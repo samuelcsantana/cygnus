@@ -12,8 +12,8 @@ export function LoginRoute() {
 
   useEffect(() => {
     // The login screen only ever mounts once the protected shell (and its
-    // useBabies() observer) has unmounted, so this can never leak a
-    // previous session's data into a stale still-mounted query.
+    // useCurrentUser()/useBabies() observers) has unmounted, so this can
+    // never leak a previous session's data into a stale still-mounted query.
     queryClient.clear()
   }, [])
 

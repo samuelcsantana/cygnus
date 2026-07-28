@@ -1,11 +1,12 @@
 import { create } from 'zustand'
 
 /**
- * The backend only returns {id, email, name} from POST /auth/register.
- * POST /auth/login returns no body beyond {status, message}, and there is
- * no GET /auth/me yet — so after a plain login (or a page refresh) only the
- * submitted email is known. Consumers must degrade gracefully instead of
- * fabricating a name. See CLAUDE.md-derived plan, Section 1.
+ * POST /auth/login returns no user payload beyond {status, message}, so
+ * useLogin seeds this store with just the submitted email as a provisional
+ * value. GET /auth/me (see useSyncAuthIdentity) confirms/corrects it with
+ * the real name right after — including after a page refresh, where this
+ * store starts out empty again. Consumers should still degrade gracefully
+ * (name can be briefly null) rather than assume it's always populated.
  */
 interface AuthIdentity {
   id: string | null

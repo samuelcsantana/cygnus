@@ -1,16 +1,18 @@
 import { Navigate, Outlet } from 'react-router-dom'
 
-import { useBabies } from '@/features/babies/api/babies.hooks'
+import { useSyncAuthIdentity } from '@/features/auth/api/auth.hooks'
 import { ApiError } from '@/lib/http-client'
 
 /**
- * There is no /auth/me endpoint, so GET /babies doubles as the session
- * probe: 401 means "not logged in" and redirects to /login.
+ * GET /auth/me doubles as the session probe: 401 (after the http client's
+ * own silent-refresh attempt already failed) means "not logged in" and
+ * redirects to /login. Also hydrates authIdentity.store with the confirmed
+ * profile — see useSyncAuthIdentity.
  */
 export function ProtectedLayout() {
-  const babies = useBabies()
+  const currentUser = useSyncAuthIdentity()
 
-  if (babies.isPending) {
+  if (currentUser.isPending) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="border-t-transparent h-8 w-8 animate-spin rounded-full border-2 border-primary" />
@@ -18,14 +20,14 @@ export function ProtectedLayout() {
     )
   }
 
-  if (babies.isError) {
-    if (babies.error instanceof ApiError && babies.error.status === 401) {
+  if (currentUser.isError) {
+    if (currentUser.error instanceof ApiError && currentUser.error.status === 401) {
       return <Navigate to="/login" replace />
     }
 
     return (
       <div className="flex min-h-screen items-center justify-center p-8 text-center text-slate-500">
-        {babies.error.message}
+        {currentUser.error.message}
       </div>
     )
   }

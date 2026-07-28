@@ -1,9 +1,38 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
 
-import { loginUser, logoutUser, registerUser } from './auth.api'
+import { getCurrentUser, loginUser, logoutUser, registerUser } from './auth.api'
 import type { LoginInput, RegisterInput } from './auth.schemas'
+
+export const currentUserQueryKey = ['auth', 'me'] as const
+
+export function useCurrentUser() {
+  return useQuery({
+    queryKey: currentUserQueryKey,
+    queryFn: getCurrentUser,
+    staleTime: 5 * 60_000,
+  })
+}
+
+/**
+ * Keeps authIdentity.store in sync with the confirmed GET /auth/me profile.
+ * Mounted once by ProtectedLayout so the real name survives a page refresh
+ * instead of falling back to the raw email (see authIdentity.store.ts).
+ */
+export function useSyncAuthIdentity() {
+  const setIdentity = useAuthIdentityStore((state) => state.setIdentity)
+  const currentUser = useCurrentUser()
+
+  useEffect(() => {
+    if (currentUser.data) {
+      setIdentity({ id: currentUser.data.id, email: currentUser.data.email, name: currentUser.data.name })
+    }
+  }, [currentUser.data, setIdentity])
+
+  return currentUser
+}
 
 export function useRegister() {
   const setIdentity = useAuthIdentityStore((state) => state.setIdentity)
@@ -36,9 +65,10 @@ export function useLogout() {
     onSuccess: () => {
       clearIdentity()
       // Query cache is cleared once LoginRoute mounts (see LoginRoute.tsx), not here —
-      // the protected shell's own useBabies() observer is often still mounted at this
-      // point, and clearing immediately makes it refetch with the now-gone cookie,
-      // producing an unwanted 401 → hard-redirect flash before the SPA navigation lands.
+      // the protected shell's own useCurrentUser()/useBabies() observers are often still
+      // mounted at this point, and clearing immediately makes them refetch with the
+      // now-gone cookie, producing an unwanted 401 → hard-redirect flash before the SPA
+      // navigation lands.
     },
   })
 }

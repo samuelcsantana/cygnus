@@ -11,4 +11,12 @@ const api = (path: string) => `${config.apiBaseUrl}${path}`
 export const handlers = [
   http.get(api('/babies'), () => HttpResponse.json([])),
   http.get(api('/notifications'), () => HttpResponse.json([])),
+  http.get(api('/auth/me'), () =>
+    HttpResponse.json({
+      id: '00000000-0000-0000-0000-000000000000',
+      email: 'parent@example.com',
+      name: 'Parent',
+      createdAt: '2024-01-01T00:00:00.000Z',
+    }),
+  ),
 ]

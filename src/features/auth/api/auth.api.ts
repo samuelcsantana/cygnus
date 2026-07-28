@@ -26,3 +26,8 @@ export async function logoutUser(): Promise<void> {
   const response = await httpClient.post<unknown>('/auth/logout')
   okResponseSchema.parse(response)
 }
+
+export async function getCurrentUser(): Promise<User> {
+  const response = await httpClient.get<unknown>('/auth/me')
+  return userSchema.parse(response)
+}
