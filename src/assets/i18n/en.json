@@ -1,0 +1,43 @@
+{
+  "common": {
+    "appName": "Cygnus"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Enter a valid email address",
+    "minLength": "Must be at least {{requiredLength}} characters"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Create account",
+      "errorInvalidCredentials": "Invalid email or password",
+      "errorGeneric": "Could not sign in. Please try again."
+    },
+    "register": {
+      "title": "Create account",
+      "nameLabel": "Full name",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "passwordHint": "At least 8 characters",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "success": "Account created successfully! Sign in to continue.",
+      "errorEmailInUse": "This email is already registered",
+      "errorGeneric": "Could not create your account. Please try again."
+    }
+  },
+  "layout": {
+    "navbar": {
+      "title": "Cygnus",
+      "logout": "Log out"
+    }
+  }
+}
