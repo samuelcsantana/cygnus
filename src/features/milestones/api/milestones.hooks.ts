@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { createMilestone, fetchMilestones } from './milestones.api'
+import { createMilestone, fetchMilestones, updateMilestone } from './milestones.api'
 import type { Milestone, MilestoneFormInput } from './milestones.schemas'
 
 export function milestonesQueryKey(babyId: string) {
@@ -28,6 +28,19 @@ export function useCreateMilestone(babyId: string) {
     onSuccess: (milestone) => {
       queryClient.setQueryData<Milestone[]>(milestonesQueryKey(babyId), (prev) =>
         (prev ? [...prev, milestone] : [milestone]).sort(byNewestFirst),
+      )
+    },
+  })
+}
+
+export function useUpdateMilestone(babyId: string, milestoneId: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (input: MilestoneFormInput) => updateMilestone(babyId, milestoneId, input),
+    onSuccess: (milestone) => {
+      queryClient.setQueryData<Milestone[]>(milestonesQueryKey(babyId), (prev) =>
+        prev?.map((item) => (item.id === milestone.id ? milestone : item)).sort(byNewestFirst),
       )
     },
   })

@@ -1,17 +1,23 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { formatDateDisplay } from '@/lib/date'
 import { cn } from '@/lib/utils'
+import { PencilIcon } from '@/shared/icons/pencil-icon'
 
 import type { Milestone } from '../api/milestones.schemas'
 import { MILESTONE_CATEGORY_META } from './category-meta'
+import { EditMilestoneDialog } from './EditMilestoneDialog'
 
 interface MilestoneTimelineProps {
+  babyId: string
+  birthDate: string
   items: Milestone[]
 }
 
-export function MilestoneTimeline({ items }: MilestoneTimelineProps) {
+export function MilestoneTimeline({ babyId, birthDate, items }: MilestoneTimelineProps) {
   const { t, i18n } = useTranslation()
+  const [editTarget, setEditTarget] = useState<Milestone | null>(null)
 
   return (
     <div className="relative ml-4 max-w-3xl sm:ml-8">
@@ -31,8 +37,17 @@ export function MilestoneTimeline({ items }: MilestoneTimelineProps) {
                 {meta.emoji}
               </div>
 
-              <div className="ml-20 w-full rounded-[2rem] border border-slate-100 bg-white p-8 shadow-sm transition-all duration-300 group-hover:border-slate-200 group-hover:shadow-md">
-                <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <div className="relative ml-20 w-full rounded-[2rem] border border-slate-100 bg-white p-8 shadow-sm transition-all duration-300 group-hover:border-slate-200 group-hover:shadow-md">
+                <button
+                  type="button"
+                  onClick={() => setEditTarget(milestone)}
+                  aria-label={t('milestones.edit.action', { title: milestone.title })}
+                  className="absolute top-6 right-6 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                >
+                  <PencilIcon className="h-4 w-4" />
+                </button>
+
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2 pr-8">
                   <span className={cn('inline-block rounded-lg px-3 py-1 text-xs font-bold', meta.badgeClass)}>
                     {formatDateDisplay(milestone.achievedAt, i18n.language)}
                   </span>
@@ -49,6 +64,13 @@ export function MilestoneTimeline({ items }: MilestoneTimelineProps) {
           )
         })}
       </div>
+
+      <EditMilestoneDialog
+        babyId={babyId}
+        birthDate={birthDate}
+        milestone={editTarget}
+        onOpenChange={(open) => !open && setEditTarget(null)}
+      />
     </div>
   )
 }

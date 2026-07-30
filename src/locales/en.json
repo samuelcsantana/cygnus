@@ -203,6 +203,11 @@
       "photoUrlHint": "File upload isn't supported yet — paste the link to an already-hosted photo.",
       "submit": "Save Milestone",
       "genericError": "Could not save the milestone. Please try again."
+    },
+    "edit": {
+      "action": "Edit milestone: {{title}}",
+      "title": "Edit Milestone",
+      "submit": "Save Changes"
     }
   },
   "notifications": {

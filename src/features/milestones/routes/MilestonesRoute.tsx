@@ -60,9 +60,9 @@ export function MilestonesRoute() {
             </Link>
           }
         />
-      ) : (
-        <MilestoneTimeline items={items} />
-      )}
+      ) : baby ? (
+        <MilestoneTimeline babyId={babyId} birthDate={baby.birthDate} items={items} />
+      ) : null}
     </div>
   )
 }

@@ -15,11 +15,21 @@ import { MILESTONE_CATEGORY_META } from './category-meta'
 
 interface MilestoneFormProps {
   birthDate: string
+  defaultValues?: Partial<MilestoneFormInput>
   onSubmit: (values: MilestoneFormInput) => Promise<void>
   submitLabel: string
+  onCancel?: () => void
+  showCancel?: boolean
 }
 
-export function MilestoneForm({ birthDate, onSubmit, submitLabel }: MilestoneFormProps) {
+export function MilestoneForm({
+  birthDate,
+  defaultValues,
+  onSubmit,
+  submitLabel,
+  onCancel,
+  showCancel,
+}: MilestoneFormProps) {
   const { t } = useTranslation()
   const [submitError, setSubmitError] = useState(false)
   const schema = useMemo(() => createMilestoneFormSchema(birthDate), [birthDate])
@@ -31,7 +41,7 @@ export function MilestoneForm({ birthDate, onSubmit, submitLabel }: MilestoneFor
     formState: { errors, isSubmitting },
   } = useForm<MilestoneFormInput>({
     resolver: zodResolver(schema),
-    defaultValues: { photoUrl: '' },
+    defaultValues: { photoUrl: '', ...defaultValues },
   })
 
   const handleFormSubmit = handleSubmit(async (values) => {
@@ -126,7 +136,16 @@ export function MilestoneForm({ birthDate, onSubmit, submitLabel }: MilestoneFor
         </p>
       )}
 
-      <div className="mt-6 flex items-center justify-end border-t border-slate-100 pt-6">
+      <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+        {showCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-6 py-3.5 text-sm font-bold text-slate-600 transition-colors hover:text-slate-900"
+          >
+            {t('common.cancel')}
+          </button>
+        )}
         <Button type="submit" disabled={isSubmitting} className="bg-slate-900 text-white hover:bg-slate-800">
           {isSubmitting ? t('common.saving') : submitLabel}
         </Button>

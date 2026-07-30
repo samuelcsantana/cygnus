@@ -203,6 +203,11 @@
       "photoUrlHint": "Upload de arquivo ainda não é suportado — cole o link de uma foto já hospedada.",
       "submit": "Salvar Marco",
       "genericError": "Não foi possível salvar o marco. Tente novamente."
+    },
+    "edit": {
+      "action": "Editar marco: {{title}}",
+      "title": "Editar Marco",
+      "submit": "Salvar Alterações"
     }
   },
   "notifications": {

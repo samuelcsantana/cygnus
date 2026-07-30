@@ -203,6 +203,11 @@
       "photoUrlHint": "La subida de archivos aún no es compatible — pega el enlace de una foto ya alojada.",
       "submit": "Guardar Hito",
       "genericError": "No se pudo guardar el hito. Inténtalo de nuevo."
+    },
+    "edit": {
+      "action": "Editar hito: {{title}}",
+      "title": "Editar Hito",
+      "submit": "Guardar Cambios"
     }
   },
   "notifications": {
