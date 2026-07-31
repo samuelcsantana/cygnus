@@ -152,6 +152,10 @@
       "saveNotes": "Save Notes",
       "markCompleted": "Mark as Completed",
       "cancelAppointment": "Cancel Appointment",
+      "cancelConfirmTitle": "Cancel this appointment?",
+      "cancelConfirmDescription": "This can't be undone. The appointment with {{doctorName}} will be marked as cancelled.",
+      "cancelConfirmAction": "Yes, cancel appointment",
+      "cancelConfirmDismiss": "Go back",
       "genericError": "Could not update the appointment."
     },
     "form": {

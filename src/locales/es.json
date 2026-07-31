@@ -152,6 +152,10 @@
       "saveNotes": "Guardar Notas",
       "markCompleted": "Marcar como Completada",
       "cancelAppointment": "Cancelar Consulta",
+      "cancelConfirmTitle": "¿Cancelar esta consulta?",
+      "cancelConfirmDescription": "Esta acción no se puede deshacer. La consulta con {{doctorName}} se marcará como cancelada.",
+      "cancelConfirmAction": "Sí, cancelar consulta",
+      "cancelConfirmDismiss": "Volver",
       "genericError": "No se pudo actualizar la consulta."
     },
     "form": {

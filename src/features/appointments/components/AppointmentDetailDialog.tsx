@@ -1,6 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
@@ -81,14 +92,32 @@ export function AppointmentDetailDialog({ babyId, appointment, onOpenChange }: A
 
               {appointment.status === 'SCHEDULED' && (
                 <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => handleSetStatus('CANCELLED')}
-                    disabled={updateAppointment.isPending}
-                  >
-                    {t('appointments.detail.cancelAppointment')}
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button type="button" variant="outline" disabled={updateAppointment.isPending}>
+                        {t('appointments.detail.cancelAppointment')}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>{t('appointments.detail.cancelConfirmTitle')}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          {t('appointments.detail.cancelConfirmDescription', {
+                            doctorName: appointment.doctorName,
+                          })}
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>{t('appointments.detail.cancelConfirmDismiss')}</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleSetStatus('CANCELLED')}
+                          disabled={updateAppointment.isPending}
+                        >
+                          {t('appointments.detail.cancelConfirmAction')}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                   <Button
                     type="button"
                     onClick={() => handleSetStatus('COMPLETED')}
