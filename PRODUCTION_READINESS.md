@@ -15,7 +15,7 @@ Checklist vivo do que falta antes de um lançamento real. Gerado após a impleme
 ## 🟡 Importante (dá pra lançar em beta fechado sem isso)
 
 - [x] Editar perfil do bebê — ícone de lápis no `BabyCard` abre `EditBabyDialog`, PATCH completo (`src/features/babies/`). **Excluir segue impossível**: não existe `DELETE /babies/{id}` no contrato da API — precisa entrar como pedido pro backend
-- [ ] Editar marco (`PATCH` existe na API, sem UI)
+- [x] Editar marco — ícone de lápis em cada card do `MilestoneTimeline` abre `EditMilestoneDialog`, PATCH completo (`src/features/milestones/`)
 - [ ] Confirmação antes de ação destrutiva (ex: "Cancelar Consulta" executa na hora)
 - [ ] Seletor de idioma na UI (3 idiomas funcionam, só troca via localStorage manual)
 - [ ] Testes E2E (Playwright) das jornadas críticas — CLAUDE.md Seção 10 pede isso explicitamente
