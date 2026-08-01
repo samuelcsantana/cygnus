@@ -27,7 +27,7 @@ export function MilestonesRoute() {
     <div className="animate-fade-in-up">
       <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="mb-1 text-sm font-semibold tracking-wider text-amber-500 uppercase">
+          <p className="mb-1 text-sm font-semibold tracking-wider text-amber-700 uppercase">
             {t('milestones.eyebrow')}
           </p>
           <h2 className="text-3xl font-extrabold text-slate-900">{t('milestones.title')}</h2>
@@ -53,7 +53,7 @@ export function MilestonesRoute() {
           action={
             <Link
               to="/milestones/new"
-              className="inline-flex items-center justify-center rounded-xl bg-amber-500 px-6 py-3 font-bold text-white shadow-md shadow-amber-500/20 transition-colors hover:bg-amber-600"
+              className="inline-flex items-center justify-center rounded-xl bg-amber-700 px-6 py-3 font-bold text-white shadow-md shadow-amber-700/20 transition-colors hover:bg-amber-800"
             >
               {t('milestones.empty.cta')}
             </Link>

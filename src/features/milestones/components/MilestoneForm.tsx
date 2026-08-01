@@ -127,7 +127,7 @@ export function MilestoneForm({
           {...register('photoUrl')}
         />
         {photoUrlErrorKey && <p className="text-destructive mt-1 text-sm">{t(photoUrlErrorKey)}</p>}
-        <p className="mt-1 text-xs text-slate-400">{t('milestones.form.photoUrlHint')}</p>
+        <p className="mt-1 text-xs text-slate-500">{t('milestones.form.photoUrlHint')}</p>
       </div>
 
       {submitError && (

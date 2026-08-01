@@ -159,7 +159,7 @@ function StatCard({ to, icon, iconClassName, label }: StatCardProps) {
       </div>
       <div>
         <p className="mb-1 text-sm font-semibold tracking-wider text-slate-500 uppercase">{label}</p>
-        <p className="text-sm text-slate-400">{t('babies.dashboard.statComingSoon')}</p>
+        <p className="text-sm text-slate-500">{t('babies.dashboard.statComingSoon')}</p>
       </div>
     </Link>
   )

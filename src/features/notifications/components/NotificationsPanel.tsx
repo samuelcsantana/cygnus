@@ -14,7 +14,7 @@ export function NotificationsPanel({ notifications, onMarkRead }: NotificationsP
   const { t, i18n } = useTranslation()
 
   if (notifications.length === 0) {
-    return <p className="p-4 text-center text-sm text-slate-400">{t('notifications.empty')}</p>
+    return <p className="p-4 text-center text-sm text-slate-500">{t('notifications.empty')}</p>
   }
 
   return (
@@ -36,7 +36,7 @@ export function NotificationsPanel({ notifications, onMarkRead }: NotificationsP
                 <span className="text-sm font-bold text-slate-900">{notification.title}</span>
               </div>
               <p className="text-xs text-slate-500">{notification.message}</p>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-slate-500">
                 {formatDateTimeDisplay(notification.createdAt, i18n.language)}
               </span>
             </button>

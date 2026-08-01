@@ -27,7 +27,7 @@ export function AppointmentCard({ appointment, onReschedule, onViewDetails }: Ap
           <AppointmentStatusBadge status={appointment.status} />
         </div>
         <div className="min-w-[80px] rounded-2xl border border-slate-100 bg-slate-50 p-3 text-center">
-          <span className="mb-1 block text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+          <span className="mb-1 block text-[10px] font-bold tracking-wider text-slate-500 uppercase">
             {t('appointments.dateLabel')}
           </span>
           <span className="block text-lg font-black text-slate-800">{formatDateDisplay(date, i18n.language)}</span>

@@ -26,7 +26,7 @@ export function MobileNavItem({ to, icon, label, disabled }: MobileNavItemProps)
     <NavLink
       to={to}
       className={({ isActive }) =>
-        cn(baseClass, isActive ? 'bg-teal-50 text-teal-700' : 'text-slate-400 hover:text-slate-600')
+        cn(baseClass, isActive ? 'bg-teal-50 text-teal-700' : 'text-slate-500 hover:text-slate-600')
       }
     >
       <span className="mb-1 h-6 w-6">{icon}</span>
