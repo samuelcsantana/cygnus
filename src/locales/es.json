@@ -93,6 +93,11 @@
       "avatarUrlPlaceholder": "https://...",
       "submit": "Crear Perfil",
       "genericError": "No se pudo guardar. Inténtalo de nuevo."
+    },
+    "edit": {
+      "action": "Editar perfil de {{name}}",
+      "title": "Editar Perfil",
+      "submit": "Guardar Cambios"
     }
   },
   "vaccines": {
@@ -205,6 +210,13 @@
     "bellAria_one": "Notificaciones, {{count}} sin leer",
     "bellAria_other": "Notificaciones, {{count}} sin leer",
     "empty": "Aún no hay notificaciones."
+  },
+  "errors": {
+    "boundary": {
+      "title": "Algo salió mal",
+      "description": "Encontramos un error inesperado. Intenta recargar la página — si el problema continúa, contacta al soporte.",
+      "reload": "Recargar página"
+    }
   },
   "validation": {
     "required": "Este campo es obligatorio.",

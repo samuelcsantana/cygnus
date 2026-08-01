@@ -93,6 +93,11 @@
       "avatarUrlPlaceholder": "https://...",
       "submit": "Create Profile",
       "genericError": "Could not save. Please try again."
+    },
+    "edit": {
+      "action": "Edit {{name}}'s profile",
+      "title": "Edit Profile",
+      "submit": "Save Changes"
     }
   },
   "vaccines": {
@@ -205,6 +210,13 @@
     "bellAria_one": "Notifications, {{count}} unread",
     "bellAria_other": "Notifications, {{count}} unread",
     "empty": "No notifications yet."
+  },
+  "errors": {
+    "boundary": {
+      "title": "Something went wrong",
+      "description": "We ran into an unexpected error. Try reloading the page — if the problem continues, contact support.",
+      "reload": "Reload page"
+    }
   },
   "validation": {
     "required": "This field is required.",

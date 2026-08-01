@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { createBabySchema } from './babies.schemas'
+import { babyFormSchema } from './babies.schemas'
 
-describe('createBabySchema', () => {
+describe('babyFormSchema', () => {
   it('rejects a birth date in the future', () => {
     const tomorrow = new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString().slice(0, 10)
 
-    const result = createBabySchema.safeParse({
+    const result = babyFormSchema.safeParse({
       name: 'Miguel',
       birthDate: tomorrow,
       gender: 'MALE',
@@ -16,7 +16,7 @@ describe('createBabySchema', () => {
   })
 
   it('accepts a valid past birth date with only the required fields', () => {
-    const result = createBabySchema.safeParse({
+    const result = babyFormSchema.safeParse({
       name: 'Miguel',
       birthDate: '2024-01-01',
       gender: 'MALE',
@@ -26,7 +26,7 @@ describe('createBabySchema', () => {
   })
 
   it('requires gender to be selected', () => {
-    const result = createBabySchema.safeParse({
+    const result = babyFormSchema.safeParse({
       name: 'Miguel',
       birthDate: '2024-01-01',
     })

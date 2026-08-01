@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom'
 
 import { ArrowLeftIcon } from '@/shared/icons/arrow-left-icon'
 
-import { useBabies } from '../api/babies.hooks'
+import { useBabies, useCreateBaby } from '../api/babies.hooks'
 import { BabyForm } from '../components/BabyForm'
 
 export function AddBabyRoute() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const babies = useBabies()
+  const createBaby = useCreateBaby()
   const hasBabies = (babies.data?.length ?? 0) > 0
 
   const goToDashboard = () => navigate('/dashboard')
@@ -33,7 +34,15 @@ export function AddBabyRoute() {
 
       <div className="relative overflow-hidden rounded-[2.5rem] border border-slate-100 bg-white p-8 shadow-sm sm:p-10">
         <div className="bg-primary/5 absolute top-0 right-0 z-0 h-32 w-32 -mr-10 -mt-10 rounded-bl-full" />
-        <BabyForm onSuccess={goToDashboard} onCancel={goToDashboard} showCancel={hasBabies} />
+        <BabyForm
+          submitLabel={t('babies.form.submit')}
+          onCancel={goToDashboard}
+          showCancel={hasBabies}
+          onSubmit={async (values) => {
+            await createBaby.mutateAsync(values)
+            goToDashboard()
+          }}
+        />
       </div>
     </div>
   )

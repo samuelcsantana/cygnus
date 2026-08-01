@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -10,38 +11,39 @@ import { AllergiesTagInput } from '@/shared/components/AllergiesTagInput'
 import { SelectorCardGroup } from '@/shared/components/SelectorCardGroup'
 import { fieldErrorKey } from '@/shared/utils/zod-error'
 
-import { useCreateBaby } from '../api/babies.hooks'
-import { createBabySchema, type CreateBabyInput } from '../api/babies.schemas'
+import { babyFormSchema, type BabyFormInput } from '../api/babies.schemas'
 
 const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as const
 const NOT_INFORMED = 'none'
 
 interface BabyFormProps {
-  onSuccess: () => void
+  defaultValues?: Partial<BabyFormInput>
+  onSubmit: (values: BabyFormInput) => Promise<void>
+  submitLabel: string
   onCancel?: () => void
   showCancel?: boolean
 }
 
-export function BabyForm({ onSuccess, onCancel, showCancel }: BabyFormProps) {
+export function BabyForm({ defaultValues, onSubmit, submitLabel, onCancel, showCancel }: BabyFormProps) {
   const { t } = useTranslation()
-  const createBaby = useCreateBaby()
+  const [submitError, setSubmitError] = useState(false)
 
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors },
-  } = useForm<CreateBabyInput>({
-    resolver: zodResolver(createBabySchema),
-    defaultValues: { allergies: [], avatarUrl: '' },
+    formState: { errors, isSubmitting },
+  } = useForm<BabyFormInput>({
+    resolver: zodResolver(babyFormSchema),
+    defaultValues: { allergies: [], avatarUrl: '', ...defaultValues },
   })
 
-  const onSubmit = handleSubmit(async (values) => {
+  const handleFormSubmit = handleSubmit(async (values) => {
+    setSubmitError(false)
     try {
-      await createBaby.mutateAsync(values)
-      onSuccess()
+      await onSubmit(values)
     } catch {
-      // surfaced below via createBaby.error
+      setSubmitError(true)
     }
   })
 
@@ -51,7 +53,7 @@ export function BabyForm({ onSuccess, onCancel, showCancel }: BabyFormProps) {
   const avatarUrlErrorKey = fieldErrorKey(errors.avatarUrl)
 
   return (
-    <form onSubmit={onSubmit} className="relative z-10 space-y-6" noValidate>
+    <form onSubmit={handleFormSubmit} className="relative z-10 space-y-6" noValidate>
       <div>
         <Label htmlFor="name">{t('babies.form.nameLabel')}</Label>
         <Input
@@ -168,7 +170,7 @@ export function BabyForm({ onSuccess, onCancel, showCancel }: BabyFormProps) {
         )}
       </div>
 
-      {createBaby.isError && (
+      {submitError && (
         <p role="alert" className="text-destructive text-sm">
           {t('babies.form.genericError')}
         </p>
@@ -184,8 +186,8 @@ export function BabyForm({ onSuccess, onCancel, showCancel }: BabyFormProps) {
             {t('common.cancel')}
           </button>
         )}
-        <Button type="submit" disabled={createBaby.isPending}>
-          {createBaby.isPending ? t('common.saving') : t('babies.form.submit')}
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? t('common.saving') : submitLabel}
         </Button>
       </div>
     </form>

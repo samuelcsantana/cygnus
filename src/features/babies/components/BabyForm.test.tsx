@@ -8,9 +8,9 @@ import { BabyForm } from './BabyForm'
 describe('BabyForm', () => {
   it('rejects a future birth date inline, without calling the API', async () => {
     const user = userEvent.setup()
-    const onSuccess = vi.fn()
+    const onSubmit = vi.fn(async () => {})
 
-    renderWithProviders(<BabyForm onSuccess={onSuccess} />)
+    renderWithProviders(<BabyForm submitLabel="Criar Perfil" onSubmit={onSubmit} />)
 
     await user.type(screen.getByLabelText('Nome da Criança'), 'Miguel')
 
@@ -24,6 +24,6 @@ describe('BabyForm', () => {
       expect(screen.getByText('A data de nascimento não pode ser no futuro.')).toBeInTheDocument()
     })
 
-    expect(onSuccess).not.toHaveBeenCalled()
+    expect(onSubmit).not.toHaveBeenCalled()
   })
 })

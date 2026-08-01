@@ -23,7 +23,9 @@ export type Baby = z.infer<typeof babySchema>
 
 export const babyListSchema = z.array(babySchema)
 
-export const createBabySchema = z.object({
+// Shared by both the create and edit flows — the form always collects the
+// same fields; only the API call (POST vs PATCH) differs.
+export const babyFormSchema = z.object({
   name: z.string().min(1),
   birthDate: z
     .string()
@@ -35,5 +37,5 @@ export const createBabySchema = z.object({
   // A native <input> always yields "" (never undefined) when left blank.
   avatarUrl: z.union([z.string().url(), z.literal('')]).optional(),
 })
-export type CreateBabyInput = z.infer<typeof createBabySchema>
+export type BabyFormInput = z.infer<typeof babyFormSchema>
 
