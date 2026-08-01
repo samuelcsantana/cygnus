@@ -226,6 +226,12 @@
       "title": "Something went wrong",
       "description": "We ran into an unexpected error. Try reloading the page — if the problem continues, contact support.",
       "reload": "Reload page"
+    },
+    "notFound": {
+      "eyebrow": "Error 404",
+      "title": "Page not found",
+      "description": "The address you tried to visit doesn't exist or was moved.",
+      "backHome": "Back to home"
     }
   },
   "validation": {

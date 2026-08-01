@@ -226,6 +226,12 @@
       "title": "Algo deu errado",
       "description": "Encontramos um erro inesperado. Tente recarregar a página — se o problema continuar, entre em contato com o suporte.",
       "reload": "Recarregar página"
+    },
+    "notFound": {
+      "eyebrow": "Erro 404",
+      "title": "Página não encontrada",
+      "description": "O endereço que você tentou acessar não existe ou foi movido.",
+      "backHome": "Voltar ao início"
     }
   },
   "validation": {

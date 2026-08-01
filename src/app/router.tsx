@@ -11,6 +11,7 @@ import { NewMilestoneRoute } from '@/features/milestones/routes/NewMilestoneRout
 import { VaccinesRoute } from '@/features/vaccines/routes/VaccinesRoute'
 
 import { AppShellLayout } from './routes/AppShellLayout'
+import { NotFoundRoute } from './routes/NotFoundRoute'
 import { ProtectedLayout } from './routes/ProtectedLayout'
 
 export const router = createBrowserRouter([
@@ -41,5 +42,5 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  { path: '*', element: <Navigate to="/" replace /> },
+  { path: '*', element: <NotFoundRoute /> },
 ])
