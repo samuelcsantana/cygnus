@@ -9,6 +9,9 @@ export default mergeConfig(
       environment: 'jsdom',
       setupFiles: ['./src/test/setup.ts'],
       css: true,
+      // e2e/ holds Playwright specs (a different test runner, real browser,
+      // no jsdom) — Vitest's default glob would otherwise also pick them up.
+      exclude: ['**/node_modules/**', '**/.git/**', 'e2e/**'],
     },
   }),
 )
