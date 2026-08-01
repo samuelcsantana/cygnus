@@ -16,7 +16,7 @@ Checklist vivo do que falta antes de um lançamento real. Gerado após a impleme
 
 - [x] Editar perfil do bebê — ícone de lápis no `BabyCard` abre `EditBabyDialog`, PATCH completo (`src/features/babies/`). **Excluir segue impossível**: não existe `DELETE /babies/{id}` no contrato da API — precisa entrar como pedido pro backend
 - [x] Editar marco — ícone de lápis em cada card do `MilestoneTimeline` abre `EditMilestoneDialog`, PATCH completo (`src/features/milestones/`)
-- [ ] Confirmação antes de ação destrutiva (ex: "Cancelar Consulta" executa na hora)
+- [x] Confirmação antes de ação destrutiva — "Cancelar Consulta" agora abre um `AlertDialog` (shadcn) de confirmação antes de fazer o PATCH (`AppointmentDetailDialog.tsx`)
 - [ ] Seletor de idioma na UI (3 idiomas funcionam, só troca via localStorage manual)
 - [ ] Testes E2E (Playwright) das jornadas críticas — CLAUDE.md Seção 10 pede isso explicitamente
 - [x] Error Boundary — `src/app/ErrorBoundary.tsx` + `ErrorFallback.tsx` envolvendo o router em `App.tsx`
