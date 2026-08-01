@@ -18,7 +18,7 @@ Checklist vivo do que falta antes de um lançamento real. Gerado após a impleme
 - [x] Editar marco — ícone de lápis em cada card do `MilestoneTimeline` abre `EditMilestoneDialog`, PATCH completo (`src/features/milestones/`)
 - [x] Confirmação antes de ação destrutiva — "Cancelar Consulta" agora abre um `AlertDialog` (shadcn) de confirmação antes de fazer o PATCH (`AppointmentDetailDialog.tsx`)
 - [x] Seletor de idioma na UI — `LanguageSwitcher` (`src/shared/components/`) no header do app (mobile e desktop) e na tela de login/registro; `i18n.changeLanguage()` já persiste em `localStorage` (`i18nextLng`) via `i18next-browser-languagedetector`
-- [ ] Testes E2E (Playwright) das jornadas críticas — CLAUDE.md Seção 10 pede isso explicitamente
+- [x] Testes E2E (Playwright) das jornadas críticas — `e2e/` cobre as 4 jornadas citadas no CLAUDE.md Seção 10 (registrar+login, adicionar bebê, registrar vacina aplicada, agendar consulta), rodando contra o stack Docker real dos dois repos (`npm run test:e2e`, ver `e2e/README.md`). **Não está no CI** ainda — exigiria checkout do `cygnus-api` (repo separado/privado) + Postgres/Redis no runner; fica como próximo passo se quiser automatizar
 - [x] Error Boundary — `src/app/ErrorBoundary.tsx` + `ErrorFallback.tsx` envolvendo o router em `App.tsx`
 - [ ] Avatar Dicebear depende de serviço externo não controlado (`api.dicebear.com`)
 - [ ] Bundle único ~721KB sem code-splitting (Vite já avisa no build)
