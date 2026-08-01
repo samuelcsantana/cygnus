@@ -7,7 +7,8 @@
     "back": "Volver",
     "cancel": "Cancelar",
     "saving": "Guardando...",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "languageSwitcherLabel": "Idioma"
   },
   "nav": {
     "dashboard": "Resumen",

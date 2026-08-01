@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { LogoIcon } from '@/shared/icons/logo-icon'
 
 interface AuthLayoutProps {
@@ -33,6 +34,10 @@ export function AuthLayout({ children }: AuthLayoutProps) {
       </div>
 
       <div className="relative flex w-full items-center justify-center bg-white p-8 sm:p-12 lg:w-1/2">
+        <div className="absolute top-6 right-6">
+          <LanguageSwitcher />
+        </div>
+
         <div className="animate-fade-in-up w-full max-w-md">
           <div className="mb-10 text-center lg:hidden">
             <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">

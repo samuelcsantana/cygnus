@@ -10,6 +10,7 @@ import { LogoIcon } from '@/shared/icons/logo-icon'
 import { LogoutIcon } from '@/shared/icons/logout-icon'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
+import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { MobileNavItem } from '@/shared/components/MobileNavItem'
 import { NavItem } from '@/shared/components/NavItem'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
@@ -75,12 +76,15 @@ export function AppShellLayout() {
             <span className="text-lg font-bold text-slate-900">{t('common.appName')}</span>
           </div>
           <div className="flex items-center gap-3">
+            <LanguageSwitcher />
             <NotificationBell />
             <span className="text-sm font-semibold text-slate-600">{accountLabel}</span>
           </div>
         </header>
 
         <header className="sticky top-0 z-20 hidden items-center justify-end gap-4 border-b border-slate-200 bg-white/80 px-8 py-4 backdrop-blur-md md:flex">
+          <LanguageSwitcher />
+          <div className="h-8 w-px bg-slate-200" />
           <NotificationBell />
           <div className="h-8 w-px bg-slate-200" />
           <span className="text-sm font-bold text-slate-700">{accountLabel}</span>
