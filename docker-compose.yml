@@ -1,0 +1,21 @@
+# Runs the frontend alongside cygnus-api's own docker-compose setup (a
+# separate repository). This file intentionally does not define an `api`
+# service — point VITE_API_BASE_URL at wherever that backend is actually
+# reachable from the browser (defaults to the same localhost:3005 used by
+# `npm run dev`).
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:3005}
+    ports:
+      - '4205:80'
+    healthcheck:
+      test: ['CMD', 'wget', '--quiet', '--spider', 'http://127.0.0.1/']
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped

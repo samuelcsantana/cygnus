@@ -1,0 +1,216 @@
+{
+  "common": {
+    "appName": "Meu Neném",
+    "loading": "Carregando...",
+    "myAccount": "Minha conta",
+    "comingSoonMessage": "Esta seção está em construção.",
+    "back": "Voltar",
+    "cancel": "Cancelar",
+    "saving": "Salvando...",
+    "close": "Fechar"
+  },
+  "nav": {
+    "dashboard": "Visão Geral",
+    "vaccines": "Vacinas",
+    "appointments": "Consultas",
+    "milestones": "Marcos",
+    "logout": "Sair da conta"
+  },
+  "auth": {
+    "login": {
+      "brandTagline": "O painel completo para a saúde e memórias da sua família.",
+      "copyright": "© {{year}} Meu Neném App",
+      "title": "Bem-vindo(a) de volta",
+      "subtitle": "Acesse sua conta para começar.",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "Seu e-mail",
+      "passwordLabel": "Senha",
+      "passwordPlaceholder": "Sua senha",
+      "submit": "Entrar na Conta",
+      "invalidCredentials": "E-mail ou senha inválidos.",
+      "genericError": "Não foi possível entrar. Tente novamente.",
+      "noAccount": "Ainda não tem conta?",
+      "registerLink": "Cadastre-se"
+    },
+    "register": {
+      "title": "Criar Conta",
+      "subtitle": "Cadastre-se para começar a acompanhar sua família.",
+      "nameLabel": "Nome completo",
+      "namePlaceholder": "Seu nome completo",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "Seu e-mail",
+      "passwordLabel": "Senha",
+      "passwordPlaceholder": "Crie uma senha (mín. 8 caracteres)",
+      "submit": "Criar Conta",
+      "emailTaken": "Este e-mail já está cadastrado.",
+      "genericError": "Não foi possível criar sua conta. Tente novamente.",
+      "successToast": "Conta criada com sucesso! Faça login para continuar.",
+      "hasAccount": "Já tem uma conta?",
+      "loginLink": "Entrar"
+    }
+  },
+  "babies": {
+    "yourChildren": "Suas Crianças",
+    "addChild": "Adicionar Criança",
+    "monthsOld_one": "{{count}} mês",
+    "monthsOld_other": "{{count}} meses",
+    "dashboard": {
+      "eyebrowEmpty": "O painel da sua família",
+      "headingEmptyLine1": "O desenvolvimento das suas crianças,",
+      "headingEmptyHighlight": "organizado em um só lugar.",
+      "subtitleEmpty": "Tenha controle absoluto sobre a imunização, histórico médico e eternize cada momento importante. Tudo centralizado para facilitar sua rotina.",
+      "featureVaccinesTitle": "Imunização no Prazo",
+      "featureVaccinesDesc": "Carteira digital inteligente para acompanhar as vacinas de todos os filhos.",
+      "featureAppointmentsTitle": "Consultas e Rotina",
+      "featureAppointmentsDesc": "Agende e guarde o histórico das visitas ao pediatra e especialistas.",
+      "featureMilestonesTitle": "Linha do Tempo",
+      "featureMilestonesDesc": "Crie um diário visual registrando cada marco importante do crescimento.",
+      "ctaAddFirstChild": "Começar Agora: Adicionar Criança",
+      "eyebrow": "VISÃO GERAL",
+      "heading": "Painel da Família",
+      "subtitle": "Acompanhamento consolidado.",
+      "statVaccinesLabel": "Vacinas",
+      "statAppointmentsLabel": "Consultas",
+      "statMilestonesLabel": "Marcos",
+      "statComingSoon": "Em breve"
+    },
+    "form": {
+      "title": "Novo Perfil",
+      "subtitle": "Insira as informações da criança para começarmos o acompanhamento.",
+      "nameLabel": "Nome da Criança",
+      "namePlaceholder": "Ex: Miguel",
+      "birthDateLabel": "Data de Nascimento",
+      "birthDateFuture": "A data de nascimento não pode ser no futuro.",
+      "genderLabel": "Sexo",
+      "genderMale": "Menino",
+      "genderFemale": "Menina",
+      "bloodTypeLabel": "Tipo Sanguíneo",
+      "bloodTypeNotInformed": "Não informado",
+      "allergiesLabel": "Alergias",
+      "allergiesPlaceholder": "Digite e pressione Enter",
+      "allergiesRemoveAria": "Remover {{value}}",
+      "avatarUrlLabel": "Foto (URL)",
+      "avatarUrlPlaceholder": "https://...",
+      "submit": "Criar Perfil",
+      "genericError": "Não foi possível salvar. Tente novamente."
+    }
+  },
+  "vaccines": {
+    "eyebrow": "IMUNIZAÇÃO",
+    "title": "Carteira de Vacinação",
+    "genericError": "Não foi possível carregar o calendário de vacinas.",
+    "ageGroupLabel_one": "{{count}} mês",
+    "ageGroupLabel_other": "{{count}} meses",
+    "doseLabel": "{{count}}ª dose",
+    "status": {
+      "pending": "Pendente",
+      "delayed": "Atrasada",
+      "applied": "Aplicada em {{date}}"
+    },
+    "empty": {
+      "title": "Nenhuma vacina encontrada",
+      "description": "O calendário de vacinação desta criança ainda não foi gerado."
+    },
+    "apply": {
+      "title": "Aplicar Vacina",
+      "dateLabel": "Data da Aplicação",
+      "notesLabel": "Anotações (Opcional)",
+      "submit": "Salvar Registro",
+      "genericError": "Não foi possível registrar a vacina. Tente novamente."
+    }
+  },
+  "appointments": {
+    "eyebrow": "MÉDICOS",
+    "title": "Consultas",
+    "scheduleAction": "Agendar Consulta",
+    "dateLabel": "Data",
+    "genericError": "Não foi possível carregar as consultas.",
+    "status": {
+      "scheduled": "Agendada",
+      "completed": "Concluída",
+      "cancelled": "Cancelada"
+    },
+    "empty": {
+      "title": "Sem consultas agendadas",
+      "description": "Organize as visitas ao pediatra e especialistas.",
+      "cta": "Agendar a primeira"
+    },
+    "reschedule": {
+      "action": "Reagendar",
+      "title": "Reagendar Consulta",
+      "submit": "Salvar Alterações"
+    },
+    "detail": {
+      "action": "Ver Detalhes",
+      "title": "Detalhes da Consulta",
+      "notesLabel": "Anotações",
+      "saveNotes": "Salvar Anotações",
+      "markCompleted": "Marcar como Concluída",
+      "cancelAppointment": "Cancelar Consulta",
+      "genericError": "Não foi possível atualizar a consulta."
+    },
+    "form": {
+      "createTitle": "Agendar Consulta",
+      "createSubtitle": "Registre um novo acompanhamento.",
+      "doctorNameLabel": "Nome do Profissional",
+      "doctorNamePlaceholder": "Ex: Dra. Ana Silva",
+      "locationLabel": "Local (Opcional)",
+      "locationPlaceholder": "Ex: Clínica Pediátrica",
+      "dateLabel": "Data",
+      "timeLabel": "Horário",
+      "reasonLabel": "Motivo (Opcional)",
+      "reasonPlaceholder": "Ex: Consulta de rotina",
+      "scheduledAtPast": "A data e hora não podem estar no passado.",
+      "submit": "Salvar Consulta",
+      "genericError": "Não foi possível salvar a consulta. Tente novamente."
+    }
+  },
+  "milestones": {
+    "eyebrow": "MEMÓRIAS",
+    "title": "Marcos de Desenvolvimento",
+    "action": "Registrar Marco",
+    "genericError": "Não foi possível carregar os marcos.",
+    "category": {
+      "motor": "Motor",
+      "language": "Linguagem",
+      "social": "Social",
+      "cognitive": "Cognitivo",
+      "other": "Outro"
+    },
+    "empty": {
+      "title": "O primeiro marco está chegando!",
+      "description": "Desde o primeiro sorriso aos primeiros passos. Registre aqui esses momentos inesquecíveis.",
+      "cta": "Registrar agora"
+    },
+    "form": {
+      "createTitle": "Novo Marco",
+      "createSubtitle": "Guarde para sempre as conquistas.",
+      "categoryLabel": "Categoria",
+      "titleLabel": "O que aconteceu?",
+      "titlePlaceholder": "Ex: Primeiros passos sozinho",
+      "achievedAtLabel": "Data",
+      "achievedAtFuture": "A data não pode ser no futuro.",
+      "achievedAtBeforeBirth": "A data não pode ser antes do nascimento.",
+      "descriptionLabel": "Detalhes",
+      "descriptionPlaceholder": "Conte como foi esse momento especial...",
+      "photoUrlLabel": "Foto (URL)",
+      "photoUrlPlaceholder": "https://...",
+      "photoUrlHint": "Upload de arquivo ainda não é suportado — cole o link de uma foto já hospedada.",
+      "submit": "Salvar Marco",
+      "genericError": "Não foi possível salvar o marco. Tente novamente."
+    }
+  },
+  "notifications": {
+    "title": "Notificações",
+    "bellAria_one": "Notificações, {{count}} não lida",
+    "bellAria_other": "Notificações, {{count}} não lidas",
+    "empty": "Nenhuma notificação por aqui."
+  },
+  "validation": {
+    "required": "Este campo é obrigatório.",
+    "tooShort": "Valor muito curto.",
+    "tooLong": "Valor muito longo.",
+    "invalidFormat": "Formato inválido.",
+    "invalid": "Valor inválido."
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "common": {
+    "appName": "Meu Neném",
+    "loading": "Loading...",
+    "myAccount": "My account",
+    "comingSoonMessage": "This section is under construction.",
+    "back": "Back",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "close": "Close"
+  },
+  "nav": {
+    "dashboard": "Overview",
+    "vaccines": "Vaccines",
+    "appointments": "Appointments",
+    "milestones": "Milestones",
+    "logout": "Log out"
+  },
+  "auth": {
+    "login": {
+      "brandTagline": "The complete dashboard for your family's health and memories.",
+      "copyright": "© {{year}} Meu Neném App",
+      "title": "Welcome back",
+      "subtitle": "Sign in to your account to get started.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Your email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Your password",
+      "submit": "Sign In",
+      "invalidCredentials": "Invalid email or password.",
+      "genericError": "Could not sign in. Please try again.",
+      "noAccount": "Don't have an account yet?",
+      "registerLink": "Sign up"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Sign up to start tracking your family.",
+      "nameLabel": "Full name",
+      "namePlaceholder": "Your full name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Your email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Create a password (min. 8 characters)",
+      "submit": "Create Account",
+      "emailTaken": "This email is already registered.",
+      "genericError": "Could not create your account. Please try again.",
+      "successToast": "Account created successfully! Sign in to continue.",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in"
+    }
+  },
+  "babies": {
+    "yourChildren": "Your Children",
+    "addChild": "Add Child",
+    "monthsOld_one": "{{count}} month old",
+    "monthsOld_other": "{{count}} months old",
+    "dashboard": {
+      "eyebrowEmpty": "Your family's dashboard",
+      "headingEmptyLine1": "Your children's development,",
+      "headingEmptyHighlight": "organized in one place.",
+      "subtitleEmpty": "Take full control of immunizations and medical history, and treasure every important moment. All centralized to make your routine easier.",
+      "featureVaccinesTitle": "Immunizations On Track",
+      "featureVaccinesDesc": "A smart digital record to track every child's vaccines.",
+      "featureAppointmentsTitle": "Appointments & Routine",
+      "featureAppointmentsDesc": "Schedule and keep the history of pediatrician and specialist visits.",
+      "featureMilestonesTitle": "Timeline",
+      "featureMilestonesDesc": "Create a visual diary recording every important growth milestone.",
+      "ctaAddFirstChild": "Get Started: Add a Child",
+      "eyebrow": "OVERVIEW",
+      "heading": "Family Dashboard",
+      "subtitle": "Consolidated tracking.",
+      "statVaccinesLabel": "Vaccines",
+      "statAppointmentsLabel": "Appointments",
+      "statMilestonesLabel": "Milestones",
+      "statComingSoon": "Coming soon"
+    },
+    "form": {
+      "title": "New Profile",
+      "subtitle": "Enter the child's information to start tracking.",
+      "nameLabel": "Child's Name",
+      "namePlaceholder": "E.g. Miguel",
+      "birthDateLabel": "Date of Birth",
+      "birthDateFuture": "The date of birth cannot be in the future.",
+      "genderLabel": "Sex",
+      "genderMale": "Boy",
+      "genderFemale": "Girl",
+      "bloodTypeLabel": "Blood Type",
+      "bloodTypeNotInformed": "Not informed",
+      "allergiesLabel": "Allergies",
+      "allergiesPlaceholder": "Type and press Enter",
+      "allergiesRemoveAria": "Remove {{value}}",
+      "avatarUrlLabel": "Photo (URL)",
+      "avatarUrlPlaceholder": "https://...",
+      "submit": "Create Profile",
+      "genericError": "Could not save. Please try again."
+    }
+  },
+  "vaccines": {
+    "eyebrow": "IMMUNIZATION",
+    "title": "Vaccination Record",
+    "genericError": "Could not load the vaccine calendar.",
+    "ageGroupLabel_one": "{{count}} month",
+    "ageGroupLabel_other": "{{count}} months",
+    "doseLabel": "Dose {{count}}",
+    "status": {
+      "pending": "Pending",
+      "delayed": "Delayed",
+      "applied": "Applied on {{date}}"
+    },
+    "empty": {
+      "title": "No vaccines found",
+      "description": "This child's vaccination calendar hasn't been generated yet."
+    },
+    "apply": {
+      "title": "Apply Vaccine",
+      "dateLabel": "Application Date",
+      "notesLabel": "Notes (Optional)",
+      "submit": "Save Record",
+      "genericError": "Could not record the vaccine. Please try again."
+    }
+  },
+  "appointments": {
+    "eyebrow": "DOCTORS",
+    "title": "Appointments",
+    "scheduleAction": "Schedule Appointment",
+    "dateLabel": "Date",
+    "genericError": "Could not load appointments.",
+    "status": {
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "empty": {
+      "title": "No appointments scheduled",
+      "description": "Organize visits to the pediatrician and specialists.",
+      "cta": "Schedule the first one"
+    },
+    "reschedule": {
+      "action": "Reschedule",
+      "title": "Reschedule Appointment",
+      "submit": "Save Changes"
+    },
+    "detail": {
+      "action": "View Details",
+      "title": "Appointment Details",
+      "notesLabel": "Notes",
+      "saveNotes": "Save Notes",
+      "markCompleted": "Mark as Completed",
+      "cancelAppointment": "Cancel Appointment",
+      "genericError": "Could not update the appointment."
+    },
+    "form": {
+      "createTitle": "Schedule Appointment",
+      "createSubtitle": "Register a new follow-up.",
+      "doctorNameLabel": "Professional's Name",
+      "doctorNamePlaceholder": "E.g. Dr. Ana Silva",
+      "locationLabel": "Location (Optional)",
+      "locationPlaceholder": "E.g. Pediatric Clinic",
+      "dateLabel": "Date",
+      "timeLabel": "Time",
+      "reasonLabel": "Reason (Optional)",
+      "reasonPlaceholder": "E.g. Routine check-up",
+      "scheduledAtPast": "The date and time cannot be in the past.",
+      "submit": "Save Appointment",
+      "genericError": "Could not save the appointment. Please try again."
+    }
+  },
+  "milestones": {
+    "eyebrow": "MEMORIES",
+    "title": "Developmental Milestones",
+    "action": "Record Milestone",
+    "genericError": "Could not load milestones.",
+    "category": {
+      "motor": "Motor",
+      "language": "Language",
+      "social": "Social",
+      "cognitive": "Cognitive",
+      "other": "Other"
+    },
+    "empty": {
+      "title": "The first milestone is coming!",
+      "description": "From the first smile to the first steps. Record these unforgettable moments here.",
+      "cta": "Record now"
+    },
+    "form": {
+      "createTitle": "New Milestone",
+      "createSubtitle": "Keep these achievements forever.",
+      "categoryLabel": "Category",
+      "titleLabel": "What happened?",
+      "titlePlaceholder": "E.g. First steps alone",
+      "achievedAtLabel": "Date",
+      "achievedAtFuture": "The date cannot be in the future.",
+      "achievedAtBeforeBirth": "The date cannot be before birth.",
+      "descriptionLabel": "Details",
+      "descriptionPlaceholder": "Tell us about this special moment...",
+      "photoUrlLabel": "Photo (URL)",
+      "photoUrlPlaceholder": "https://...",
+      "photoUrlHint": "File upload isn't supported yet — paste the link to an already-hosted photo.",
+      "submit": "Save Milestone",
+      "genericError": "Could not save the milestone. Please try again."
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "bellAria_one": "Notifications, {{count}} unread",
+    "bellAria_other": "Notifications, {{count}} unread",
+    "empty": "No notifications yet."
+  },
+  "validation": {
+    "required": "This field is required.",
+    "tooShort": "Value is too short.",
+    "tooLong": "Value is too long.",
+    "invalidFormat": "Invalid format.",
+    "invalid": "Invalid value."
+  }
+}

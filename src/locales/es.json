@@ -1,0 +1,216 @@
+{
+  "common": {
+    "appName": "Meu Neném",
+    "loading": "Cargando...",
+    "myAccount": "Mi cuenta",
+    "comingSoonMessage": "Esta sección está en construcción.",
+    "back": "Volver",
+    "cancel": "Cancelar",
+    "saving": "Guardando...",
+    "close": "Cerrar"
+  },
+  "nav": {
+    "dashboard": "Resumen",
+    "vaccines": "Vacunas",
+    "appointments": "Consultas",
+    "milestones": "Hitos",
+    "logout": "Cerrar sesión"
+  },
+  "auth": {
+    "login": {
+      "brandTagline": "El panel completo para la salud y los recuerdos de tu familia.",
+      "copyright": "© {{year}} Meu Neném App",
+      "title": "Bienvenido(a) de nuevo",
+      "subtitle": "Accede a tu cuenta para comenzar.",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "Tu correo electrónico",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Tu contraseña",
+      "submit": "Iniciar sesión",
+      "invalidCredentials": "Correo electrónico o contraseña inválidos.",
+      "genericError": "No se pudo iniciar sesión. Inténtalo de nuevo.",
+      "noAccount": "¿Aún no tienes una cuenta?",
+      "registerLink": "Regístrate"
+    },
+    "register": {
+      "title": "Crear Cuenta",
+      "subtitle": "Regístrate para comenzar a seguir a tu familia.",
+      "nameLabel": "Nombre completo",
+      "namePlaceholder": "Tu nombre completo",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "Tu correo electrónico",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Crea una contraseña (mín. 8 caracteres)",
+      "submit": "Crear Cuenta",
+      "emailTaken": "Este correo electrónico ya está registrado.",
+      "genericError": "No se pudo crear tu cuenta. Inténtalo de nuevo.",
+      "successToast": "¡Cuenta creada con éxito! Inicia sesión para continuar.",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "loginLink": "Iniciar sesión"
+    }
+  },
+  "babies": {
+    "yourChildren": "Tus Hijos",
+    "addChild": "Agregar Hijo",
+    "monthsOld_one": "{{count}} mes",
+    "monthsOld_other": "{{count}} meses",
+    "dashboard": {
+      "eyebrowEmpty": "El panel de tu familia",
+      "headingEmptyLine1": "El desarrollo de tus hijos,",
+      "headingEmptyHighlight": "organizado en un solo lugar.",
+      "subtitleEmpty": "Ten control total sobre la inmunización, el historial médico y guarda cada momento importante. Todo centralizado para facilitar tu rutina.",
+      "featureVaccinesTitle": "Inmunización al Día",
+      "featureVaccinesDesc": "Cartilla digital inteligente para seguir las vacunas de todos los hijos.",
+      "featureAppointmentsTitle": "Consultas y Rutina",
+      "featureAppointmentsDesc": "Agenda y guarda el historial de las visitas al pediatra y especialistas.",
+      "featureMilestonesTitle": "Línea de Tiempo",
+      "featureMilestonesDesc": "Crea un diario visual registrando cada hito importante del crecimiento.",
+      "ctaAddFirstChild": "Comenzar Ahora: Agregar Hijo",
+      "eyebrow": "RESUMEN",
+      "heading": "Panel de la Familia",
+      "subtitle": "Seguimiento consolidado.",
+      "statVaccinesLabel": "Vacunas",
+      "statAppointmentsLabel": "Consultas",
+      "statMilestonesLabel": "Hitos",
+      "statComingSoon": "Próximamente"
+    },
+    "form": {
+      "title": "Nuevo Perfil",
+      "subtitle": "Ingresa la información del niño para comenzar el seguimiento.",
+      "nameLabel": "Nombre del Niño",
+      "namePlaceholder": "Ej: Miguel",
+      "birthDateLabel": "Fecha de Nacimiento",
+      "birthDateFuture": "La fecha de nacimiento no puede ser en el futuro.",
+      "genderLabel": "Sexo",
+      "genderMale": "Niño",
+      "genderFemale": "Niña",
+      "bloodTypeLabel": "Tipo de Sangre",
+      "bloodTypeNotInformed": "No informado",
+      "allergiesLabel": "Alergias",
+      "allergiesPlaceholder": "Escribe y presiona Enter",
+      "allergiesRemoveAria": "Eliminar {{value}}",
+      "avatarUrlLabel": "Foto (URL)",
+      "avatarUrlPlaceholder": "https://...",
+      "submit": "Crear Perfil",
+      "genericError": "No se pudo guardar. Inténtalo de nuevo."
+    }
+  },
+  "vaccines": {
+    "eyebrow": "INMUNIZACIÓN",
+    "title": "Cartilla de Vacunación",
+    "genericError": "No se pudo cargar el calendario de vacunas.",
+    "ageGroupLabel_one": "{{count}} mes",
+    "ageGroupLabel_other": "{{count}} meses",
+    "doseLabel": "{{count}}ª dosis",
+    "status": {
+      "pending": "Pendiente",
+      "delayed": "Atrasada",
+      "applied": "Aplicada el {{date}}"
+    },
+    "empty": {
+      "title": "No se encontraron vacunas",
+      "description": "El calendario de vacunación de este niño aún no ha sido generado."
+    },
+    "apply": {
+      "title": "Aplicar Vacuna",
+      "dateLabel": "Fecha de Aplicación",
+      "notesLabel": "Notas (Opcional)",
+      "submit": "Guardar Registro",
+      "genericError": "No se pudo registrar la vacuna. Inténtalo de nuevo."
+    }
+  },
+  "appointments": {
+    "eyebrow": "MÉDICOS",
+    "title": "Consultas",
+    "scheduleAction": "Agendar Consulta",
+    "dateLabel": "Fecha",
+    "genericError": "No se pudieron cargar las consultas.",
+    "status": {
+      "scheduled": "Agendada",
+      "completed": "Completada",
+      "cancelled": "Cancelada"
+    },
+    "empty": {
+      "title": "Sin consultas agendadas",
+      "description": "Organiza las visitas al pediatra y especialistas.",
+      "cta": "Agendar la primera"
+    },
+    "reschedule": {
+      "action": "Reprogramar",
+      "title": "Reprogramar Consulta",
+      "submit": "Guardar Cambios"
+    },
+    "detail": {
+      "action": "Ver Detalles",
+      "title": "Detalles de la Consulta",
+      "notesLabel": "Notas",
+      "saveNotes": "Guardar Notas",
+      "markCompleted": "Marcar como Completada",
+      "cancelAppointment": "Cancelar Consulta",
+      "genericError": "No se pudo actualizar la consulta."
+    },
+    "form": {
+      "createTitle": "Agendar Consulta",
+      "createSubtitle": "Registra un nuevo seguimiento.",
+      "doctorNameLabel": "Nombre del Profesional",
+      "doctorNamePlaceholder": "Ej: Dra. Ana Silva",
+      "locationLabel": "Lugar (Opcional)",
+      "locationPlaceholder": "Ej: Clínica Pediátrica",
+      "dateLabel": "Fecha",
+      "timeLabel": "Hora",
+      "reasonLabel": "Motivo (Opcional)",
+      "reasonPlaceholder": "Ej: Consulta de rutina",
+      "scheduledAtPast": "La fecha y hora no pueden estar en el pasado.",
+      "submit": "Guardar Consulta",
+      "genericError": "No se pudo guardar la consulta. Inténtalo de nuevo."
+    }
+  },
+  "milestones": {
+    "eyebrow": "RECUERDOS",
+    "title": "Hitos de Desarrollo",
+    "action": "Registrar Hito",
+    "genericError": "No se pudieron cargar los hitos.",
+    "category": {
+      "motor": "Motor",
+      "language": "Lenguaje",
+      "social": "Social",
+      "cognitive": "Cognitivo",
+      "other": "Otro"
+    },
+    "empty": {
+      "title": "¡El primer hito está por llegar!",
+      "description": "Desde la primera sonrisa hasta los primeros pasos. Registra aquí esos momentos inolvidables.",
+      "cta": "Registrar ahora"
+    },
+    "form": {
+      "createTitle": "Nuevo Hito",
+      "createSubtitle": "Guarda estos logros para siempre.",
+      "categoryLabel": "Categoría",
+      "titleLabel": "¿Qué pasó?",
+      "titlePlaceholder": "Ej: Primeros pasos solo",
+      "achievedAtLabel": "Fecha",
+      "achievedAtFuture": "La fecha no puede ser en el futuro.",
+      "achievedAtBeforeBirth": "La fecha no puede ser anterior al nacimiento.",
+      "descriptionLabel": "Detalles",
+      "descriptionPlaceholder": "Cuéntanos cómo fue ese momento especial...",
+      "photoUrlLabel": "Foto (URL)",
+      "photoUrlPlaceholder": "https://...",
+      "photoUrlHint": "La subida de archivos aún no es compatible — pega el enlace de una foto ya alojada.",
+      "submit": "Guardar Hito",
+      "genericError": "No se pudo guardar el hito. Inténtalo de nuevo."
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "bellAria_one": "Notificaciones, {{count}} sin leer",
+    "bellAria_other": "Notificaciones, {{count}} sin leer",
+    "empty": "Aún no hay notificaciones."
+  },
+  "validation": {
+    "required": "Este campo es obligatorio.",
+    "tooShort": "El valor es demasiado corto.",
+    "tooLong": "El valor es demasiado largo.",
+    "invalidFormat": "Formato inválido.",
+    "invalid": "Valor inválido."
+  }
+}
