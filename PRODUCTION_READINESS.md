@@ -27,7 +27,7 @@ Checklist vivo do que falta antes de um lançamento real. Gerado após a impleme
 
 ## 🟢 Polish (não bloqueia nada)
 
-- [ ] Skeletons em vez de spinner genérico
+- [x] Skeletons em vez de spinner genérico — `VaccineCalendarSkeleton`, `AppointmentsSkeleton`, `MilestoneTimelineSkeleton` substituem o spinner nas 3 listas (Vacinas/Consultas/Marcos); o spinner de boot do `ProtectedLayout` ficou como está de propósito (é checagem de sessão, não lista de conteúdo)
 - [ ] Upload de foto real pra marcos (hoje só URL colada; backend também não tem storage)
 - [ ] Imprimir/exportar carteira de vacinação
 - [ ] PWA / instalar na tela inicial
