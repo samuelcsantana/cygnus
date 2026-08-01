@@ -21,9 +21,9 @@ Checklist vivo do que falta antes de um lançamento real. Gerado após a impleme
 - [x] Testes E2E (Playwright) das jornadas críticas — `e2e/` cobre as 4 jornadas citadas no CLAUDE.md Seção 10 (registrar+login, adicionar bebê, registrar vacina aplicada, agendar consulta), rodando contra o stack Docker real dos dois repos (`npm run test:e2e`, ver `e2e/README.md`). **Não está no CI** ainda — exigiria checkout do `cygnus-api` (repo separado/privado) + Postgres/Redis no runner; fica como próximo passo se quiser automatizar
 - [x] Error Boundary — `src/app/ErrorBoundary.tsx` + `ErrorFallback.tsx` envolvendo o router em `App.tsx`
 - [ ] Avatar Dicebear depende de serviço externo não controlado (`api.dicebear.com`)
-- [ ] Bundle único ~721KB sem code-splitting (Vite já avisa no build)
-- [ ] Seleção de bebê não persiste entre sessões (Zustand sem `persist`)
-- [ ] Página 404 real (hoje redireciona silenciosamente pra `/`)
+- [x] Bundle único ~721KB sem code-splitting — rotas convertidas pra `lazy` do React Router (`router.tsx`); chunk principal caiu pra ~272KB (gzip 85KB), resto carrega sob demanda. Validado com a suíte Playwright completa contra o build real
+- [x] Seleção de bebê não persiste entre sessões — `selectedBaby.store.ts` agora usa `zustand/middleware persist`; limpo no logout pra não vazar entre contas no mesmo dispositivo
+- [x] Página 404 real — `NotFoundRoute` (`src/app/routes/`) substitui o redirect silencioso no catch-all do router
 
 ## 🟢 Polish (não bloqueia nada)
 
