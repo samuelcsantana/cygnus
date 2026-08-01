@@ -20,7 +20,7 @@ Checklist vivo do que falta antes de um lançamento real. Gerado após a impleme
 - [x] Seletor de idioma na UI — `LanguageSwitcher` (`src/shared/components/`) no header do app (mobile e desktop) e na tela de login/registro; `i18n.changeLanguage()` já persiste em `localStorage` (`i18nextLng`) via `i18next-browser-languagedetector`
 - [x] Testes E2E (Playwright) das jornadas críticas — `e2e/` cobre as 4 jornadas citadas no CLAUDE.md Seção 10 (registrar+login, adicionar bebê, registrar vacina aplicada, agendar consulta), rodando contra o stack Docker real dos dois repos (`npm run test:e2e`, ver `e2e/README.md`). **Não está no CI** ainda — exigiria checkout do `cygnus-api` (repo separado/privado) + Postgres/Redis no runner; fica como próximo passo se quiser automatizar
 - [x] Error Boundary — `src/app/ErrorBoundary.tsx` + `ErrorFallback.tsx` envolvendo o router em `App.tsx`
-- [ ] Avatar Dicebear depende de serviço externo não controlado (`api.dicebear.com`)
+- [x] Avatar Dicebear depende de serviço externo não controlado — trocado `https://api.dicebear.com/...` por geração local com `@dicebear/core` + `@dicebear/collection` (`shared/utils/defaultAvatar.ts`), mesmo estilo "avataaars", zero chamada de rede em produção
 - [x] Bundle único ~721KB sem code-splitting — rotas convertidas pra `lazy` do React Router (`router.tsx`); chunk principal caiu pra ~272KB (gzip 85KB), resto carrega sob demanda. Validado com a suíte Playwright completa contra o build real
 - [x] Seleção de bebê não persiste entre sessões — `selectedBaby.store.ts` agora usa `zustand/middleware persist`; limpo no logout pra não vazar entre contas no mesmo dispositivo
 - [x] Página 404 real — `NotFoundRoute` (`src/app/routes/`) substitui o redirect silencioso no catch-all do router
