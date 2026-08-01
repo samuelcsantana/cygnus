@@ -1,8 +1,10 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ageInMonths } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { PencilIcon } from '@/shared/icons/pencil-icon'
+import { defaultAvatarDataUri } from '@/shared/utils/defaultAvatar'
 
 import type { Baby } from '../api/babies.schemas'
 
@@ -15,7 +17,8 @@ interface BabyCardProps {
 
 export function BabyCard({ baby, selected, onSelect, onEdit }: BabyCardProps) {
   const { t } = useTranslation()
-  const avatarUrl = baby.avatarUrl ?? `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(baby.name)}`
+  const generatedAvatar = useMemo(() => defaultAvatarDataUri(baby.name), [baby.name])
+  const avatarUrl = baby.avatarUrl ?? generatedAvatar
   const months = ageInMonths(baby.birthDate)
 
   const content = (
