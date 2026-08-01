@@ -8,6 +8,7 @@ import { SyringeIcon } from '@/shared/icons/syringe-icon'
 
 import { useVaccineCalendar } from '../api/vaccines.hooks'
 import { VaccineCalendarList } from '../components/VaccineCalendarList'
+import { VaccineCalendarSkeleton } from '../components/VaccineCalendarSkeleton'
 
 export function VaccinesRoute() {
   const { t } = useTranslation()
@@ -33,9 +34,7 @@ export function VaccinesRoute() {
       </div>
 
       {calendar.isPending ? (
-        <div className="flex justify-center py-16">
-          <div className="border-t-transparent h-8 w-8 animate-spin rounded-full border-2 border-primary" />
-        </div>
+        <VaccineCalendarSkeleton />
       ) : calendar.isError ? (
         <p className="py-16 text-center text-slate-500">{t('vaccines.genericError')}</p>
       ) : !hasAnyDose ? (

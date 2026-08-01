@@ -8,6 +8,7 @@ import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 
 import { useMilestones } from '../api/milestones.hooks'
 import { MilestoneTimeline } from '../components/MilestoneTimeline'
+import { MilestoneTimelineSkeleton } from '../components/MilestoneTimelineSkeleton'
 
 export function MilestonesRoute() {
   const { t } = useTranslation()
@@ -41,9 +42,7 @@ export function MilestonesRoute() {
       </div>
 
       {milestones.isPending ? (
-        <div className="flex justify-center py-16">
-          <div className="border-t-transparent h-8 w-8 animate-spin rounded-full border-2 border-primary" />
-        </div>
+        <MilestoneTimelineSkeleton />
       ) : milestones.isError ? (
         <p className="py-16 text-center text-slate-500">{t('milestones.genericError')}</p>
       ) : items.length === 0 ? (

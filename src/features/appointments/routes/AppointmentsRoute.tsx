@@ -12,6 +12,7 @@ import { useAppointments } from '../api/appointments.hooks'
 import type { Appointment } from '../api/appointments.schemas'
 import { AppointmentCard } from '../components/AppointmentCard'
 import { AppointmentDetailDialog } from '../components/AppointmentDetailDialog'
+import { AppointmentsSkeleton } from '../components/AppointmentsSkeleton'
 import { RescheduleDialog } from '../components/RescheduleDialog'
 
 export function AppointmentsRoute() {
@@ -49,9 +50,7 @@ export function AppointmentsRoute() {
       </div>
 
       {appointments.isPending ? (
-        <div className="flex justify-center py-16">
-          <div className="border-t-transparent h-8 w-8 animate-spin rounded-full border-2 border-primary" />
-        </div>
+        <AppointmentsSkeleton />
       ) : appointments.isError ? (
         <p className="py-16 text-center text-slate-500">{t('appointments.genericError')}</p>
       ) : items.length === 0 ? (
