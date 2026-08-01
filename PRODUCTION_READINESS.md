@@ -32,7 +32,7 @@ Checklist vivo do que falta antes de um lançamento real. Gerado após a impleme
 - [ ] Imprimir/exportar carteira de vacinação
 - [ ] PWA / instalar na tela inicial
 - [ ] Busca/filtro e paginação nas listas
-- [ ] Auditoria automatizada de acessibilidade (axe/jest-axe)
+- [x] Auditoria automatizada de acessibilidade — `@axe-core/playwright` roda WCAG 2 A/AA em login, registro e nas páginas autenticadas principais (`e2e/accessibility.spec.ts`). Achou e corrigiu 2 problemas reais e sistêmicos de contraste: `text-slate-400` usado como texto de verdade (rótulos, dicas, timestamps) em vez de só ícone, e `amber-500` (texto/fundo) na tela de Marcos — ambos ficavam abaixo de 4.5:1. **Detalhe de tooling:** a animação `animate-fade-in-up` precisa ser desabilitada antes do scan (`page.addStyleTag`), senão o axe captura o DOM no meio da transição de opacidade e reporta falsos positivos em cascata
 - [ ] Analytics de uso
 
 ## Ordem de execução combinada
