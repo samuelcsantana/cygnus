@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { createBaby, fetchBabies, updateBaby } from './babies.api'
+import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
+
+import { createBaby, deleteBaby, fetchBabies, updateBaby } from './babies.api'
 import type { Baby, BabyFormInput } from './babies.schemas'
 
 export const babiesQueryKey = ['babies'] as const
@@ -36,6 +38,25 @@ export function useUpdateBaby(babyId: string) {
       queryClient.setQueryData<Baby[]>(babiesQueryKey, (prev) =>
         prev?.map((baby) => (baby.id === updated.id ? updated : baby)),
       )
+    },
+  })
+}
+
+export function useDeleteBaby() {
+  const queryClient = useQueryClient()
+  const selectedBabyId = useSelectedBabyStore((state) => state.selectedBabyId)
+  const setSelectedBabyId = useSelectedBabyStore((state) => state.setSelectedBabyId)
+
+  return useMutation({
+    mutationFn: (babyId: string) => deleteBaby(babyId),
+    onSuccess: (_data, deletedBabyId) => {
+      queryClient.setQueryData<Baby[]>(babiesQueryKey, (prev) =>
+        prev?.filter((baby) => baby.id !== deletedBabyId),
+      )
+
+      if (selectedBabyId === deletedBabyId) {
+        setSelectedBabyId(null)
+      }
     },
   })
 }

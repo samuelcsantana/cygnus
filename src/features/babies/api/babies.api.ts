@@ -37,3 +37,7 @@ export async function updateBaby(babyId: string, input: BabyFormInput): Promise<
   const response = await httpClient.patch<unknown>(`/babies/${babyId}`, body)
   return babySchema.parse(response)
 }
+
+export async function deleteBaby(babyId: string): Promise<void> {
+  await httpClient.delete<void>(`/babies/${babyId}`)
+}

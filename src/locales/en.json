@@ -99,6 +99,14 @@
       "action": "Edit {{name}}'s profile",
       "title": "Edit Profile",
       "submit": "Save Changes"
+    },
+    "delete": {
+      "action": "Delete {{name}}'s profile",
+      "confirmTitle": "Delete profile?",
+      "confirmDescription": "This will permanently delete {{name}}'s profile, including recorded vaccines, appointments and milestones. This action cannot be undone.",
+      "confirmDismiss": "Cancel",
+      "confirmAction": "Delete",
+      "genericError": "Could not delete the profile. Please try again."
     }
   },
   "vaccines": {

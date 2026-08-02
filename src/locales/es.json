@@ -99,6 +99,14 @@
       "action": "Editar perfil de {{name}}",
       "title": "Editar Perfil",
       "submit": "Guardar Cambios"
+    },
+    "delete": {
+      "action": "Eliminar perfil de {{name}}",
+      "confirmTitle": "¿Eliminar perfil?",
+      "confirmDescription": "Esto eliminará permanentemente el perfil de {{name}}, incluyendo vacunas, consultas e hitos registrados. Esta acción no se puede deshacer.",
+      "confirmDismiss": "Cancelar",
+      "confirmAction": "Eliminar",
+      "genericError": "No se pudo eliminar el perfil. Inténtalo de nuevo."
     }
   },
   "vaccines": {
