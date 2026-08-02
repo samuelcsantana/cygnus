@@ -9,7 +9,7 @@ export function AppointmentStatusBadge({ status }: { status: AppointmentStatus }
 
   if (status === 'COMPLETED') {
     return (
-      <Badge variant="outline" className="border-green-100 bg-green-50 text-green-700">
+      <Badge variant="outline" className="border-teal-100 bg-teal-50 text-teal-700">
         {t('appointments.status.completed')}
       </Badge>
     )
@@ -17,14 +17,14 @@ export function AppointmentStatusBadge({ status }: { status: AppointmentStatus }
 
   if (status === 'CANCELLED') {
     return (
-      <Badge variant="outline" className="border-slate-200 bg-slate-100 text-slate-600">
+      <Badge variant="outline" className="border-slate-200 bg-slate-100 text-ink-muted">
         {t('appointments.status.cancelled')}
       </Badge>
     )
   }
 
   return (
-    <Badge variant="outline" className="border-indigo-100 bg-indigo-50 text-indigo-700">
+    <Badge variant="outline" className="border-violet-100 bg-violet-50 text-violet-700">
       {t('appointments.status.scheduled')}
     </Badge>
   )

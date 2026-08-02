@@ -21,7 +21,7 @@ export function MilestoneTimeline({ babyId, birthDate, items }: MilestoneTimelin
 
   return (
     <div className="relative ml-4 max-w-3xl sm:ml-8">
-      <div className="absolute top-6 bottom-6 left-6 w-1 rounded-full bg-gradient-to-b from-amber-200 via-amber-400 to-amber-200 opacity-50" />
+      <div className="absolute top-6 bottom-6 left-6 w-0.5 rounded-full bg-slate-200" />
 
       <div className="space-y-10">
         {items.map((milestone) => {
@@ -42,7 +42,7 @@ export function MilestoneTimeline({ babyId, birthDate, items }: MilestoneTimelin
                   type="button"
                   onClick={() => setEditTarget(milestone)}
                   aria-label={t('milestones.edit.action', { title: milestone.title })}
-                  className="absolute top-6 right-6 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                  className="text-ink-faint hover:text-ink absolute top-6 right-6 rounded-lg p-1.5 transition-colors hover:bg-slate-100"
                 >
                   <PencilIcon className="h-4 w-4" />
                 </button>
@@ -55,9 +55,9 @@ export function MilestoneTimeline({ babyId, birthDate, items }: MilestoneTimelin
                     {t(`milestones.category.${milestone.category.toLowerCase()}`)}
                   </span>
                 </div>
-                <h3 className="mb-2 text-2xl font-bold text-slate-900">{milestone.title}</h3>
+                <h3 className="font-display mb-2 text-2xl font-bold text-ink">{milestone.title}</h3>
                 {milestone.description && (
-                  <p className="text-base leading-relaxed font-medium text-slate-600">{milestone.description}</p>
+                  <p className="text-ink-muted text-base leading-relaxed font-medium">{milestone.description}</p>
                 )}
               </div>
             </div>

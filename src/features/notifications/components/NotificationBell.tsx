@@ -20,7 +20,7 @@ export function NotificationBell() {
         <button
           type="button"
           aria-label={t('notifications.bellAria', { count: unreadCount })}
-          className="hover:text-primary relative rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-50"
+          className="hover:text-primary relative rounded-full p-2 text-ink-faint transition-colors hover:bg-slate-50"
         >
           <BellIcon className="h-6 w-6" />
           {unreadCount > 0 && (
@@ -32,7 +32,7 @@ export function NotificationBell() {
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 p-0 sm:w-96">
         <div className="border-b border-slate-100 px-4 py-3">
-          <p className="text-sm font-bold text-slate-900">{t('notifications.title')}</p>
+          <p className="text-sm font-bold text-ink">{t('notifications.title')}</p>
         </div>
         <NotificationsPanel notifications={items} onMarkRead={(id) => markRead.mutate(id)} />
       </PopoverContent>

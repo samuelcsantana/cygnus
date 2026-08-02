@@ -59,7 +59,7 @@ export function AppointmentDetailDialog({ babyId, appointment, onOpenChange }: A
         {appointment && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <p className="font-bold text-slate-900">{appointment.doctorName}</p>
+              <p className="font-bold text-ink">{appointment.doctorName}</p>
               <AppointmentStatusBadge status={appointment.status} />
             </div>
 
@@ -122,7 +122,7 @@ export function AppointmentDetailDialog({ babyId, appointment, onOpenChange }: A
                     type="button"
                     onClick={() => handleSetStatus('COMPLETED')}
                     disabled={updateAppointment.isPending}
-                    className="bg-indigo-600 text-white hover:bg-indigo-700"
+                    className="bg-violet-600 text-white hover:bg-violet-700"
                   >
                     {t('appointments.detail.markCompleted')}
                   </Button>

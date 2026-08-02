@@ -21,7 +21,7 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   return (
     <Select value={i18n.resolvedLanguage} onValueChange={(value) => void i18n.changeLanguage(value)}>
       <SelectTrigger aria-label={t('common.languageSwitcherLabel')} className={className} size="sm">
-        <GlobeIcon className="h-4 w-4 text-slate-400" />
+        <GlobeIcon className="h-4 w-4 text-ink-faint" />
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

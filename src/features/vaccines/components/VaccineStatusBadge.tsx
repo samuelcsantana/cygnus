@@ -10,7 +10,7 @@ export function VaccineStatusBadge({ item }: { item: VaccineItem }) {
 
   if (item.status === 'APPLIED') {
     return (
-      <Badge variant="outline" className="border-green-100 bg-green-50 text-green-700">
+      <Badge variant="outline" className="border-teal-100 bg-teal-50 text-teal-700">
         {t('vaccines.status.applied', {
           date: item.applicationDate ? formatDateDisplay(item.applicationDate, i18n.language) : '',
         })}

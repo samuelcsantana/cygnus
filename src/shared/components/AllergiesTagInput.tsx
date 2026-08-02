@@ -54,7 +54,7 @@ export function AllergiesTagInput({ id, value, onChange, placeholder, removeLabe
         onKeyDown={handleKeyDown}
         onBlur={commitDraft}
         placeholder={placeholder}
-        className="min-w-[120px] flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400"
+        className="min-w-[120px] flex-1 bg-transparent text-sm outline-none placeholder:text-ink-faint"
       />
     </div>
   )

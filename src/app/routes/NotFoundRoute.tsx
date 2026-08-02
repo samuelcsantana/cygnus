@@ -18,8 +18,8 @@ export function NotFoundRoute() {
         <LogoIcon className="h-8 w-8" />
       </div>
       <p className="text-primary text-sm font-semibold tracking-wider uppercase">{t('errors.notFound.eyebrow')}</p>
-      <h1 className="text-2xl font-bold text-slate-900">{t('errors.notFound.title')}</h1>
-      <p className="max-w-md text-slate-500">{t('errors.notFound.description')}</p>
+      <h1 className="text-2xl font-bold text-ink">{t('errors.notFound.title')}</h1>
+      <p className="max-w-md text-ink-muted">{t('errors.notFound.description')}</p>
       <Button asChild>
         <Link to="/">{t('errors.notFound.backHome')}</Link>
       </Button>

@@ -11,13 +11,13 @@ This is the React frontend for the `cygnus-api` backend. This document mirrors t
 - **Milestones** — developmental milestones (first smile, first steps, first words) as a timeline, optionally with photos and notes.
 - **Profile** — the parent's account and the list of babies they manage (a household can have more than one child).
 
-The brand and visual language is **"Meu Neném Soft-Modern"**: a warm, professional, "high-end pediatric" aesthetic — deep teal primary (`#0f5653`), soft neutral surfaces, generous rounded corners, Inter typeface. It deliberately avoids a clinical/cold medical-app feel.
+The brand and visual language is **"Meu Neném Soft-Modern"**: a warm, professional, "high-end pediatric" aesthetic — teal primary (`#2A9D8F`), soft neutral surfaces, generous rounded corners, Nunito for headings + Inter for body text. It deliberately avoids a clinical/cold medical-app feel.
 
 ### Design source of truth
 
-- **Figma:** https://www.figma.com/design/oNhnQnvnk4hui83MwonXln/Meu-Nen%C3%A9m-%E2%80%94-Telas — the one and only design reference; no local export of it survives in this repo (see below). Where a screen exists in two versions ("X" and "X (Redesign)"), **the Redesign version is canonical** unless a specific screen is explicitly called out otherwise (e.g. login has historically mixed the original left/brand panel with the redesign's right/form panel — check with the user if a screen has both and it isn't obvious which to use).
-- **The Figma MCP server is rate-limited** (Starter plan: 6 tool calls/month at time of writing). Treat every `get_design_context`/`get_screenshot`/`get_variable_defs` call as expensive: batch what you need for a screen into as few calls as possible, and pull the full color/typography/spacing token set **once**, early, and write it straight into the Tailwind `@theme` (Section 3) so it's never re-fetched. If the quota is already exhausted, ask the user for a screenshot/export of the specific screen instead of guessing.
-- There is no cached `DESIGN.md` or per-screen `code.html` in this repo (there was, in the previous Angular attempt — it was deleted). The first real task in a fresh session should be pulling the token set from Figma and re-establishing it as a committed source of truth (e.g. a `DESIGN.md` at the repo root) before implementing screens, so it doesn't have to be re-derived screen by screen.
+- **`DESIGN.md`** (repo root) — the committed token sheet (colors, typography, radii), sourced from `samuelcsantana/BabyCareAppDesign` (private GitHub repo, a Figma Make export). This is the **primary** reference as of the most recent redesign — read it first, and copy class names/hex values from it literally rather than re-deriving them.
+- **Figma:** https://www.figma.com/design/oNhnQnvnk4hui83MwonXln/Meu-Nen%C3%A9m-%E2%80%94-Telas — kept as the reference for any screen/detail `BabyCareAppDesign` doesn't cover. Where a screen exists in two versions ("X" and "X (Redesign)"), **the Redesign version is canonical** unless a specific screen is explicitly called out otherwise.
+- **The Figma MCP server is rate-limited** (Starter plan: 6 tool calls/month at time of writing). Treat every `get_design_context`/`get_screenshot`/`get_variable_defs` call as expensive: batch what you need for a screen into as few calls as possible. If the quota is already exhausted, ask the user for a screenshot/export of the specific screen instead of guessing.
 
 ### Lessons from the previous (Angular) attempt — read before implementing a screen
 
@@ -72,7 +72,7 @@ Apply feature-based, pragmatic Clean Architecture principles. Avoid over-enginee
 - **Tailwind CSS v4**, configured via `@theme` in the main CSS entry, with tokens (colors, font sizes with paired line-height/weight, radii) pulled from Figma once and committed — see Section 0. This lets classes copied from Figma's design-to-code output (`bg-primary`, `text-headline-lg`, `rounded-xl`, …) resolve correctly by just pasting them in.
 - **shadcn/ui** for interactive/complex primitives (dialog, dropdown menu, select, popover, calendar/date picker, tabs, toast). Add components with the CLI (`npx shadcn@latest add <component>`) — they're copied into `src/components/ui/` as editable source, **not** an opaque npm dependency. Customize the copied source directly to match the exact design tokens instead of fighting default shadcn styling with overrides.
 - Don't hand-roll accessible behavior (focus trap, roving tabindex, keyboard nav, ARIA wiring) that shadcn/Radix already solves — that was the whole point of picking it over hand-rolled Angular components.
-- Icons: **Material Symbols Outlined** (loaded as a webfont, same as the design exports use) so icon names copy directly from `code.html`/Figma without remapping. Don't introduce a second icon set.
+- Icons: a small hand-built SVG icon set in `src/shared/icons/` (one component per icon, sharing the `IconBase` wrapper in `icon-base.tsx`) — matches the reference's own inline-SVG icons. Don't introduce an icon font or a second icon library; add a new icon component instead.
 
 ## 4. Local Infrastructure & Environment Configuration
 - The app runs locally against `cygnus-api` at `http://localhost:3005` and is served on `http://localhost:4205` — set `server.port: 4205` in `vite.config.ts` — matching the backend's `CORS_ORIGIN` (see `cygnus-api/.env`).

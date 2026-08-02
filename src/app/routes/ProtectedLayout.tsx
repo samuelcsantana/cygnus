@@ -26,7 +26,7 @@ export function ProtectedLayout() {
     }
 
     return (
-      <div className="flex min-h-screen items-center justify-center p-8 text-center text-slate-500">
+      <div className="flex min-h-screen items-center justify-center p-8 text-center text-ink-muted">
         {currentUser.error.message}
       </div>
     )

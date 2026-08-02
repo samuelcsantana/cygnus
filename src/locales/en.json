@@ -15,6 +15,7 @@
     "vaccines": "Vaccines",
     "appointments": "Appointments",
     "milestones": "Milestones",
+    "notifications": "Notifications",
     "logout": "Log out"
   },
   "auth": {
@@ -70,10 +71,29 @@
       "eyebrow": "OVERVIEW",
       "heading": "Family Dashboard",
       "subtitle": "Consolidated tracking.",
-      "statVaccinesLabel": "Vaccines",
-      "statAppointmentsLabel": "Appointments",
-      "statMilestonesLabel": "Milestones",
-      "statComingSoon": "Coming soon"
+      "greetingMorning": "Good morning",
+      "greetingAfternoon": "Good afternoon",
+      "greetingEvening": "Good evening",
+      "greetingLine": "{{greeting}}, {{name}}! 👋",
+      "viewingProfile": "You're viewing {{name}}'s profile",
+      "overdueBanner_one": "{{count}} overdue vaccine",
+      "overdueBanner_other": "{{count}} overdue vaccines",
+      "overdueBannerSuffix": "for {{name}}. Schedule it as soon as possible.",
+      "viewVaccines": "View vaccines →",
+      "statVaccinesAppliedLabel": "Vaccines applied",
+      "statVaccinesAppliedSub_one": "{{count}} pending",
+      "statVaccinesAppliedSub_other": "{{count}} pending",
+      "statNextAppointmentLabel": "Next appointment",
+      "statNextAppointmentEmpty": "No appointment scheduled",
+      "statMilestonesLabel": "Milestones logged",
+      "statMilestonesSub": "developmental milestones",
+      "statLastAppointmentLabel": "Last appointment",
+      "latestMilestonesTitle": "Latest milestones ⭐",
+      "viewAllMilestones": "View all →",
+      "noMilestonesYet": "No milestones logged yet",
+      "vaccineCalendarTitle": "Vaccine calendar 💉",
+      "viewAllVaccines": "View all →",
+      "allVaccinesUpToDate": "All vaccines up to date! 🎉"
     },
     "form": {
       "title": "New Profile",
@@ -113,6 +133,11 @@
     "eyebrow": "IMMUNIZATION",
     "title": "Vaccination Record",
     "genericError": "Could not load the vaccine calendar.",
+    "progressLabel": "Calendar progress",
+    "filterAll": "All",
+    "filterApplied": "Applied ({{count}})",
+    "filterPending": "Pending ({{count}})",
+    "filterDelayed": "Delayed ({{count}})",
     "ageGroupLabel_one": "{{count}} month",
     "ageGroupLabel_other": "{{count}} months",
     "doseLabel": "Dose {{count}}",
@@ -188,6 +213,7 @@
     "title": "Developmental Milestones",
     "action": "Record Milestone",
     "genericError": "Could not load milestones.",
+    "filterAll": "All",
     "category": {
       "motor": "Motor",
       "language": "Language",
@@ -224,9 +250,14 @@
     }
   },
   "notifications": {
+    "eyebrow": "ALERTS",
     "title": "Notifications",
     "bellAria_one": "Notifications, {{count}} unread",
     "bellAria_other": "Notifications, {{count}} unread",
+    "unreadCount_one": "{{count}} unread",
+    "unreadCount_other": "{{count}} unread",
+    "markAllRead": "Mark all as read",
+    "genericError": "Could not load notifications.",
     "empty": "No notifications yet."
   },
   "errors": {

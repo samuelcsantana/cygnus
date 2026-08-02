@@ -34,15 +34,15 @@ export function AppointmentsRoute() {
     <div className="animate-fade-in-up">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="mb-1 text-sm font-semibold tracking-wider text-indigo-600 uppercase">
+          <p className="mb-1 text-sm font-semibold tracking-wider text-violet-600 uppercase">
             {t('appointments.eyebrow')}
           </p>
-          <h2 className="text-3xl font-extrabold text-slate-900">{t('appointments.title')}</h2>
-          {baby && <p className="mt-1 text-lg text-slate-500">{baby.name}</p>}
+          <h2 className="font-display text-3xl font-extrabold text-ink">{t('appointments.title')}</h2>
+          {baby && <p className="mt-1 text-lg text-ink-muted">{baby.name}</p>}
         </div>
         <Link
           to="/appointments/new"
-          className="inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-6 py-3 font-bold text-white shadow-lg shadow-indigo-600/30 transition-all hover:bg-indigo-700 active:scale-[0.98]"
+          className="inline-flex items-center justify-center rounded-2xl bg-violet-600 px-6 py-3 font-bold text-white shadow-lg shadow-violet-600/30 transition-all hover:bg-violet-700 active:scale-[0.98]"
         >
           <PlusIcon className="mr-2 h-5 w-5" />
           {t('appointments.scheduleAction')}
@@ -52,7 +52,7 @@ export function AppointmentsRoute() {
       {appointments.isPending ? (
         <AppointmentsSkeleton />
       ) : appointments.isError ? (
-        <p className="py-16 text-center text-slate-500">{t('appointments.genericError')}</p>
+        <p className="py-16 text-center text-ink-muted">{t('appointments.genericError')}</p>
       ) : items.length === 0 ? (
         <EmptyState
           icon={<CalendarIcon className="h-10 w-10" />}
@@ -61,7 +61,7 @@ export function AppointmentsRoute() {
           action={
             <Link
               to="/appointments/new"
-              className="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-6 py-3 font-bold text-white shadow-md shadow-indigo-600/20 transition-colors hover:bg-indigo-700"
+              className="inline-flex items-center justify-center rounded-xl bg-violet-600 px-6 py-3 font-bold text-white shadow-md shadow-violet-600/20 transition-colors hover:bg-violet-700"
             >
               {t('appointments.empty.cta')}
             </Link>

@@ -20,13 +20,13 @@ export function LoginRoute() {
   return (
     <AuthLayout>
       <div className="mb-10 text-center lg:text-left">
-        <h2 className="text-3xl font-bold text-slate-900">{t('auth.login.title')}</h2>
-        <p className="mt-2 text-slate-500">{t('auth.login.subtitle')}</p>
+        <h2 className="font-display text-3xl font-extrabold text-ink">{t('auth.login.title')}</h2>
+        <p className="mt-2 text-ink-muted">{t('auth.login.subtitle')}</p>
       </div>
 
       <LoginForm />
 
-      <p className="mt-8 text-center text-sm text-slate-500">
+      <p className="mt-8 text-center text-sm text-ink-muted">
         {t('auth.login.noAccount')}{' '}
         <Link to="/register" className="text-primary font-semibold hover:underline">
           {t('auth.login.registerLink')}

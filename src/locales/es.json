@@ -15,6 +15,7 @@
     "vaccines": "Vacunas",
     "appointments": "Consultas",
     "milestones": "Hitos",
+    "notifications": "Notificaciones",
     "logout": "Cerrar sesión"
   },
   "auth": {
@@ -70,10 +71,29 @@
       "eyebrow": "RESUMEN",
       "heading": "Panel de la Familia",
       "subtitle": "Seguimiento consolidado.",
-      "statVaccinesLabel": "Vacunas",
-      "statAppointmentsLabel": "Consultas",
-      "statMilestonesLabel": "Hitos",
-      "statComingSoon": "Próximamente"
+      "greetingMorning": "Buenos días",
+      "greetingAfternoon": "Buenas tardes",
+      "greetingEvening": "Buenas noches",
+      "greetingLine": "{{greeting}}, {{name}}! 👋",
+      "viewingProfile": "Estás viendo el perfil de {{name}}",
+      "overdueBanner_one": "{{count}} vacuna atrasada",
+      "overdueBanner_other": "{{count}} vacunas atrasadas",
+      "overdueBannerSuffix": "para {{name}}. Agenda cuanto antes.",
+      "viewVaccines": "Ver vacunas →",
+      "statVaccinesAppliedLabel": "Vacunas aplicadas",
+      "statVaccinesAppliedSub_one": "{{count}} pendiente",
+      "statVaccinesAppliedSub_other": "{{count}} pendientes",
+      "statNextAppointmentLabel": "Próxima consulta",
+      "statNextAppointmentEmpty": "Sin consulta agendada",
+      "statMilestonesLabel": "Hitos registrados",
+      "statMilestonesSub": "hitos del desarrollo",
+      "statLastAppointmentLabel": "Última consulta",
+      "latestMilestonesTitle": "Últimos hitos ⭐",
+      "viewAllMilestones": "Ver todos →",
+      "noMilestonesYet": "Aún no hay hitos registrados",
+      "vaccineCalendarTitle": "Calendario de vacunas 💉",
+      "viewAllVaccines": "Ver todas →",
+      "allVaccinesUpToDate": "¡Todas las vacunas al día! 🎉"
     },
     "form": {
       "title": "Nuevo Perfil",
@@ -113,6 +133,11 @@
     "eyebrow": "INMUNIZACIÓN",
     "title": "Cartilla de Vacunación",
     "genericError": "No se pudo cargar el calendario de vacunas.",
+    "progressLabel": "Progreso del calendario",
+    "filterAll": "Todas",
+    "filterApplied": "Aplicadas ({{count}})",
+    "filterPending": "Pendientes ({{count}})",
+    "filterDelayed": "Atrasadas ({{count}})",
     "ageGroupLabel_one": "{{count}} mes",
     "ageGroupLabel_other": "{{count}} meses",
     "doseLabel": "{{count}}ª dosis",
@@ -188,6 +213,7 @@
     "title": "Hitos de Desarrollo",
     "action": "Registrar Hito",
     "genericError": "No se pudieron cargar los hitos.",
+    "filterAll": "Todos",
     "category": {
       "motor": "Motor",
       "language": "Lenguaje",
@@ -224,9 +250,14 @@
     }
   },
   "notifications": {
+    "eyebrow": "AVISOS",
     "title": "Notificaciones",
     "bellAria_one": "Notificaciones, {{count}} sin leer",
     "bellAria_other": "Notificaciones, {{count}} sin leer",
+    "unreadCount_one": "{{count}} sin leer",
+    "unreadCount_other": "{{count}} sin leer",
+    "markAllRead": "Marcar todas como leídas",
+    "genericError": "No se pudieron cargar las notificaciones.",
     "empty": "Aún no hay notificaciones."
   },
   "errors": {

@@ -127,7 +127,7 @@ export function MilestoneForm({
           {...register('photoUrl')}
         />
         {photoUrlErrorKey && <p className="text-destructive mt-1 text-sm">{t(photoUrlErrorKey)}</p>}
-        <p className="mt-1 text-xs text-slate-500">{t('milestones.form.photoUrlHint')}</p>
+        <p className="mt-1 text-xs text-ink-muted">{t('milestones.form.photoUrlHint')}</p>
       </div>
 
       {submitError && (
@@ -141,7 +141,7 @@ export function MilestoneForm({
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-3.5 text-sm font-bold text-slate-600 transition-colors hover:text-slate-900"
+            className="px-6 py-3.5 text-sm font-bold text-ink-muted transition-colors hover:text-ink"
           >
             {t('common.cancel')}
           </button>

@@ -20,7 +20,7 @@ export function VaccineCalendarList({ groups, babyId }: VaccineCalendarListProps
         .filter((group) => group.items.length > 0)
         .map((group) => (
           <section key={group.ageInMonths}>
-            <h3 className="mb-3 text-sm font-bold tracking-wider text-slate-500 uppercase">
+            <h3 className="mb-3 text-sm font-bold tracking-wider text-ink-muted uppercase">
               {t('vaccines.ageGroupLabel', { count: group.ageInMonths })}
             </h3>
             <div className="overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-sm">
@@ -51,11 +51,11 @@ function VaccineRow({ item, onApply }: VaccineRowProps) {
   const content = (
     <>
       <div className="sm:flex-1">
-        <p className="text-base font-bold text-slate-900">{item.name}</p>
-        <p className="text-sm font-medium text-slate-500">{t('vaccines.doseLabel', { count: item.doseNumber })}</p>
+        <p className="text-base font-bold text-ink">{item.name}</p>
+        <p className="text-sm font-medium text-ink-muted">{t('vaccines.doseLabel', { count: item.doseNumber })}</p>
       </div>
       <div className="sm:flex-1">
-        <p className="text-sm font-medium text-slate-600">{item.description}</p>
+        <p className="text-sm font-medium text-ink-muted">{item.description}</p>
       </div>
       <VaccineStatusBadge item={item} />
     </>

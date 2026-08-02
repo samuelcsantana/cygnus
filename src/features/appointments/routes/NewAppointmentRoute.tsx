@@ -23,13 +23,13 @@ export function NewAppointmentRoute() {
         <button
           type="button"
           onClick={() => navigate('/appointments')}
-          className="mb-6 flex w-fit items-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-500 shadow-sm transition-colors hover:text-indigo-600"
+          className="mb-6 flex w-fit items-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-ink-muted shadow-sm transition-colors hover:text-violet-600"
         >
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           {t('common.back')}
         </button>
-        <h2 className="text-3xl font-extrabold text-slate-900">{t('appointments.form.createTitle')}</h2>
-        <p className="mt-2 text-lg text-slate-500">{t('appointments.form.createSubtitle')}</p>
+        <h2 className="font-display text-3xl font-extrabold text-ink">{t('appointments.form.createTitle')}</h2>
+        <p className="mt-2 text-lg text-ink-muted">{t('appointments.form.createSubtitle')}</p>
       </div>
 
       <div className="rounded-[2.5rem] border border-slate-100 bg-white p-8 shadow-sm sm:p-10">

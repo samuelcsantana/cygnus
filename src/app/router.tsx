@@ -62,6 +62,13 @@ export const router = createBrowserRouter([
                 Component: m.NewMilestoneRoute,
               })),
           },
+          {
+            path: 'notifications',
+            lazy: () =>
+              import('@/features/notifications/routes/NotificationsRoute').then((m) => ({
+                Component: m.NotificationsRoute,
+              })),
+          },
         ],
       },
     ],

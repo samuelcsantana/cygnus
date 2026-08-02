@@ -12,5 +12,5 @@ test('a logged-in user with no children can add their first baby', async ({ page
   await addBaby(page, { name: 'Alice E2E', birthDate: '2024-03-10', gender: 'Menina' })
 
   await expect(page.getByRole('heading', { name: 'Painel da Família' })).toBeVisible()
-  await expect(page.getByText('Alice E2E')).toBeVisible()
+  await expect(page.getByRole('button', { name: /Alice E2E \d+ mes/ })).toBeVisible()
 })

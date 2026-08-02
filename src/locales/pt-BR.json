@@ -15,6 +15,7 @@
     "vaccines": "Vacinas",
     "appointments": "Consultas",
     "milestones": "Marcos",
+    "notifications": "Notificações",
     "logout": "Sair da conta"
   },
   "auth": {
@@ -70,10 +71,29 @@
       "eyebrow": "VISÃO GERAL",
       "heading": "Painel da Família",
       "subtitle": "Acompanhamento consolidado.",
-      "statVaccinesLabel": "Vacinas",
-      "statAppointmentsLabel": "Consultas",
-      "statMilestonesLabel": "Marcos",
-      "statComingSoon": "Em breve"
+      "greetingMorning": "Bom dia",
+      "greetingAfternoon": "Boa tarde",
+      "greetingEvening": "Boa noite",
+      "greetingLine": "{{greeting}}, {{name}}! 👋",
+      "viewingProfile": "Você está vendo o perfil de {{name}}",
+      "overdueBanner_one": "{{count}} vacina em atraso",
+      "overdueBanner_other": "{{count}} vacinas em atraso",
+      "overdueBannerSuffix": "para {{name}}. Agende o quanto antes.",
+      "viewVaccines": "Ver vacinas →",
+      "statVaccinesAppliedLabel": "Vacinas tomadas",
+      "statVaccinesAppliedSub_one": "{{count}} pendente",
+      "statVaccinesAppliedSub_other": "{{count}} pendentes",
+      "statNextAppointmentLabel": "Próxima consulta",
+      "statNextAppointmentEmpty": "Sem consulta agendada",
+      "statMilestonesLabel": "Marcos registrados",
+      "statMilestonesSub": "marcos do desenvolvimento",
+      "statLastAppointmentLabel": "Última consulta",
+      "latestMilestonesTitle": "Últimos marcos ⭐",
+      "viewAllMilestones": "Ver todos →",
+      "noMilestonesYet": "Nenhum marco registrado ainda",
+      "vaccineCalendarTitle": "Calendário de vacinas 💉",
+      "viewAllVaccines": "Ver todas →",
+      "allVaccinesUpToDate": "Todas as vacinas em dia! 🎉"
     },
     "form": {
       "title": "Novo Perfil",
@@ -113,6 +133,11 @@
     "eyebrow": "IMUNIZAÇÃO",
     "title": "Carteira de Vacinação",
     "genericError": "Não foi possível carregar o calendário de vacinas.",
+    "progressLabel": "Progresso do calendário",
+    "filterAll": "Todas",
+    "filterApplied": "Tomadas ({{count}})",
+    "filterPending": "Pendentes ({{count}})",
+    "filterDelayed": "Atrasadas ({{count}})",
     "ageGroupLabel_one": "{{count}} mês",
     "ageGroupLabel_other": "{{count}} meses",
     "doseLabel": "{{count}}ª dose",
@@ -188,6 +213,7 @@
     "title": "Marcos de Desenvolvimento",
     "action": "Registrar Marco",
     "genericError": "Não foi possível carregar os marcos.",
+    "filterAll": "Todos",
     "category": {
       "motor": "Motor",
       "language": "Linguagem",
@@ -224,9 +250,14 @@
     }
   },
   "notifications": {
+    "eyebrow": "AVISOS",
     "title": "Notificações",
     "bellAria_one": "Notificações, {{count}} não lida",
     "bellAria_other": "Notificações, {{count}} não lidas",
+    "unreadCount_one": "{{count}} não lida",
+    "unreadCount_other": "{{count}} não lidas",
+    "markAllRead": "Marcar todas como lidas",
+    "genericError": "Não foi possível carregar as notificações.",
     "empty": "Nenhuma notificação por aqui."
   },
   "errors": {

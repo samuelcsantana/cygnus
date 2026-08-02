@@ -31,13 +31,13 @@ export function NewMilestoneRoute() {
         <button
           type="button"
           onClick={() => navigate('/milestones')}
-          className="mb-6 flex w-fit items-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-500 shadow-sm transition-colors hover:text-slate-900"
+          className="mb-6 flex w-fit items-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-ink-muted shadow-sm transition-colors hover:text-ink"
         >
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           {t('common.back')}
         </button>
-        <h2 className="text-3xl font-extrabold text-slate-900">{t('milestones.form.createTitle')}</h2>
-        <p className="mt-2 text-lg text-slate-500">{t('milestones.form.createSubtitle')}</p>
+        <h2 className="font-display text-3xl font-extrabold text-ink">{t('milestones.form.createTitle')}</h2>
+        <p className="mt-2 text-lg text-ink-muted">{t('milestones.form.createSubtitle')}</p>
       </div>
 
       <div className="rounded-[2.5rem] border border-slate-100 bg-white p-8 shadow-sm sm:p-10">

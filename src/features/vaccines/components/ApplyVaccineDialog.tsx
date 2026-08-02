@@ -61,9 +61,9 @@ export function ApplyVaccineDialog({ babyId, item, onOpenChange }: ApplyVaccineD
 
         {item && (
           <form onSubmit={onSubmit} className="space-y-4" noValidate>
-            <div>
-              <p className="font-bold text-slate-900">{item.name}</p>
-              <p className="text-sm text-slate-500">{t('vaccines.doseLabel', { count: item.doseNumber })}</p>
+            <div className="rounded-xl bg-teal-50 px-4 py-3">
+              <p className="font-bold text-ink">{item.name}</p>
+              <p className="text-sm font-medium text-teal-600">{t('vaccines.doseLabel', { count: item.doseNumber })}</p>
             </div>
 
             <div>

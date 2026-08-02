@@ -103,12 +103,12 @@ export function AppointmentForm({ defaultValues, onSubmit, submitLabel, onCancel
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-3.5 text-sm font-bold text-slate-600 transition-colors hover:text-slate-900"
+            className="px-6 py-3.5 text-sm font-bold text-ink-muted transition-colors hover:text-ink"
           >
             {t('common.cancel')}
           </button>
         )}
-        <Button type="submit" disabled={isSubmitting} className="bg-indigo-600 text-white hover:bg-indigo-700">
+        <Button type="submit" disabled={isSubmitting} className="bg-violet-600 text-white hover:bg-violet-700">
           {isSubmitting ? t('common.saving') : submitLabel}
         </Button>
       </div>

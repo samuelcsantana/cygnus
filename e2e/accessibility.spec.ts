@@ -54,5 +54,9 @@ test.describe('accessibility (WCAG 2 A/AA)', () => {
     await page.getByRole('link', { name: 'Marcos', exact: true }).click()
     await expect(page).toHaveURL(/\/milestones$/)
     await expectNoViolations(page)
+
+    await page.getByRole('link', { name: 'Notificações', exact: true }).click()
+    await expect(page).toHaveURL(/\/notifications$/)
+    await expectNoViolations(page)
   })
 })

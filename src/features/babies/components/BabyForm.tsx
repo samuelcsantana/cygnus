@@ -181,7 +181,7 @@ export function BabyForm({ defaultValues, onSubmit, submitLabel, onCancel, showC
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-3.5 text-sm font-bold text-slate-600 transition-colors hover:text-slate-900"
+            className="px-6 py-3.5 text-sm font-bold text-ink-muted transition-colors hover:text-ink"
           >
             {t('common.cancel')}
           </button>

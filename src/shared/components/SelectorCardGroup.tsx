@@ -32,7 +32,7 @@ export function SelectorCardGroup({ value, onValueChange, options, name, classNa
         >
           <RadioGroupItem value={option.value} />
           {option.media}
-          <span className="truncate text-sm font-bold text-slate-700">{option.label}</span>
+          <span className="truncate text-sm font-bold text-ink-muted">{option.label}</span>
         </label>
       ))}
     </RadioGroup>

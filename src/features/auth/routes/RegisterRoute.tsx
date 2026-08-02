@@ -10,13 +10,13 @@ export function RegisterRoute() {
   return (
     <AuthLayout>
       <div className="mb-10 text-center lg:text-left">
-        <h2 className="text-3xl font-bold text-slate-900">{t('auth.register.title')}</h2>
-        <p className="mt-2 text-slate-500">{t('auth.register.subtitle')}</p>
+        <h2 className="font-display text-3xl font-extrabold text-ink">{t('auth.register.title')}</h2>
+        <p className="mt-2 text-ink-muted">{t('auth.register.subtitle')}</p>
       </div>
 
       <RegisterForm />
 
-      <p className="mt-8 text-center text-sm text-slate-500">
+      <p className="mt-8 text-center text-sm text-ink-muted">
         {t('auth.register.hasAccount')}{' '}
         <Link to="/login" className="text-primary font-semibold hover:underline">
           {t('auth.register.loginLink')}
