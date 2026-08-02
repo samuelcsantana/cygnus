@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
 
 import { formatDateDisplay, splitScheduledAt } from '@/lib/date'
-import { ClockIcon } from '@/shared/icons/clock-icon'
+import { cn } from '@/lib/utils'
+import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 
 import type { Appointment } from '../api/appointments.schemas'
 import { AppointmentStatusBadge } from './AppointmentStatusBadge'
@@ -18,51 +19,56 @@ export function AppointmentCard({ appointment, onReschedule, onViewDetails }: Ap
   const isScheduled = appointment.status === 'SCHEDULED'
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-slate-100 bg-white p-8 shadow-sm">
-      <div className="absolute top-0 left-0 h-full w-2 bg-violet-500" />
-
-      <div className="mb-6 flex items-start justify-between gap-4">
-        <div>
-          <h3 className="mb-1 text-xl font-bold text-ink">{appointment.doctorName}</h3>
-          <AppointmentStatusBadge status={appointment.status} />
-        </div>
-        <div className="min-w-[80px] rounded-2xl border border-slate-100 bg-slate-50 p-3 text-center">
-          <span className="mb-1 block text-[10px] font-bold tracking-wider text-ink-muted uppercase">
-            {t('appointments.dateLabel')}
+    <div
+      className={cn(
+        'rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6',
+        isScheduled ? 'border-[1.5px] border-violet-200' : 'border-[1.5px] border-transparent',
+      )}
+    >
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3.5">
+          <span
+            className={cn(
+              'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl',
+              isScheduled ? 'bg-violet-50 text-violet-500' : 'bg-teal-50 text-teal-600',
+            )}
+          >
+            <StethoscopeIcon className="h-5 w-5" />
           </span>
-          <span className="block text-lg font-black text-ink">{formatDateDisplay(date, i18n.language)}</span>
+          <div>
+            <h3 className="text-[15px] font-bold text-ink">{appointment.doctorName}</h3>
+            {appointment.reason && <p className="text-[13px] text-ink-muted">{appointment.reason}</p>}
+          </div>
+        </div>
+        <div className="flex-shrink-0 text-right">
+          <AppointmentStatusBadge status={appointment.status} />
+          <p className="mt-1 text-xs text-ink-faint">
+            {formatDateDisplay(date, i18n.language)} · {time}
+          </p>
         </div>
       </div>
 
-      <div className="mb-4 flex flex-wrap items-center gap-3 text-sm font-bold text-ink-muted">
-        <span className="flex items-center rounded-lg bg-slate-50 px-4 py-2">
-          <ClockIcon className="mr-2 h-4 w-4 text-violet-500" />
-          {time}
-        </span>
-        {appointment.location && <span className="text-ink-muted">{appointment.location}</span>}
-      </div>
-
-      {appointment.reason && <p className="mb-4 text-sm text-ink-muted">{appointment.reason}</p>}
+      {appointment.location && <p className="mb-1 text-[13px] text-ink-muted">{appointment.location}</p>}
 
       {appointment.notes && (
-        <div className="mb-6 rounded-xl border border-slate-100 bg-surface p-4 text-sm font-medium text-ink-muted">
-          &ldquo;{appointment.notes}&rdquo;
+        <div className="mt-3 rounded-[10px] bg-surface px-3.5 py-2.5">
+          <p className="text-[13px] leading-relaxed text-ink-muted">📋 {appointment.notes}</p>
         </div>
       )}
 
       {isScheduled ? (
-        <div className="flex gap-3">
+        <div className="mt-4 flex gap-3">
           <button
             type="button"
             onClick={onReschedule}
-            className="flex-1 rounded-xl border-2 border-slate-100 py-3 text-sm font-bold text-ink-muted transition-colors hover:border-slate-200 hover:bg-slate-50"
+            className="flex-1 rounded-xl border-2 border-slate-100 py-2.5 text-sm font-bold text-ink-muted transition-colors hover:border-slate-200 hover:bg-slate-50"
           >
             {t('appointments.reschedule.action')}
           </button>
           <button
             type="button"
             onClick={onViewDetails}
-            className="flex-1 rounded-xl bg-violet-50 py-3 text-sm font-bold text-violet-700 transition-colors hover:bg-violet-100"
+            className="flex-1 rounded-xl bg-violet-50 py-2.5 text-sm font-bold text-violet-700 transition-colors hover:bg-violet-100"
           >
             {t('appointments.detail.action')}
           </button>
@@ -71,7 +77,7 @@ export function AppointmentCard({ appointment, onReschedule, onViewDetails }: Ap
         <button
           type="button"
           onClick={onViewDetails}
-          className="w-full rounded-xl bg-violet-50 py-3 text-sm font-bold text-violet-700 transition-colors hover:bg-violet-100"
+          className="mt-4 w-full rounded-xl bg-teal-50 py-2.5 text-sm font-bold text-teal-700 transition-colors hover:bg-teal-100"
         >
           {t('appointments.detail.action')}
         </button>

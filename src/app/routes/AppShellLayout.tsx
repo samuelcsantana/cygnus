@@ -12,12 +12,12 @@ import { LogoIcon } from '@/shared/icons/logo-icon'
 import { LogoutIcon } from '@/shared/icons/logout-icon'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
+import { UserIcon } from '@/shared/icons/user-icon'
 import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { MobileNavItem } from '@/shared/components/MobileNavItem'
 import { NavItem } from '@/shared/components/NavItem'
 import { SidebarBabySwitcher } from '@/shared/components/SidebarBabySwitcher'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
-import { defaultAvatarDataUri } from '@/shared/utils/defaultAvatar'
 
 export function AppShellLayout() {
   const { t } = useTranslation()
@@ -49,7 +49,6 @@ export function AppShellLayout() {
   }
 
   const accountLabel = identity?.name ?? identity?.email ?? t('common.myAccount')
-  const accountAvatar = defaultAvatarDataUri(accountLabel)
 
   return (
     <div className="flex min-h-screen flex-col bg-surface md:flex-row">
@@ -71,7 +70,9 @@ export function AppShellLayout() {
 
         <div className="border-t border-slate-100 p-5">
           <div className="flex items-center gap-3">
-            <img src={accountAvatar} alt="" className="h-9 w-9 flex-shrink-0 rounded-full bg-teal-50" />
+            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-700">
+              <UserIcon className="h-4 w-4" />
+            </span>
             <div className="min-w-0 flex-1">
               <p className="truncate text-[13px] font-bold text-ink">{identity?.name ?? accountLabel}</p>
               <p className="truncate text-[11px] text-ink-muted">{identity?.email ?? ''}</p>

@@ -20,7 +20,11 @@
   },
   "auth": {
     "login": {
+      "brandHeadline": "Every moment matters",
       "brandTagline": "The complete dashboard for your family's health and memories.",
+      "featureVaccines": "Complete vaccine calendar",
+      "featureMilestones": "Track developmental milestones",
+      "featureNotifications": "Appointment and vaccine reminders",
       "copyright": "© {{year}} Meu Neném App",
       "title": "Welcome back",
       "subtitle": "Sign in to your account to get started.",

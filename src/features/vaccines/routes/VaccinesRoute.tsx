@@ -38,12 +38,7 @@ export function VaccinesRoute() {
   }
   const progressPct = allItems.length > 0 ? Math.round((counts.APPLIED / allItems.length) * 100) : 0
 
-  const filteredGroups = groups
-    .map((group) => ({
-      ...group,
-      items: filter === 'ALL' ? group.items : group.items.filter((item) => item.status === filter),
-    }))
-    .filter((group) => group.items.length > 0)
+  const filteredItems = filter === 'ALL' ? allItems : allItems.filter((item) => item.status === filter)
 
   return (
     <div className="animate-fade-in-up">
@@ -103,7 +98,7 @@ export function VaccinesRoute() {
             ))}
           </div>
 
-          <VaccineCalendarList groups={filteredGroups} babyId={babyId} />
+          <VaccineCalendarList items={filteredItems} babyId={babyId} />
         </>
       )}
     </div>

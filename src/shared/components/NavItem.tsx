@@ -12,15 +12,12 @@ interface NavItemProps {
 }
 
 export function NavItem({ to, icon, label, disabled, badge }: NavItemProps) {
-  const baseClass =
-    'group flex w-full items-center rounded-2xl px-4 py-3.5 text-sm font-bold transition-all duration-300'
+  const baseClass = 'flex w-full items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-sm font-semibold transition-all'
 
   if (disabled) {
     return (
       <span className={cn(baseClass, 'cursor-not-allowed text-ink-faint')} aria-disabled="true">
-        <span className="mr-3 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-ink-faint">
-          {icon}
-        </span>
+        <span className="flex-shrink-0">{icon}</span>
         {label}
       </span>
     )
@@ -30,28 +27,18 @@ export function NavItem({ to, icon, label, disabled, badge }: NavItemProps) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        cn(baseClass, isActive ? 'bg-teal-50 text-teal-700' : 'text-ink-muted hover:bg-slate-50 hover:text-ink')
+        cn(
+          baseClass,
+          isActive ? 'bg-primary text-white' : 'text-ink-muted hover:bg-teal-50 hover:text-teal-700',
+        )
       }
     >
-      {({ isActive }) => (
-        <>
-          <span
-            className={cn(
-              'mr-3 flex h-10 w-10 items-center justify-center rounded-xl transition-colors',
-              isActive
-                ? 'border border-teal-100 bg-white text-teal-600 shadow-sm'
-                : 'bg-slate-100 text-ink-faint group-hover:bg-white group-hover:text-ink-muted group-hover:shadow-sm',
-            )}
-          >
-            {icon}
-          </span>
-          <span className="flex-1">{label}</span>
-          {!!badge && (
-            <span className="ml-auto rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold text-white">
-              {badge > 9 ? '9+' : badge}
-            </span>
-          )}
-        </>
+      <span className="flex-shrink-0">{icon}</span>
+      <span className="flex-1">{label}</span>
+      {!!badge && (
+        <span className="ml-auto rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold text-white">
+          {badge > 9 ? '9+' : badge}
+        </span>
       )}
     </NavLink>
   )

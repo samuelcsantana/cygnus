@@ -20,7 +20,11 @@
   },
   "auth": {
     "login": {
+      "brandHeadline": "Cada momento importa",
       "brandTagline": "El panel completo para la salud y los recuerdos de tu familia.",
+      "featureVaccines": "Calendario de vacunas completo",
+      "featureMilestones": "Registro de hitos del desarrollo",
+      "featureNotifications": "Notificaciones de consultas y vacunas",
       "copyright": "© {{year}} Meu Neném App",
       "title": "Bienvenido(a) de nuevo",
       "subtitle": "Accede a tu cuenta para comenzar.",

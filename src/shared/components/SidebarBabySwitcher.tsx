@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 import { PencilIcon } from '@/shared/icons/pencil-icon'
 import { PlusIcon } from '@/shared/icons/plus-icon'
 import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
-import { defaultAvatarDataUri } from '@/shared/utils/defaultAvatar'
+import { babyAvatarPalette, babyInitials } from '@/shared/utils/babyAvatarColor'
 
 export function SidebarBabySwitcher() {
   const { t } = useTranslation()
@@ -63,9 +63,8 @@ interface SidebarBabyRowProps {
 
 function SidebarBabyRow({ baby, selected, onSelect, onEdit }: SidebarBabyRowProps) {
   const { t } = useTranslation()
-  const generatedAvatar = useMemo(() => defaultAvatarDataUri(baby.name), [baby.name])
-  const avatarUrl = baby.avatarUrl ?? generatedAvatar
   const months = ageInMonths(baby.birthDate)
+  const palette = babyAvatarPalette(baby.id)
 
   return (
     <div
@@ -75,7 +74,19 @@ function SidebarBabyRow({ baby, selected, onSelect, onEdit }: SidebarBabyRowProp
       )}
     >
       <button type="button" onClick={onSelect} aria-pressed={selected} className="flex flex-1 items-center gap-2.5">
-        <img src={avatarUrl} alt="" className="h-8 w-8 flex-shrink-0 rounded-full bg-slate-50" />
+        {baby.avatarUrl ? (
+          <img src={baby.avatarUrl} alt="" className="h-8 w-8 flex-shrink-0 rounded-full bg-slate-50 object-cover" />
+        ) : (
+          <span
+            className={cn(
+              'flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-extrabold',
+              palette.bg,
+              palette.text,
+            )}
+          >
+            {babyInitials(baby.name)}
+          </span>
+        )}
         <span className="min-w-0 flex-1 text-left">
           <span className={cn('block truncate text-[13px] font-bold', selected ? 'text-teal-700' : 'text-ink')}>
             {baby.name}

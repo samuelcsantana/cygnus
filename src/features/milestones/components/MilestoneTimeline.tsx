@@ -20,44 +20,43 @@ export function MilestoneTimeline({ babyId, birthDate, items }: MilestoneTimelin
   const [editTarget, setEditTarget] = useState<Milestone | null>(null)
 
   return (
-    <div className="relative ml-4 max-w-3xl sm:ml-8">
-      <div className="absolute top-6 bottom-6 left-6 w-0.5 rounded-full bg-slate-200" />
+    <div className="relative ml-5 max-w-3xl sm:ml-8">
+      <div className="absolute top-5 bottom-5 left-5 w-0.5 bg-slate-200" />
 
-      <div className="space-y-10">
+      <div className="space-y-4">
         {items.map((milestone) => {
           const meta = MILESTONE_CATEGORY_META[milestone.category]
           return (
-            <div key={milestone.id} className="group relative flex items-start">
+            <div key={milestone.id} className="group relative flex items-start gap-5">
               <div
                 className={cn(
-                  'absolute left-6 z-10 -ml-[1.65rem] flex h-14 w-14 items-center justify-center rounded-2xl border-2 bg-white text-2xl shadow-sm transition-all duration-300 group-hover:scale-110',
-                  meta.accentClass,
+                  'relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-[3px] bg-white text-base',
+                  meta.nodeClass,
                 )}
               >
                 {meta.emoji}
               </div>
 
-              <div className="relative ml-20 w-full rounded-[2rem] border border-slate-100 bg-white p-8 shadow-sm transition-all duration-300 group-hover:border-slate-200 group-hover:shadow-md">
-                <button
-                  type="button"
-                  onClick={() => setEditTarget(milestone)}
-                  aria-label={t('milestones.edit.action', { title: milestone.title })}
-                  className="text-ink-faint hover:text-ink absolute top-6 right-6 rounded-lg p-1.5 transition-colors hover:bg-slate-100"
-                >
-                  <PencilIcon className="h-4 w-4" />
-                </button>
-
-                <div className="mb-3 flex flex-wrap items-center justify-between gap-2 pr-8">
-                  <span className={cn('inline-block rounded-lg px-3 py-1 text-xs font-bold', meta.badgeClass)}>
-                    {formatDateDisplay(milestone.achievedAt, i18n.language)}
-                  </span>
-                  <span className={cn('rounded-full px-3 py-1 text-xs font-bold', meta.badgeClass)}>
-                    {t(`milestones.category.${milestone.category.toLowerCase()}`)}
-                  </span>
+              <div className="relative flex-1 rounded-2xl bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] sm:p-5">
+                <div className="mb-1.5 flex items-start justify-between gap-2">
+                  <h3 className="font-display text-[15px] font-extrabold text-ink">{milestone.title}</h3>
+                  <div className="flex flex-shrink-0 items-center gap-2">
+                    <span className={cn('rounded-full px-2.5 py-0.5 text-[11px] font-semibold', meta.badgeClass)}>
+                      {t(`milestones.category.${milestone.category.toLowerCase()}`)}
+                    </span>
+                    <span className="text-xs text-ink-faint">{formatDateDisplay(milestone.achievedAt, i18n.language)}</span>
+                    <button
+                      type="button"
+                      onClick={() => setEditTarget(milestone)}
+                      aria-label={t('milestones.edit.action', { title: milestone.title })}
+                      className="text-ink-faint hover:text-ink rounded-lg p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-slate-100"
+                    >
+                      <PencilIcon className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
-                <h3 className="font-display mb-2 text-2xl font-bold text-ink">{milestone.title}</h3>
                 {milestone.description && (
-                  <p className="text-ink-muted text-base leading-relaxed font-medium">{milestone.description}</p>
+                  <p className="text-[13px] leading-relaxed text-ink-muted">{milestone.description}</p>
                 )}
               </div>
             </div>

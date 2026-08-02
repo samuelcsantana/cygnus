@@ -16,7 +16,7 @@ import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
 import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
-import { defaultAvatarDataUri } from '@/shared/utils/defaultAvatar'
+import { babyAvatarPalette, babyInitials } from '@/shared/utils/babyAvatarColor'
 
 import { useBabies } from '../api/babies.hooks'
 import type { Baby } from '../api/babies.schemas'
@@ -127,7 +127,7 @@ function DashboardContent({ baby, locale }: DashboardContentProps) {
   const latestMilestones = babyMilestones.slice(0, 3)
 
   const babyAge = t('babies.monthsOld', { count: ageInMonths(baby.birthDate) })
-  const avatarUrl = baby.avatarUrl ?? defaultAvatarDataUri(baby.name)
+  const palette = babyAvatarPalette(baby.id)
   const parentName = identity?.name ?? identity?.email ?? ''
 
   return (
@@ -140,7 +140,19 @@ function DashboardContent({ baby, locale }: DashboardContentProps) {
 
       <div className="mb-7">
         <div className="mb-1.5 flex items-center gap-3.5">
-          <img src={avatarUrl} alt="" className="h-12 w-12 flex-shrink-0 rounded-full bg-teal-50" />
+          {baby.avatarUrl ? (
+            <img src={baby.avatarUrl} alt="" className="h-12 w-12 flex-shrink-0 rounded-full bg-teal-50 object-cover" />
+          ) : (
+            <span
+              className={cn(
+                'font-display flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-lg font-black',
+                palette.bg,
+                palette.text,
+              )}
+            >
+              {babyInitials(baby.name)}
+            </span>
+          )}
           <div>
             <h1 className="font-display text-2xl font-black text-ink">
               {t('babies.dashboard.greetingLine', { greeting: t(greetingKey), name: parentName })}
@@ -268,14 +280,12 @@ function DashboardContent({ baby, locale }: DashboardContentProps) {
                   />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[13px] font-semibold text-ink">{item.name}</p>
-                    <p className="text-[11px] text-ink-muted">{t('vaccines.doseLabel', { count: item.doseNumber })}</p>
+                    <p className="text-[11px] text-ink-muted">
+                      {t('vaccines.doseLabel', { count: item.doseNumber })} ·{' '}
+                      {t('vaccines.ageGroupLabel', { count: item.recommendedAgeInMonths })}
+                    </p>
                   </div>
-                  <span
-                    className={cn(
-                      'flex-shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold',
-                      item.status === 'DELAYED' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700',
-                    )}
-                  >
+                  <span className="flex-shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
                     {item.status === 'DELAYED' ? t('vaccines.status.delayed') : t('vaccines.status.pending')}
                   </span>
                 </div>
