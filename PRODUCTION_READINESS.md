@@ -14,7 +14,8 @@ Checklist vivo do que falta antes de um lançamento real. Gerado após a impleme
 
 ## 🟡 Importante (dá pra lançar em beta fechado sem isso)
 
-- [x] Editar perfil do bebê — ícone de lápis no `BabyCard` abre `EditBabyDialog`, PATCH completo (`src/features/babies/`). **Excluir segue impossível**: não existe `DELETE /babies/{id}` no contrato da API — precisa entrar como pedido pro backend
+- [x] Editar perfil do bebê — ícone de lápis no `BabyCard` abre `EditBabyDialog`, PATCH completo (`src/features/babies/`)
+- [x] Excluir perfil do bebê — `cygnus-api` agora expõe `DELETE /babies/{id}` (cascata para vacinas/consultas/marcos/notificações). `EditBabyDialog` ganhou uma ação destrutiva com confirmação (`AlertDialog`, mesmo padrão do cancelamento de consulta); ao excluir o bebê selecionado, `selectedBaby.store` é limpo para não deixar rotas `vaccines`/`appointments`/`milestones` apontando pra um `babyId` inexistente
 - [x] Editar marco — ícone de lápis em cada card do `MilestoneTimeline` abre `EditMilestoneDialog`, PATCH completo (`src/features/milestones/`)
 - [x] Confirmação antes de ação destrutiva — "Cancelar Consulta" agora abre um `AlertDialog` (shadcn) de confirmação antes de fazer o PATCH (`AppointmentDetailDialog.tsx`)
 - [x] Seletor de idioma na UI — `LanguageSwitcher` (`src/shared/components/`) no header do app (mobile e desktop) e na tela de login/registro; `i18n.changeLanguage()` já persiste em `localStorage` (`i18nextLng`) via `i18next-browser-languagedetector`
@@ -45,5 +46,3 @@ Checklist vivo do que falta antes de um lançamento real. Gerado após a impleme
 6. ~~`/auth/refresh` e `/auth/me`~~ — feito nos dois repos (`cygnus-api` + `cygnus`), com testes de integração/unitários novos.
 
 Itens sem checkbox marcado seguem em aberto. Marque conforme forem resolvidos.
-
-**Nota:** a imagem Docker do `cygnus-api` (`docker-compose up`) ainda reflete o código anterior às mudanças acima — rebuild (`docker compose build api`) antes do próximo teste manual ponta a ponta contra o container.
