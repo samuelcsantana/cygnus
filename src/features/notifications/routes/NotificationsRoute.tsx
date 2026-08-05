@@ -21,9 +21,6 @@ export function NotificationsRoute() {
     <div className="animate-fade-in-up">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <p className="text-primary mb-1 text-sm font-semibold tracking-wider uppercase">
-            {t('notifications.eyebrow')}
-          </p>
           <h2 className="font-display text-3xl font-extrabold text-ink">{t('notifications.title')}</h2>
           <p className="mt-1 text-lg text-ink-muted">
             {t('notifications.unreadCount', { count: unreadItems.length })}

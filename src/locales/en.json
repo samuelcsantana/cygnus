@@ -8,10 +8,15 @@
     "cancel": "Cancel",
     "saving": "Saving...",
     "close": "Close",
-    "languageSwitcherLabel": "Language"
+    "languageSwitcherLabel": "Language",
+    "datePicker": {
+      "placeholder": "dd-mm-yyyy",
+      "openLabel": "Open calendar"
+    }
   },
   "nav": {
-    "dashboard": "Overview",
+    "menuLabel": "Menu",
+    "dashboard": "Home",
     "vaccines": "Vaccines",
     "appointments": "Appointments",
     "milestones": "Milestones",
@@ -56,25 +61,66 @@
     }
   },
   "babies": {
-    "yourChildren": "Your Children",
+    "yourChildren": "My Children",
     "addChild": "Add Child",
     "monthsOld_one": "{{count}} month old",
     "monthsOld_other": "{{count}} months old",
     "dashboard": {
-      "eyebrowEmpty": "Your family's dashboard",
-      "headingEmptyLine1": "Your children's development,",
-      "headingEmptyHighlight": "organized in one place.",
-      "subtitleEmpty": "Take full control of immunizations and medical history, and treasure every important moment. All centralized to make your routine easier.",
-      "featureVaccinesTitle": "Immunizations On Track",
-      "featureVaccinesDesc": "A smart digital record to track every child's vaccines.",
-      "featureAppointmentsTitle": "Appointments & Routine",
-      "featureAppointmentsDesc": "Schedule and keep the history of pediatrician and specialist visits.",
-      "featureMilestonesTitle": "Timeline",
-      "featureMilestonesDesc": "Create a visual diary recording every important growth milestone.",
-      "ctaAddFirstChild": "Get Started: Add a Child",
-      "eyebrow": "OVERVIEW",
-      "heading": "Family Dashboard",
-      "subtitle": "Consolidated tracking.",
+      "welcomeHeading": "Welcome to Meu Neném!",
+      "welcomeDescription": "Track vaccines, appointments and the most special milestones of your children's growth — all organized in one place, so you never miss an important moment.",
+      "welcomeCta": "Add Your First Child",
+      "previewSectionTitle": "What you'll be able to do ✨",
+      "previewVaccines": {
+        "cardTitle": "Vaccine Calendar",
+        "cardSubtitle": "Full immunization schedule",
+        "progressLabel": "Progress",
+        "items": [
+          { "name": "BCG", "dose": "Single dose", "status": "taken" },
+          { "name": "DTaP/Hib/HepB", "dose": "3rd dose", "status": "taken" },
+          { "name": "Influenza", "dose": "Annual", "status": "overdue" },
+          { "name": "MMR", "dose": "2nd dose", "status": "pending" }
+        ]
+      },
+      "previewMilestones": {
+        "cardTitle": "Developmental Milestones",
+        "cardSubtitle": "Motor · Language · Social · Cognitive",
+        "footerNote": "Every special moment recorded forever",
+        "items": [
+          { "title": "First smile", "date": "04/20/2022", "category": "social" },
+          { "title": "First steps", "date": "01/15/2023", "category": "motor" },
+          { "title": "First word", "date": "11/03/2022", "category": "language" }
+        ]
+      },
+      "previewAppointments": {
+        "cardTitle": "Medical Appointments",
+        "cardSubtitle": "History and scheduling",
+        "footerNote": "Jot down notes and reports for every visit",
+        "items": [
+          { "doctorName": "Dr. Carla Mendes", "specialty": "Pediatrics", "date": "8/15", "status": "scheduled" },
+          { "doctorName": "Dr. Paulo Andrade", "specialty": "Pediatric Dentistry", "date": "7/05", "status": "completed" }
+        ]
+      },
+      "previewNotifications": {
+        "cardTitle": "Smart Notifications",
+        "cardSubtitle": "Automatic reminders",
+        "footerNote": "You control which alerts you get",
+        "items": [
+          { "text": "DTaP 3rd dose — due in 3 days" },
+          { "text": "Pediatric appointment tomorrow at 2pm" },
+          { "text": "Your baby turns another month older today! 🎂" }
+        ]
+      },
+      "stepsSectionTitle": "Get started in 3 simple steps 🚀",
+      "steps": {
+        "items": [
+          { "title": "Add your child", "description": "Name, date of birth, done — takes less than a minute" },
+          { "title": "Log the vaccines", "description": "Mark the ones already taken and the app organizes the next ones automatically" },
+          { "title": "Track their growth", "description": "Appointments, milestones and notifications so you never miss anything important" }
+        ]
+      },
+      "bottomCtaTitle": "Ready to get started?",
+      "bottomCtaDescription": "Add your child now and have everything organized in minutes 💛",
+      "bottomCtaAction": "Add a Child",
       "greetingMorning": "Good morning",
       "greetingAfternoon": "Good afternoon",
       "greetingEvening": "Good evening",
@@ -114,10 +160,22 @@
       "allergiesLabel": "Allergies",
       "allergiesPlaceholder": "Type and press Enter",
       "allergiesRemoveAria": "Remove {{value}}",
-      "avatarUrlLabel": "Photo (URL)",
-      "avatarUrlPlaceholder": "https://...",
+      "avatarLabel": "Baby's Photo (Optional)",
+      "avatarUrlPlaceholder": "Paste a URL or upload a photo",
+      "avatarUploadAria": "Upload photo",
+      "avatarRemoveAria": "Remove photo",
+      "avatarFileTooLarge": "The image must be at most 10MB.",
+      "avatarInvalidImage": "Couldn't load that image. Try a different file.",
+      "avatarColorGroupLabel": "Avatar border color",
+      "avatarColorOption": "Color {{number}}",
       "submit": "Create Profile",
       "genericError": "Could not save. Please try again."
+    },
+    "wizard": {
+      "stepProfile": "Profile",
+      "stepHealth": "Health",
+      "continue": "Continue",
+      "back": "Back"
     },
     "edit": {
       "action": "Edit {{name}}'s profile",
@@ -125,6 +183,8 @@
       "submit": "Save Changes"
     },
     "delete": {
+      "sectionTitle": "Danger Zone",
+      "sectionDescription": "Deleting this profile is permanent and will remove all recorded vaccines, appointments and milestones for this child.",
       "action": "Delete {{name}}'s profile",
       "confirmTitle": "Delete profile?",
       "confirmDescription": "This will permanently delete {{name}}'s profile, including recorded vaccines, appointments and milestones. This action cannot be undone.",
@@ -134,8 +194,9 @@
     }
   },
   "vaccines": {
-    "eyebrow": "IMMUNIZATION",
-    "title": "Vaccination Record",
+    "title": "Vaccines",
+    "titleWithBaby": "{{name}}'s Vaccines 💉",
+    "summary": "{{applied}} taken · {{delayed}} overdue · {{pending}} pending",
     "genericError": "Could not load the vaccine calendar.",
     "progressLabel": "Calendar progress",
     "filterAll": "All",
@@ -156,15 +217,76 @@
     },
     "apply": {
       "title": "Apply Vaccine",
-      "dateLabel": "Application Date",
-      "notesLabel": "Notes (Optional)",
       "submit": "Save Record",
       "genericError": "Could not record the vaccine. Please try again."
+    },
+    "registerAction": "Register Vaccine",
+    "applicationDetails": {
+      "dateLabel": "Application Date",
+      "batchNumberLabel": "Batch / lot number (Optional)",
+      "batchNumberPlaceholder": "E.g. A2B3C4",
+      "locationLabel": "Vaccination location (Optional)",
+      "locationPlaceholder": "E.g. City Health Clinic, Vita Clinic, General Hospital",
+      "professionalLabel": "Administering professional (Optional)",
+      "professionalPlaceholder": "E.g. Nurse Márcia Costa",
+      "photoUrlLabel": "Photo (Optional)",
+      "photoUrlPlaceholder": "Paste the photo link",
+      "notesLabel": "Notes (Optional)"
+    },
+    "register": {
+      "title": "Register vaccine",
+      "detailsTitle": "Application details",
+      "stepType": "Vaccine type",
+      "stepSelect": "Choose vaccine",
+      "stepDetails": "Details",
+      "continue": "Continue",
+      "back": "Back",
+      "submit": "Save vaccine",
+      "genericError": "Could not register the vaccine. Please try again.",
+      "type": {
+        "catalog": {
+          "title": "Required schedule",
+          "description": "Vaccines from the national immunization schedule due for this age"
+        },
+        "campaign": {
+          "title": "Vaccination campaign",
+          "description": "Seasonal campaign vaccines such as flu, COVID-19, yellow fever"
+        },
+        "custom": {
+          "title": "Other vaccine",
+          "description": "Private, travel or otherwise unlisted vaccines"
+        }
+      },
+      "catalogPicker": {
+        "label": "Pending vaccines",
+        "empty": "All schedule vaccines are up to date!"
+      },
+      "campaignPicker": {
+        "suggestedLabel": "Recent and frequent campaigns",
+        "customLabel": "Or type the campaign name",
+        "customPlaceholder": "E.g. Dengue — Qdenga, 1st dose"
+      },
+      "custom": {
+        "sectionLabel": "Custom vaccine",
+        "nameLabel": "Vaccine name",
+        "namePlaceholder": "E.g. Combined varicella (MMRV)",
+        "doseLabel": "Dose (Optional)",
+        "dosePlaceholder": "E.g. 1st dose, Single dose, Booster"
+      }
+    },
+    "adhoc": {
+      "sectionTitle": "Other registered vaccines",
+      "sectionDescription": "Campaign and private vaccines registered for this child.",
+      "sourceLabel": {
+        "campaign": "Campaign",
+        "custom": "Other vaccine"
+      }
     }
   },
   "appointments": {
-    "eyebrow": "DOCTORS",
     "title": "Appointments",
+    "titleWithBaby": "{{name}}'s Appointments 🩺",
+    "summary": "{{completed}} completed · {{scheduled}} scheduled",
     "scheduleAction": "Schedule Appointment",
     "dateLabel": "Date",
     "genericError": "Could not load appointments.",
@@ -201,6 +323,8 @@
       "createSubtitle": "Register a new follow-up.",
       "doctorNameLabel": "Professional's Name",
       "doctorNamePlaceholder": "E.g. Dr. Ana Silva",
+      "specialtyLabel": "Specialty (Optional)",
+      "specialtyPlaceholder": "E.g. Pediatrics",
       "locationLabel": "Location (Optional)",
       "locationPlaceholder": "E.g. Pediatric Clinic",
       "dateLabel": "Date",
@@ -210,11 +334,19 @@
       "scheduledAtPast": "The date and time cannot be in the past.",
       "submit": "Save Appointment",
       "genericError": "Could not save the appointment. Please try again."
+    },
+    "wizard": {
+      "stepProfessional": "Professional",
+      "stepSchedule": "Schedule",
+      "continue": "Continue",
+      "back": "Back"
     }
   },
   "milestones": {
-    "eyebrow": "MEMORIES",
     "title": "Developmental Milestones",
+    "titleWithBaby": "{{name}}'s Milestones ⭐",
+    "summary_one": "{{count}} special moment recorded",
+    "summary_other": "{{count}} special moments recorded",
     "action": "Record Milestone",
     "genericError": "Could not load milestones.",
     "filterAll": "All",
@@ -247,6 +379,12 @@
       "submit": "Save Milestone",
       "genericError": "Could not save the milestone. Please try again."
     },
+    "wizard": {
+      "stepCore": "What happened?",
+      "stepDetails": "Details",
+      "continue": "Continue",
+      "back": "Back"
+    },
     "edit": {
       "action": "Edit milestone: {{title}}",
       "title": "Edit Milestone",
@@ -254,8 +392,7 @@
     }
   },
   "notifications": {
-    "eyebrow": "ALERTS",
-    "title": "Notifications",
+    "title": "Notifications 🔔",
     "bellAria_one": "Notifications, {{count}} unread",
     "bellAria_other": "Notifications, {{count}} unread",
     "unreadCount_one": "{{count}} unread",
@@ -263,6 +400,56 @@
     "markAllRead": "Mark all as read",
     "genericError": "Could not load notifications.",
     "empty": "No notifications yet."
+  },
+  "profile": {
+    "nav": {
+      "viewProfile": "View my profile"
+    },
+    "title": "My Profile",
+    "subtitle": "Manage your personal information and account security.",
+    "language": {
+      "sectionTitle": "Language"
+    },
+    "form": {
+      "sectionTitle": "Personal Information",
+      "nameLabel": "Full name",
+      "emailLabel": "Email",
+      "currentPasswordLabel": "Current password",
+      "currentPasswordHint": "Only required if you change your email.",
+      "currentPasswordRequiredForEmail": "Enter your current password to change your email.",
+      "submit": "Save Changes",
+      "savedToast": "Profile updated successfully!",
+      "incorrectCurrentPassword": "Incorrect current password.",
+      "emailTaken": "This email is already in use by another account.",
+      "genericError": "Could not save. Please try again."
+    },
+    "password": {
+      "sectionTitle": "Change Password",
+      "currentPasswordLabel": "Current password",
+      "newPasswordLabel": "New password",
+      "confirmNewPasswordLabel": "Confirm new password",
+      "mismatch": "Passwords do not match.",
+      "submit": "Update Password",
+      "savedToast": "Password updated successfully!",
+      "incorrectCurrentPassword": "Incorrect current password.",
+      "genericError": "Could not update the password. Please try again."
+    },
+    "babies": {
+      "sectionTitle": "Babies you manage",
+      "empty": "You haven't added any babies yet.",
+      "addFirst": "Add Child"
+    },
+    "delete": {
+      "sectionTitle": "Danger Zone",
+      "sectionDescription": "Deleting your account is permanent and will remove all associated babies, vaccines, appointments and milestones.",
+      "action": "Delete my account",
+      "confirmTitle": "Delete account?",
+      "confirmDescription": "This action is irreversible. All your data, including babies, vaccines, appointments and milestones, will be permanently deleted.",
+      "currentPasswordLabel": "Confirm your current password",
+      "confirmAction": "Permanently delete account",
+      "incorrectPassword": "Incorrect current password.",
+      "genericError": "Could not delete the account. Please try again."
+    }
   },
   "errors": {
     "boundary": {

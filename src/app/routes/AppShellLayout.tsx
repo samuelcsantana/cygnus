@@ -1,22 +1,22 @@
 import { useTranslation } from 'react-i18next'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 
 import { useLogout } from '@/features/auth/api/auth.hooks'
 import { useBabies } from '@/features/babies/api/babies.hooks'
+import { AddBabyDialog } from '@/features/babies/components/AddBabyDialog'
 import { useNotifications } from '@/features/notifications/api/notifications.hooks'
-import { NotificationBell } from '@/features/notifications/components/NotificationBell'
 import { BellIcon } from '@/shared/icons/bell-icon'
-import { CalendarIcon } from '@/shared/icons/calendar-icon'
 import { DashboardIcon } from '@/shared/icons/dashboard-icon'
 import { LogoIcon } from '@/shared/icons/logo-icon'
 import { LogoutIcon } from '@/shared/icons/logout-icon'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
+import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { UserIcon } from '@/shared/icons/user-icon'
-import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { MobileNavItem } from '@/shared/components/MobileNavItem'
 import { NavItem } from '@/shared/components/NavItem'
 import { SidebarBabySwitcher } from '@/shared/components/SidebarBabySwitcher'
+import { useAddBabyDialogStore } from '@/shared/stores/addBabyDialog.store'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
 
 export function AppShellLayout() {
@@ -26,6 +26,8 @@ export function AppShellLayout() {
   const notifications = useNotifications()
   const identity = useAuthIdentityStore((state) => state.identity)
   const logout = useLogout()
+  const isAddBabyDialogOpen = useAddBabyDialogStore((state) => state.isOpen)
+  const closeAddBabyDialog = useAddBabyDialogStore((state) => state.close)
 
   const hasBabies = (babies.data?.length ?? 0) > 0
   const unreadCount = notifications.data?.filter((n) => !n.readAt).length ?? 0
@@ -33,7 +35,7 @@ export function AppShellLayout() {
   const navItems = [
     { to: '/dashboard', label: t('nav.dashboard'), icon: <DashboardIcon className="h-5 w-5" /> },
     { to: '/vaccines', label: t('nav.vaccines'), icon: <SyringeIcon className="h-5 w-5" /> },
-    { to: '/appointments', label: t('nav.appointments'), icon: <CalendarIcon className="h-5 w-5" /> },
+    { to: '/appointments', label: t('nav.appointments'), icon: <StethoscopeIcon className="h-5 w-5" /> },
     { to: '/milestones', label: t('nav.milestones'), icon: <SparkleIcon className="h-5 w-5" /> },
     {
       to: '/notifications',
@@ -62,7 +64,10 @@ export function AppShellLayout() {
 
         <SidebarBabySwitcher />
 
-        <nav className="mt-4 flex-1 space-y-1.5 overflow-y-auto px-4">
+        <p className="mt-4 mb-2 px-6 text-[10px] font-bold tracking-wider text-ink-muted uppercase">
+          {t('nav.menuLabel')}
+        </p>
+        <nav className="flex-1 space-y-1.5 overflow-y-auto px-4 pb-4">
           {navItems.map((item) => (
             <NavItem key={item.to} {...item} disabled={!hasBabies && item.to !== '/notifications'} />
           ))}
@@ -70,13 +75,19 @@ export function AppShellLayout() {
 
         <div className="border-t border-slate-100 p-5">
           <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-700">
-              <UserIcon className="h-4 w-4" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-bold text-ink">{identity?.name ?? accountLabel}</p>
-              <p className="truncate text-[11px] text-ink-muted">{identity?.email ?? ''}</p>
-            </div>
+            <Link
+              to="/profile"
+              className="flex min-w-0 flex-1 items-center gap-3 rounded-lg transition-colors hover:bg-teal-50/60"
+              title={t('profile.nav.viewProfile')}
+            >
+              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-700">
+                <UserIcon className="h-4 w-4" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[13px] font-bold text-ink">{identity?.name ?? accountLabel}</p>
+                <p className="truncate text-[11px] text-ink-muted">{identity?.email ?? ''}</p>
+              </div>
+            </Link>
             <button
               type="button"
               onClick={handleLogout}
@@ -99,22 +110,13 @@ export function AppShellLayout() {
             </div>
             <span className="font-display text-lg font-extrabold text-ink">{t('common.appName')}</span>
           </div>
-          <div className="flex items-center gap-3">
-            <LanguageSwitcher />
-            <NotificationBell />
-          </div>
-        </header>
-
-        <header className="sticky top-0 z-20 hidden items-center justify-end gap-4 border-b border-slate-200 bg-white/80 px-8 py-4 backdrop-blur-md md:flex">
-          <LanguageSwitcher />
-          <div className="h-8 w-px bg-slate-200" />
-          <NotificationBell />
+          <Link to="/profile" aria-label={t('profile.nav.viewProfile')} className="text-ink-muted">
+            <UserIcon className="h-5 w-5" />
+          </Link>
         </header>
 
         <div className="flex-1 overflow-y-auto p-5 pb-24 md:p-10 md:pb-10 lg:p-12">
-          <div className="mx-auto max-w-6xl">
-            <Outlet />
-          </div>
+          <Outlet />
         </div>
       </main>
 
@@ -123,6 +125,8 @@ export function AppShellLayout() {
           <MobileNavItem key={item.to} {...item} disabled={!hasBabies && item.to !== '/notifications'} />
         ))}
       </nav>
+
+      <AddBabyDialog open={isAddBabyDialogOpen} onOpenChange={(open) => !open && closeAddBabyDialog()} />
     </div>
   )
 }

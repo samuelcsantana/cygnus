@@ -8,10 +8,15 @@
     "cancel": "Cancelar",
     "saving": "Guardando...",
     "close": "Cerrar",
-    "languageSwitcherLabel": "Idioma"
+    "languageSwitcherLabel": "Idioma",
+    "datePicker": {
+      "placeholder": "dd-mm-aaaa",
+      "openLabel": "Abrir calendario"
+    }
   },
   "nav": {
-    "dashboard": "Resumen",
+    "menuLabel": "Menú",
+    "dashboard": "Inicio",
     "vaccines": "Vacunas",
     "appointments": "Consultas",
     "milestones": "Hitos",
@@ -56,25 +61,66 @@
     }
   },
   "babies": {
-    "yourChildren": "Tus Hijos",
+    "yourChildren": "Mis Hijos",
     "addChild": "Agregar Hijo",
     "monthsOld_one": "{{count}} mes",
     "monthsOld_other": "{{count}} meses",
     "dashboard": {
-      "eyebrowEmpty": "El panel de tu familia",
-      "headingEmptyLine1": "El desarrollo de tus hijos,",
-      "headingEmptyHighlight": "organizado en un solo lugar.",
-      "subtitleEmpty": "Ten control total sobre la inmunización, el historial médico y guarda cada momento importante. Todo centralizado para facilitar tu rutina.",
-      "featureVaccinesTitle": "Inmunización al Día",
-      "featureVaccinesDesc": "Cartilla digital inteligente para seguir las vacunas de todos los hijos.",
-      "featureAppointmentsTitle": "Consultas y Rutina",
-      "featureAppointmentsDesc": "Agenda y guarda el historial de las visitas al pediatra y especialistas.",
-      "featureMilestonesTitle": "Línea de Tiempo",
-      "featureMilestonesDesc": "Crea un diario visual registrando cada hito importante del crecimiento.",
-      "ctaAddFirstChild": "Comenzar Ahora: Agregar Hijo",
-      "eyebrow": "RESUMEN",
-      "heading": "Panel de la Familia",
-      "subtitle": "Seguimiento consolidado.",
+      "welcomeHeading": "¡Bienvenido(a) a Meu Neném!",
+      "welcomeDescription": "Sigue las vacunas, consultas y los hitos más especiales del crecimiento de tus hijos — todo organizado en un solo lugar, para que nunca pierdas un momento importante.",
+      "welcomeCta": "Registrar Primer Hijo",
+      "previewSectionTitle": "Lo que podrás hacer ✨",
+      "previewVaccines": {
+        "cardTitle": "Calendario de Vacunas",
+        "cardSubtitle": "Calendario completo",
+        "progressLabel": "Progreso",
+        "items": [
+          { "name": "BCG", "dose": "Dosis única", "status": "taken" },
+          { "name": "Penta (DTP/Hib/HepB)", "dose": "3ª dosis", "status": "taken" },
+          { "name": "Influenza", "dose": "Anual", "status": "overdue" },
+          { "name": "Triple viral (SRP)", "dose": "2ª dosis", "status": "pending" }
+        ]
+      },
+      "previewMilestones": {
+        "cardTitle": "Hitos del Desarrollo",
+        "cardSubtitle": "Motor · Lenguaje · Social · Cognitivo",
+        "footerNote": "Cada momento especial registrado para siempre",
+        "items": [
+          { "title": "Primera sonrisa", "date": "20/04/2022", "category": "social" },
+          { "title": "Primeros pasos", "date": "15/01/2023", "category": "motor" },
+          { "title": "Primera palabra", "date": "03/11/2022", "category": "language" }
+        ]
+      },
+      "previewAppointments": {
+        "cardTitle": "Consultas Médicas",
+        "cardSubtitle": "Historial y citas",
+        "footerNote": "Anota observaciones e informes de cada visita",
+        "items": [
+          { "doctorName": "Dra. Carla Mendes", "specialty": "Pediatría", "date": "15/08", "status": "scheduled" },
+          { "doctorName": "Dr. Paulo Andrade", "specialty": "Odontopediatría", "date": "05/07", "status": "completed" }
+        ]
+      },
+      "previewNotifications": {
+        "cardTitle": "Notificaciones Inteligentes",
+        "cardSubtitle": "Recordatorios automáticos",
+        "footerNote": "Tú controlas qué alertas recibir",
+        "items": [
+          { "text": "Penta 3ª dosis — vence en 3 días" },
+          { "text": "Consulta pediátrica mañana a las 14h" },
+          { "text": "¡Tu bebé cumple un mes más hoy! 🎂" }
+        ]
+      },
+      "stepsSectionTitle": "Comienza en 3 pasos simples 🚀",
+      "steps": {
+        "items": [
+          { "title": "Registra a tu hijo", "description": "Nombre, fecha de nacimiento y listo — toma menos de 1 minuto" },
+          { "title": "Registra las vacunas", "description": "Marca las que ya recibió y la app organiza las próximas automáticamente" },
+          { "title": "Sigue el crecimiento", "description": "Consultas, hitos y notificaciones para no perder nunca nada importante" }
+        ]
+      },
+      "bottomCtaTitle": "¿Listo(a) para comenzar?",
+      "bottomCtaDescription": "Registra a tu hijo ahora y ten todo organizado en minutos 💛",
+      "bottomCtaAction": "Agregar Hijo",
       "greetingMorning": "Buenos días",
       "greetingAfternoon": "Buenas tardes",
       "greetingEvening": "Buenas noches",
@@ -114,10 +160,22 @@
       "allergiesLabel": "Alergias",
       "allergiesPlaceholder": "Escribe y presiona Enter",
       "allergiesRemoveAria": "Eliminar {{value}}",
-      "avatarUrlLabel": "Foto (URL)",
-      "avatarUrlPlaceholder": "https://...",
+      "avatarLabel": "Foto del Bebé (Opcional)",
+      "avatarUrlPlaceholder": "Pega una URL o sube una foto",
+      "avatarUploadAria": "Subir foto",
+      "avatarRemoveAria": "Quitar foto",
+      "avatarFileTooLarge": "La imagen debe tener como máximo 10MB.",
+      "avatarInvalidImage": "No se pudo cargar esa imagen. Prueba con otro archivo.",
+      "avatarColorGroupLabel": "Color del borde del avatar",
+      "avatarColorOption": "Color {{number}}",
       "submit": "Crear Perfil",
       "genericError": "No se pudo guardar. Inténtalo de nuevo."
+    },
+    "wizard": {
+      "stepProfile": "Perfil",
+      "stepHealth": "Salud",
+      "continue": "Continuar",
+      "back": "Atrás"
     },
     "edit": {
       "action": "Editar perfil de {{name}}",
@@ -125,6 +183,8 @@
       "submit": "Guardar Cambios"
     },
     "delete": {
+      "sectionTitle": "Zona de Peligro",
+      "sectionDescription": "Eliminar este perfil es permanente y eliminará todas las vacunas, consultas e hitos registrados de este niño.",
       "action": "Eliminar perfil de {{name}}",
       "confirmTitle": "¿Eliminar perfil?",
       "confirmDescription": "Esto eliminará permanentemente el perfil de {{name}}, incluyendo vacunas, consultas e hitos registrados. Esta acción no se puede deshacer.",
@@ -134,8 +194,9 @@
     }
   },
   "vaccines": {
-    "eyebrow": "INMUNIZACIÓN",
-    "title": "Cartilla de Vacunación",
+    "title": "Vacunas",
+    "titleWithBaby": "Vacunas de {{name}} 💉",
+    "summary": "{{applied}} aplicadas · {{delayed}} atrasadas · {{pending}} pendientes",
     "genericError": "No se pudo cargar el calendario de vacunas.",
     "progressLabel": "Progreso del calendario",
     "filterAll": "Todas",
@@ -156,15 +217,76 @@
     },
     "apply": {
       "title": "Aplicar Vacuna",
-      "dateLabel": "Fecha de Aplicación",
-      "notesLabel": "Notas (Opcional)",
       "submit": "Guardar Registro",
       "genericError": "No se pudo registrar la vacuna. Inténtalo de nuevo."
+    },
+    "registerAction": "Registrar Vacuna",
+    "applicationDetails": {
+      "dateLabel": "Fecha de Aplicación",
+      "batchNumberLabel": "Lote / nº de frasco (Opcional)",
+      "batchNumberPlaceholder": "Ej: A2B3C4",
+      "locationLabel": "Lugar de vacunación (Opcional)",
+      "locationPlaceholder": "Ej: Centro de Salud, Clínica Vita, Hospital General",
+      "professionalLabel": "Profesional responsable (Opcional)",
+      "professionalPlaceholder": "Ej: Enf. Márcia Costa",
+      "photoUrlLabel": "Foto (Opcional)",
+      "photoUrlPlaceholder": "Pega el enlace de la foto",
+      "notesLabel": "Notas (Opcional)"
+    },
+    "register": {
+      "title": "Registrar vacuna",
+      "detailsTitle": "Detalles de la aplicación",
+      "stepType": "Tipo de vacuna",
+      "stepSelect": "Elegir vacuna",
+      "stepDetails": "Detalles",
+      "continue": "Continuar",
+      "back": "Volver",
+      "submit": "Guardar vacuna",
+      "genericError": "No se pudo registrar la vacuna. Inténtalo de nuevo.",
+      "type": {
+        "catalog": {
+          "title": "Calendario obligatorio",
+          "description": "Vacunas del calendario nacional previstas para la edad"
+        },
+        "campaign": {
+          "title": "Campaña de vacunación",
+          "description": "Vacunas de campañas estacionales como gripe, COVID-19, fiebre amarilla"
+        },
+        "custom": {
+          "title": "Otra vacuna",
+          "description": "Vacunas particulares, de viaje o no listadas anteriormente"
+        }
+      },
+      "catalogPicker": {
+        "label": "Vacunas pendientes",
+        "empty": "¡Todas las vacunas del calendario están al día!"
+      },
+      "campaignPicker": {
+        "suggestedLabel": "Campañas recientes y frecuentes",
+        "customLabel": "O escribe el nombre de la campaña",
+        "customPlaceholder": "Ej: Dengue — Qdenga, 1ª dosis"
+      },
+      "custom": {
+        "sectionLabel": "Vacuna personalizada",
+        "nameLabel": "Nombre de la vacuna",
+        "namePlaceholder": "Ej: Varicela combinada (MMRV)",
+        "doseLabel": "Dosis (Opcional)",
+        "dosePlaceholder": "Ej: 1ª dosis, Dosis única, Refuerzo"
+      }
+    },
+    "adhoc": {
+      "sectionTitle": "Otras vacunas registradas",
+      "sectionDescription": "Campañas y vacunas particulares registradas para este niño.",
+      "sourceLabel": {
+        "campaign": "Campaña",
+        "custom": "Otra vacuna"
+      }
     }
   },
   "appointments": {
-    "eyebrow": "MÉDICOS",
     "title": "Consultas",
+    "titleWithBaby": "Consultas de {{name}} 🩺",
+    "summary": "{{completed}} realizadas · {{scheduled}} agendadas",
     "scheduleAction": "Agendar Consulta",
     "dateLabel": "Fecha",
     "genericError": "No se pudieron cargar las consultas.",
@@ -201,6 +323,8 @@
       "createSubtitle": "Registra un nuevo seguimiento.",
       "doctorNameLabel": "Nombre del Profesional",
       "doctorNamePlaceholder": "Ej: Dra. Ana Silva",
+      "specialtyLabel": "Especialidad (Opcional)",
+      "specialtyPlaceholder": "Ej: Pediatría",
       "locationLabel": "Lugar (Opcional)",
       "locationPlaceholder": "Ej: Clínica Pediátrica",
       "dateLabel": "Fecha",
@@ -210,11 +334,19 @@
       "scheduledAtPast": "La fecha y hora no pueden estar en el pasado.",
       "submit": "Guardar Consulta",
       "genericError": "No se pudo guardar la consulta. Inténtalo de nuevo."
+    },
+    "wizard": {
+      "stepProfessional": "Profesional",
+      "stepSchedule": "Agenda",
+      "continue": "Continuar",
+      "back": "Atrás"
     }
   },
   "milestones": {
-    "eyebrow": "RECUERDOS",
     "title": "Hitos de Desarrollo",
+    "titleWithBaby": "Hitos de {{name}} ⭐",
+    "summary_one": "{{count}} momento especial registrado",
+    "summary_other": "{{count}} momentos especiales registrados",
     "action": "Registrar Hito",
     "genericError": "No se pudieron cargar los hitos.",
     "filterAll": "Todos",
@@ -247,6 +379,12 @@
       "submit": "Guardar Hito",
       "genericError": "No se pudo guardar el hito. Inténtalo de nuevo."
     },
+    "wizard": {
+      "stepCore": "¿Qué pasó?",
+      "stepDetails": "Detalles",
+      "continue": "Continuar",
+      "back": "Atrás"
+    },
     "edit": {
       "action": "Editar hito: {{title}}",
       "title": "Editar Hito",
@@ -254,8 +392,7 @@
     }
   },
   "notifications": {
-    "eyebrow": "AVISOS",
-    "title": "Notificaciones",
+    "title": "Notificaciones 🔔",
     "bellAria_one": "Notificaciones, {{count}} sin leer",
     "bellAria_other": "Notificaciones, {{count}} sin leer",
     "unreadCount_one": "{{count}} sin leer",
@@ -263,6 +400,56 @@
     "markAllRead": "Marcar todas como leídas",
     "genericError": "No se pudieron cargar las notificaciones.",
     "empty": "Aún no hay notificaciones."
+  },
+  "profile": {
+    "nav": {
+      "viewProfile": "Ver mi perfil"
+    },
+    "title": "Mi Perfil",
+    "subtitle": "Gestiona tu información personal y la seguridad de tu cuenta.",
+    "language": {
+      "sectionTitle": "Idioma"
+    },
+    "form": {
+      "sectionTitle": "Información Personal",
+      "nameLabel": "Nombre completo",
+      "emailLabel": "Correo electrónico",
+      "currentPasswordLabel": "Contraseña actual",
+      "currentPasswordHint": "Necesaria solo si cambias tu correo electrónico.",
+      "currentPasswordRequiredForEmail": "Ingresa tu contraseña actual para cambiar el correo electrónico.",
+      "submit": "Guardar Cambios",
+      "savedToast": "¡Perfil actualizado con éxito!",
+      "incorrectCurrentPassword": "Contraseña actual incorrecta.",
+      "emailTaken": "Este correo electrónico ya está en uso por otra cuenta.",
+      "genericError": "No se pudo guardar. Inténtalo de nuevo."
+    },
+    "password": {
+      "sectionTitle": "Cambiar Contraseña",
+      "currentPasswordLabel": "Contraseña actual",
+      "newPasswordLabel": "Nueva contraseña",
+      "confirmNewPasswordLabel": "Confirmar nueva contraseña",
+      "mismatch": "Las contraseñas no coinciden.",
+      "submit": "Actualizar Contraseña",
+      "savedToast": "¡Contraseña actualizada con éxito!",
+      "incorrectCurrentPassword": "Contraseña actual incorrecta.",
+      "genericError": "No se pudo actualizar la contraseña. Inténtalo de nuevo."
+    },
+    "babies": {
+      "sectionTitle": "Bebés que gestionas",
+      "empty": "Todavía no has añadido ningún bebé.",
+      "addFirst": "Añadir Niño"
+    },
+    "delete": {
+      "sectionTitle": "Zona de Peligro",
+      "sectionDescription": "Eliminar tu cuenta es permanente y eliminará todos los bebés, vacunas, citas e hitos asociados.",
+      "action": "Eliminar mi cuenta",
+      "confirmTitle": "¿Eliminar cuenta?",
+      "confirmDescription": "Esta acción es irreversible. Todos tus datos, incluidos bebés, vacunas, citas e hitos, se eliminarán permanentemente.",
+      "currentPasswordLabel": "Confirma tu contraseña actual",
+      "confirmAction": "Eliminar cuenta permanentemente",
+      "incorrectPassword": "Contraseña actual incorrecta.",
+      "genericError": "No se pudo eliminar la cuenta. Inténtalo de nuevo."
+    }
   },
   "errors": {
     "boundary": {

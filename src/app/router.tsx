@@ -29,10 +29,6 @@ export const router = createBrowserRouter([
             lazy: () => import('@/features/babies/routes/DashboardRoute').then((m) => ({ Component: m.DashboardRoute })),
           },
           {
-            path: 'add-baby',
-            lazy: () => import('@/features/babies/routes/AddBabyRoute').then((m) => ({ Component: m.AddBabyRoute })),
-          },
-          {
             path: 'vaccines',
             lazy: () => import('@/features/vaccines/routes/VaccinesRoute').then((m) => ({ Component: m.VaccinesRoute })),
           },
@@ -44,23 +40,9 @@ export const router = createBrowserRouter([
               })),
           },
           {
-            path: 'appointments/new',
-            lazy: () =>
-              import('@/features/appointments/routes/NewAppointmentRoute').then((m) => ({
-                Component: m.NewAppointmentRoute,
-              })),
-          },
-          {
             path: 'milestones',
             lazy: () =>
               import('@/features/milestones/routes/MilestonesRoute').then((m) => ({ Component: m.MilestonesRoute })),
-          },
-          {
-            path: 'milestones/new',
-            lazy: () =>
-              import('@/features/milestones/routes/NewMilestoneRoute').then((m) => ({
-                Component: m.NewMilestoneRoute,
-              })),
           },
           {
             path: 'notifications',
@@ -68,6 +50,10 @@ export const router = createBrowserRouter([
               import('@/features/notifications/routes/NotificationsRoute').then((m) => ({
                 Component: m.NotificationsRoute,
               })),
+          },
+          {
+            path: 'profile',
+            lazy: () => import('@/features/profile/routes/ProfileRoute').then((m) => ({ Component: m.ProfileRoute })),
           },
         ],
       },
