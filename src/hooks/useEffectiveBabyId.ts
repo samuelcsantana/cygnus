@@ -17,11 +17,21 @@ export function useEffectiveBabyId(): string | null {
   const babyList = babies.data ?? []
   const onlyBaby = babyList.length === 1 ? babyList[0] : undefined
 
+  // The selection persists in localStorage across logins — including a
+  // different account signing in on the same browser without ever clicking
+  // "logout" — so once the baby list has loaded, a selection that isn't in
+  // it (belongs to nobody, or to someone else) must be treated as absent
+  // rather than sent to the API as-is.
+  const selectionIsStale = !!babies.data && !!selectedBabyId && !babyList.some((baby) => baby.id === selectedBabyId)
+  const effectiveSelectedId = selectionIsStale ? null : selectedBabyId
+
   useEffect(() => {
-    if (!selectedBabyId && onlyBaby) {
+    if (selectionIsStale) {
+      setSelectedBabyId(null)
+    } else if (!effectiveSelectedId && onlyBaby) {
       setSelectedBabyId(onlyBaby.id)
     }
-  }, [selectedBabyId, onlyBaby, setSelectedBabyId])
+  }, [selectionIsStale, effectiveSelectedId, onlyBaby, setSelectedBabyId])
 
-  return selectedBabyId ?? onlyBaby?.id ?? null
+  return effectiveSelectedId ?? onlyBaby?.id ?? null
 }
