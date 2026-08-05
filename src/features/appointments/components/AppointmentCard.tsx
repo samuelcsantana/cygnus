@@ -37,7 +37,7 @@ export function AppointmentCard({ appointment, onReschedule, onViewDetails }: Ap
           </span>
           <div>
             <h3 className="text-[15px] font-bold text-ink">{appointment.doctorName}</h3>
-            {appointment.reason && <p className="text-[13px] text-ink-muted">{appointment.reason}</p>}
+            {appointment.specialty && <p className="text-[13px] text-ink-muted">{appointment.specialty}</p>}
           </div>
         </div>
         <div className="flex-shrink-0 text-right">
@@ -48,6 +48,7 @@ export function AppointmentCard({ appointment, onReschedule, onViewDetails }: Ap
         </div>
       </div>
 
+      {appointment.reason && <p className="mb-1 text-[13px] text-ink-muted">{appointment.reason}</p>}
       {appointment.location && <p className="mb-1 text-[13px] text-ink-muted">{appointment.location}</p>}
 
       {appointment.notes && (

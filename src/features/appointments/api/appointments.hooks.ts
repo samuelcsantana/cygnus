@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { createAppointment, fetchAppointments, updateAppointment } from './appointments.api'
+import { createAppointment, fetchAppointments, fetchMedicalSpecialties, updateAppointment } from './appointments.api'
 import type { Appointment, AppointmentFormInput, UpdateAppointmentInput } from './appointments.schemas'
 
 export function appointmentsQueryKey(babyId: string) {
@@ -13,6 +13,17 @@ export function useAppointments(babyId: string | null) {
     queryFn: () => fetchAppointments(babyId!),
     enabled: !!babyId,
     select: (data) => [...data].sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt)),
+  })
+}
+
+// Static reference data (medical specialties) — cached for the whole session, no need to refetch.
+// No `initialData` here: seeding one would mark the query fresh before the first real
+// fetch and, combined with `staleTime: Infinity`, permanently skip it.
+export function useMedicalSpecialties() {
+  return useQuery({
+    queryKey: ['medical-specialties'],
+    queryFn: fetchMedicalSpecialties,
+    staleTime: Infinity,
   })
 }
 

@@ -29,6 +29,7 @@ export function RescheduleDialog({ babyId, appointment, onOpenChange }: Reschedu
             defaultValues={{
               ...splitScheduledAt(appointment.scheduledAt),
               doctorName: appointment.doctorName,
+              specialty: appointment.specialty ?? '',
               location: appointment.location ?? '',
               reason: appointment.reason ?? '',
             }}
@@ -42,6 +43,7 @@ export function RescheduleDialog({ babyId, appointment, onOpenChange }: Reschedu
                 input: {
                   scheduledAt,
                   doctorName: values.doctorName,
+                  specialty: values.specialty || null,
                   location: values.location || null,
                   reason: values.reason || null,
                 },

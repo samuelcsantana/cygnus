@@ -3,6 +3,7 @@ import { httpClient } from '@/lib/http-client'
 import {
   appointmentListSchema,
   appointmentSchema,
+  medicalSpecialtyListSchema,
   updateAppointmentSchema,
   type Appointment,
   type AppointmentFormInput,
@@ -14,11 +15,17 @@ export async function fetchAppointments(babyId: string): Promise<Appointment[]> 
   return appointmentListSchema.parse(response)
 }
 
+export async function fetchMedicalSpecialties(): Promise<string[]> {
+  const response = await httpClient.get<unknown>('/specialties')
+  return medicalSpecialtyListSchema.parse(response)
+}
+
 export async function createAppointment(babyId: string, input: AppointmentFormInput): Promise<Appointment> {
   const scheduledAt = new Date(`${input.date}T${input.time}`).toISOString()
   const body = {
     scheduledAt,
     doctorName: input.doctorName,
+    specialty: input.specialty || undefined,
     location: input.location || undefined,
     reason: input.reason || undefined,
   }

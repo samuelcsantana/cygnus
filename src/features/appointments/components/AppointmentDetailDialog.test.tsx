@@ -16,6 +16,7 @@ const sampleAppointment: Appointment = {
   babyId,
   scheduledAt: '2026-09-01T10:00:00.000Z',
   doctorName: 'Dra. Ana Souza',
+  specialty: 'Pediatria',
   location: 'Clínica Central',
   reason: 'Checkup',
   notes: null,
