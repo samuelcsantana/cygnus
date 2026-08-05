@@ -5,14 +5,11 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { todayDateString } from '@/lib/date'
-import { fieldErrorKey } from '@/shared/utils/zod-error'
 
 import { useApplyVaccine } from '../api/vaccines.hooks'
 import { applyVaccineSchema, type ApplyVaccineInput, type VaccineItem } from '../api/vaccines.schemas'
+import { VaccineApplicationDetailsFields } from './VaccineApplicationDetailsFields'
 
 interface ApplyVaccineDialogProps {
   babyId: string
@@ -26,6 +23,7 @@ export function ApplyVaccineDialog({ babyId, item, onOpenChange }: ApplyVaccineD
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -50,8 +48,6 @@ export function ApplyVaccineDialog({ babyId, item, onOpenChange }: ApplyVaccineD
     }
   })
 
-  const dateErrorKey = fieldErrorKey(errors.applicationDate)
-
   return (
     <Dialog open={!!item} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -66,22 +62,7 @@ export function ApplyVaccineDialog({ babyId, item, onOpenChange }: ApplyVaccineD
               <p className="text-sm font-medium text-teal-600">{t('vaccines.doseLabel', { count: item.doseNumber })}</p>
             </div>
 
-            <div>
-              <Label htmlFor="applicationDate">{t('vaccines.apply.dateLabel')}</Label>
-              <Input
-                id="applicationDate"
-                type="date"
-                className="mt-2"
-                aria-invalid={!!errors.applicationDate}
-                {...register('applicationDate')}
-              />
-              {dateErrorKey && <p className="text-destructive mt-1 text-sm">{t(dateErrorKey)}</p>}
-            </div>
-
-            <div>
-              <Label htmlFor="notes">{t('vaccines.apply.notesLabel')}</Label>
-              <Textarea id="notes" rows={3} className="mt-2" {...register('notes')} />
-            </div>
+            <VaccineApplicationDetailsFields register={register} control={control} errors={errors} />
 
             {applyVaccine.isError && (
               <p role="alert" className="text-destructive text-sm">

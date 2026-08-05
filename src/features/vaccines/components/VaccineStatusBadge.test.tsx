@@ -15,6 +15,10 @@ function itemWithStatus(status: VaccineItem['status']): VaccineItem {
     status,
     applicationDate: status === 'APPLIED' ? '2026-01-01' : null,
     notes: null,
+    batchNumber: null,
+    location: null,
+    professional: null,
+    photoUrl: null,
   }
 }
 

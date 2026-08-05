@@ -6,10 +6,13 @@ import { useBabies } from '@/features/babies/api/babies.hooks'
 import { useEffectiveBabyId } from '@/hooks/useEffectiveBabyId'
 import { cn } from '@/lib/utils'
 import { EmptyState } from '@/shared/components/EmptyState'
+import { PlusIcon } from '@/shared/icons/plus-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 
 import { useVaccineCalendar } from '../api/vaccines.hooks'
 import type { VaccineStatus } from '../api/vaccines.schemas'
+import { AdhocVaccineList } from '../components/AdhocVaccineList'
+import { RegisterVaccineDialog } from '../components/RegisterVaccineDialog'
 import { VaccineCalendarList } from '../components/VaccineCalendarList'
 import { VaccineCalendarSkeleton } from '../components/VaccineCalendarSkeleton'
 
@@ -21,6 +24,7 @@ export function VaccinesRoute() {
   const babies = useBabies()
   const calendar = useVaccineCalendar(babyId)
   const [filter, setFilter] = useState<Filter>('ALL')
+  const [isRegisterOpen, setRegisterOpen] = useState(false)
 
   if (!babyId) {
     return <Navigate to="/dashboard" replace />
@@ -44,11 +48,29 @@ export function VaccinesRoute() {
     <div className="animate-fade-in-up">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="text-primary mb-1 text-sm font-semibold tracking-wider uppercase">{t('vaccines.eyebrow')}</p>
-          <h2 className="font-display text-3xl font-extrabold text-ink">{t('vaccines.title')}</h2>
-          {baby && <p className="mt-1 text-lg text-ink-muted">{baby.name}</p>}
+          <h2 className="font-display text-3xl font-extrabold text-ink">
+            {baby ? t('vaccines.titleWithBaby', { name: baby.name }) : t('vaccines.title')}
+          </h2>
+          <p className="mt-1 text-lg text-ink-muted">
+            {t('vaccines.summary', { applied: counts.APPLIED, delayed: counts.DELAYED, pending: counts.PENDING })}
+          </p>
         </div>
+        <button
+          type="button"
+          onClick={() => setRegisterOpen(true)}
+          className="inline-flex items-center justify-center rounded-2xl bg-teal-600 px-6 py-3 font-bold text-white shadow-lg shadow-teal-900/20 transition-all hover:bg-teal-700 active:scale-[0.98]"
+        >
+          <PlusIcon className="mr-2 h-5 w-5" />
+          {t('vaccines.registerAction')}
+        </button>
       </div>
+
+      <RegisterVaccineDialog
+        babyId={babyId}
+        pendingItems={allItems.filter((item) => item.status !== 'APPLIED')}
+        open={isRegisterOpen}
+        onOpenChange={setRegisterOpen}
+      />
 
       {calendar.isPending ? (
         <VaccineCalendarSkeleton />
@@ -101,6 +123,8 @@ export function VaccinesRoute() {
           <VaccineCalendarList items={filteredItems} babyId={babyId} />
         </>
       )}
+
+      <AdhocVaccineList babyId={babyId} />
     </div>
   )
 }

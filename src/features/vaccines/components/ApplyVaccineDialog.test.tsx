@@ -18,9 +18,39 @@ const sampleItem: VaccineItem = {
   status: 'PENDING',
   applicationDate: null,
   notes: null,
+  batchNumber: null,
+  location: null,
+  professional: null,
+  photoUrl: null,
 }
 
 describe('ApplyVaccineDialog', () => {
+  it('sends the optional detail fields (batch, location, professional, photo) in the PATCH body', async () => {
+    let receivedBody: unknown = null
+    server.use(
+      http.patch(`${config.apiBaseUrl}/babies/:babyId/vaccines/:vaccineId/apply`, async ({ request }) => {
+        receivedBody = await request.json()
+        return HttpResponse.json({ ...sampleItem, status: 'APPLIED', applicationDate: '2026-01-01' })
+      }),
+    )
+
+    const user = userEvent.setup()
+    renderWithProviders(<ApplyVaccineDialog babyId="baby-1" item={sampleItem} onOpenChange={vi.fn()} />)
+
+    await user.type(screen.getByLabelText('Lote / nº do frasco (Opcional)'), 'A2B3C4')
+    await user.type(screen.getByLabelText('Local de vacinação (Opcional)'), 'UBS Vila Mariana')
+    await user.type(screen.getByLabelText('Profissional responsável (Opcional)'), 'Enf. Márcia Costa')
+    await user.click(screen.getByRole('button', { name: 'Salvar Registro' }))
+
+    await waitFor(() => {
+      expect(receivedBody).toMatchObject({
+        batchNumber: 'A2B3C4',
+        location: 'UBS Vila Mariana',
+        professional: 'Enf. Márcia Costa',
+      })
+    })
+  })
+
   it('shows an inline error when the apply request fails, instead of failing silently', async () => {
     server.use(
       http.patch(`${config.apiBaseUrl}/babies/:babyId/vaccines/:vaccineId/apply`, () =>
