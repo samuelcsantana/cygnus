@@ -81,6 +81,7 @@ export function VaccinesRoute() {
           icon={<SyringeIcon className="h-10 w-10" />}
           title={t('vaccines.empty.title')}
           description={t('vaccines.empty.description')}
+          tone="teal"
         />
       ) : (
         <>

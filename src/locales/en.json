@@ -399,13 +399,16 @@
     "unreadCount_other": "{{count}} unread",
     "markAllRead": "Mark all as read",
     "genericError": "Could not load notifications.",
-    "empty": "No notifications yet."
+    "empty": "No notifications yet.",
+    "emptyState": {
+      "title": "You're all caught up",
+      "description": "Alerts for overdue vaccines and upcoming appointments will show up here as soon as there's something new."
+    }
   },
   "profile": {
     "nav": {
       "viewProfile": "View my profile"
     },
-    "title": "My Profile",
     "subtitle": "Manage your personal information and account security.",
     "language": {
       "sectionTitle": "Language"

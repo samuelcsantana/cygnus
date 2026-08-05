@@ -1,16 +1,30 @@
 import type { ReactNode } from 'react'
 
+import { cn } from '@/lib/utils'
+
+type EmptyStateTone = 'slate' | 'teal' | 'violet' | 'amber' | 'rose'
+
+const TONE_CLASSES: Record<EmptyStateTone, string> = {
+  slate: 'bg-slate-50 text-ink-faint',
+  teal: 'bg-teal-50 text-teal-600',
+  violet: 'bg-violet-50 text-violet-600',
+  amber: 'bg-amber-50 text-amber-600',
+  rose: 'bg-rose-50 text-rose-500',
+}
+
 interface EmptyStateProps {
   icon: ReactNode
   title: string
   description: string
   action?: ReactNode
+  /** Matches the section's accent color (see DESIGN.md's per-feature map). Defaults to neutral. */
+  tone?: EmptyStateTone
 }
 
-export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
+export function EmptyState({ icon, title, description, action, tone = 'slate' }: EmptyStateProps) {
   return (
     <div className="rounded-[2rem] border border-slate-100 bg-white p-12 text-center shadow-sm">
-      <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-slate-50 text-ink-faint">
+      <div className={cn('mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full', TONE_CLASSES[tone])}>
         {icon}
       </div>
       <h3 className="mb-2 text-xl font-bold text-ink">{title}</h3>

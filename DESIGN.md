@@ -90,12 +90,10 @@ exactly) that a new base wasn't needed.
 - **Branding**: kept "Meu Neném" (name, heart logo mark) — the reference
   calls the app "Crescer" with a 🌱 mark, but that's a placeholder from the
   Figma Make prototype, not a product rename.
-- **Vaccine registration wizard**: the reference's multi-step "type of
-  vaccine" picker (calendário/campanha/outra) plus batch/clinic/
-  professional/photo/reminder fields aren't backed by any `cygnus-api`
-  endpoint — `PATCH /babies/{id}/vaccines/{id}/apply` only accepts
-  `applicationDate` + `notes` for a known vaccine. Not built; a candidate
-  future backend request, same as `DELETE /babies/{id}` was before it
-  shipped.
+- **Vaccine registration wizard**: built as `RegisterVaccineDialog`,
+  backed by the `cygnus-api` adhoc endpoints
+  (`GET`/`POST /babies/{id}/vaccines/adhoc`) and by
+  `PATCH /babies/{id}/vaccines/{id}/apply` now also accepting
+  batch/location/professional/photo for known-catalog vaccines.
 - **Dark mode**: the reference has none; the app's existing dark tokens are
   untouched.

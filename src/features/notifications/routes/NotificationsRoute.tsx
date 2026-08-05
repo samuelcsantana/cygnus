@@ -1,5 +1,8 @@
 import { useTranslation } from 'react-i18next'
 
+import { EmptyState } from '@/shared/components/EmptyState'
+import { BellIcon } from '@/shared/icons/bell-icon'
+
 import { useMarkNotificationRead, useNotifications } from '../api/notifications.hooks'
 import { NotificationsPanel } from '../components/NotificationsPanel'
 
@@ -41,6 +44,13 @@ export function NotificationsRoute() {
         </div>
       ) : notifications.isError ? (
         <p className="py-16 text-center text-ink-muted">{t('notifications.genericError')}</p>
+      ) : items.length === 0 ? (
+        <EmptyState
+          icon={<BellIcon className="h-10 w-10" />}
+          title={t('notifications.emptyState.title')}
+          description={t('notifications.emptyState.description')}
+          tone="rose"
+        />
       ) : (
         <div className="overflow-hidden rounded-2xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
           <NotificationsPanel

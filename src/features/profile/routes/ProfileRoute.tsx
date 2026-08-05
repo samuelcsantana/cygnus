@@ -33,12 +33,23 @@ export function ProfileRoute() {
   }
 
   const babyList = babies.data ?? []
+  const accountInitial = currentUser.data.name.trim().slice(0, 1).toUpperCase()
 
   return (
     <div className="animate-fade-in-up mx-auto max-w-3xl">
-      <div className="mb-7">
-        <h2 className="font-display text-2xl font-extrabold text-ink">{t('profile.title')}</h2>
-        <p className="mt-0.5 text-sm text-ink-muted">{t('profile.subtitle')}</p>
+      <div className="from-primary relative mb-7 overflow-hidden rounded-2xl bg-gradient-to-br to-teal-400 px-6 py-7 sm:px-8 sm:py-8">
+        <div className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/10" />
+        <div className="pointer-events-none absolute -bottom-14 right-16 h-28 w-28 rounded-full bg-white/10" />
+        <div className="relative flex items-center gap-4">
+          <span className="font-display flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-white/20 text-2xl font-black text-white ring-2 ring-white/40">
+            {accountInitial}
+          </span>
+          <div className="min-w-0">
+            <h2 className="font-display truncate text-2xl font-extrabold text-white">{currentUser.data.name}</h2>
+            <p className="truncate text-sm text-white/80">{currentUser.data.email}</p>
+          </div>
+        </div>
+        <p className="relative mt-5 text-sm text-white/80">{t('profile.subtitle')}</p>
       </div>
 
       <div className="flex flex-col gap-5">

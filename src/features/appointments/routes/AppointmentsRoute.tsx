@@ -64,6 +64,7 @@ export function AppointmentsRoute() {
           icon={<CalendarIcon className="h-10 w-10" />}
           title={t('appointments.empty.title')}
           description={t('appointments.empty.description')}
+          tone="violet"
           action={
             <button
               type="button"

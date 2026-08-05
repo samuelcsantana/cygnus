@@ -60,6 +60,7 @@ export function MilestonesRoute() {
           icon={<SparkleIcon className="h-10 w-10" />}
           title={t('milestones.empty.title')}
           description={t('milestones.empty.description')}
+          tone="amber"
           action={
             <button
               type="button"

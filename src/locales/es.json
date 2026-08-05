@@ -399,13 +399,16 @@
     "unreadCount_other": "{{count}} sin leer",
     "markAllRead": "Marcar todas como leídas",
     "genericError": "No se pudieron cargar las notificaciones.",
-    "empty": "Aún no hay notificaciones."
+    "empty": "Aún no hay notificaciones.",
+    "emptyState": {
+      "title": "Todo al día por aquí",
+      "description": "Los avisos de vacunas atrasadas y próximas consultas aparecerán en esta página en cuanto haya algo nuevo."
+    }
   },
   "profile": {
     "nav": {
       "viewProfile": "Ver mi perfil"
     },
-    "title": "Mi Perfil",
     "subtitle": "Gestiona tu información personal y la seguridad de tu cuenta.",
     "language": {
       "sectionTitle": "Idioma"
