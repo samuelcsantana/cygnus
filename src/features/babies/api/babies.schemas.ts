@@ -8,6 +8,9 @@ export type Gender = z.infer<typeof genderSchema>
 export const bloodTypeSchema = z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
 export type BloodType = z.infer<typeof bloodTypeSchema>
 
+// Matches the backend's validation for `avatarColor` — a hex color used as the avatar's border.
+export const avatarColorHexRegex = /^#[0-9A-Fa-f]{6}$/
+
 export const babySchema = z.object({
   id: z.string().uuid(),
   userId: z.string().uuid(),
@@ -17,6 +20,7 @@ export const babySchema = z.object({
   bloodType: bloodTypeSchema.nullable(),
   allergies: z.array(z.string()),
   avatarUrl: z.string().nullable(),
+  avatarColor: z.string().nullable(),
   createdAt: z.string(),
 })
 export type Baby = z.infer<typeof babySchema>
@@ -36,6 +40,7 @@ export const babyFormSchema = z.object({
   allergies: z.array(z.string().min(1)).optional(),
   // A native <input> always yields "" (never undefined) when left blank.
   avatarUrl: z.union([z.string().url(), z.literal('')]).optional(),
+  avatarColor: z.union([z.string().regex(avatarColorHexRegex), z.literal('')]).optional(),
 })
 export type BabyFormInput = z.infer<typeof babyFormSchema>
 

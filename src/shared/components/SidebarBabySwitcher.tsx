@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
 
 import { useBabies } from '@/features/babies/api/babies.hooks'
 import { EditBabyDialog } from '@/features/babies/components/EditBabyDialog'
@@ -9,8 +8,9 @@ import { ageInMonths } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { PencilIcon } from '@/shared/icons/pencil-icon'
 import { PlusIcon } from '@/shared/icons/plus-icon'
+import { useAddBabyDialogStore } from '@/shared/stores/addBabyDialog.store'
 import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
-import { babyAvatarPalette, babyInitials } from '@/shared/utils/babyAvatarColor'
+import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 
 export function SidebarBabySwitcher() {
   const { t } = useTranslation()
@@ -18,6 +18,7 @@ export function SidebarBabySwitcher() {
   const selectedBabyId = useSelectedBabyStore((state) => state.selectedBabyId)
   const setSelectedBabyId = useSelectedBabyStore((state) => state.setSelectedBabyId)
   const [editTarget, setEditTarget] = useState<Baby | null>(null)
+  const openAddBabyDialog = useAddBabyDialogStore((state) => state.open)
 
   const babyList = babies.data ?? []
 
@@ -40,13 +41,14 @@ export function SidebarBabySwitcher() {
             onEdit={() => setEditTarget(baby)}
           />
         ))}
-        <Link
-          to="/add-baby"
+        <button
+          type="button"
+          onClick={openAddBabyDialog}
           className="mt-1 flex items-center gap-2.5 rounded-xl border border-dashed border-teal-200 px-2.5 py-2 text-xs font-semibold text-teal-700 transition-colors hover:bg-teal-50"
         >
           <PlusIcon className="h-4 w-4" />
           {t('babies.addChild')}
-        </Link>
+        </button>
       </div>
 
       <EditBabyDialog baby={editTarget} onOpenChange={(open) => !open && setEditTarget(null)} />
@@ -64,7 +66,7 @@ interface SidebarBabyRowProps {
 function SidebarBabyRow({ baby, selected, onSelect, onEdit }: SidebarBabyRowProps) {
   const { t } = useTranslation()
   const months = ageInMonths(baby.birthDate)
-  const palette = babyAvatarPalette(baby.id)
+  const avatarAppearance = babyAvatarAppearance(baby.id, baby.avatarColor)
 
   return (
     <div
@@ -75,14 +77,19 @@ function SidebarBabyRow({ baby, selected, onSelect, onEdit }: SidebarBabyRowProp
     >
       <button type="button" onClick={onSelect} aria-pressed={selected} className="flex flex-1 items-center gap-2.5">
         {baby.avatarUrl ? (
-          <img src={baby.avatarUrl} alt="" className="h-8 w-8 flex-shrink-0 rounded-full bg-slate-50 object-cover" />
+          <img
+            src={baby.avatarUrl}
+            alt=""
+            className={cn('h-8 w-8 flex-shrink-0 rounded-full bg-slate-50 object-cover', baby.avatarColor && 'border-2')}
+            style={baby.avatarColor ? { borderColor: baby.avatarColor } : undefined}
+          />
         ) : (
           <span
             className={cn(
               'flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-extrabold',
-              palette.bg,
-              palette.text,
+              avatarAppearance.className,
             )}
+            style={avatarAppearance.style}
           >
             {babyInitials(baby.name)}
           </span>

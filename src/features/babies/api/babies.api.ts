@@ -13,6 +13,7 @@ export async function createBaby(input: BabyFormInput): Promise<Baby> {
     ...parsed,
     allergies: parsed.allergies && parsed.allergies.length > 0 ? parsed.allergies : undefined,
     avatarUrl: parsed.avatarUrl ? parsed.avatarUrl : undefined,
+    avatarColor: parsed.avatarColor ? parsed.avatarColor : undefined,
   }
   const response = await httpClient.post<unknown>('/babies', body)
   return babySchema.parse(response)
@@ -33,6 +34,7 @@ export async function updateBaby(babyId: string, input: BabyFormInput): Promise<
     bloodType: parsed.bloodType ?? null,
     allergies: parsed.allergies ?? [],
     avatarUrl: parsed.avatarUrl ? parsed.avatarUrl : null,
+    avatarColor: parsed.avatarColor ? parsed.avatarColor : null,
   }
   const response = await httpClient.patch<unknown>(`/babies/${babyId}`, body)
   return babySchema.parse(response)

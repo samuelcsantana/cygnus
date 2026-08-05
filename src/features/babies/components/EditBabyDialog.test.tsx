@@ -18,6 +18,7 @@ const sampleBaby: Baby = {
   bloodType: null,
   allergies: [],
   avatarUrl: null,
+  avatarColor: null,
   createdAt: '2024-03-10T00:00:00.000Z',
 }
 
