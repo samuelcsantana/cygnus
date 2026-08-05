@@ -73,6 +73,6 @@ describe('EditMilestoneDialog', () => {
     )
 
     expect(screen.getByLabelText('O que aconteceu?')).toHaveValue('Primeiro sorriso')
-    expect(screen.getByLabelText('Data')).toHaveValue('2026-01-10')
+    expect(screen.getByLabelText('Data')).toHaveValue('10-01-2026')
   })
 })

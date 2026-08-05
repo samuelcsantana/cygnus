@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 
 import { useBabies } from '@/features/babies/api/babies.hooks'
 import { useEffectiveBabyId } from '@/hooks/useEffectiveBabyId'
@@ -10,6 +10,7 @@ import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 
 import { useMilestones } from '../api/milestones.hooks'
 import type { MilestoneCategory } from '../api/milestones.schemas'
+import { AddMilestoneDialog } from '../components/AddMilestoneDialog'
 import { MILESTONE_CATEGORY_META } from '../components/category-meta'
 import { MilestoneTimeline } from '../components/MilestoneTimeline'
 import { MilestoneTimelineSkeleton } from '../components/MilestoneTimelineSkeleton'
@@ -22,6 +23,7 @@ export function MilestonesRoute() {
   const babies = useBabies()
   const milestones = useMilestones(babyId)
   const [activeCategory, setActiveCategory] = useState<MilestoneCategory | 'ALL'>('ALL')
+  const [isAddOpen, setIsAddOpen] = useState(false)
 
   if (!babyId) {
     return <Navigate to="/dashboard" replace />
@@ -35,16 +37,18 @@ export function MilestonesRoute() {
     <div className="animate-fade-in-up">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="text-primary mb-1 text-sm font-semibold tracking-wider uppercase">{t('milestones.eyebrow')}</p>
-          <h2 className="font-display text-3xl font-extrabold text-ink">{t('milestones.title')}</h2>
-          {baby && <p className="mt-1 text-lg text-ink-muted">{baby.name}</p>}
+          <h2 className="font-display text-3xl font-extrabold text-ink">
+            {baby ? t('milestones.titleWithBaby', { name: baby.name }) : t('milestones.title')}
+          </h2>
+          <p className="mt-1 text-lg text-ink-muted">{t('milestones.summary', { count: items.length })}</p>
         </div>
-        <Link
-          to="/milestones/new"
+        <button
+          type="button"
+          onClick={() => setIsAddOpen(true)}
           className="inline-flex items-center justify-center rounded-2xl bg-amber-700 px-6 py-3 font-bold text-white shadow-lg shadow-amber-900/10 transition-all hover:bg-amber-800 active:scale-[0.98]"
         >
           {t('milestones.action')}
-        </Link>
+        </button>
       </div>
 
       {milestones.isPending ? (
@@ -57,12 +61,13 @@ export function MilestonesRoute() {
           title={t('milestones.empty.title')}
           description={t('milestones.empty.description')}
           action={
-            <Link
-              to="/milestones/new"
+            <button
+              type="button"
+              onClick={() => setIsAddOpen(true)}
               className="inline-flex items-center justify-center rounded-xl bg-amber-700 px-6 py-3 font-bold text-white shadow-md shadow-amber-900/10 transition-colors hover:bg-amber-800"
             >
               {t('milestones.empty.cta')}
-            </Link>
+            </button>
           }
         />
       ) : baby ? (
@@ -100,6 +105,10 @@ export function MilestonesRoute() {
           <MilestoneTimeline babyId={babyId} birthDate={baby.birthDate} items={filteredItems} />
         </>
       ) : null}
+
+      {baby && (
+        <AddMilestoneDialog babyId={babyId} birthDate={baby.birthDate} open={isAddOpen} onOpenChange={setIsAddOpen} />
+      )}
     </div>
   )
 }
