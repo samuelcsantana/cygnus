@@ -1,9 +1,39 @@
-export function todayDateString(): string {
-  const now = new Date()
-  const year = now.getFullYear()
-  const month = String(now.getMonth() + 1).padStart(2, '0')
-  const day = String(now.getDate()).padStart(2, '0')
+export function toDateString(date: Date): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
+}
+
+export function todayDateString(): string {
+  return toDateString(new Date())
+}
+
+export function parseDateString(dateStr: string): Date | undefined {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr)
+  if (!match) return undefined
+  const [, year, month, day] = match
+  return new Date(Number(year), Number(month) - 1, Number(day))
+}
+
+/** Displays a `yyyy-MM-dd` value in the Brazilian `dd-MM-yyyy` standard. */
+export function formatBrDateString(dateStr: string): string {
+  const date = parseDateString(dateStr)
+  if (!date) return ''
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  return `${day}-${month}-${date.getFullYear()}`
+}
+
+/** Parses a `dd-MM-yyyy` value (the Brazilian standard), rejecting calendar-invalid dates like 31-04-2024. */
+export function parseBrDateString(dateStr: string): Date | undefined {
+  const match = /^(\d{2})-(\d{2})-(\d{4})$/.exec(dateStr)
+  if (!match) return undefined
+  const [, day, month, year] = match
+  const date = new Date(Number(year), Number(month) - 1, Number(day))
+  const isRealDate =
+    date.getFullYear() === Number(year) && date.getMonth() === Number(month) - 1 && date.getDate() === Number(day)
+  return isRealDate ? date : undefined
 }
 
 export function formatDateDisplay(dateStr: string, locale: string): string {
