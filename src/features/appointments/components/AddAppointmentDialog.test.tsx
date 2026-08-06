@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
 import { server } from '@/test/msw/server'
@@ -9,6 +9,28 @@ import { fireEvent, renderWithProviders, screen, waitFor } from '@/test/test-uti
 import { AddAppointmentDialog } from './AddAppointmentDialog'
 
 const babyId = '11111111-1111-4111-8111-111111111111'
+const otherBabyId = '33333333-3333-4333-8333-333333333333'
+
+const baby = {
+  id: babyId,
+  userId: '99999999-9999-4999-8999-999999999999',
+  name: 'Baby One',
+  birthDate: '2024-01-01',
+  gender: 'FEMALE',
+  bloodType: null,
+  allergies: [],
+  avatarUrl: null,
+  avatarColor: null,
+  createdAt: '2024-01-01T00:00:00.000Z',
+}
+
+const otherBaby = { ...baby, id: otherBabyId, name: 'Baby Two' }
+
+// A single-baby household auto-selects and skips the picker step, so most
+// tests here can exercise the wizard exactly as if babyId were still a prop.
+beforeEach(() => {
+  server.use(http.get(`${config.apiBaseUrl}/babies`, () => HttpResponse.json([baby])))
+})
 
 describe('AddAppointmentDialog', () => {
   it('closes without calling the API when the close button is clicked', async () => {
@@ -22,7 +44,7 @@ describe('AddAppointmentDialog', () => {
 
     const user = userEvent.setup()
     const onOpenChange = vi.fn()
-    renderWithProviders(<AddAppointmentDialog babyId={babyId} open onOpenChange={onOpenChange} />)
+    renderWithProviders(<AddAppointmentDialog open onOpenChange={onOpenChange} />)
 
     await user.click(screen.getByRole('button', { name: 'Fechar' }))
 
@@ -32,7 +54,7 @@ describe('AddAppointmentDialog', () => {
 
   it('blocks advancing to the schedule step without a professional name', async () => {
     const user = userEvent.setup()
-    renderWithProviders(<AddAppointmentDialog babyId={babyId} open onOpenChange={vi.fn()} />)
+    renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
 
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
 
@@ -44,7 +66,7 @@ describe('AddAppointmentDialog', () => {
 
   it('lets the user go back to the professional step without losing what was typed', async () => {
     const user = userEvent.setup()
-    renderWithProviders(<AddAppointmentDialog babyId={babyId} open onOpenChange={vi.fn()} />)
+    renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
 
     await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
@@ -85,7 +107,7 @@ describe('AddAppointmentDialog', () => {
 
     const user = userEvent.setup()
     const onOpenChange = vi.fn()
-    renderWithProviders(<AddAppointmentDialog babyId={babyId} open onOpenChange={onOpenChange} />)
+    renderWithProviders(<AddAppointmentDialog open onOpenChange={onOpenChange} />)
 
     await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
     await user.type(screen.getByLabelText('Especialidade (Opcional)'), 'Pediatria')
@@ -104,5 +126,27 @@ describe('AddAppointmentDialog', () => {
     })
     expect(receivedBody.specialty).toBe('Pediatria')
     expect(onOpenChange).toHaveBeenCalledWith(false)
+  })
+
+  it('shows a baby picker first when the household has more than one child, and gates progress on a choice', async () => {
+    server.use(http.get(`${config.apiBaseUrl}/babies`, () => HttpResponse.json([baby, otherBaby])))
+
+    const user = userEvent.setup()
+    renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Baby One')).toBeInTheDocument()
+    })
+    expect(screen.getByText('Baby Two')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Nome do Profissional')).not.toBeInTheDocument()
+
+    const continueButton = screen.getByRole('button', { name: 'Continuar' })
+    expect(continueButton).toBeDisabled()
+
+    await user.click(screen.getByText('Baby Two'))
+    expect(continueButton).toBeEnabled()
+
+    await user.click(continueButton)
+    expect(screen.getByLabelText('Nome do Profissional')).toBeInTheDocument()
   })
 })

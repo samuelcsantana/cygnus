@@ -22,14 +22,13 @@ import type { Appointment } from '../api/appointments.schemas'
 import { AppointmentStatusBadge } from './AppointmentStatusBadge'
 
 interface AppointmentDetailDialogProps {
-  babyId: string
   appointment: Appointment | null
   onOpenChange: (open: boolean) => void
 }
 
-export function AppointmentDetailDialog({ babyId, appointment, onOpenChange }: AppointmentDetailDialogProps) {
+export function AppointmentDetailDialog({ appointment, onOpenChange }: AppointmentDetailDialogProps) {
   const { t } = useTranslation()
-  const updateAppointment = useUpdateAppointment(babyId)
+  const updateAppointment = useUpdateAppointment(appointment?.babyId ?? '')
   const [notes, setNotes] = useState('')
 
   useEffect(() => {

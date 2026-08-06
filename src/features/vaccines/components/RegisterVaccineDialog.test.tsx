@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
 import { server } from '@/test/msw/server'
@@ -25,11 +25,36 @@ const pendingItem: VaccineItem = {
 }
 
 const sampleBabyId = '22222222-2222-4222-8222-222222222222'
+const otherBabyId = '55555555-5555-4555-8555-555555555555'
+
+const baby = {
+  id: sampleBabyId,
+  userId: '99999999-9999-4999-8999-999999999999',
+  name: 'Baby One',
+  birthDate: '2024-01-01',
+  gender: 'FEMALE',
+  bloodType: null,
+  allergies: [],
+  avatarUrl: null,
+  avatarColor: null,
+  createdAt: '2024-01-01T00:00:00.000Z',
+}
+
+const otherBaby = { ...baby, id: otherBabyId, name: 'Baby Two' }
+
+// A single-baby household auto-selects and skips the picker step, so most
+// tests here can exercise the wizard exactly as if babyId/pendingItems were still props.
+beforeEach(() => {
+  server.use(
+    http.get(`${config.apiBaseUrl}/babies`, () => HttpResponse.json([baby])),
+    http.get(`${config.apiBaseUrl}/babies/:babyId/vaccines`, () =>
+      HttpResponse.json([{ ageInMonths: 0, items: [pendingItem] }]),
+    ),
+  )
+})
 
 function renderDialog(onOpenChange = vi.fn()) {
-  return renderWithProviders(
-    <RegisterVaccineDialog babyId={sampleBabyId} pendingItems={[pendingItem]} open onOpenChange={onOpenChange} />,
-  )
+  return renderWithProviders(<RegisterVaccineDialog open onOpenChange={onOpenChange} />)
 }
 
 describe('RegisterVaccineDialog', () => {
@@ -37,11 +62,15 @@ describe('RegisterVaccineDialog', () => {
     const user = userEvent.setup()
     renderDialog()
 
-    expect(screen.queryByRole('button', { name: 'Continuar' })).not.toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: 'Continuar' })).not.toBeInTheDocument()
+    })
 
     await user.click(screen.getByText('Calendário obrigatório'))
 
-    expect(screen.getByText('Hepatite B')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Hepatite B')).toBeInTheDocument()
+    })
     expect(screen.queryByText('Campanha de vacinação')).not.toBeInTheDocument()
   })
 
@@ -50,7 +79,9 @@ describe('RegisterVaccineDialog', () => {
     renderDialog()
 
     await user.click(screen.getByText('Calendário obrigatório'))
-    expect(screen.getByRole('button', { name: 'Continuar' })).toBeDisabled()
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Continuar' })).toBeDisabled()
+    })
 
     await user.click(screen.getByText('Hepatite B'))
     expect(screen.getByRole('button', { name: 'Continuar' })).toBeEnabled()
@@ -61,7 +92,9 @@ describe('RegisterVaccineDialog', () => {
     renderDialog()
 
     await user.click(screen.getByText('Calendário obrigatório'))
-    expect(screen.getByText('Hepatite B')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Hepatite B')).toBeInTheDocument()
+    })
 
     await user.click(screen.getByRole('button', { name: 'Voltar' }))
 
@@ -83,6 +116,9 @@ describe('RegisterVaccineDialog', () => {
     renderDialog(onOpenChange)
 
     await user.click(screen.getByText('Calendário obrigatório'))
+    await waitFor(() => {
+      expect(screen.getByText('Hepatite B')).toBeInTheDocument()
+    })
     await user.click(screen.getByText('Hepatite B'))
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
     await user.click(screen.getByRole('button', { name: 'Salvar vacina' }))
@@ -194,5 +230,26 @@ describe('RegisterVaccineDialog', () => {
       expect(screen.getByRole('alert')).toHaveTextContent('Não foi possível registrar a vacina. Tente novamente.')
     })
     expect(onOpenChange).not.toHaveBeenCalledWith(false)
+  })
+
+  it('shows a baby picker first when the household has more than one child, and gates progress on a choice', async () => {
+    server.use(http.get(`${config.apiBaseUrl}/babies`, () => HttpResponse.json([baby, otherBaby])))
+
+    const user = userEvent.setup()
+    renderDialog()
+
+    await waitFor(() => {
+      expect(screen.getByText('Baby One')).toBeInTheDocument()
+    })
+    expect(screen.getByText('Baby Two')).toBeInTheDocument()
+
+    const continueButton = screen.getByRole('button', { name: 'Continuar' })
+    expect(continueButton).toBeDisabled()
+
+    await user.click(screen.getByText('Baby Two'))
+    expect(continueButton).toBeEnabled()
+
+    await user.click(continueButton)
+    expect(screen.getByText('Calendário obrigatório')).toBeInTheDocument()
   })
 })

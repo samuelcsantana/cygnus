@@ -2,45 +2,41 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
-import { useBabies } from '@/features/babies/api/babies.hooks'
-import { useEffectiveBabyId } from '@/hooks/useEffectiveBabyId'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { CalendarIcon } from '@/shared/icons/calendar-icon'
 import { PlusIcon } from '@/shared/icons/plus-icon'
 
-import { useAppointments } from '../api/appointments.hooks'
-import type { Appointment } from '../api/appointments.schemas'
+import { useAllBabiesAppointments } from '../api/appointments.hooks'
 import { AddAppointmentDialog } from '../components/AddAppointmentDialog'
-import { AppointmentCard } from '../components/AppointmentCard'
-import { AppointmentDetailDialog } from '../components/AppointmentDetailDialog'
+import { AppointmentsList } from '../components/AppointmentsList'
 import { AppointmentsSkeleton } from '../components/AppointmentsSkeleton'
-import { RescheduleDialog } from '../components/RescheduleDialog'
 
 export function AppointmentsRoute() {
   const { t } = useTranslation()
-  const babyId = useEffectiveBabyId()
-  const babies = useBabies()
-  const appointments = useAppointments(babyId)
-  const [rescheduleTarget, setRescheduleTarget] = useState<Appointment | null>(null)
-  const [detailTarget, setDetailTarget] = useState<Appointment | null>(null)
+  const { isPending, isError, isEmpty, babies, items } = useAllBabiesAppointments()
   const [isAddOpen, setIsAddOpen] = useState(false)
 
-  if (!babyId) {
+  if (isEmpty) {
     return <Navigate to="/dashboard" replace />
   }
 
-  const baby = babies.data?.find((candidate) => candidate.id === babyId)
-  const items = appointments.data ?? []
   const completedCount = items.filter((appointment) => appointment.status === 'COMPLETED').length
   const scheduledCount = items.filter((appointment) => appointment.status === 'SCHEDULED').length
+
+  // Upcoming visits first (soonest first), then past ones (most recent first) —
+  // reads as "what's next" followed by "history".
+  const sortedItems = [...items].sort((a, b) => {
+    const aScheduled = a.status === 'SCHEDULED'
+    const bScheduled = b.status === 'SCHEDULED'
+    if (aScheduled !== bScheduled) return aScheduled ? -1 : 1
+    return aScheduled ? a.scheduledAt.localeCompare(b.scheduledAt) : b.scheduledAt.localeCompare(a.scheduledAt)
+  })
 
   return (
     <div className="animate-fade-in-up">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <h2 className="font-display text-3xl font-extrabold text-ink">
-            {baby ? t('appointments.titleWithBaby', { name: baby.name }) : t('appointments.title')}
-          </h2>
+          <h2 className="font-display text-3xl font-extrabold text-ink">{t('appointments.title')}</h2>
           <p className="mt-1 text-lg text-ink-muted">
             {t('appointments.summary', { completed: completedCount, scheduled: scheduledCount })}
           </p>
@@ -55,9 +51,11 @@ export function AppointmentsRoute() {
         </button>
       </div>
 
-      {appointments.isPending ? (
+      <AddAppointmentDialog open={isAddOpen} onOpenChange={setIsAddOpen} />
+
+      {isPending ? (
         <AppointmentsSkeleton />
-      ) : appointments.isError ? (
+      ) : isError ? (
         <p className="py-16 text-center text-ink-muted">{t('appointments.genericError')}</p>
       ) : items.length === 0 ? (
         <EmptyState
@@ -76,29 +74,8 @@ export function AppointmentsRoute() {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {items.map((appointment) => (
-            <AppointmentCard
-              key={appointment.id}
-              appointment={appointment}
-              onReschedule={() => setRescheduleTarget(appointment)}
-              onViewDetails={() => setDetailTarget(appointment)}
-            />
-          ))}
-        </div>
+        <AppointmentsList items={sortedItems} babies={babies} />
       )}
-
-      <RescheduleDialog
-        babyId={babyId}
-        appointment={rescheduleTarget}
-        onOpenChange={(open) => !open && setRescheduleTarget(null)}
-      />
-      <AppointmentDetailDialog
-        babyId={babyId}
-        appointment={detailTarget}
-        onOpenChange={(open) => !open && setDetailTarget(null)}
-      />
-      <AddAppointmentDialog babyId={babyId} open={isAddOpen} onOpenChange={setIsAddOpen} />
     </div>
   )
 }

@@ -1,11 +1,16 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { useCurrentUser } from '@/features/auth/api/auth.hooks'
 import { useBabies } from '@/features/babies/api/babies.hooks'
+import type { Baby } from '@/features/babies/api/babies.schemas'
+import { EditBabyDialog } from '@/features/babies/components/EditBabyDialog'
 import { ageInMonths } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
+import { PencilIcon } from '@/shared/icons/pencil-icon'
+import { PlusIcon } from '@/shared/icons/plus-icon'
 import { useAddBabyDialogStore } from '@/shared/stores/addBabyDialog.store'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 
@@ -19,6 +24,7 @@ export function ProfileRoute() {
   const currentUser = useCurrentUser()
   const babies = useBabies()
   const openAddBabyDialog = useAddBabyDialogStore((state) => state.open)
+  const [editTarget, setEditTarget] = useState<Baby | null>(null)
 
   if (currentUser.isPending) {
     return (
@@ -69,7 +75,20 @@ export function ProfileRoute() {
         </section>
 
         <section className="rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
-          <h3 className="font-display mb-5 text-base font-extrabold text-ink">{t('profile.babies.sectionTitle')}</h3>
+          <div className="mb-5 flex items-center justify-between">
+            <h3 className="font-display text-base font-extrabold text-ink">{t('profile.babies.sectionTitle')}</h3>
+            {babyList.length > 0 && (
+              <button
+                type="button"
+                onClick={openAddBabyDialog}
+                aria-label={t('babies.addChild')}
+                className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-bold text-teal-700 transition-colors hover:bg-teal-50"
+              >
+                <PlusIcon className="h-3.5 w-3.5" />
+                {t('babies.addChild')}
+              </button>
+            )}
+          </div>
           {babyList.length === 0 ? (
             <p className="text-sm text-ink-muted">
               {t('profile.babies.empty')}{' '}
@@ -107,6 +126,14 @@ export function ProfileRoute() {
                         {t('babies.monthsOld', { count: ageInMonths(baby.birthDate) })}
                       </p>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => setEditTarget(baby)}
+                      aria-label={t('babies.edit.action', { name: baby.name })}
+                      className="flex-shrink-0 rounded-lg p-1.5 text-ink-faint transition-colors hover:bg-slate-100 hover:text-teal-600"
+                    >
+                      <PencilIcon className="h-3.5 w-3.5" />
+                    </button>
                   </div>
                 )
               })}
@@ -120,6 +147,8 @@ export function ProfileRoute() {
           <DeleteAccountDialog onDeleted={() => navigate('/login', { replace: true })} />
         </section>
       </div>
+
+      <EditBabyDialog baby={editTarget} onOpenChange={(open) => !open && setEditTarget(null)} />
     </div>
   )
 }

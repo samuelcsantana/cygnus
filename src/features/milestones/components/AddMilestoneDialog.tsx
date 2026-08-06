@@ -5,7 +5,10 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
-import { StepIndicator } from '@/shared/components/StepIndicator'
+import { soleBaby, useBabies } from '@/features/babies/api/babies.hooks'
+import { todayDateString } from '@/lib/date'
+import { BabyPickerStep } from '@/shared/components/BabyPickerStep'
+import { StepIndicator, type Step as StepIndicatorStep } from '@/shared/components/StepIndicator'
 import { CloseIcon } from '@/shared/icons/close-icon'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 
@@ -14,19 +17,24 @@ import { createMilestoneFormSchema, type MilestoneFormInput } from '../api/miles
 import { MilestoneCoreFields } from './MilestoneCoreFields'
 import { MilestoneDetailFields } from './MilestoneDetailFields'
 
-type Step = 'core' | 'details'
+type Step = 'baby' | 'core' | 'details'
 
 interface AddMilestoneDialogProps {
-  babyId: string
-  birthDate: string
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function AddMilestoneDialog({ babyId, birthDate, open, onOpenChange }: AddMilestoneDialogProps) {
+export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogProps) {
   const { t } = useTranslation()
-  const createMilestone = useCreateMilestone(babyId)
+  const babies = useBabies()
+  const babyList = babies.data ?? []
+  const needsBabyPicker = babyList.length > 1
+
   const [step, setStep] = useState<Step>('core')
+  const [selectedBabyId, setSelectedBabyId] = useState<string | null>(null)
+  const createMilestone = useCreateMilestone(selectedBabyId)
+
+  const birthDate = babyList.find((baby) => baby.id === selectedBabyId)?.birthDate ?? todayDateString()
   const schema = useMemo(() => createMilestoneFormSchema(birthDate), [birthDate])
 
   const {
@@ -42,13 +50,15 @@ export function AddMilestoneDialog({ babyId, birthDate, open, onOpenChange }: Ad
   })
 
   useEffect(() => {
-    if (!open) {
-      setStep('core')
-      reset({ photoUrl: '' })
-    }
-  }, [open, reset])
+    if (!open) return
+    const sole = soleBaby(babies.data)
+    setSelectedBabyId(sole?.id ?? null)
+    setStep(babyList.length > 1 ? 'baby' : 'core')
+    reset({ photoUrl: '' })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, babies.data])
 
-  const handleContinue = async () => {
+  const handleContinueFromCore = async () => {
     const isValid = await trigger(['category', 'title', 'achievedAt'])
     if (isValid) {
       setStep('details')
@@ -59,6 +69,12 @@ export function AddMilestoneDialog({ babyId, birthDate, open, onOpenChange }: Ad
     await createMilestone.mutateAsync(values)
     onOpenChange(false)
   })
+
+  const steps: StepIndicatorStep[] = [
+    ...(needsBabyPicker ? [{ id: 'baby', label: t('babies.picker.stepLabel') }] : []),
+    { id: 'core', label: t('milestones.wizard.stepCore') },
+    { id: 'details', label: t('milestones.wizard.stepDetails') },
+  ]
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -78,17 +94,23 @@ export function AddMilestoneDialog({ babyId, birthDate, open, onOpenChange }: Ad
         </div>
 
         <div className="p-7">
-          <StepIndicator
-            steps={[
-              { id: 'core', label: t('milestones.wizard.stepCore') },
-              { id: 'details', label: t('milestones.wizard.stepDetails') },
-            ]}
-            currentStepId={step}
-            accentClassName="bg-amber-700"
-            className="mb-6"
-          />
+          <StepIndicator steps={steps} currentStepId={step} accentClassName="bg-amber-700" className="mb-6" />
 
-          {step === 'core' ? (
+          {step === 'baby' ? (
+            <div key="baby" className="animate-fade-in-up">
+              <BabyPickerStep babies={babyList} value={selectedBabyId} onSelect={setSelectedBabyId} />
+              <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+                <Button
+                  type="button"
+                  disabled={!selectedBabyId}
+                  onClick={() => setStep('core')}
+                  className="bg-amber-700 text-white hover:bg-amber-800"
+                >
+                  {t('milestones.wizard.continue')}
+                </Button>
+              </div>
+            </div>
+          ) : step === 'core' ? (
             // Deliberately not inside a <form>: a same-position button whose `type`
             // flips from "button" to "submit" on click (React reuses the DOM node)
             // can trigger a native submit on that very click if it's a form
@@ -96,7 +118,11 @@ export function AddMilestoneDialog({ babyId, birthDate, open, onOpenChange }: Ad
             <div key="core" className="animate-fade-in-up">
               <MilestoneCoreFields control={control} register={register} errors={errors} />
               <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
-                <Button type="button" onClick={handleContinue} className="bg-amber-700 text-white hover:bg-amber-800">
+                <Button
+                  type="button"
+                  onClick={handleContinueFromCore}
+                  className="bg-amber-700 text-white hover:bg-amber-800"
+                >
                   {t('milestones.wizard.continue')}
                 </Button>
               </div>

@@ -1,20 +1,23 @@
 import { useTranslation } from 'react-i18next'
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import type { Baby } from '@/features/babies/api/babies.schemas'
+import { todayDateString } from '@/lib/date'
 
 import { useUpdateMilestone } from '../api/milestones.hooks'
 import type { Milestone } from '../api/milestones.schemas'
 import { MilestoneForm } from './MilestoneForm'
 
 interface EditMilestoneDialogProps {
-  babyId: string
-  birthDate: string
+  babies: Baby[]
   milestone: Milestone | null
   onOpenChange: (open: boolean) => void
 }
 
-export function EditMilestoneDialog({ babyId, birthDate, milestone, onOpenChange }: EditMilestoneDialogProps) {
+export function EditMilestoneDialog({ babies, milestone, onOpenChange }: EditMilestoneDialogProps) {
   const { t } = useTranslation()
+  const babyId = milestone?.babyId ?? ''
+  const birthDate = babies.find((baby) => baby.id === babyId)?.birthDate ?? todayDateString()
   const updateMilestone = useUpdateMilestone(babyId, milestone?.id ?? '')
 
   return (

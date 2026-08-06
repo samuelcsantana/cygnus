@@ -2,14 +2,15 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
-import { useBabies } from '@/features/babies/api/babies.hooks'
-import { useEffectiveBabyId } from '@/hooks/useEffectiveBabyId'
+import { FamilyStrip } from '@/features/babies/components/FamilyStrip'
+import { EditBabyDialog } from '@/features/babies/components/EditBabyDialog'
+import type { Baby } from '@/features/babies/api/babies.schemas'
 import { cn } from '@/lib/utils'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { PlusIcon } from '@/shared/icons/plus-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 
-import { useVaccineCalendar } from '../api/vaccines.hooks'
+import { useAllBabiesVaccineCalendars } from '../api/vaccines.hooks'
 import type { VaccineStatus } from '../api/vaccines.schemas'
 import { AdhocVaccineList } from '../components/AdhocVaccineList'
 import { RegisterVaccineDialog } from '../components/RegisterVaccineDialog'
@@ -20,37 +21,37 @@ type Filter = 'ALL' | VaccineStatus
 
 export function VaccinesRoute() {
   const { t } = useTranslation()
-  const babyId = useEffectiveBabyId()
-  const babies = useBabies()
-  const calendar = useVaccineCalendar(babyId)
+  const { isPending, isError, isEmpty, babies, items } = useAllBabiesVaccineCalendars()
   const [filter, setFilter] = useState<Filter>('ALL')
   const [isRegisterOpen, setRegisterOpen] = useState(false)
+  const [editTarget, setEditTarget] = useState<Baby | null>(null)
 
-  if (!babyId) {
+  if (isEmpty) {
     return <Navigate to="/dashboard" replace />
   }
 
-  const baby = babies.data?.find((candidate) => candidate.id === babyId)
-  const groups = calendar.data ?? []
-  const allItems = groups.flatMap((group) => group.items)
-  const hasAnyDose = allItems.length > 0
-
   const counts = {
-    APPLIED: allItems.filter((item) => item.status === 'APPLIED').length,
-    PENDING: allItems.filter((item) => item.status === 'PENDING').length,
-    DELAYED: allItems.filter((item) => item.status === 'DELAYED').length,
+    APPLIED: items.filter((item) => item.status === 'APPLIED').length,
+    PENDING: items.filter((item) => item.status === 'PENDING').length,
+    DELAYED: items.filter((item) => item.status === 'DELAYED').length,
   }
-  const progressPct = allItems.length > 0 ? Math.round((counts.APPLIED / allItems.length) * 100) : 0
 
-  const filteredItems = filter === 'ALL' ? allItems : allItems.filter((item) => item.status === filter)
+  const familyStripItems = babies.map((baby) => ({
+    baby,
+    delayedVaccineCount: items.filter((item) => item.babyId === baby.id && item.status === 'DELAYED').length,
+  }))
+
+  const filteredItems = (filter === 'ALL' ? items : items.filter((item) => item.status === filter)).sort((a, b) => {
+    const rank = { DELAYED: 0, PENDING: 1, APPLIED: 2 } as const
+    if (a.status !== b.status) return rank[a.status] - rank[b.status]
+    return a.recommendedAgeInMonths - b.recommendedAgeInMonths
+  })
 
   return (
     <div className="animate-fade-in-up">
-      <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <h2 className="font-display text-3xl font-extrabold text-ink">
-            {baby ? t('vaccines.titleWithBaby', { name: baby.name }) : t('vaccines.title')}
-          </h2>
+          <h2 className="font-display text-3xl font-extrabold text-ink">{t('vaccines.title')}</h2>
           <p className="mt-1 text-lg text-ink-muted">
             {t('vaccines.summary', { applied: counts.APPLIED, delayed: counts.DELAYED, pending: counts.PENDING })}
           </p>
@@ -65,18 +66,13 @@ export function VaccinesRoute() {
         </button>
       </div>
 
-      <RegisterVaccineDialog
-        babyId={babyId}
-        pendingItems={allItems.filter((item) => item.status !== 'APPLIED')}
-        open={isRegisterOpen}
-        onOpenChange={setRegisterOpen}
-      />
+      <RegisterVaccineDialog open={isRegisterOpen} onOpenChange={setRegisterOpen} />
 
-      {calendar.isPending ? (
+      {isPending ? (
         <VaccineCalendarSkeleton />
-      ) : calendar.isError ? (
+      ) : isError ? (
         <p className="py-16 text-center text-ink-muted">{t('vaccines.genericError')}</p>
-      ) : !hasAnyDose ? (
+      ) : items.length === 0 ? (
         <EmptyState
           icon={<SyringeIcon className="h-10 w-10" />}
           title={t('vaccines.empty.title')}
@@ -85,20 +81,13 @@ export function VaccinesRoute() {
         />
       ) : (
         <>
-          <div className="mb-5 rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
-            <div className="mb-2.5 flex items-center justify-between">
-              <span className="text-[13px] font-semibold text-ink">{t('vaccines.progressLabel')}</span>
-              <span className="text-primary text-[13px] font-bold">{progressPct}%</span>
+          {babies.length > 1 && (
+            <div className="mb-6">
+              <FamilyStrip items={familyStripItems} onEdit={setEditTarget} />
             </div>
-            <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-teal-500 to-teal-400 transition-all duration-500"
-                style={{ width: `${progressPct}%` }}
-              />
-            </div>
-          </div>
+          )}
 
-          <div className="mb-5 flex flex-wrap gap-2">
+          <div className="mb-6 flex flex-wrap gap-2">
             {(
               [
                 ['ALL', t('vaccines.filterAll')],
@@ -121,11 +110,12 @@ export function VaccinesRoute() {
             ))}
           </div>
 
-          <VaccineCalendarList items={filteredItems} babyId={babyId} />
+          <VaccineCalendarList items={filteredItems} babies={babies} />
+          <AdhocVaccineList babies={babies} />
         </>
       )}
 
-      <AdhocVaccineList babyId={babyId} />
+      <EditBabyDialog baby={editTarget} onOpenChange={(open) => !open && setEditTarget(null)} />
     </div>
   )
 }

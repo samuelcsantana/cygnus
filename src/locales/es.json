@@ -15,7 +15,6 @@
     }
   },
   "nav": {
-    "menuLabel": "Menú",
     "dashboard": "Inicio",
     "vaccines": "Vacunas",
     "appointments": "Consultas",
@@ -61,10 +60,13 @@
     }
   },
   "babies": {
-    "yourChildren": "Mis Hijos",
     "addChild": "Agregar Hijo",
     "monthsOld_one": "{{count}} mes",
     "monthsOld_other": "{{count}} meses",
+    "picker": {
+      "stepLabel": "Hijo/a",
+      "subtitle": "¿Para cuál hijo es esto?"
+    },
     "dashboard": {
       "welcomeHeading": "¡Bienvenido(a) a Meu Neném!",
       "welcomeDescription": "Sigue las vacunas, consultas y los hitos más especiales del crecimiento de tus hijos — todo organizado en un solo lugar, para que nunca pierdas un momento importante.",
@@ -125,10 +127,12 @@
       "greetingAfternoon": "Buenas tardes",
       "greetingEvening": "Buenas noches",
       "greetingLine": "{{greeting}}, {{name}}! 👋",
-      "viewingProfile": "Estás viendo el perfil de {{name}}",
+      "childCount_one": "Siguiendo a {{count}} hijo",
+      "childCount_other": "Siguiendo a {{count}} hijos",
       "overdueBanner_one": "{{count}} vacuna atrasada",
       "overdueBanner_other": "{{count}} vacunas atrasadas",
-      "overdueBannerSuffix": "para {{name}}. Agenda cuanto antes.",
+      "overdueBannerHousehold_one": "para {{count}} hijo. Agenda cuanto antes.",
+      "overdueBannerHousehold_other": "para {{count}} hijos. Agenda cuanto antes.",
       "viewVaccines": "Ver vacunas →",
       "statVaccinesAppliedLabel": "Vacunas aplicadas",
       "statVaccinesAppliedSub_one": "{{count}} pendiente",
@@ -138,12 +142,13 @@
       "statMilestonesLabel": "Hitos registrados",
       "statMilestonesSub": "hitos del desarrollo",
       "statLastAppointmentLabel": "Última consulta",
-      "latestMilestonesTitle": "Últimos hitos ⭐",
-      "viewAllMilestones": "Ver todos →",
       "noMilestonesYet": "Aún no hay hitos registrados",
-      "vaccineCalendarTitle": "Calendario de vacunas 💉",
-      "viewAllVaccines": "Ver todas →",
-      "allVaccinesUpToDate": "¡Todas las vacunas al día! 🎉"
+      "viewAll": "Ver todo →",
+      "vaccinesAllUpToDate": "¡Todas las vacunas al día! 🎉",
+      "noAppointmentsScheduled": "Sin consultas agendadas",
+      "familyStripDelayed_one": "{{count}} vacuna atrasada",
+      "familyStripDelayed_other": "{{count}} vacunas atrasadas",
+      "familyStripUpToDate": "Vacunas al día"
     },
     "form": {
       "title": "Nuevo Perfil",
@@ -195,7 +200,6 @@
   },
   "vaccines": {
     "title": "Vacunas",
-    "titleWithBaby": "Vacunas de {{name}} 💉",
     "summary": "{{applied}} aplicadas · {{delayed}} atrasadas · {{pending}} pendientes",
     "genericError": "No se pudo cargar el calendario de vacunas.",
     "progressLabel": "Progreso del calendario",
@@ -285,7 +289,6 @@
   },
   "appointments": {
     "title": "Consultas",
-    "titleWithBaby": "Consultas de {{name}} 🩺",
     "summary": "{{completed}} realizadas · {{scheduled}} agendadas",
     "scheduleAction": "Agendar Consulta",
     "dateLabel": "Fecha",
@@ -344,7 +347,6 @@
   },
   "milestones": {
     "title": "Hitos de Desarrollo",
-    "titleWithBaby": "Hitos de {{name}} ⭐",
     "summary_one": "{{count}} momento especial registrado",
     "summary_other": "{{count}} momentos especiales registrados",
     "action": "Registrar Hito",

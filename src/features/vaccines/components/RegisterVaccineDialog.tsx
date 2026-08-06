@@ -12,22 +12,24 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { soleBaby, useBabies } from '@/features/babies/api/babies.hooks'
 import { todayDateString } from '@/lib/date'
 import { cn } from '@/lib/utils'
+import { BabyPickerStep } from '@/shared/components/BabyPickerStep'
 import { SelectorCardGroup } from '@/shared/components/SelectorCardGroup'
-import { StepIndicator } from '@/shared/components/StepIndicator'
+import { StepIndicator, type Step as StepIndicatorStep } from '@/shared/components/StepIndicator'
 import { BellIcon } from '@/shared/icons/bell-icon'
 import { CalendarIcon } from '@/shared/icons/calendar-icon'
 import { PencilIcon } from '@/shared/icons/pencil-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 
-import { useApplyVaccine, useRegisterAdhocVaccine } from '../api/vaccines.hooks'
-import { applyVaccineSchema, type VaccineItem } from '../api/vaccines.schemas'
+import { useApplyVaccine, useRegisterAdhocVaccine, useVaccineCalendar } from '../api/vaccines.hooks'
+import { applyVaccineSchema } from '../api/vaccines.schemas'
 import { CAMPAIGN_VACCINE_SUGGESTIONS } from './campaign-vaccine-suggestions'
 import { VaccineApplicationDetailsFields } from './VaccineApplicationDetailsFields'
 
 type VaccineTypeChoice = 'CATALOG' | 'CAMPAIGN' | 'CUSTOM'
-type Step = 'type' | 'select' | 'details'
+type Step = 'baby' | 'type' | 'select' | 'details'
 
 const detailsFormSchema = applyVaccineSchema.extend({
   applicationDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
@@ -35,23 +37,31 @@ const detailsFormSchema = applyVaccineSchema.extend({
 type DetailsFormInput = z.infer<typeof detailsFormSchema>
 
 interface RegisterVaccineDialogProps {
-  babyId: string
-  pendingItems: VaccineItem[]
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function RegisterVaccineDialog({ babyId, pendingItems, open, onOpenChange }: RegisterVaccineDialogProps) {
+export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDialogProps) {
   const { t } = useTranslation()
-  const applyVaccine = useApplyVaccine(babyId)
-  const registerAdhocVaccine = useRegisterAdhocVaccine(babyId)
+  const babies = useBabies()
+  const babyList = babies.data ?? []
+  const needsBabyPicker = babyList.length > 1
 
   const [step, setStep] = useState<Step>('type')
+  const [selectedBabyId, setSelectedBabyId] = useState<string | null>(null)
   const [choice, setChoice] = useState<VaccineTypeChoice | null>(null)
   const [selectedVaccineId, setSelectedVaccineId] = useState<string | null>(null)
   const [campaignName, setCampaignName] = useState('')
   const [customName, setCustomName] = useState('')
   const [customDose, setCustomDose] = useState('')
+
+  const calendar = useVaccineCalendar(selectedBabyId)
+  const pendingItems = (calendar.data ?? [])
+    .flatMap((group) => group.items)
+    .filter((item) => item.status !== 'APPLIED')
+
+  const applyVaccine = useApplyVaccine(selectedBabyId)
+  const registerAdhocVaccine = useRegisterAdhocVaccine(selectedBabyId)
 
   const {
     register,
@@ -65,16 +75,18 @@ export function RegisterVaccineDialog({ babyId, pendingItems, open, onOpenChange
   })
 
   useEffect(() => {
-    if (!open) {
-      setStep('type')
-      setChoice(null)
-      setSelectedVaccineId(null)
-      setCampaignName('')
-      setCustomName('')
-      setCustomDose('')
-      reset({ applicationDate: todayDateString() })
-    }
-  }, [open, reset])
+    if (!open) return
+    const sole = soleBaby(babies.data)
+    setSelectedBabyId(sole?.id ?? null)
+    setStep(babyList.length > 1 ? 'baby' : 'type')
+    setChoice(null)
+    setSelectedVaccineId(null)
+    setCampaignName('')
+    setCustomName('')
+    setCustomDose('')
+    reset({ applicationDate: todayDateString() })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, babies.data])
 
   const selectedVaccine = pendingItems.find((item) => item.vaccineId === selectedVaccineId) ?? null
 
@@ -113,6 +125,13 @@ export function RegisterVaccineDialog({ babyId, pendingItems, open, onOpenChange
 
   const submitErrorMessage = mutation.error ? t('vaccines.register.genericError') : null
 
+  const steps: StepIndicatorStep[] = [
+    ...(needsBabyPicker ? [{ id: 'baby', label: t('babies.picker.stepLabel') }] : []),
+    { id: 'type', label: t('vaccines.register.stepType') },
+    { id: 'select', label: t('vaccines.register.stepSelect') },
+    { id: 'details', label: t('vaccines.register.stepDetails') },
+  ]
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
@@ -125,17 +144,18 @@ export function RegisterVaccineDialog({ babyId, pendingItems, open, onOpenChange
           </DialogTitle>
         </DialogHeader>
 
-        <StepIndicator
-          steps={[
-            { id: 'type', label: t('vaccines.register.stepType') },
-            { id: 'select', label: t('vaccines.register.stepSelect') },
-            { id: 'details', label: t('vaccines.register.stepDetails') },
-          ]}
-          currentStepId={step}
-          accentClassName="bg-teal-500"
-        />
+        <StepIndicator steps={steps} currentStepId={step} accentClassName="bg-teal-500" />
 
-        {step === 'type' ? (
+        {step === 'baby' ? (
+          <div className="animate-fade-in-up space-y-5">
+            <BabyPickerStep babies={babyList} value={selectedBabyId} onSelect={setSelectedBabyId} />
+            <DialogFooter>
+              <Button type="button" disabled={!selectedBabyId} onClick={() => setStep('type')}>
+                {t('vaccines.register.continue')}
+              </Button>
+            </DialogFooter>
+          </div>
+        ) : step === 'type' ? (
           <div className="animate-fade-in-up space-y-5">
             <SelectorCardGroup
               layout="vertical"

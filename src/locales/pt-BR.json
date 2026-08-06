@@ -15,7 +15,6 @@
     }
   },
   "nav": {
-    "menuLabel": "Menu",
     "dashboard": "Início",
     "vaccines": "Vacinas",
     "appointments": "Consultas",
@@ -61,10 +60,13 @@
     }
   },
   "babies": {
-    "yourChildren": "Meus Filhos",
     "addChild": "Adicionar Filho",
     "monthsOld_one": "{{count}} mês",
     "monthsOld_other": "{{count}} meses",
+    "picker": {
+      "stepLabel": "Criança",
+      "subtitle": "Para qual criança é isso?"
+    },
     "dashboard": {
       "welcomeHeading": "Bem-vindo(a) ao Meu Neném!",
       "welcomeDescription": "Acompanhe vacinas, consultas e os marcos mais especiais do crescimento dos seus filhos — tudo organizado em um só lugar, para você nunca perder um momento importante.",
@@ -125,10 +127,12 @@
       "greetingAfternoon": "Boa tarde",
       "greetingEvening": "Boa noite",
       "greetingLine": "{{greeting}}, {{name}}! 👋",
-      "viewingProfile": "Você está vendo o perfil de {{name}}",
+      "childCount_one": "Acompanhando {{count}} criança",
+      "childCount_other": "Acompanhando {{count}} crianças",
       "overdueBanner_one": "{{count}} vacina em atraso",
       "overdueBanner_other": "{{count}} vacinas em atraso",
-      "overdueBannerSuffix": "para {{name}}. Agende o quanto antes.",
+      "overdueBannerHousehold_one": "para {{count}} criança. Agende o quanto antes.",
+      "overdueBannerHousehold_other": "para {{count}} crianças. Agende o quanto antes.",
       "viewVaccines": "Ver vacinas →",
       "statVaccinesAppliedLabel": "Vacinas tomadas",
       "statVaccinesAppliedSub_one": "{{count}} pendente",
@@ -138,12 +142,13 @@
       "statMilestonesLabel": "Marcos registrados",
       "statMilestonesSub": "marcos do desenvolvimento",
       "statLastAppointmentLabel": "Última consulta",
-      "latestMilestonesTitle": "Últimos marcos ⭐",
-      "viewAllMilestones": "Ver todos →",
       "noMilestonesYet": "Nenhum marco registrado ainda",
-      "vaccineCalendarTitle": "Calendário de vacinas 💉",
-      "viewAllVaccines": "Ver todas →",
-      "allVaccinesUpToDate": "Todas as vacinas em dia! 🎉"
+      "viewAll": "Ver tudo →",
+      "vaccinesAllUpToDate": "Todas as vacinas em dia! 🎉",
+      "noAppointmentsScheduled": "Sem consultas agendadas",
+      "familyStripDelayed_one": "{{count}} vacina atrasada",
+      "familyStripDelayed_other": "{{count}} vacinas atrasadas",
+      "familyStripUpToDate": "Vacinas em dia"
     },
     "form": {
       "title": "Novo Perfil",
@@ -195,7 +200,6 @@
   },
   "vaccines": {
     "title": "Vacinas",
-    "titleWithBaby": "Vacinas de {{name}} 💉",
     "summary": "{{applied}} tomadas · {{delayed}} atrasadas · {{pending}} pendentes",
     "genericError": "Não foi possível carregar o calendário de vacinas.",
     "progressLabel": "Progresso do calendário",
@@ -285,7 +289,6 @@
   },
   "appointments": {
     "title": "Consultas",
-    "titleWithBaby": "Consultas de {{name}} 🩺",
     "summary": "{{completed}} realizadas · {{scheduled}} agendadas",
     "scheduleAction": "Agendar Consulta",
     "dateLabel": "Data",
@@ -344,7 +347,6 @@
   },
   "milestones": {
     "title": "Marcos de Desenvolvimento",
-    "titleWithBaby": "Marcos de {{name}} ⭐",
     "summary_one": "{{count}} momento especial registrado",
     "summary_other": "{{count}} momentos especiais registrados",
     "action": "Registrar Marco",

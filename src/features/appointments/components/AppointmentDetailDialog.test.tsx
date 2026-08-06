@@ -36,7 +36,7 @@ describe('AppointmentDetailDialog', () => {
 
     const user = userEvent.setup()
     renderWithProviders(
-      <AppointmentDetailDialog babyId={babyId} appointment={sampleAppointment} onOpenChange={vi.fn()} />,
+      <AppointmentDetailDialog appointment={sampleAppointment} onOpenChange={vi.fn()} />,
     )
 
     await user.click(screen.getByRole('button', { name: 'Cancelar Consulta' }))
@@ -57,7 +57,7 @@ describe('AppointmentDetailDialog', () => {
     const user = userEvent.setup()
     const onOpenChange = vi.fn()
     renderWithProviders(
-      <AppointmentDetailDialog babyId={babyId} appointment={sampleAppointment} onOpenChange={onOpenChange} />,
+      <AppointmentDetailDialog appointment={sampleAppointment} onOpenChange={onOpenChange} />,
     )
 
     await user.click(screen.getByRole('button', { name: 'Cancelar Consulta' }))
@@ -82,7 +82,7 @@ describe('AppointmentDetailDialog', () => {
 
     const user = userEvent.setup()
     renderWithProviders(
-      <AppointmentDetailDialog babyId={babyId} appointment={sampleAppointment} onOpenChange={vi.fn()} />,
+      <AppointmentDetailDialog appointment={sampleAppointment} onOpenChange={vi.fn()} />,
     )
 
     await user.click(screen.getByRole('button', { name: 'Cancelar Consulta' }))

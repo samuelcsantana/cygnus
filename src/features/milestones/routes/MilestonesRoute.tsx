@@ -2,13 +2,11 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
-import { useBabies } from '@/features/babies/api/babies.hooks'
-import { useEffectiveBabyId } from '@/hooks/useEffectiveBabyId'
 import { cn } from '@/lib/utils'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 
-import { useMilestones } from '../api/milestones.hooks'
+import { useAllBabiesMilestones } from '../api/milestones.hooks'
 import type { MilestoneCategory } from '../api/milestones.schemas'
 import { AddMilestoneDialog } from '../components/AddMilestoneDialog'
 import { MILESTONE_CATEGORY_META } from '../components/category-meta'
@@ -19,27 +17,23 @@ const CATEGORIES: MilestoneCategory[] = ['MOTOR', 'LANGUAGE', 'SOCIAL', 'COGNITI
 
 export function MilestonesRoute() {
   const { t } = useTranslation()
-  const babyId = useEffectiveBabyId()
-  const babies = useBabies()
-  const milestones = useMilestones(babyId)
+  const { isPending, isError, isEmpty, babies, items } = useAllBabiesMilestones()
   const [activeCategory, setActiveCategory] = useState<MilestoneCategory | 'ALL'>('ALL')
   const [isAddOpen, setIsAddOpen] = useState(false)
 
-  if (!babyId) {
+  if (isEmpty) {
     return <Navigate to="/dashboard" replace />
   }
 
-  const baby = babies.data?.find((candidate) => candidate.id === babyId)
-  const items = milestones.data ?? []
-  const filteredItems = activeCategory === 'ALL' ? items : items.filter((item) => item.category === activeCategory)
+  const filteredItems = [...(activeCategory === 'ALL' ? items : items.filter((item) => item.category === activeCategory))].sort(
+    (a, b) => b.achievedAt.localeCompare(a.achievedAt),
+  )
 
   return (
     <div className="animate-fade-in-up">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <h2 className="font-display text-3xl font-extrabold text-ink">
-            {baby ? t('milestones.titleWithBaby', { name: baby.name }) : t('milestones.title')}
-          </h2>
+          <h2 className="font-display text-3xl font-extrabold text-ink">{t('milestones.title')}</h2>
           <p className="mt-1 text-lg text-ink-muted">{t('milestones.summary', { count: items.length })}</p>
         </div>
         <button
@@ -51,9 +45,11 @@ export function MilestonesRoute() {
         </button>
       </div>
 
-      {milestones.isPending ? (
+      <AddMilestoneDialog open={isAddOpen} onOpenChange={setIsAddOpen} />
+
+      {isPending ? (
         <MilestoneTimelineSkeleton />
-      ) : milestones.isError ? (
+      ) : isError ? (
         <p className="text-ink-muted py-16 text-center">{t('milestones.genericError')}</p>
       ) : items.length === 0 ? (
         <EmptyState
@@ -71,7 +67,7 @@ export function MilestonesRoute() {
             </button>
           }
         />
-      ) : baby ? (
+      ) : (
         <>
           <div className="mb-8 flex flex-wrap gap-2">
             <button
@@ -103,12 +99,8 @@ export function MilestonesRoute() {
             })}
           </div>
 
-          <MilestoneTimeline babyId={babyId} birthDate={baby.birthDate} items={filteredItems} />
+          <MilestoneTimeline items={filteredItems} babies={babies} />
         </>
-      ) : null}
-
-      {baby && (
-        <AddMilestoneDialog babyId={babyId} birthDate={baby.birthDate} open={isAddOpen} onOpenChange={setIsAddOpen} />
       )}
     </div>
   )

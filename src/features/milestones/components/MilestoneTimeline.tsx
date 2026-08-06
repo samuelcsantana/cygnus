@@ -1,23 +1,28 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import type { Baby } from '@/features/babies/api/babies.schemas'
 import { formatDateDisplay } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { PencilIcon } from '@/shared/icons/pencil-icon'
+import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 
 import type { Milestone } from '../api/milestones.schemas'
 import { MILESTONE_CATEGORY_META } from './category-meta'
 import { EditMilestoneDialog } from './EditMilestoneDialog'
 
 interface MilestoneTimelineProps {
-  babyId: string
-  birthDate: string
   items: Milestone[]
+  babies: Baby[]
 }
 
-export function MilestoneTimeline({ babyId, birthDate, items }: MilestoneTimelineProps) {
+// A single, merged, household-wide timeline — each entry tagged with which
+// baby it belongs to, so a family with several children sees one chronological
+// story instead of one full timeline repeated per child.
+export function MilestoneTimeline({ items, babies }: MilestoneTimelineProps) {
   const { t, i18n } = useTranslation()
   const [editTarget, setEditTarget] = useState<Milestone | null>(null)
+  const babyById = new Map(babies.map((baby) => [baby.id, baby]))
 
   return (
     <div className="relative ml-5 max-w-3xl sm:ml-8">
@@ -26,6 +31,8 @@ export function MilestoneTimeline({ babyId, birthDate, items }: MilestoneTimelin
       <div className="space-y-4">
         {items.map((milestone) => {
           const meta = MILESTONE_CATEGORY_META[milestone.category]
+          const baby = babyById.get(milestone.babyId)
+          const avatarAppearance = baby ? babyAvatarAppearance(baby.id, baby.avatarColor) : null
           return (
             <div key={milestone.id} className="group relative flex items-start gap-5">
               <div
@@ -55,6 +62,20 @@ export function MilestoneTimeline({ babyId, birthDate, items }: MilestoneTimelin
                     </button>
                   </div>
                 </div>
+                {baby && (
+                  <div className="mb-1.5 flex items-center gap-1.5">
+                    <span
+                      className={cn(
+                        'flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-[8px] font-black',
+                        avatarAppearance?.className,
+                      )}
+                      style={avatarAppearance?.style}
+                    >
+                      {babyInitials(baby.name)}
+                    </span>
+                    <span className="text-[11px] font-semibold text-ink-muted">{baby.name}</span>
+                  </div>
+                )}
                 {milestone.description && (
                   <p className="text-[13px] leading-relaxed text-ink-muted">{milestone.description}</p>
                 )}
@@ -65,8 +86,7 @@ export function MilestoneTimeline({ babyId, birthDate, items }: MilestoneTimelin
       </div>
 
       <EditMilestoneDialog
-        babyId={babyId}
-        birthDate={birthDate}
+        babies={babies}
         milestone={editTarget}
         onOpenChange={(open) => !open && setEditTarget(null)}
       />

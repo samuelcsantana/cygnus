@@ -1,7 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
-
 import { createBaby, deleteBaby, fetchBabies, updateBaby } from './babies.api'
 import type { Baby, BabyFormInput } from './babies.schemas'
 
@@ -16,6 +14,11 @@ export function useBabies() {
     queryKey: babiesQueryKey,
     queryFn: fetchBabies,
   })
+}
+
+/** Used by the "Add" wizards to auto-select (and hide the picker) when there's only one baby. */
+export function soleBaby(babies: Baby[] | undefined): Baby | undefined {
+  return babies?.length === 1 ? babies[0] : undefined
 }
 
 export function useCreateBaby() {
@@ -44,8 +47,6 @@ export function useUpdateBaby(babyId: string) {
 
 export function useDeleteBaby() {
   const queryClient = useQueryClient()
-  const selectedBabyId = useSelectedBabyStore((state) => state.selectedBabyId)
-  const setSelectedBabyId = useSelectedBabyStore((state) => state.setSelectedBabyId)
 
   return useMutation({
     mutationFn: (babyId: string) => deleteBaby(babyId),
@@ -53,10 +54,6 @@ export function useDeleteBaby() {
       queryClient.setQueryData<Baby[]>(babiesQueryKey, (prev) =>
         prev?.filter((baby) => baby.id !== deletedBabyId),
       )
-
-      if (selectedBabyId === deletedBabyId) {
-        setSelectedBabyId(null)
-      }
     },
   })
 }

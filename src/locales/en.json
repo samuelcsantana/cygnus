@@ -15,7 +15,6 @@
     }
   },
   "nav": {
-    "menuLabel": "Menu",
     "dashboard": "Home",
     "vaccines": "Vaccines",
     "appointments": "Appointments",
@@ -61,10 +60,13 @@
     }
   },
   "babies": {
-    "yourChildren": "My Children",
     "addChild": "Add Child",
     "monthsOld_one": "{{count}} month old",
     "monthsOld_other": "{{count}} months old",
+    "picker": {
+      "stepLabel": "Child",
+      "subtitle": "Which child is this for?"
+    },
     "dashboard": {
       "welcomeHeading": "Welcome to Meu Neném!",
       "welcomeDescription": "Track vaccines, appointments and the most special milestones of your children's growth — all organized in one place, so you never miss an important moment.",
@@ -125,10 +127,12 @@
       "greetingAfternoon": "Good afternoon",
       "greetingEvening": "Good evening",
       "greetingLine": "{{greeting}}, {{name}}! 👋",
-      "viewingProfile": "You're viewing {{name}}'s profile",
+      "childCount_one": "Tracking {{count}} child",
+      "childCount_other": "Tracking {{count}} children",
       "overdueBanner_one": "{{count}} overdue vaccine",
       "overdueBanner_other": "{{count}} overdue vaccines",
-      "overdueBannerSuffix": "for {{name}}. Schedule it as soon as possible.",
+      "overdueBannerHousehold_one": "for {{count}} child. Schedule it as soon as possible.",
+      "overdueBannerHousehold_other": "for {{count}} children. Schedule it as soon as possible.",
       "viewVaccines": "View vaccines →",
       "statVaccinesAppliedLabel": "Vaccines applied",
       "statVaccinesAppliedSub_one": "{{count}} pending",
@@ -138,12 +142,13 @@
       "statMilestonesLabel": "Milestones logged",
       "statMilestonesSub": "developmental milestones",
       "statLastAppointmentLabel": "Last appointment",
-      "latestMilestonesTitle": "Latest milestones ⭐",
-      "viewAllMilestones": "View all →",
       "noMilestonesYet": "No milestones logged yet",
-      "vaccineCalendarTitle": "Vaccine calendar 💉",
-      "viewAllVaccines": "View all →",
-      "allVaccinesUpToDate": "All vaccines up to date! 🎉"
+      "viewAll": "View all →",
+      "vaccinesAllUpToDate": "All vaccines up to date! 🎉",
+      "noAppointmentsScheduled": "No appointments scheduled",
+      "familyStripDelayed_one": "{{count}} overdue vaccine",
+      "familyStripDelayed_other": "{{count}} overdue vaccines",
+      "familyStripUpToDate": "Vaccines up to date"
     },
     "form": {
       "title": "New Profile",
@@ -195,7 +200,6 @@
   },
   "vaccines": {
     "title": "Vaccines",
-    "titleWithBaby": "{{name}}'s Vaccines 💉",
     "summary": "{{applied}} taken · {{delayed}} overdue · {{pending}} pending",
     "genericError": "Could not load the vaccine calendar.",
     "progressLabel": "Calendar progress",
@@ -285,7 +289,6 @@
   },
   "appointments": {
     "title": "Appointments",
-    "titleWithBaby": "{{name}}'s Appointments 🩺",
     "summary": "{{completed}} completed · {{scheduled}} scheduled",
     "scheduleAction": "Schedule Appointment",
     "dateLabel": "Date",
@@ -344,7 +347,6 @@
   },
   "milestones": {
     "title": "Developmental Milestones",
-    "titleWithBaby": "{{name}}'s Milestones ⭐",
     "summary_one": "{{count}} special moment recorded",
     "summary_other": "{{count}} special moments recorded",
     "action": "Record Milestone",

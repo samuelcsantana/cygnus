@@ -5,7 +5,9 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
-import { StepIndicator } from '@/shared/components/StepIndicator'
+import { soleBaby, useBabies } from '@/features/babies/api/babies.hooks'
+import { BabyPickerStep } from '@/shared/components/BabyPickerStep'
+import { StepIndicator, type Step as StepIndicatorStep } from '@/shared/components/StepIndicator'
 import { CloseIcon } from '@/shared/icons/close-icon'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 
@@ -14,18 +16,22 @@ import { appointmentFormSchema, type AppointmentFormInput } from '../api/appoint
 import { AppointmentProfessionalFields } from './AppointmentProfessionalFields'
 import { AppointmentScheduleFields } from './AppointmentScheduleFields'
 
-type Step = 'professional' | 'schedule'
+type Step = 'baby' | 'professional' | 'schedule'
 
 interface AddAppointmentDialogProps {
-  babyId: string
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function AddAppointmentDialog({ babyId, open, onOpenChange }: AddAppointmentDialogProps) {
+export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialogProps) {
   const { t } = useTranslation()
-  const createAppointment = useCreateAppointment(babyId)
+  const babies = useBabies()
+  const babyList = babies.data ?? []
+  const needsBabyPicker = babyList.length > 1
+
   const [step, setStep] = useState<Step>('professional')
+  const [selectedBabyId, setSelectedBabyId] = useState<string | null>(null)
+  const createAppointment = useCreateAppointment(selectedBabyId)
 
   const {
     register,
@@ -39,13 +45,15 @@ export function AddAppointmentDialog({ babyId, open, onOpenChange }: AddAppointm
   })
 
   useEffect(() => {
-    if (!open) {
-      setStep('professional')
-      reset()
-    }
-  }, [open, reset])
+    if (!open) return
+    const sole = soleBaby(babies.data)
+    setSelectedBabyId(sole?.id ?? null)
+    setStep(babyList.length > 1 ? 'baby' : 'professional')
+    reset()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, babies.data])
 
-  const handleContinue = async () => {
+  const handleContinueFromProfessional = async () => {
     const isValid = await trigger('doctorName')
     if (isValid) {
       setStep('schedule')
@@ -56,6 +64,12 @@ export function AddAppointmentDialog({ babyId, open, onOpenChange }: AddAppointm
     await createAppointment.mutateAsync(values)
     onOpenChange(false)
   })
+
+  const steps: StepIndicatorStep[] = [
+    ...(needsBabyPicker ? [{ id: 'baby', label: t('babies.picker.stepLabel') }] : []),
+    { id: 'professional', label: t('appointments.wizard.stepProfessional') },
+    { id: 'schedule', label: t('appointments.wizard.stepSchedule') },
+  ]
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -75,17 +89,23 @@ export function AddAppointmentDialog({ babyId, open, onOpenChange }: AddAppointm
         </div>
 
         <div className="p-7">
-          <StepIndicator
-            steps={[
-              { id: 'professional', label: t('appointments.wizard.stepProfessional') },
-              { id: 'schedule', label: t('appointments.wizard.stepSchedule') },
-            ]}
-            currentStepId={step}
-            accentClassName="bg-violet-600"
-            className="mb-6"
-          />
+          <StepIndicator steps={steps} currentStepId={step} accentClassName="bg-violet-600" className="mb-6" />
 
-          {step === 'professional' ? (
+          {step === 'baby' ? (
+            <div key="baby" className="animate-fade-in-up">
+              <BabyPickerStep babies={babyList} value={selectedBabyId} onSelect={setSelectedBabyId} />
+              <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+                <Button
+                  type="button"
+                  disabled={!selectedBabyId}
+                  onClick={() => setStep('professional')}
+                  className="bg-violet-600 text-white hover:bg-violet-700"
+                >
+                  {t('appointments.wizard.continue')}
+                </Button>
+              </div>
+            </div>
+          ) : step === 'professional' ? (
             // Deliberately not inside a <form>: a same-position button whose `type`
             // flips from "button" to "submit" on click (React reuses the DOM node)
             // can trigger a native submit on that very click if it's a form
@@ -93,7 +113,11 @@ export function AddAppointmentDialog({ babyId, open, onOpenChange }: AddAppointm
             <div key="professional" className="animate-fade-in-up">
               <AppointmentProfessionalFields register={register} control={control} errors={errors} />
               <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
-                <Button type="button" onClick={handleContinue} className="bg-violet-600 text-white hover:bg-violet-700">
+                <Button
+                  type="button"
+                  onClick={handleContinueFromProfessional}
+                  className="bg-violet-600 text-white hover:bg-violet-700"
+                >
                   {t('appointments.wizard.continue')}
                 </Button>
               </div>

@@ -8,14 +8,13 @@ import type { Appointment } from '../api/appointments.schemas'
 import { AppointmentForm } from './AppointmentForm'
 
 interface RescheduleDialogProps {
-  babyId: string
   appointment: Appointment | null
   onOpenChange: (open: boolean) => void
 }
 
-export function RescheduleDialog({ babyId, appointment, onOpenChange }: RescheduleDialogProps) {
+export function RescheduleDialog({ appointment, onOpenChange }: RescheduleDialogProps) {
   const { t } = useTranslation()
-  const updateAppointment = useUpdateAppointment(babyId)
+  const updateAppointment = useUpdateAppointment(appointment?.babyId ?? '')
 
   return (
     <Dialog open={!!appointment} onOpenChange={onOpenChange}>

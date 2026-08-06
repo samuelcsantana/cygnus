@@ -11,6 +11,19 @@ import { EditMilestoneDialog } from './EditMilestoneDialog'
 
 const babyId = '22222222-2222-4222-8222-222222222222'
 
+const sampleBaby = {
+  id: babyId,
+  userId: '99999999-9999-4999-8999-999999999999',
+  name: 'Baby One',
+  birthDate: '2025-06-01',
+  gender: 'FEMALE' as const,
+  bloodType: null,
+  allergies: [],
+  avatarUrl: null,
+  avatarColor: null,
+  createdAt: '2025-01-01T00:00:00.000Z',
+}
+
 const sampleMilestone: Milestone = {
   id: '11111111-1111-4111-8111-111111111111',
   babyId,
@@ -34,7 +47,7 @@ describe('EditMilestoneDialog', () => {
     const onOpenChange = vi.fn()
 
     renderWithProviders(
-      <EditMilestoneDialog babyId={babyId} birthDate="2025-06-01" milestone={sampleMilestone} onOpenChange={onOpenChange} />,
+      <EditMilestoneDialog babies={[sampleBaby]} milestone={sampleMilestone} onOpenChange={onOpenChange} />,
     )
 
     await user.click(screen.getByRole('button', { name: 'Salvar Alterações' }))
@@ -57,7 +70,7 @@ describe('EditMilestoneDialog', () => {
     const onOpenChange = vi.fn()
 
     renderWithProviders(
-      <EditMilestoneDialog babyId={babyId} birthDate="2025-06-01" milestone={sampleMilestone} onOpenChange={onOpenChange} />,
+      <EditMilestoneDialog babies={[sampleBaby]} milestone={sampleMilestone} onOpenChange={onOpenChange} />,
     )
 
     await user.click(screen.getByRole('button', { name: 'Salvar Alterações' }))
@@ -69,7 +82,7 @@ describe('EditMilestoneDialog', () => {
 
   it('pre-fills the form with the milestone being edited', () => {
     renderWithProviders(
-      <EditMilestoneDialog babyId={babyId} birthDate="2025-06-01" milestone={sampleMilestone} onOpenChange={vi.fn()} />,
+      <EditMilestoneDialog babies={[sampleBaby]} milestone={sampleMilestone} onOpenChange={vi.fn()} />,
     )
 
     expect(screen.getByLabelText('O que aconteceu?')).toHaveValue('Primeiro sorriso')

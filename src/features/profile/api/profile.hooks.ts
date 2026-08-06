@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { currentUserQueryKey } from '@/features/auth/api/auth.hooks'
 import type { User } from '@/features/auth/api/auth.schemas'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
-import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 
 import { deleteAccount, updateProfile, type UpdateProfilePayload } from './profile.api'
 
@@ -22,13 +21,11 @@ export function useUpdateProfile() {
 
 export function useDeleteAccount() {
   const clearIdentity = useAuthIdentityStore((state) => state.clearIdentity)
-  const setSelectedBabyId = useSelectedBabyStore((state) => state.setSelectedBabyId)
 
   return useMutation({
     mutationFn: (currentPassword: string) => deleteAccount(currentPassword),
     onSuccess: () => {
       clearIdentity()
-      setSelectedBabyId(null)
     },
   })
 }

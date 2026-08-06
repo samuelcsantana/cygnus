@@ -2,7 +2,6 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
-import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 
 import { getCurrentUser, loginUser, logoutUser, registerUser } from './auth.api'
 import type { LoginInput, RegisterInput } from './auth.schemas'
@@ -60,16 +59,11 @@ export function useLogin() {
 
 export function useLogout() {
   const clearIdentity = useAuthIdentityStore((state) => state.clearIdentity)
-  const setSelectedBabyId = useSelectedBabyStore((state) => state.setSelectedBabyId)
 
   return useMutation({
     mutationFn: logoutUser,
     onSuccess: () => {
       clearIdentity()
-      // Persisted across sessions (selectedBaby.store.ts) — clear it so a
-      // different account on the same device never inherits a baby
-      // selection that belongs to someone else.
-      setSelectedBabyId(null)
       // Query cache is cleared once LoginRoute mounts (see LoginRoute.tsx), not here —
       // the protected shell's own useCurrentUser()/useBabies() observers are often still
       // mounted at this point, and clearing immediately makes them refetch with the

@@ -1,22 +1,26 @@
 import { useTranslation } from 'react-i18next'
 
+import type { Baby } from '@/features/babies/api/babies.schemas'
 import { formatDateDisplay, splitScheduledAt } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
+import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 
 import type { Appointment } from '../api/appointments.schemas'
 import { AppointmentStatusBadge } from './AppointmentStatusBadge'
 
 interface AppointmentCardProps {
   appointment: Appointment
+  baby?: Baby
   onReschedule: () => void
   onViewDetails: () => void
 }
 
-export function AppointmentCard({ appointment, onReschedule, onViewDetails }: AppointmentCardProps) {
+export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails }: AppointmentCardProps) {
   const { t, i18n } = useTranslation()
   const { date, time } = splitScheduledAt(appointment.scheduledAt)
   const isScheduled = appointment.status === 'SCHEDULED'
+  const avatarAppearance = baby ? babyAvatarAppearance(baby.id, baby.avatarColor) : null
 
   return (
     <div
@@ -27,17 +31,34 @@ export function AppointmentCard({ appointment, onReschedule, onViewDetails }: Ap
     >
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-center gap-3.5">
-          <span
-            className={cn(
-              'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl',
-              isScheduled ? 'bg-violet-50 text-violet-500' : 'bg-teal-50 text-teal-600',
-            )}
-          >
-            <StethoscopeIcon className="h-5 w-5" />
-          </span>
+          {baby ? (
+            <span
+              className={cn(
+                'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-base font-black',
+                avatarAppearance?.className,
+              )}
+              style={avatarAppearance?.style}
+              title={baby.name}
+            >
+              {babyInitials(baby.name)}
+            </span>
+          ) : (
+            <span
+              className={cn(
+                'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl',
+                isScheduled ? 'bg-violet-50 text-violet-500' : 'bg-teal-50 text-teal-600',
+              )}
+            >
+              <StethoscopeIcon className="h-5 w-5" />
+            </span>
+          )}
           <div>
             <h3 className="text-[15px] font-bold text-ink">{appointment.doctorName}</h3>
-            {appointment.specialty && <p className="text-[13px] text-ink-muted">{appointment.specialty}</p>}
+            <p className="text-[13px] text-ink-muted">
+              {baby?.name}
+              {baby && appointment.specialty && ' · '}
+              {appointment.specialty}
+            </p>
           </div>
         </div>
         <div className="flex-shrink-0 text-right">
