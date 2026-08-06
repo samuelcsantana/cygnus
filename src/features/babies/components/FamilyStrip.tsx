@@ -63,14 +63,23 @@ export function FamilyStrip({ items, onEdit }: FamilyStripProps) {
                 <p className="text-[11px] font-bold text-teal-600">{t('babies.dashboard.familyStripUpToDate')}</p>
               )}
             </div>
-            <button
-              type="button"
-              onClick={() => onEdit(baby)}
-              aria-label={t('babies.edit.action', { name: baby.name })}
-              className="flex-shrink-0 self-start rounded-lg p-1.5 text-ink-faint opacity-0 transition-opacity group-hover:opacity-100 hover:bg-slate-100 hover:text-teal-600"
-            >
-              <PencilIcon className="h-3.5 w-3.5" />
-            </button>
+            {/* Touch target: the -inset-2.5 pseudo-element expands the tappable
+                area to the WCAG 44x44px minimum without enlarging the visible
+                icon or disturbing the compact card layout. Default opacity is
+                dimmed rather than 0 so the action is discoverable on touch
+                devices (no :hover state there); keyboard focus and hover both
+                bring it to full opacity. */}
+            <span className="relative flex-shrink-0 self-start">
+              <button
+                type="button"
+                onClick={() => onEdit(baby)}
+                aria-label={t('babies.edit.action', { name: baby.name })}
+                className="relative rounded-lg p-1.5 text-ink-faint opacity-60 transition-opacity hover:bg-slate-100 hover:text-teal-600 hover:opacity-100 focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100"
+              >
+                <span className="absolute -inset-2.5" aria-hidden="true" />
+                <PencilIcon className="h-3.5 w-3.5" />
+              </button>
+            </span>
           </div>
         )
       })}

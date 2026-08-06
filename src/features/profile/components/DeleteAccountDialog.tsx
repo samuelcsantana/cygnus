@@ -69,7 +69,7 @@ export function DeleteAccountDialog({ onDeleted }: DeleteAccountDialogProps) {
           {t('profile.delete.action')}
         </button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('profile.delete.confirmTitle')}</DialogTitle>
         </DialogHeader>

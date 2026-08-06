@@ -42,10 +42,15 @@ export function VaccineApplicationDetailsFields<T extends VaccineApplicationDeta
               onValueChange={field.onChange}
               className="mt-2"
               aria-invalid={!!errors.applicationDate}
+              aria-describedby={dateErrorKey ? 'applicationDate-error' : undefined}
             />
           )}
         />
-        {dateErrorKey && <p className="text-destructive mt-1 text-sm">{t(dateErrorKey)}</p>}
+        {dateErrorKey && (
+          <p id="applicationDate-error" className="text-destructive mt-1 text-sm">
+            {t(dateErrorKey)}
+          </p>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -87,9 +92,14 @@ export function VaccineApplicationDetailsFields<T extends VaccineApplicationDeta
           placeholder={t('vaccines.applicationDetails.photoUrlPlaceholder')}
           className="mt-2"
           aria-invalid={!!errors.photoUrl}
+          aria-describedby={photoUrlErrorKey ? 'photoUrl-error' : undefined}
           {...register('photoUrl' as Path<T>)}
         />
-        {photoUrlErrorKey && <p className="text-destructive mt-1 text-sm">{t(photoUrlErrorKey)}</p>}
+        {photoUrlErrorKey && (
+          <p id="photoUrl-error" className="text-destructive mt-1 text-sm">
+            {t(photoUrlErrorKey)}
+          </p>
+        )}
       </div>
 
       <div>

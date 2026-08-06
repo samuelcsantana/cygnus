@@ -32,6 +32,11 @@ const buttonVariants = cva(
         "icon-sm":
           "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
         "icon-lg": "size-9",
+        // Meets the WCAG 2.5.5 / mobile-platform 44x44px minimum touch target —
+        // for icon-only *primary action* buttons in dense mobile list/card
+        // views, where the default `icon`/`icon-sm` sizes are visually too
+        // large for the surrounding density but still need a big enough hit area.
+        "icon-touch": "size-11",
       },
     },
     defaultVariants: {

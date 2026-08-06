@@ -37,12 +37,21 @@ export function MilestoneCoreFields({ control, register, errors }: MilestoneCore
           control={control}
           name="category"
           render={({ field }) => (
-            <div className="mt-2" role="group" aria-labelledby="category-label">
+            <div
+              className="mt-2"
+              role="group"
+              aria-labelledby="category-label"
+              aria-describedby={categoryErrorKey ? 'category-error' : undefined}
+            >
               <SelectorCardGroup value={field.value} onValueChange={field.onChange} options={categoryOptions} />
             </div>
           )}
         />
-        {categoryErrorKey && <p className="text-destructive mt-1 text-sm">{t(categoryErrorKey)}</p>}
+        {categoryErrorKey && (
+          <p id="category-error" className="text-destructive mt-1 text-sm">
+            {t(categoryErrorKey)}
+          </p>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -52,10 +61,15 @@ export function MilestoneCoreFields({ control, register, errors }: MilestoneCore
             id="title"
             placeholder={t('milestones.form.titlePlaceholder')}
             aria-invalid={!!errors.title}
+            aria-describedby={titleErrorKey ? 'title-error' : undefined}
             className="mt-2"
             {...register('title')}
           />
-          {titleErrorKey && <p className="text-destructive mt-1 text-sm">{t(titleErrorKey)}</p>}
+          {titleErrorKey && (
+            <p id="title-error" className="text-destructive mt-1 text-sm">
+              {t(titleErrorKey)}
+            </p>
+          )}
         </div>
         <div>
           <Label htmlFor="achievedAt">{t('milestones.form.achievedAtLabel')}</Label>
@@ -68,11 +82,16 @@ export function MilestoneCoreFields({ control, register, errors }: MilestoneCore
                 value={field.value}
                 onValueChange={field.onChange}
                 aria-invalid={!!errors.achievedAt}
+                aria-describedby={achievedAtErrorKey ? 'achievedAt-error' : undefined}
                 className="mt-2"
               />
             )}
           />
-          {achievedAtErrorKey && <p className="text-destructive mt-1 text-sm">{t(achievedAtErrorKey)}</p>}
+          {achievedAtErrorKey && (
+            <p id="achievedAt-error" className="text-destructive mt-1 text-sm">
+              {t(achievedAtErrorKey)}
+            </p>
+          )}
         </div>
       </div>
     </div>
