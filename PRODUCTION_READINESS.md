@@ -2,6 +2,30 @@
 
 Checklist vivo do que falta antes de um lançamento real. Gerado após a implementação inicial completa (auth, babies, vaccines, appointments, milestones, notifications) contra o `cygnus-api` real. Atualize os checkboxes conforme os itens forem resolvidos.
 
+## Nota de arquitetura (contexto para a próxima sessão)
+
+Duas reconstruções grandes de UX aconteceram depois da versão inicial deste
+checklist — vale ler antes de mexer em navegação ou nas telas de conteúdo:
+
+1. **Navegação no topo + sem seleção obrigatória de filho.** A sidebar
+   esquerda (`SidebarBabySwitcher`) e o Zustand `selectedBaby.store.ts` foram
+   removidos por completo. A navegação agora é uma barra no topo
+   (`AppShellLayout.tsx`); cada aba mostra a família inteira de uma vez, e
+   "qual filho" só é perguntado dentro dos diálogos de cadastro
+   (`BabyPickerStep`, some sozinho quando só há um filho).
+2. **Dashboard, Vacinas, Consultas e Marcos viraram visões únicas
+   entre-filhos.** Em vez de repetir uma seção completa por filho, cada tela
+   mostra uma lista/timeline/grid única, ordenada globalmente (urgência,
+   data etc.), com cada item marcado por um avatarzinho colorido do filho
+   (`babyAvatarAppearance`/`babyInitials`, em `shared/utils/babyAvatarColor.ts`).
+
+Ao investigar esse trabalho, foi encontrado e corrigido no `cygnus-api` um bug
+de contrato: o campo `specialty` de `Appointment` tinha migration, lista de
+sugestões e formulário no frontend, mas nunca foi ligado no domínio/use
+cases/repositório/schemas de rota do backend — criar uma consulta com
+especialidade preenchida quebrava com 500 e depois falha de validação Zod na
+resposta. Corrigido de ponta a ponta (ver `cygnus-api/PLANO.md`, Fase 9).
+
 ## 🔴 Bloqueadores
 
 - [x] **Sessão expira em 15 min sem refresh** — `cygnus-api` agora expõe `POST /auth/refresh` (rotaciona `access_token`/`refresh_token` via cookie HTTP-only). Frontend tenta um silent-refresh automático em qualquer 401 (exceto `/auth/login` e o próprio `/auth/refresh`) antes de redirecionar pro login — ver `src/lib/http-client.ts`.
@@ -15,7 +39,7 @@ Checklist vivo do que falta antes de um lançamento real. Gerado após a impleme
 ## 🟡 Importante (dá pra lançar em beta fechado sem isso)
 
 - [x] Editar perfil do bebê — ícone de lápis no `BabyCard` abre `EditBabyDialog`, PATCH completo (`src/features/babies/`)
-- [x] Excluir perfil do bebê — `cygnus-api` agora expõe `DELETE /babies/{id}` (cascata para vacinas/consultas/marcos/notificações). `EditBabyDialog` ganhou uma ação destrutiva com confirmação (`AlertDialog`, mesmo padrão do cancelamento de consulta); ao excluir o bebê selecionado, `selectedBaby.store` é limpo para não deixar rotas `vaccines`/`appointments`/`milestones` apontando pra um `babyId` inexistente
+- [x] Excluir perfil do bebê — `cygnus-api` agora expõe `DELETE /babies/{id}` (cascata para vacinas/consultas/marcos/notificações). `EditBabyDialog` ganhou uma ação destrutiva com confirmação (`AlertDialog`, mesmo padrão do cancelamento de consulta)
 - [x] Editar marco — ícone de lápis em cada card do `MilestoneTimeline` abre `EditMilestoneDialog`, PATCH completo (`src/features/milestones/`)
 - [x] Confirmação antes de ação destrutiva — "Cancelar Consulta" agora abre um `AlertDialog` (shadcn) de confirmação antes de fazer o PATCH (`AppointmentDetailDialog.tsx`)
 - [x] Seletor de idioma na UI — `LanguageSwitcher` (`src/shared/components/`) no header do app (mobile e desktop) e na tela de login/registro; `i18n.changeLanguage()` já persiste em `localStorage` (`i18nextLng`) via `i18next-browser-languagedetector`
@@ -23,7 +47,7 @@ Checklist vivo do que falta antes de um lançamento real. Gerado após a impleme
 - [x] Error Boundary — `src/app/ErrorBoundary.tsx` + `ErrorFallback.tsx` envolvendo o router em `App.tsx`
 - [x] Avatar Dicebear depende de serviço externo não controlado — trocado `https://api.dicebear.com/...` por geração local com `@dicebear/core` + `@dicebear/collection` (`shared/utils/defaultAvatar.ts`), mesmo estilo "avataaars", zero chamada de rede em produção
 - [x] Bundle único ~721KB sem code-splitting — rotas convertidas pra `lazy` do React Router (`router.tsx`); chunk principal caiu pra ~272KB (gzip 85KB), resto carrega sob demanda. Validado com a suíte Playwright completa contra o build real
-- [x] Seleção de bebê não persiste entre sessões — `selectedBaby.store.ts` agora usa `zustand/middleware persist`; limpo no logout pra não vazar entre contas no mesmo dispositivo
+- [x] Seleção de bebê não persiste entre sessões — resolvido de raiz: não existe mais um "bebê selecionado" global (`selectedBaby.store.ts` foi removido na reconstrução de navegação, ver nota de arquitetura abaixo), então não há nada pra persistir nem vazar entre contas
 - [x] Página 404 real — `NotFoundRoute` (`src/app/routes/`) substitui o redirect silencioso no catch-all do router
 
 ## 🟢 Polish (não bloqueia nada)
