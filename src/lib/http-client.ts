@@ -1,4 +1,5 @@
 import { config } from './config'
+import { readCookie } from './cookies'
 
 export interface ApiErrorBody {
   status: 'error'
@@ -58,6 +59,21 @@ function refreshSession(): Promise<boolean> {
 // after a silent refresh would be meaningless (or, for /auth/refresh itself, recursive).
 const SESSION_REFRESH_EXEMPT_PATHS = new Set(['/auth/login', '/auth/refresh'])
 
+// Double-submit CSRF scheme: the backend sets a non-HttpOnly `csrf_token`
+// cookie readable by JS, and expects it echoed back as this header on any
+// request that mutates state. GET requests are exempt (safe/idempotent).
+const CSRF_COOKIE_NAME = 'csrf_token'
+const CSRF_HEADER_NAME = 'X-CSRF-Token'
+const MUTATING_METHODS = new Set(['POST', 'PATCH', 'PUT', 'DELETE'])
+
+function csrfHeaders(method: string | undefined): Record<string, string> {
+  if (!method || !MUTATING_METHODS.has(method.toUpperCase())) {
+    return {}
+  }
+  const token = readCookie(CSRF_COOKIE_NAME)
+  return token ? { [CSRF_HEADER_NAME]: token } : {}
+}
+
 async function request<T>(path: string, options: RequestOptions = {}, isRetry = false): Promise<T> {
   const { body, headers, ...rest } = options
 
@@ -66,6 +82,7 @@ async function request<T>(path: string, options: RequestOptions = {}, isRetry = 
     credentials: 'include',
     headers: {
       ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+      ...csrfHeaders(rest.method),
       ...headers,
     },
     body: body !== undefined ? JSON.stringify(body) : undefined,
