@@ -5,6 +5,8 @@ import { Toaster } from '@/components/ui/sonner'
 import '@/lib/i18n'
 import { queryClient, setUnauthorizedHandler } from '@/lib/query-client'
 
+import { ThemeProvider } from './ThemeProvider'
+
 interface AppProvidersProps {
   children: ReactNode
 }
@@ -19,9 +21,11 @@ export function AppProviders({ children }: AppProvidersProps) {
   }, [])
 
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-      <Toaster />
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        {children}
+        <Toaster />
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }

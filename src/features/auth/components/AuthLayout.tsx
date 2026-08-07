@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
+import { ThemeToggle } from '@/shared/components/ThemeToggle'
 import { LogoIcon } from '@/shared/icons/logo-icon'
 
 interface AuthLayoutProps {
@@ -54,7 +55,8 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         </div>
 
         <div className="relative flex w-full flex-col justify-center bg-white p-8 sm:p-12">
-          <div className="absolute top-6 right-6">
+          <div className="absolute top-6 right-6 flex items-center gap-2">
+            <ThemeToggle />
             <LanguageSwitcher />
           </div>
 
