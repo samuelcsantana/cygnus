@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -42,6 +43,7 @@ export function ApplyVaccineDialog({ babyId, item, onOpenChange }: ApplyVaccineD
     if (!item) return
     try {
       await applyVaccine.mutateAsync({ vaccineId: item.vaccineId, input: values })
+      toast.success(t('vaccines.apply.successToast'))
       onOpenChange(false)
     } catch {
       // surfaced below via applyVaccine.error
@@ -50,7 +52,7 @@ export function ApplyVaccineDialog({ babyId, item, onOpenChange }: ApplyVaccineD
 
   return (
     <Dialog open={!!item} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('vaccines.apply.title')}</DialogTitle>
         </DialogHeader>

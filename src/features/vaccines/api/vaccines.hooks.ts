@@ -3,7 +3,13 @@ import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/rea
 import { useBabies } from '@/features/babies/api/babies.hooks'
 import type { Baby } from '@/features/babies/api/babies.schemas'
 
-import { applyVaccine, fetchAdhocVaccines, fetchVaccineCalendar, registerAdhocVaccine } from './vaccines.api'
+import {
+  applyVaccine,
+  deleteAdhocVaccine,
+  fetchAdhocVaccines,
+  fetchVaccineCalendar,
+  registerAdhocVaccine,
+} from './vaccines.api'
 import type {
   AdhocVaccineRecord,
   ApplyVaccineInput,
@@ -150,6 +156,19 @@ export function useRegisterAdhocVaccine(babyId: string | null) {
         created,
         ...(prev ?? []),
       ])
+    },
+  })
+}
+
+export function useDeleteAdhocVaccine(babyId: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (recordId: string) => deleteAdhocVaccine(babyId, recordId),
+    onSuccess: (_data, deletedRecordId) => {
+      queryClient.setQueryData<AdhocVaccineRecord[]>(adhocVaccinesQueryKey(babyId), (prev) =>
+        prev?.filter((record) => record.id !== deletedRecordId),
+      )
     },
   })
 }

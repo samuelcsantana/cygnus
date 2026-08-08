@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -20,6 +21,7 @@ import { SelectorCardGroup } from '@/shared/components/SelectorCardGroup'
 import { StepIndicator, type Step as StepIndicatorStep } from '@/shared/components/StepIndicator'
 import { BellIcon } from '@/shared/icons/bell-icon'
 import { CalendarIcon } from '@/shared/icons/calendar-icon'
+import { CheckIcon } from '@/shared/icons/check-icon'
 import { PencilIcon } from '@/shared/icons/pencil-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 
@@ -29,7 +31,11 @@ import { CAMPAIGN_VACCINE_SUGGESTIONS } from './campaign-vaccine-suggestions'
 import { VaccineApplicationDetailsFields } from './VaccineApplicationDetailsFields'
 
 type VaccineTypeChoice = 'CATALOG' | 'CAMPAIGN' | 'CUSTOM'
-type Step = 'baby' | 'type' | 'select' | 'details'
+// 'confirmation' is a post-submit interstitial (not a real wizard step, so
+// it's deliberately left out of the `steps` StepIndicator array below) that
+// lets a parent log several historical doses in one sitting — "add another"
+// loops back to 'type' instead of closing the dialog.
+type Step = 'baby' | 'type' | 'select' | 'details' | 'confirmation'
 
 const detailsFormSchema = applyVaccineSchema.extend({
   applicationDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
@@ -54,6 +60,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
   const [campaignName, setCampaignName] = useState('')
   const [customName, setCustomName] = useState('')
   const [customDose, setCustomDose] = useState('')
+  const [lastRegisteredName, setLastRegisteredName] = useState('')
 
   const calendar = useVaccineCalendar(selectedBabyId)
   const pendingItems = (calendar.data ?? [])
@@ -101,6 +108,8 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
 
   const mutation = choice === 'CATALOG' ? applyVaccine : registerAdhocVaccine
 
+  const summaryName = choice === 'CATALOG' ? (selectedVaccine?.name ?? '') : choice === 'CAMPAIGN' ? campaignName : customName
+
   const onSubmit = handleSubmit(async (values) => {
     try {
       if (choice === 'CATALOG' && selectedVaccineId) {
@@ -115,13 +124,26 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
           ...values,
         })
       }
-      onOpenChange(false)
+      toast.success(t('vaccines.register.successToast'))
+      setLastRegisteredName(summaryName)
+      setStep('confirmation')
     } catch {
       // surfaced below via mutation.error
     }
   })
 
-  const summaryName = choice === 'CATALOG' ? (selectedVaccine?.name ?? '') : choice === 'CAMPAIGN' ? campaignName : customName
+  // Loops back to the type step instead of closing the dialog, so a parent
+  // catching up on several historical doses doesn't have to reopen it each
+  // time — only the vaccine-specific selections reset; the chosen baby stays.
+  const handleAddAnother = () => {
+    setChoice(null)
+    setSelectedVaccineId(null)
+    setCampaignName('')
+    setCustomName('')
+    setCustomDose('')
+    reset({ applicationDate: todayDateString() })
+    setStep('type')
+  }
 
   const submitErrorMessage = mutation.error ? t('vaccines.register.genericError') : null
 
@@ -144,7 +166,9 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
           </DialogTitle>
         </DialogHeader>
 
-        <StepIndicator steps={steps} currentStepId={step} accentClassName="bg-teal-500" />
+        {step !== 'confirmation' && (
+          <StepIndicator steps={steps} currentStepId={step} accentClassName="bg-teal-500" />
+        )}
 
         {step === 'baby' ? (
           <div className="animate-fade-in-up space-y-5">
@@ -327,7 +351,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
               </Button>
             </DialogFooter>
           </div>
-        ) : (
+        ) : step === 'details' ? (
           <form onSubmit={onSubmit} className="animate-fade-in-up space-y-4" noValidate>
             <div className="flex items-center gap-3 rounded-xl bg-teal-50 px-4 py-3">
               <SyringeIcon className="h-5 w-5 flex-shrink-0 text-teal-600" />
@@ -351,6 +375,29 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
               </Button>
             </DialogFooter>
           </form>
+        ) : (
+          // Post-submit interstitial (item 13): lets a parent log several
+          // historical doses in one sitting instead of closing/reopening the
+          // dialog for each one.
+          <div className="animate-fade-in-up space-y-5 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 text-teal-600">
+              <CheckIcon className="h-7 w-7" />
+            </div>
+            <div>
+              <p className="font-display text-lg font-extrabold text-ink">
+                {t('vaccines.register.addAnother.title', { name: lastRegisteredName })}
+              </p>
+              <p className="mt-1 text-sm text-ink-muted">{t('vaccines.register.addAnother.prompt')}</p>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                {t('vaccines.register.addAnother.done')}
+              </Button>
+              <Button type="button" onClick={handleAddAnother}>
+                {t('vaccines.register.addAnother.action')}
+              </Button>
+            </DialogFooter>
+          </div>
         )}
       </DialogContent>
     </Dialog>

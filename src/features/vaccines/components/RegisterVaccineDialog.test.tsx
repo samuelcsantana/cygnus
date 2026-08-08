@@ -123,10 +123,17 @@ describe('RegisterVaccineDialog', () => {
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
     await user.click(screen.getByRole('button', { name: 'Salvar vacina' }))
 
+    // A successful submit shows a post-submit "add another?" interstitial
+    // instead of closing right away (bulk historical entry, item 13) —
+    // the dialog only closes once the user explicitly picks "Concluir".
     await waitFor(() => {
-      expect(onOpenChange).toHaveBeenCalledWith(false)
+      expect(screen.getByRole('button', { name: 'Concluir' })).toBeInTheDocument()
     })
     expect(capturedUrl).toContain(`/vaccines/${pendingItem.vaccineId}/apply`)
+    expect(onOpenChange).not.toHaveBeenCalledWith(false)
+
+    await user.click(screen.getByRole('button', { name: 'Concluir' }))
+    expect(onOpenChange).toHaveBeenCalledWith(false)
   })
 
   it('registers a campaign vaccine via POST .../adhoc with source CAMPAIGN', async () => {
@@ -164,9 +171,56 @@ describe('RegisterVaccineDialog', () => {
     await user.click(screen.getByRole('button', { name: 'Salvar vacina' }))
 
     await waitFor(() => {
-      expect(onOpenChange).toHaveBeenCalledWith(false)
+      expect(screen.getByRole('button', { name: 'Concluir' })).toBeInTheDocument()
     })
     expect(receivedBody).toMatchObject({ source: 'CAMPAIGN', customName: 'Influenza (gripe) — Campanha anual' })
+    expect(onOpenChange).not.toHaveBeenCalledWith(false)
+
+    await user.click(screen.getByRole('button', { name: 'Concluir' }))
+    expect(onOpenChange).toHaveBeenCalledWith(false)
+  })
+
+  it('lets the user register another dose without closing the dialog', async () => {
+    server.use(
+      http.post(`${config.apiBaseUrl}/babies/:babyId/vaccines/adhoc`, async () =>
+        HttpResponse.json(
+          {
+            id: '33333333-3333-4333-8333-333333333333',
+            babyId: sampleBabyId,
+            source: 'CAMPAIGN',
+            customName: 'Influenza (gripe) — Campanha anual',
+            customDose: null,
+            status: 'APPLIED',
+            applicationDate: '2026-01-01',
+            notes: null,
+            batchNumber: null,
+            location: null,
+            professional: null,
+            photoUrl: null,
+          },
+          { status: 201 },
+        ),
+      ),
+    )
+
+    const user = userEvent.setup()
+    const onOpenChange = vi.fn()
+    renderDialog(onOpenChange)
+
+    await user.click(screen.getByText('Campanha de vacinação'))
+    await user.click(screen.getByText('Influenza (gripe) — Campanha anual'))
+    await user.click(screen.getByRole('button', { name: 'Continuar' }))
+    await user.click(screen.getByRole('button', { name: 'Salvar vacina' }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Adicionar outra' })).toBeInTheDocument()
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Adicionar outra' }))
+
+    // Back on the type step, ready to log another dose, dialog still open.
+    expect(screen.getByText('Calendário obrigatório')).toBeInTheDocument()
+    expect(onOpenChange).not.toHaveBeenCalledWith(false)
   })
 
   it('registers a custom vaccine via POST .../adhoc with source CUSTOM', async () => {
@@ -205,9 +259,13 @@ describe('RegisterVaccineDialog', () => {
     await user.click(screen.getByRole('button', { name: 'Salvar vacina' }))
 
     await waitFor(() => {
-      expect(onOpenChange).toHaveBeenCalledWith(false)
+      expect(screen.getByRole('button', { name: 'Concluir' })).toBeInTheDocument()
     })
     expect(receivedBody).toMatchObject({ source: 'CUSTOM', customName: 'Varicela combinada (MMRV)', customDose: '1ª dose' })
+    expect(onOpenChange).not.toHaveBeenCalledWith(false)
+
+    await user.click(screen.getByRole('button', { name: 'Concluir' }))
+    expect(onOpenChange).toHaveBeenCalledWith(false)
   })
 
   it('shows an inline error and keeps the dialog open when the mutation fails', async () => {

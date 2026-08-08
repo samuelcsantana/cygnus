@@ -49,3 +49,7 @@ export async function registerAdhocVaccine(
   const response = await httpClient.post<unknown>(`/babies/${babyId}/vaccines/adhoc`, body)
   return adhocVaccineRecordSchema.parse(response)
 }
+
+export async function deleteAdhocVaccine(babyId: string, recordId: string): Promise<void> {
+  await httpClient.delete<void>(`/babies/${babyId}/vaccines/adhoc/${recordId}`)
+}
