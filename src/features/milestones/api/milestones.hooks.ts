@@ -3,7 +3,7 @@ import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/rea
 import { useBabies } from '@/features/babies/api/babies.hooks'
 import type { Baby } from '@/features/babies/api/babies.schemas'
 
-import { createMilestone, fetchMilestones, updateMilestone } from './milestones.api'
+import { createMilestone, deleteMilestone, fetchMilestones, updateMilestone } from './milestones.api'
 import type { Milestone, MilestoneFormInput } from './milestones.schemas'
 
 export function milestonesQueryKey(babyId: string) {
@@ -97,6 +97,19 @@ export function useUpdateMilestone(babyId: string, milestoneId: string) {
     onSuccess: (milestone) => {
       queryClient.setQueryData<Milestone[]>(milestonesQueryKey(babyId), (prev) =>
         prev?.map((item) => (item.id === milestone.id ? milestone : item)).sort(byNewestFirst),
+      )
+    },
+  })
+}
+
+export function useDeleteMilestone(babyId: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (milestoneId: string) => deleteMilestone(babyId, milestoneId),
+    onSuccess: (_data, deletedMilestoneId) => {
+      queryClient.setQueryData<Milestone[]>(milestonesQueryKey(babyId), (prev) =>
+        prev?.filter((item) => item.id !== deletedMilestoneId),
       )
     },
   })

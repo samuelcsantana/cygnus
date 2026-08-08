@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import type { Baby } from '@/features/babies/api/babies.schemas'
@@ -42,6 +43,7 @@ export function EditMilestoneDialog({ babies, milestone, onOpenChange }: EditMil
             onCancel={() => onOpenChange(false)}
             onSubmit={async (values) => {
               await updateMilestone.mutateAsync(values)
+              toast.success(t('milestones.edit.successToast'))
               onOpenChange(false)
             }}
           />

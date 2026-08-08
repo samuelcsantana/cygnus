@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
@@ -67,6 +68,7 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
 
   const onSubmit = handleSubmit(async (values) => {
     await createMilestone.mutateAsync(values)
+    toast.success(t('milestones.form.successToast'))
     onOpenChange(false)
   })
 

@@ -40,3 +40,7 @@ export async function updateMilestone(
   const response = await httpClient.patch<unknown>(`/babies/${babyId}/milestones/${milestoneId}`, body)
   return milestoneSchema.parse(response)
 }
+
+export async function deleteMilestone(babyId: string, milestoneId: string): Promise<void> {
+  await httpClient.delete<void>(`/babies/${babyId}/milestones/${milestoneId}`)
+}
