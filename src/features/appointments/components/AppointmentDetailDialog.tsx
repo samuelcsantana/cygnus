@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import {
   AlertDialog,
@@ -40,17 +41,23 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
   async function handleSaveNotes() {
     if (!appointment) return
     await updateAppointment.mutateAsync({ appointmentId: appointment.id, input: { notes: notes || null } })
+    toast.success(t('appointments.detail.notesSavedToast'))
   }
 
   async function handleSetStatus(status: 'COMPLETED' | 'CANCELLED') {
     if (!appointment) return
     await updateAppointment.mutateAsync({ appointmentId: appointment.id, input: { status, notes: notes || null } })
+    toast.success(
+      status === 'CANCELLED'
+        ? t('appointments.detail.cancelSuccessToast')
+        : t('appointments.detail.completeSuccessToast'),
+    )
     onOpenChange(false)
   }
 
   return (
     <Dialog open={!!appointment} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{t('appointments.detail.title')}</DialogTitle>
         </DialogHeader>

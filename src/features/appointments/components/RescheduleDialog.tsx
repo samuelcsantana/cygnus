@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { splitScheduledAt } from '@/lib/date'
@@ -18,7 +19,7 @@ export function RescheduleDialog({ appointment, onOpenChange }: RescheduleDialog
 
   return (
     <Dialog open={!!appointment} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{t('appointments.reschedule.title')}</DialogTitle>
         </DialogHeader>
@@ -47,6 +48,7 @@ export function RescheduleDialog({ appointment, onOpenChange }: RescheduleDialog
                   reason: values.reason || null,
                 },
               })
+              toast.success(t('appointments.reschedule.successToast'))
               onOpenChange(false)
             }}
           />

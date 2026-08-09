@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
@@ -62,6 +63,7 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
 
   const onSubmit = handleSubmit(async (values) => {
     await createAppointment.mutateAsync(values)
+    toast.success(t('appointments.form.successToast'))
     onOpenChange(false)
   })
 

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
 import { cn } from '@/lib/utils'
+import { BabyFilterChips } from '@/shared/components/BabyFilterChips'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 
@@ -19,15 +20,18 @@ export function MilestonesRoute() {
   const { t } = useTranslation()
   const { isPending, isError, isEmpty, babies, items } = useAllBabiesMilestones()
   const [activeCategory, setActiveCategory] = useState<MilestoneCategory | 'ALL'>('ALL')
+  const [babyFilter, setBabyFilter] = useState<string | null>(null)
   const [isAddOpen, setIsAddOpen] = useState(false)
 
   if (isEmpty) {
     return <Navigate to="/dashboard" replace />
   }
 
-  const filteredItems = [...(activeCategory === 'ALL' ? items : items.filter((item) => item.category === activeCategory))].sort(
-    (a, b) => b.achievedAt.localeCompare(a.achievedAt),
-  )
+  const filteredItems = [
+    ...(activeCategory === 'ALL' ? items : items.filter((item) => item.category === activeCategory)).filter(
+      (item) => !babyFilter || item.babyId === babyFilter,
+    ),
+  ].sort((a, b) => b.achievedAt.localeCompare(a.achievedAt))
 
   return (
     <div className="animate-fade-in-up">
@@ -69,6 +73,8 @@ export function MilestonesRoute() {
         />
       ) : (
         <>
+          <BabyFilterChips babies={babies} value={babyFilter} onChange={setBabyFilter} className="mb-4" />
+
           <div className="mb-8 flex flex-wrap gap-2">
             <button
               type="button"

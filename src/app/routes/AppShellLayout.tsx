@@ -15,6 +15,8 @@ import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { UserIcon } from '@/shared/icons/user-icon'
 import { MobileNavItem } from '@/shared/components/MobileNavItem'
+import { OfflineBanner } from '@/shared/components/OfflineBanner'
+import { ThemeToggle } from '@/shared/components/ThemeToggle'
 import { TopNavItem } from '@/shared/components/TopNavItem'
 import { useAddBabyDialogStore } from '@/shared/stores/addBabyDialog.store'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
@@ -80,6 +82,7 @@ export function AppShellLayout() {
             <PlusIcon className="h-3.5 w-3.5" />
             {t('babies.addChild')}
           </button>
+          <ThemeToggle />
           <Link
             to="/profile"
             className="flex items-center gap-2.5 rounded-full py-1.5 pr-3 pl-1.5 transition-colors hover:bg-teal-50/60"
@@ -121,11 +124,14 @@ export function AppShellLayout() {
           >
             <PlusIcon className="h-5 w-5" />
           </button>
+          <ThemeToggle />
           <Link to="/profile" aria-label={t('profile.nav.viewProfile')} className="rounded-lg p-1.5 text-ink-muted">
             <UserIcon className="h-5 w-5" />
           </Link>
         </div>
       </header>
+
+      <OfflineBanner />
 
       <main className="flex-1 p-5 pb-24 md:p-10 md:pb-10 lg:p-12">
         <Outlet />

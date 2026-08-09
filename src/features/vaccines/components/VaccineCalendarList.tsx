@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { Baby } from '@/features/babies/api/babies.schemas'
 import { cn } from '@/lib/utils'
+import { BabyFilterChips } from '@/shared/components/BabyFilterChips'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 
 import type { VaccineItemWithBaby } from '../api/vaccines.hooks'
@@ -31,12 +32,17 @@ const STATUS_ICON_GLYPH: Record<VaccineItemWithBaby['status'], string> = {
 // list instead of one full section repeated per child.
 export function VaccineCalendarList({ items, babies }: VaccineCalendarListProps) {
   const [applyTarget, setApplyTarget] = useState<VaccineItemWithBaby | null>(null)
+  const [babyFilter, setBabyFilter] = useState<string | null>(null)
   const babyById = new Map(babies.map((baby) => [baby.id, baby]))
+
+  const filteredItems = babyFilter ? items.filter((item) => item.babyId === babyFilter) : items
 
   return (
     <div>
+      <BabyFilterChips babies={babies} value={babyFilter} onChange={setBabyFilter} className="mb-4" />
+
       <ul className="flex flex-col gap-2">
-        {items.map((item) => (
+        {filteredItems.map((item) => (
           <li key={`${item.babyId}-${item.vaccineId}`}>
             <VaccineRow item={item} baby={babyById.get(item.babyId)} onApply={() => setApplyTarget(item)} />
           </li>
@@ -100,7 +106,7 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
 
   const rowClass = cn(
     'flex w-full items-center gap-3 rounded-2xl bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]',
-    item.status === 'DELAYED' ? 'border border-amber-100' : 'border border-transparent',
+    item.status === 'DELAYED' ? 'border border-rose-100' : 'border border-transparent',
   )
 
   if (item.status === 'APPLIED') {

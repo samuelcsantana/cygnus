@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 import {
   AlertDialog,
@@ -65,6 +66,7 @@ export function EditBabyDialog({ baby, onOpenChange }: EditBabyDialogProps) {
               onCancel={() => onOpenChange(false)}
               onSubmit={async (values) => {
                 await updateBaby.mutateAsync(values)
+                toast.success(t('babies.edit.successToast'))
                 onOpenChange(false)
               }}
               dangerZone={
@@ -99,7 +101,12 @@ export function EditBabyDialog({ baby, onOpenChange }: EditBabyDialogProps) {
                         <AlertDialogAction
                           variant="destructive"
                           onClick={() => {
-                            deleteBaby.mutate(baby.id, { onSuccess: () => onOpenChange(false) })
+                            deleteBaby.mutate(baby.id, {
+                              onSuccess: () => {
+                                toast.success(t('babies.delete.successToast'))
+                                onOpenChange(false)
+                              },
+                            })
                           }}
                           disabled={deleteBaby.isPending}
                         >
