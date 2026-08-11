@@ -139,7 +139,7 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
             </div>
           ) : (
             <form key="details" onSubmit={onSubmit} noValidate className="animate-fade-in-up">
-              <MilestoneDetailFields register={register} errors={errors} />
+              <MilestoneDetailFields register={register} control={control} errors={errors} />
               <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
                 <button
                   type="button"

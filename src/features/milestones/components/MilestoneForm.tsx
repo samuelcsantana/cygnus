@@ -52,7 +52,7 @@ export function MilestoneForm({
   return (
     <form onSubmit={handleFormSubmit} className="space-y-6" noValidate>
       <MilestoneCoreFields control={control} register={register} errors={errors} />
-      <MilestoneDetailFields register={register} errors={errors} />
+      <MilestoneDetailFields register={register} control={control} errors={errors} />
 
       {submitError && (
         <p role="alert" className="text-destructive text-sm">

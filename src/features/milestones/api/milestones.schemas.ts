@@ -44,3 +44,8 @@ export function createMilestoneFormSchema(birthDate: string) {
   })
 }
 export type MilestoneFormInput = z.infer<ReturnType<typeof createMilestoneFormSchema>>
+
+export const milestonePhotoUploadResponseSchema = z.object({
+  url: z.string().url(),
+})
+export type MilestonePhotoUploadResponse = z.infer<typeof milestonePhotoUploadResponseSchema>

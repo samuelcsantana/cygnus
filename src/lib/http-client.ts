@@ -38,10 +38,14 @@ function isApiErrorBody(value: unknown): value is ApiErrorBody {
  * store the rotated cookies, and retry the original request. Concurrent 401s
  * (e.g. several queries firing at once) share one in-flight refresh instead
  * of each triggering their own POST /auth/refresh.
+ *
+ * Exported so non-JSON callers (e.g. lib/upload.ts) can apply the same
+ * single-refresh-then-retry behavior instead of duplicating it (CLAUDE.md
+ * Section 6: this behavior must live in one place).
  */
 let refreshPromise: Promise<boolean> | null = null
 
-function refreshSession(): Promise<boolean> {
+export function refreshSession(): Promise<boolean> {
   refreshPromise ??= fetch(`${config.apiBaseUrl}/auth/refresh`, {
     method: 'POST',
     credentials: 'include',
@@ -66,7 +70,13 @@ const CSRF_COOKIE_NAME = 'csrf_token'
 const CSRF_HEADER_NAME = 'X-CSRF-Token'
 const MUTATING_METHODS = new Set(['POST', 'PATCH', 'PUT', 'DELETE'])
 
-function csrfHeaders(method: string | undefined): Record<string, string> {
+/**
+ * Exported so non-JSON callers (e.g. lib/upload.ts's multipart/form-data
+ * POST) can attach the same CSRF header without duplicating the
+ * cookie-reading logic — those requests bypass `request()` entirely because
+ * it always JSON-stringifies its body and sets `Content-Type: application/json`.
+ */
+export function csrfHeaders(method: string | undefined): Record<string, string> {
   if (!method || !MUTATING_METHODS.has(method.toUpperCase())) {
     return {}
   }

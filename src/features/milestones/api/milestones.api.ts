@@ -1,6 +1,13 @@
 import { httpClient } from '@/lib/http-client'
+import { uploadFile } from '@/lib/upload'
 
-import { milestoneListSchema, milestoneSchema, type Milestone, type MilestoneFormInput } from './milestones.schemas'
+import {
+  milestoneListSchema,
+  milestonePhotoUploadResponseSchema,
+  milestoneSchema,
+  type Milestone,
+  type MilestoneFormInput,
+} from './milestones.schemas'
 
 export async function fetchMilestones(babyId: string): Promise<Milestone[]> {
   const response = await httpClient.get<unknown>(`/babies/${babyId}/milestones`)
@@ -43,4 +50,10 @@ export async function updateMilestone(
 
 export async function deleteMilestone(babyId: string, milestoneId: string): Promise<void> {
   await httpClient.delete<void>(`/babies/${babyId}/milestones/${milestoneId}`)
+}
+
+/** Field name and endpoint mirror the backend contract exactly — see uploads.api docs. */
+export async function uploadMilestonePhoto(file: File): Promise<string> {
+  const response = await uploadFile<unknown>('/uploads/milestone-photos', 'photo', file)
+  return milestonePhotoUploadResponseSchema.parse(response).url
 }

@@ -3,7 +3,7 @@ import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/rea
 import { useBabies } from '@/features/babies/api/babies.hooks'
 import type { Baby } from '@/features/babies/api/babies.schemas'
 
-import { createMilestone, deleteMilestone, fetchMilestones, updateMilestone } from './milestones.api'
+import { createMilestone, deleteMilestone, fetchMilestones, updateMilestone, uploadMilestonePhoto } from './milestones.api'
 import type { Milestone, MilestoneFormInput } from './milestones.schemas'
 
 export function milestonesQueryKey(babyId: string) {
@@ -99,6 +99,12 @@ export function useUpdateMilestone(babyId: string, milestoneId: string) {
         prev?.map((item) => (item.id === milestone.id ? milestone : item)).sort(byNewestFirst),
       )
     },
+  })
+}
+
+export function useUploadMilestonePhoto() {
+  return useMutation({
+    mutationFn: (file: File) => uploadMilestonePhoto(file),
   })
 }
 

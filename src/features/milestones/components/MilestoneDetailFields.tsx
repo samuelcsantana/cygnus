@@ -1,21 +1,23 @@
-import type { FieldErrors, UseFormRegister } from 'react-hook-form'
+import { useController, type Control, type FieldErrors, type UseFormRegister } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { fieldErrorKey } from '@/shared/utils/zod-error'
 
 import type { MilestoneFormInput } from '../api/milestones.schemas'
+import { MilestonePhotoUploadField } from './MilestonePhotoUploadField'
 
 interface MilestoneDetailFieldsProps {
   register: UseFormRegister<MilestoneFormInput>
+  control: Control<MilestoneFormInput>
   errors: FieldErrors<MilestoneFormInput>
 }
 
-export function MilestoneDetailFields({ register, errors }: MilestoneDetailFieldsProps) {
+export function MilestoneDetailFields({ register, control, errors }: MilestoneDetailFieldsProps) {
   const { t } = useTranslation()
   const photoUrlErrorKey = fieldErrorKey(errors.photoUrl)
+  const photoUrlField = useController({ control, name: 'photoUrl' })
 
   return (
     <div className="space-y-6">
@@ -32,16 +34,13 @@ export function MilestoneDetailFields({ register, errors }: MilestoneDetailField
 
       <div>
         <Label htmlFor="photoUrl">{t('milestones.form.photoUrlLabel')}</Label>
-        <Input
+        <MilestonePhotoUploadField
           id="photoUrl"
-          type="url"
-          placeholder={t('milestones.form.photoUrlPlaceholder')}
-          aria-invalid={!!errors.photoUrl}
           className="mt-2"
-          {...register('photoUrl')}
+          value={photoUrlField.field.value}
+          onValueChange={photoUrlField.field.onChange}
         />
         {photoUrlErrorKey && <p className="text-destructive mt-1 text-sm">{t(photoUrlErrorKey)}</p>}
-        <p className="mt-1 text-xs text-ink-muted">{t('milestones.form.photoUrlHint')}</p>
       </div>
     </div>
   )
