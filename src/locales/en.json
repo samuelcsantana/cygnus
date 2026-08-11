@@ -26,6 +26,14 @@
     "babyFilter": {
       "groupLabel": "Filter by child",
       "all": "All"
+    },
+    "search": {
+      "placeholder": "Search..."
+    },
+    "loadMore": "Load more",
+    "noSearchResults": {
+      "title": "No results found",
+      "description": "Try searching for something else."
     }
   },
   "nav": {
@@ -213,6 +221,39 @@
       "confirmAction": "Delete",
       "genericError": "Could not delete the profile. Please try again.",
       "successToast": "Profile deleted successfully."
+    },
+    "guardians": {
+      "sectionTitle": "Guardians",
+      "sectionDescription": "Invite another adult to help take care of this profile.",
+      "inviteAction": "Invite guardian",
+      "loadError": "Could not load guardians.",
+      "roleOwner": "Owner",
+      "roleGuardian": "Guardian",
+      "removeAction": "Remove {{name}}",
+      "leaveAction": "Leave as guardian",
+      "leaveConfirmTitle": "Leave this profile?",
+      "removeConfirmTitle": "Remove guardian?",
+      "leaveConfirmDescription": "You'll lose access to {{babyName}}'s profile. You can be invited again in the future.",
+      "removeConfirmDescription": "{{name}} will lose access to {{babyName}}'s profile.",
+      "confirmDismiss": "Cancel",
+      "leaveConfirmAction": "Leave",
+      "removeConfirmAction": "Remove",
+      "leaveSuccessToast": "You left the profile.",
+      "removeSuccessToast": "Guardian removed successfully.",
+      "removeGenericError": "Could not complete the action. Please try again.",
+      "invite": {
+        "emailLabel": "Invitee's email (optional)",
+        "emailPlaceholder": "name@example.com",
+        "emailHint": "Leave blank to generate a link that can be shared with anyone.",
+        "generateAction": "Generate invite",
+        "successToast": "Invite created successfully!",
+        "genericError": "Could not create the invite. Please try again.",
+        "linkLabel": "Invite link",
+        "copyAction": "Copy link",
+        "copiedToast": "Link copied!",
+        "copyError": "Could not copy the link.",
+        "newInviteAction": "Generate another invite"
+      }
     }
   },
   "vaccines": {
@@ -319,6 +360,21 @@
         "genericError": "Could not delete the record. Please try again.",
         "successToast": "Record deleted successfully."
       }
+    },
+    "search": {
+      "label": "Search vaccine"
+    },
+    "card": {
+      "viewAction": "View {{name}}'s card",
+      "printAction": "Print",
+      "title": "Vaccination Card",
+      "birthDateLabel": "Born:",
+      "loadError": "Could not load the vaccination card.",
+      "empty": "No vaccines recorded for this child yet.",
+      "columnDate": "Date",
+      "columnVaccine": "Vaccine",
+      "columnDose": "Dose",
+      "columnStatus": "Status"
     }
   },
   "appointments": {
@@ -382,6 +438,9 @@
       "stepSchedule": "Schedule",
       "continue": "Continue",
       "back": "Back"
+    },
+    "search": {
+      "label": "Search appointment"
     }
   },
   "milestones": {
@@ -414,9 +473,12 @@
       "achievedAtBeforeBirth": "The date cannot be before birth.",
       "descriptionLabel": "Details",
       "descriptionPlaceholder": "Tell us about this special moment...",
-      "photoUrlLabel": "Photo (URL)",
-      "photoUrlPlaceholder": "https://...",
-      "photoUrlHint": "File upload isn't supported yet — paste the link to an already-hosted photo.",
+      "photoUrlLabel": "Photo",
+      "photoUploadAction": "Upload photo",
+      "photoRemoveAria": "Remove photo",
+      "photoInvalidType": "Please upload a JPEG, PNG or WEBP image.",
+      "photoTooLarge": "The image must be at most 5MB.",
+      "photoUploadError": "Could not upload the photo. Please try again.",
       "submit": "Save Milestone",
       "genericError": "Could not save the milestone. Please try again.",
       "successToast": "Milestone recorded successfully!"
@@ -441,6 +503,9 @@
       "confirmAction": "Delete",
       "genericError": "Could not delete the milestone. Please try again.",
       "successToast": "Milestone deleted successfully."
+    },
+    "search": {
+      "label": "Search milestone"
     }
   },
   "notifications": {
@@ -504,6 +569,25 @@
       "confirmAction": "Permanently delete account",
       "incorrectPassword": "Incorrect current password.",
       "genericError": "Could not delete the account. Please try again."
+    }
+  },
+  "invites": {
+    "redeem": {
+      "title": "You've been invited to help take care of {{babyName}}",
+      "description": "Accept the invite to track vaccines, appointments and milestones for this profile.",
+      "acceptAction": "Accept invite",
+      "successToast": "You now help take care of {{babyName}}!",
+      "alreadyGuardianError": "You're already a guardian for this profile.",
+      "expiredError": "This invite has expired or was already used.",
+      "genericError": "Could not accept the invite. Please try again.",
+      "invalidTitle": "Invite not found",
+      "invalidDescription": "This invite link doesn't exist or is invalid.",
+      "errorTitle": "Something went wrong",
+      "genericLoadError": "Could not load this invite. Please try again.",
+      "expiredTitle": "Invite expired",
+      "expiredDescription": "This invite is no longer valid. Ask the person to generate a new link.",
+      "alreadyUsedTitle": "Invite already used",
+      "alreadyUsedDescription": "This invite has already been used by someone else."
     }
   },
   "errors": {

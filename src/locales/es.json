@@ -26,6 +26,14 @@
     "babyFilter": {
       "groupLabel": "Filtrar por hijo/a",
       "all": "Todos"
+    },
+    "search": {
+      "placeholder": "Buscar..."
+    },
+    "loadMore": "Cargar más",
+    "noSearchResults": {
+      "title": "No se encontraron resultados",
+      "description": "Prueba a buscar otro término."
     }
   },
   "nav": {
@@ -213,6 +221,39 @@
       "confirmAction": "Eliminar",
       "genericError": "No se pudo eliminar el perfil. Inténtalo de nuevo.",
       "successToast": "Perfil eliminado con éxito."
+    },
+    "guardians": {
+      "sectionTitle": "Responsables",
+      "sectionDescription": "Invita a otro adulto para ayudar a cuidar este perfil.",
+      "inviteAction": "Invitar responsable",
+      "loadError": "No se pudieron cargar los responsables.",
+      "roleOwner": "Titular",
+      "roleGuardian": "Responsable",
+      "removeAction": "Eliminar a {{name}}",
+      "leaveAction": "Salir como responsable",
+      "leaveConfirmTitle": "¿Salir de este perfil?",
+      "removeConfirmTitle": "¿Eliminar responsable?",
+      "leaveConfirmDescription": "Perderás el acceso al perfil de {{babyName}}. Puedes ser invitado(a) de nuevo en el futuro.",
+      "removeConfirmDescription": "{{name}} perderá el acceso al perfil de {{babyName}}.",
+      "confirmDismiss": "Cancelar",
+      "leaveConfirmAction": "Salir",
+      "removeConfirmAction": "Eliminar",
+      "leaveSuccessToast": "Saliste del perfil.",
+      "removeSuccessToast": "Responsable eliminado con éxito.",
+      "removeGenericError": "No se pudo completar la acción. Inténtalo de nuevo.",
+      "invite": {
+        "emailLabel": "Correo del invitado (opcional)",
+        "emailPlaceholder": "nombre@ejemplo.com",
+        "emailHint": "Déjalo en blanco para generar un enlace que se puede compartir con cualquier persona.",
+        "generateAction": "Generar invitación",
+        "successToast": "¡Invitación creada con éxito!",
+        "genericError": "No se pudo crear la invitación. Inténtalo de nuevo.",
+        "linkLabel": "Enlace de invitación",
+        "copyAction": "Copiar enlace",
+        "copiedToast": "¡Enlace copiado!",
+        "copyError": "No se pudo copiar el enlace.",
+        "newInviteAction": "Generar otra invitación"
+      }
     }
   },
   "vaccines": {
@@ -319,6 +360,21 @@
         "genericError": "No se pudo eliminar el registro. Inténtalo de nuevo.",
         "successToast": "Registro eliminado con éxito."
       }
+    },
+    "search": {
+      "label": "Buscar vacuna"
+    },
+    "card": {
+      "viewAction": "Ver carnet de {{name}}",
+      "printAction": "Imprimir",
+      "title": "Carnet de Vacunación",
+      "birthDateLabel": "Nacimiento:",
+      "loadError": "No se pudo cargar el carnet de vacunación.",
+      "empty": "Aún no hay vacunas registradas para este niño.",
+      "columnDate": "Fecha",
+      "columnVaccine": "Vacuna",
+      "columnDose": "Dosis",
+      "columnStatus": "Estado"
     }
   },
   "appointments": {
@@ -382,6 +438,9 @@
       "stepSchedule": "Agenda",
       "continue": "Continuar",
       "back": "Atrás"
+    },
+    "search": {
+      "label": "Buscar consulta"
     }
   },
   "milestones": {
@@ -414,9 +473,12 @@
       "achievedAtBeforeBirth": "La fecha no puede ser anterior al nacimiento.",
       "descriptionLabel": "Detalles",
       "descriptionPlaceholder": "Cuéntanos cómo fue ese momento especial...",
-      "photoUrlLabel": "Foto (URL)",
-      "photoUrlPlaceholder": "https://...",
-      "photoUrlHint": "La subida de archivos aún no es compatible — pega el enlace de una foto ya alojada.",
+      "photoUrlLabel": "Foto",
+      "photoUploadAction": "Subir foto",
+      "photoRemoveAria": "Quitar foto",
+      "photoInvalidType": "Sube una imagen JPEG, PNG o WEBP.",
+      "photoTooLarge": "La imagen debe tener como máximo 5MB.",
+      "photoUploadError": "No se pudo subir la foto. Inténtalo de nuevo.",
       "submit": "Guardar Hito",
       "genericError": "No se pudo guardar el hito. Inténtalo de nuevo.",
       "successToast": "¡Hito registrado con éxito!"
@@ -441,6 +503,9 @@
       "confirmAction": "Eliminar",
       "genericError": "No se pudo eliminar el hito. Inténtalo de nuevo.",
       "successToast": "Hito eliminado con éxito."
+    },
+    "search": {
+      "label": "Buscar hito"
     }
   },
   "notifications": {
@@ -504,6 +569,25 @@
       "confirmAction": "Eliminar cuenta permanentemente",
       "incorrectPassword": "Contraseña actual incorrecta.",
       "genericError": "No se pudo eliminar la cuenta. Inténtalo de nuevo."
+    }
+  },
+  "invites": {
+    "redeem": {
+      "title": "Fuiste invitado(a) a ayudar a cuidar de {{babyName}}",
+      "description": "Acepta la invitación para seguir vacunas, consultas e hitos de este perfil.",
+      "acceptAction": "Aceptar invitación",
+      "successToast": "¡Ahora ayudas a cuidar de {{babyName}}!",
+      "alreadyGuardianError": "Ya eres responsable de este perfil.",
+      "expiredError": "Esta invitación expiró o ya fue utilizada.",
+      "genericError": "No se pudo aceptar la invitación. Inténtalo de nuevo.",
+      "invalidTitle": "Invitación no encontrada",
+      "invalidDescription": "Este enlace de invitación no existe o no es válido.",
+      "errorTitle": "Algo salió mal",
+      "genericLoadError": "No se pudo cargar esta invitación. Inténtalo de nuevo.",
+      "expiredTitle": "Invitación expirada",
+      "expiredDescription": "Esta invitación ya no es válida. Pide a la persona que genere un nuevo enlace.",
+      "alreadyUsedTitle": "Invitación ya utilizada",
+      "alreadyUsedDescription": "Esta invitación ya fue utilizada por otra persona."
     }
   },
   "errors": {

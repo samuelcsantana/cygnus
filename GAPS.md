@@ -59,8 +59,8 @@ Severidade usa a mesma escala do checklist existente:
 - [x] 🟡 **Sem toast/confirmação visível nas ações centrais** — `sonner` adicionado em `RegisterVaccineDialog`, `ApplyVaccineDialog`, `AppointmentDetailDialog`, `RescheduleDialog`, `AddAppointmentDialog`, `AddMilestoneDialog`, `EditMilestoneDialog`, `AddBabyDialog`, `EditBabyDialog`.
 - [x] 🟡 **Sem exclusão/correção de vacina aplicada por engano ou marco cadastrado errado** — `DELETE /babies/:babyId/milestones/:milestoneId` e `DELETE /babies/:babyId/vaccines/adhoc/:recordId` implementados no backend (escopo deliberadamente restrito a registros adhoc/campanha, não aos gerados pelo catálogo oficial), com UI de exclusão + confirmação (`AlertDialog`) no frontend.
 - [x] 🟡 **Catálogo de vacinas cobre só 5 antígenos** — expandido para 29 entradas cobrindo o calendário PNI completo (nascimento → adolescência), com fonte citada no seed e comentários `REVIEW:` nos pontos de dosagem que merecem checagem pediátrica humana (Febre Amarela, HPV, Varicela/Tetra Viral).
-- [ ] 🟡 **Sem modelo de guardião/compartilhamento entre responsáveis** — **fora de escopo desta rodada por decisão explícita** (feature nova: model de convite/household, migration, isolamento de acesso, UI de convite). Registrado aqui para priorização futura.
-- [ ] 🟡 **Notificações são só in-app, sem push/e-mail/SMS** — **fora de escopo desta rodada por decisão explícita** (depende de decidir/integrar provedor externo — FCM, Resend, etc. — com credenciais). Registrado aqui para priorização futura.
+- [x] 🟡 **Sem modelo de guardião/compartilhamento entre responsáveis** — implementado em 2026-08-11 (segunda rodada): `BabyGuardian`/`BabyInvite` no Prisma, autorização centralizada em `ensureBabyAccess`, refatorados os 17+2 pontos de checagem de posse, endpoints de convite (`POST /babies/:babyId/invites`, `GET /invites/:code`, `POST /invites/:code/redeem`, `GET/DELETE /babies/:babyId/guardians`), UI de convite/gerenciamento em `EditBabyDialog`, rota pública `/invites/:code` com redirect-after-login seguro. Teste dedicado de prevenção de IDOR (`guardian-access.spec.ts`) prova os dois sentidos (negação + acesso legítimo).
+- [x] 🟡 **Notificações são só in-app, sem push/e-mail/SMS** — e-mail implementado em 2026-08-11 via Resend (`EmailService`, com no-op seguro se `RESEND_API_KEY` não estiver configurada): lembrete de vacina atrasada/consulta próxima enviado a todos os guardiões do bebê com `emailNotificationsEnabled=true`, mais e-mail de convite de guardião. Push/SMS continuam fora de escopo.
 - [x] 🟢 **Sem filtro por criança nas listas unificadas** — `BabyFilterChips` implementado e ligado a `VaccineCalendarList`, `AppointmentsList` e `MilestonesRoute` (estado local, sem store global).
 - [x] 🟢 **Sem cadastro em lote de vacinas históricas** — `RegisterVaccineDialog` ganhou fluxo "adicionar outra?" após cada submissão, sem fechar o diálogo.
 - [x] 🟢 **Sem indicador de "sem conexão"** — `useOnlineStatus` + `OfflineBanner` no `AppShellLayout`.
@@ -69,16 +69,24 @@ Severidade usa a mesma escala do checklist existente:
 
 ---
 
-## Itens deixados de fora desta rodada (decisão explícita do usuário em 2026-08-11)
+## Segunda rodada (2026-08-11): guardião/compartilhamento + e-mail + upload + carteira + busca
 
-1. **Guardião/compartilhamento entre responsáveis** — exige model novo no Prisma (household/convite), migration, isolamento de acesso e UI de convite; é uma feature nova, não um bug fix.
-2. **Notificação push/e-mail** — depende de escolher e integrar um provedor externo (FCM, Resend, SMTP, etc.) com credenciais.
+Além dos dois itens acima (agora `[x]`), essa rodada também implementou itens do `PRODUCTION_READINESS.md`:
+- Upload real de foto para marcos (antes só aceitava URL colada) — `POST /uploads/milestone-photos`, armazenamento em disco via volume Docker.
+- Carteira de vacinação imprimível (`/vaccines/:babyId/card`, `print:` variants do Tailwind).
+- Busca por texto + paginação client-side ("carregar mais") nas listas de vacinas/consultas/marcos.
 
 ## Verificação desta rodada
 
-Todas as mudanças foram implementadas em dois repositórios (`cygnus` e `cygnus-api`) por agentes separados e depois verificadas de forma independente:
+**Primeira rodada:**
 - Backend: `npm run build` (tsc) limpo, `npm test` → 214/214 passando, `npm audit --omit=dev` → 0 vulnerabilidades.
 - Frontend: `npm run build` limpo, `npm test` → 68/68 passando, i18n com 410 chaves idênticas em `pt-BR.json`/`en.json`/`es.json`.
 - Contratos de API conferidos manualmente: `/specialties`, `DELETE .../vaccines/adhoc/:recordId`, `DELETE .../milestones/:milestoneId`, e o esquema CSRF (cookie `csrf_token` + header `X-CSRF-Token`) batem entre os dois repositórios.
+
+**Segunda rodada (guardião/compartilhamento + e-mail + upload + carteira + busca):**
+- Backend: `npm run build` limpo, `npm test` → 257/257 passando, `npm audit --omit=dev` → 0 vulnerabilidades. Teste dedicado de IDOR prova que um usuário sem vínculo de guardião recebe 404 (nunca o dado) e que um guardião legítimo (via convite redimido) recebe 200 de verdade.
+- Frontend: `npm run build` limpo, `npm run lint` zerado, `npm test` → 70/70 passando, i18n com 474 chaves idênticas nas 3 línguas.
+- Contrato de upload conferido manualmente: frontend chama `POST /uploads/milestone-photos` campo `photo`, batendo exatamente com a rota do backend. Upload real testado ponta a ponta contra o build do backend (arquivo confirmado em disco).
+- Proteção contra open-redirect confirmada no fluxo `?redirectTo=` do login pós-convite.
 
 **Nada foi commitado** — todas as mudanças estão no working tree de `cygnus` e `cygnus-api` para revisão antes de commit/push.

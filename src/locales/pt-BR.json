@@ -26,6 +26,14 @@
     "babyFilter": {
       "groupLabel": "Filtrar por criança",
       "all": "Todos"
+    },
+    "search": {
+      "placeholder": "Buscar..."
+    },
+    "loadMore": "Carregar mais",
+    "noSearchResults": {
+      "title": "Nenhum resultado encontrado",
+      "description": "Tente buscar por outro termo."
     }
   },
   "nav": {
@@ -213,6 +221,39 @@
       "confirmAction": "Excluir",
       "genericError": "Não foi possível excluir o perfil. Tente novamente.",
       "successToast": "Perfil excluído com sucesso."
+    },
+    "guardians": {
+      "sectionTitle": "Responsáveis",
+      "sectionDescription": "Convide outro adulto para ajudar a cuidar deste perfil.",
+      "inviteAction": "Convidar responsável",
+      "loadError": "Não foi possível carregar os responsáveis.",
+      "roleOwner": "Titular",
+      "roleGuardian": "Responsável",
+      "removeAction": "Remover {{name}}",
+      "leaveAction": "Sair como responsável",
+      "leaveConfirmTitle": "Sair deste perfil?",
+      "removeConfirmTitle": "Remover responsável?",
+      "leaveConfirmDescription": "Você vai perder o acesso ao perfil de {{babyName}}. Você pode ser convidado(a) novamente no futuro.",
+      "removeConfirmDescription": "{{name}} vai perder o acesso ao perfil de {{babyName}}.",
+      "confirmDismiss": "Cancelar",
+      "leaveConfirmAction": "Sair",
+      "removeConfirmAction": "Remover",
+      "leaveSuccessToast": "Você saiu do perfil.",
+      "removeSuccessToast": "Responsável removido com sucesso.",
+      "removeGenericError": "Não foi possível concluir a ação. Tente novamente.",
+      "invite": {
+        "emailLabel": "E-mail do convidado (opcional)",
+        "emailPlaceholder": "nome@exemplo.com",
+        "emailHint": "Deixe em branco para gerar um link que pode ser compartilhado com qualquer pessoa.",
+        "generateAction": "Gerar convite",
+        "successToast": "Convite criado com sucesso!",
+        "genericError": "Não foi possível criar o convite. Tente novamente.",
+        "linkLabel": "Link do convite",
+        "copyAction": "Copiar link",
+        "copiedToast": "Link copiado!",
+        "copyError": "Não foi possível copiar o link.",
+        "newInviteAction": "Gerar outro convite"
+      }
     }
   },
   "vaccines": {
@@ -319,6 +360,21 @@
         "genericError": "Não foi possível excluir o registro. Tente novamente.",
         "successToast": "Registro excluído com sucesso."
       }
+    },
+    "search": {
+      "label": "Buscar vacina"
+    },
+    "card": {
+      "viewAction": "Ver carteira de {{name}}",
+      "printAction": "Imprimir",
+      "title": "Carteira de Vacinação",
+      "birthDateLabel": "Nascimento:",
+      "loadError": "Não foi possível carregar a carteira de vacinação.",
+      "empty": "Nenhuma vacina registrada para esta criança ainda.",
+      "columnDate": "Data",
+      "columnVaccine": "Vacina",
+      "columnDose": "Dose",
+      "columnStatus": "Status"
     }
   },
   "appointments": {
@@ -382,6 +438,9 @@
       "stepSchedule": "Agendamento",
       "continue": "Continuar",
       "back": "Voltar"
+    },
+    "search": {
+      "label": "Buscar consulta"
     }
   },
   "milestones": {
@@ -414,9 +473,12 @@
       "achievedAtBeforeBirth": "A data não pode ser antes do nascimento.",
       "descriptionLabel": "Detalhes",
       "descriptionPlaceholder": "Conte como foi esse momento especial...",
-      "photoUrlLabel": "Foto (URL)",
-      "photoUrlPlaceholder": "https://...",
-      "photoUrlHint": "Upload de arquivo ainda não é suportado — cole o link de uma foto já hospedada.",
+      "photoUrlLabel": "Foto",
+      "photoUploadAction": "Enviar foto",
+      "photoRemoveAria": "Remover foto",
+      "photoInvalidType": "Envie uma imagem JPEG, PNG ou WEBP.",
+      "photoTooLarge": "A imagem deve ter no máximo 5MB.",
+      "photoUploadError": "Não foi possível enviar a foto. Tente novamente.",
       "submit": "Salvar Marco",
       "genericError": "Não foi possível salvar o marco. Tente novamente.",
       "successToast": "Marco registrado com sucesso!"
@@ -441,6 +503,9 @@
       "confirmAction": "Excluir",
       "genericError": "Não foi possível excluir o marco. Tente novamente.",
       "successToast": "Marco excluído com sucesso."
+    },
+    "search": {
+      "label": "Buscar marco"
     }
   },
   "notifications": {
@@ -504,6 +569,25 @@
       "confirmAction": "Excluir conta permanentemente",
       "incorrectPassword": "Senha atual incorreta.",
       "genericError": "Não foi possível excluir a conta. Tente novamente."
+    }
+  },
+  "invites": {
+    "redeem": {
+      "title": "Você foi convidado(a) para ajudar a cuidar de {{babyName}}",
+      "description": "Aceite o convite para acompanhar vacinas, consultas e marcos deste perfil.",
+      "acceptAction": "Aceitar convite",
+      "successToast": "Você agora ajuda a cuidar de {{babyName}}!",
+      "alreadyGuardianError": "Você já é responsável por este perfil.",
+      "expiredError": "Este convite expirou ou já foi usado.",
+      "genericError": "Não foi possível aceitar o convite. Tente novamente.",
+      "invalidTitle": "Convite não encontrado",
+      "invalidDescription": "Esse link de convite não existe ou é inválido.",
+      "errorTitle": "Algo deu errado",
+      "genericLoadError": "Não foi possível carregar este convite. Tente novamente.",
+      "expiredTitle": "Convite expirado",
+      "expiredDescription": "Esse convite não é mais válido. Peça para a pessoa gerar um novo link.",
+      "alreadyUsedTitle": "Convite já utilizado",
+      "alreadyUsedDescription": "Esse convite já foi usado por outra pessoa."
     }
   },
   "errors": {

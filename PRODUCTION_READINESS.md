@@ -53,12 +53,14 @@ resposta. Corrigido de ponta a ponta (ver `cygnus-api/PLANO.md`, Fase 9).
 ## 🟢 Polish (não bloqueia nada)
 
 - [x] Skeletons em vez de spinner genérico — `VaccineCalendarSkeleton`, `AppointmentsSkeleton`, `MilestoneTimelineSkeleton` substituem o spinner nas 3 listas (Vacinas/Consultas/Marcos); o spinner de boot do `ProtectedLayout` ficou como está de propósito (é checagem de sessão, não lista de conteúdo)
-- [ ] Upload de foto real pra marcos (hoje só URL colada; backend também não tem storage)
-- [ ] Imprimir/exportar carteira de vacinação
+- [x] Upload de foto real pra marcos — `POST /uploads/milestone-photos` (multipart, `cygnus-api`), armazenamento em disco via volume Docker (`cygnus_uploads_data`), servido publicamente via `@fastify/static`; `MilestonePhotoUploadField.tsx` no frontend com preview instantâneo
+- [x] Imprimir/exportar carteira de vacinação — rota `/vaccines/:babyId/card`, tratamento de impressão via `print:` do Tailwind
 - [ ] PWA / instalar na tela inicial
-- [ ] Busca/filtro e paginação nas listas
+- [x] Busca/filtro e paginação nas listas — busca por texto (client-side, com debounce) + "carregar mais" nas listas de vacinas/consultas/marcos, ao lado do filtro por bebê já existente
 - [x] Auditoria automatizada de acessibilidade — `@axe-core/playwright` roda WCAG 2 A/AA em login, registro e nas páginas autenticadas principais (`e2e/accessibility.spec.ts`). Achou e corrigiu 2 problemas reais e sistêmicos de contraste: `text-slate-400` usado como texto de verdade (rótulos, dicas, timestamps) em vez de só ícone, e `amber-500` (texto/fundo) na tela de Marcos — ambos ficavam abaixo de 4.5:1. **Detalhe de tooling:** a animação `animate-fade-in-up` precisa ser desabilitada antes do scan (`page.addStyleTag`), senão o axe captura o DOM no meio da transição de opacidade e reporta falsos positivos em cascata
 - [ ] Analytics de uso
+- [x] Guardião/compartilhamento entre responsáveis — `BabyGuardian`/`BabyInvite`, convite por código/link e por e-mail (Resend), UI completa (ver `GAPS.md` para detalhes)
+- [x] Notificação por e-mail (vacina atrasada/consulta próxima) — via Resend, respeitando `emailNotificationsEnabled` por usuário; push/SMS continuam fora de escopo
 
 ## Ordem de execução combinada
 
