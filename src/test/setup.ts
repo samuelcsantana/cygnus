@@ -8,7 +8,10 @@ import { server } from './msw/server'
 // The default 1000ms `waitFor`/`findBy*` timeout is tight for async
 // react-hook-form validation (zodResolver) on a shared/throttled CI runner —
 // it's comfortably under budget locally but flaked intermittently in CI.
-configure({ asyncUtilTimeout: 5000 })
+// Kept below vitest's own `testTimeout` (vitest.config.ts) so a genuinely
+// stuck assertion fails with testing-library's descriptive error instead of
+// vitest's generic "Test timed out".
+configure({ asyncUtilTimeout: 8000 })
 
 // jsdom doesn't implement ResizeObserver; several Radix primitives (Select,
 // RadioGroup) call it on mount.
