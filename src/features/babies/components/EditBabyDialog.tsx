@@ -21,6 +21,7 @@ import { TrashIcon } from '@/shared/icons/trash-icon'
 import { useDeleteBaby, useUpdateBaby } from '../api/babies.hooks'
 import type { Baby } from '../api/babies.schemas'
 import { BabyForm } from './BabyForm'
+import { GuardiansSection } from './GuardiansSection'
 
 interface EditBabyDialogProps {
   baby: Baby | null
@@ -70,52 +71,56 @@ export function EditBabyDialog({ baby, onOpenChange }: EditBabyDialogProps) {
                 onOpenChange(false)
               }}
               dangerZone={
-                <div className="rounded-2xl border border-rose-100 bg-rose-50/50 p-5">
-                  <h3 className="font-display mb-1 text-sm font-extrabold text-ink">
-                    {t('babies.delete.sectionTitle')}
-                  </h3>
-                  <p className="mb-4 text-xs text-ink-muted">{t('babies.delete.sectionDescription')}</p>
+                <>
+                  <GuardiansSection babyId={baby.id} babyName={baby.name} />
 
-                  {deleteBaby.isError && (
-                    <p role="alert" className="text-destructive mb-3 text-xs">
-                      {t('babies.delete.genericError')}
-                    </p>
-                  )}
+                  <div className="rounded-2xl border border-rose-100 bg-rose-50/50 p-5">
+                    <h3 className="font-display mb-1 text-sm font-extrabold text-ink">
+                      {t('babies.delete.sectionTitle')}
+                    </h3>
+                    <p className="mb-4 text-xs text-ink-muted">{t('babies.delete.sectionDescription')}</p>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button type="button" variant="destructive" size="sm">
-                        <TrashIcon className="h-3.5 w-3.5" />
-                        {t('babies.delete.action', { name: baby.name })}
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>{t('babies.delete.confirmTitle')}</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          {t('babies.delete.confirmDescription', { name: baby.name })}
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>{t('babies.delete.confirmDismiss')}</AlertDialogCancel>
-                        <AlertDialogAction
-                          variant="destructive"
-                          onClick={() => {
-                            deleteBaby.mutate(baby.id, {
-                              onSuccess: () => {
-                                toast.success(t('babies.delete.successToast'))
-                                onOpenChange(false)
-                              },
-                            })
-                          }}
-                          disabled={deleteBaby.isPending}
-                        >
-                          {t('babies.delete.confirmAction')}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
+                    {deleteBaby.isError && (
+                      <p role="alert" className="text-destructive mb-3 text-xs">
+                        {t('babies.delete.genericError')}
+                      </p>
+                    )}
+
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button type="button" variant="destructive" size="sm">
+                          <TrashIcon className="h-3.5 w-3.5" />
+                          {t('babies.delete.action', { name: baby.name })}
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>{t('babies.delete.confirmTitle')}</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            {t('babies.delete.confirmDescription', { name: baby.name })}
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>{t('babies.delete.confirmDismiss')}</AlertDialogCancel>
+                          <AlertDialogAction
+                            variant="destructive"
+                            onClick={() => {
+                              deleteBaby.mutate(baby.id, {
+                                onSuccess: () => {
+                                  toast.success(t('babies.delete.successToast'))
+                                  onOpenChange(false)
+                                },
+                              })
+                            }}
+                            disabled={deleteBaby.isPending}
+                          >
+                            {t('babies.delete.confirmAction')}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </>
               }
             />
           </div>

@@ -17,6 +17,12 @@ export const router = createBrowserRouter([
     lazy: () => import('@/features/auth/routes/RegisterRoute').then((m) => ({ Component: m.RegisterRoute })),
   },
   {
+    // Deliberately not nested under ProtectedLayout: the invite preview must
+    // render for logged-out visitors too (see InviteRedeemRoute.tsx).
+    path: '/invites/:code',
+    lazy: () => import('@/app/routes/InviteRedeemRoute').then((m) => ({ Component: m.InviteRedeemRoute })),
+  },
+  {
     path: '/',
     element: <ProtectedLayout />,
     children: [
@@ -31,6 +37,13 @@ export const router = createBrowserRouter([
           {
             path: 'vaccines',
             lazy: () => import('@/features/vaccines/routes/VaccinesRoute').then((m) => ({ Component: m.VaccinesRoute })),
+          },
+          {
+            path: 'vaccines/:babyId/card',
+            lazy: () =>
+              import('@/features/vaccines/routes/VaccinationCardRoute').then((m) => ({
+                Component: m.VaccinationCardRoute,
+              })),
           },
           {
             path: 'appointments',

@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,7 +15,13 @@ import { loginSchema, type LoginInput } from '../api/auth.schemas'
 export function LoginForm() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const login = useLogin()
+
+  // Only ever a same-app relative path (e.g. the invite-redeem flow), never
+  // an external URL — guarded below to avoid an open-redirect via this param.
+  const redirectTo = searchParams.get('redirectTo')
+  const isSafeRedirect = !!redirectTo && redirectTo.startsWith('/') && !redirectTo.startsWith('//')
 
   const {
     register,
@@ -28,7 +34,7 @@ export function LoginForm() {
   const onSubmit = handleSubmit(async (values) => {
     try {
       await login.mutateAsync(values)
-      navigate('/dashboard', { replace: true })
+      navigate(isSafeRedirect ? redirectTo : '/dashboard', { replace: true })
     } catch {
       // surfaced below via login.error
     }

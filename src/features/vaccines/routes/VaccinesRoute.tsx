@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Navigate } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 
 import { FamilyStrip } from '@/features/babies/components/FamilyStrip'
 import { EditBabyDialog } from '@/features/babies/components/EditBabyDialog'
@@ -8,6 +8,7 @@ import type { Baby } from '@/features/babies/api/babies.schemas'
 import { cn } from '@/lib/utils'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { PlusIcon } from '@/shared/icons/plus-icon'
+import { PrinterIcon } from '@/shared/icons/printer-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 
 import { useAllBabiesVaccineCalendars } from '../api/vaccines.hooks'
@@ -86,6 +87,19 @@ export function VaccinesRoute() {
               <FamilyStrip items={familyStripItems} onEdit={setEditTarget} />
             </div>
           )}
+
+          <div className="mb-6 flex flex-wrap gap-2">
+            {babies.map((baby) => (
+              <Link
+                key={baby.id}
+                to={`/vaccines/${baby.id}/card`}
+                className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-[13px] font-semibold text-ink-muted shadow-sm transition-colors hover:bg-slate-50 hover:text-ink"
+              >
+                <PrinterIcon className="h-3.5 w-3.5" />
+                {t('vaccines.card.viewAction', { name: baby.name })}
+              </Link>
+            ))}
+          </div>
 
           <div className="mb-6 flex flex-wrap gap-2">
             {(

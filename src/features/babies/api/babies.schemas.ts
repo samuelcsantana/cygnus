@@ -44,3 +44,23 @@ export const babyFormSchema = z.object({
 })
 export type BabyFormInput = z.infer<typeof babyFormSchema>
 
+export const guardianRoleSchema = z.enum(['OWNER', 'GUARDIAN'])
+export type GuardianRole = z.infer<typeof guardianRoleSchema>
+
+export const guardianSchema = z.object({
+  userId: z.string().uuid(),
+  name: z.string(),
+  email: z.string().email(),
+  role: guardianRoleSchema,
+  joinedAt: z.string(),
+})
+export type Guardian = z.infer<typeof guardianSchema>
+
+export const guardianListSchema = z.array(guardianSchema)
+
+export const createInviteResponseSchema = z.object({
+  code: z.string(),
+  expiresAt: z.string(),
+})
+export type CreateInviteResponse = z.infer<typeof createInviteResponseSchema>
+

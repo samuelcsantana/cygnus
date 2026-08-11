@@ -1,6 +1,16 @@
 import { httpClient } from '@/lib/http-client'
 
-import { babyFormSchema, babyListSchema, babySchema, type Baby, type BabyFormInput } from './babies.schemas'
+import {
+  babyFormSchema,
+  babyListSchema,
+  babySchema,
+  createInviteResponseSchema,
+  guardianListSchema,
+  type Baby,
+  type BabyFormInput,
+  type CreateInviteResponse,
+  type Guardian,
+} from './babies.schemas'
 
 export async function fetchBabies(): Promise<Baby[]> {
   const response = await httpClient.get<unknown>('/babies')
@@ -42,4 +52,19 @@ export async function updateBaby(babyId: string, input: BabyFormInput): Promise<
 
 export async function deleteBaby(babyId: string): Promise<void> {
   await httpClient.delete<void>(`/babies/${babyId}`)
+}
+
+export async function fetchBabyGuardians(babyId: string): Promise<Guardian[]> {
+  const response = await httpClient.get<unknown>(`/babies/${babyId}/guardians`)
+  return guardianListSchema.parse(response)
+}
+
+export async function createBabyInvite(babyId: string, inviteeEmail?: string): Promise<CreateInviteResponse> {
+  const body = inviteeEmail ? { inviteeEmail } : {}
+  const response = await httpClient.post<unknown>(`/babies/${babyId}/invites`, body)
+  return createInviteResponseSchema.parse(response)
+}
+
+export async function removeBabyGuardian(babyId: string, userId: string): Promise<void> {
+  await httpClient.delete<void>(`/babies/${babyId}/guardians/${userId}`)
 }

@@ -1,7 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { createBaby, deleteBaby, fetchBabies, updateBaby } from './babies.api'
-import type { Baby, BabyFormInput } from './babies.schemas'
+import {
+  createBaby,
+  createBabyInvite,
+  deleteBaby,
+  fetchBabies,
+  fetchBabyGuardians,
+  removeBabyGuardian,
+  updateBaby,
+} from './babies.api'
+import type { Baby, BabyFormInput, Guardian } from './babies.schemas'
 
 export const babiesQueryKey = ['babies'] as const
 
@@ -53,6 +61,37 @@ export function useDeleteBaby() {
     onSuccess: (_data, deletedBabyId) => {
       queryClient.setQueryData<Baby[]>(babiesQueryKey, (prev) =>
         prev?.filter((baby) => baby.id !== deletedBabyId),
+      )
+    },
+  })
+}
+
+export function babyGuardiansQueryKey(babyId: string) {
+  return ['babies', babyId, 'guardians'] as const
+}
+
+export function useBabyGuardians(babyId: string) {
+  return useQuery({
+    queryKey: babyGuardiansQueryKey(babyId),
+    queryFn: () => fetchBabyGuardians(babyId),
+    enabled: !!babyId,
+  })
+}
+
+export function useCreateBabyInvite(babyId: string) {
+  return useMutation({
+    mutationFn: (inviteeEmail?: string) => createBabyInvite(babyId, inviteeEmail),
+  })
+}
+
+export function useRemoveBabyGuardian(babyId: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (userId: string) => removeBabyGuardian(babyId, userId),
+    onSuccess: (_data, removedUserId) => {
+      queryClient.setQueryData<Guardian[]>(babyGuardiansQueryKey(babyId), (prev) =>
+        prev?.filter((guardian) => guardian.userId !== removedUserId),
       )
     },
   })
