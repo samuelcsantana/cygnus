@@ -81,17 +81,25 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
     defaultValues: { applicationDate: todayDateString() },
   })
 
+  // Reset only when the dialog opens — not on every `babies.data` change —
+  // so a late-resolving babies query doesn't wipe in-progress input/errors
+  // out from under the user while the dialog is already open.
   useEffect(() => {
     if (!open) return
-    const sole = soleBaby(babies.data)
-    setSelectedBabyId(sole?.id ?? null)
-    setStep(babyList.length > 1 ? 'baby' : 'type')
     setChoice(null)
     setSelectedVaccineId(null)
     setCampaignName('')
     setCustomName('')
     setCustomDose('')
     reset({ applicationDate: todayDateString() })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
+  useEffect(() => {
+    if (!open) return
+    const sole = soleBaby(babies.data)
+    setSelectedBabyId(sole?.id ?? null)
+    setStep(babyList.length > 1 ? 'baby' : 'type')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, babies.data])
 

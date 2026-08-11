@@ -45,12 +45,20 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
     resolver: zodResolver(appointmentFormSchema),
   })
 
+  // Reset only when the dialog opens — not on every `babies.data` change —
+  // so a late-resolving babies query doesn't wipe in-progress input/errors
+  // out from under the user while the dialog is already open.
+  useEffect(() => {
+    if (!open) return
+    reset()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
   useEffect(() => {
     if (!open) return
     const sole = soleBaby(babies.data)
     setSelectedBabyId(sole?.id ?? null)
     setStep(babyList.length > 1 ? 'baby' : 'professional')
-    reset()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, babies.data])
 
