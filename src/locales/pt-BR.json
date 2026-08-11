@@ -12,6 +12,20 @@
     "datePicker": {
       "placeholder": "dd-mm-aaaa",
       "openLabel": "Abrir calendário"
+    },
+    "theme": {
+      "label": "Tema",
+      "light": "Claro",
+      "dark": "Escuro",
+      "system": "Sistema",
+      "switchAria": "Tema: {{current}}. Toque para alternar."
+    },
+    "offline": {
+      "message": "Você está offline. Algumas ações podem não funcionar até a conexão voltar."
+    },
+    "babyFilter": {
+      "groupLabel": "Filtrar por criança",
+      "all": "Todos"
     }
   },
   "nav": {
@@ -174,7 +188,8 @@
       "avatarColorGroupLabel": "Cor da borda do avatar",
       "avatarColorOption": "Cor {{number}}",
       "submit": "Criar Perfil",
-      "genericError": "Não foi possível salvar. Tente novamente."
+      "genericError": "Não foi possível salvar. Tente novamente.",
+      "successToast": "Perfil criado com sucesso!"
     },
     "wizard": {
       "stepProfile": "Perfil",
@@ -185,7 +200,8 @@
     "edit": {
       "action": "Editar perfil de {{name}}",
       "title": "Editar Perfil",
-      "submit": "Salvar Alterações"
+      "submit": "Salvar Alterações",
+      "successToast": "Perfil atualizado com sucesso!"
     },
     "delete": {
       "sectionTitle": "Zona de Perigo",
@@ -195,7 +211,8 @@
       "confirmDescription": "Isso vai apagar permanentemente o perfil de {{name}}, incluindo vacinas, consultas e marcos registrados. Essa ação não pode ser desfeita.",
       "confirmDismiss": "Cancelar",
       "confirmAction": "Excluir",
-      "genericError": "Não foi possível excluir o perfil. Tente novamente."
+      "genericError": "Não foi possível excluir o perfil. Tente novamente.",
+      "successToast": "Perfil excluído com sucesso."
     }
   },
   "vaccines": {
@@ -222,7 +239,8 @@
     "apply": {
       "title": "Aplicar Vacina",
       "submit": "Salvar Registro",
-      "genericError": "Não foi possível registrar a vacina. Tente novamente."
+      "genericError": "Não foi possível registrar a vacina. Tente novamente.",
+      "successToast": "Vacina aplicada com sucesso!"
     },
     "registerAction": "Registrar Vacina",
     "applicationDetails": {
@@ -247,6 +265,13 @@
       "back": "Voltar",
       "submit": "Salvar vacina",
       "genericError": "Não foi possível registrar a vacina. Tente novamente.",
+      "successToast": "Vacina registrada com sucesso!",
+      "addAnother": {
+        "title": "{{name}} registrada!",
+        "prompt": "Deseja registrar outra dose agora?",
+        "action": "Adicionar outra",
+        "done": "Concluir"
+      },
       "type": {
         "catalog": {
           "title": "Calendário obrigatório",
@@ -284,6 +309,15 @@
       "sourceLabel": {
         "campaign": "Campanha",
         "custom": "Outra vacina"
+      },
+      "delete": {
+        "action": "Excluir registro de {{name}}",
+        "confirmTitle": "Excluir este registro de vacina?",
+        "confirmDescription": "Isso vai apagar permanentemente o registro de \"{{name}}\". Essa ação não pode ser desfeita.",
+        "confirmDismiss": "Cancelar",
+        "confirmAction": "Excluir",
+        "genericError": "Não foi possível excluir o registro. Tente novamente.",
+        "successToast": "Registro excluído com sucesso."
       }
     }
   },
@@ -306,19 +340,23 @@
     "reschedule": {
       "action": "Reagendar",
       "title": "Reagendar Consulta",
-      "submit": "Salvar Alterações"
+      "submit": "Salvar Alterações",
+      "successToast": "Consulta reagendada com sucesso!"
     },
     "detail": {
       "action": "Ver Detalhes",
       "title": "Detalhes da Consulta",
       "notesLabel": "Anotações",
       "saveNotes": "Salvar Anotações",
+      "notesSavedToast": "Anotações salvas.",
       "markCompleted": "Marcar como Concluída",
       "cancelAppointment": "Cancelar Consulta",
       "cancelConfirmTitle": "Cancelar esta consulta?",
       "cancelConfirmDescription": "Essa ação não pode ser desfeita. A consulta com {{doctorName}} será marcada como cancelada.",
       "cancelConfirmAction": "Sim, cancelar consulta",
       "cancelConfirmDismiss": "Voltar",
+      "cancelSuccessToast": "Consulta cancelada.",
+      "completeSuccessToast": "Consulta marcada como concluída.",
       "genericError": "Não foi possível atualizar a consulta."
     },
     "form": {
@@ -336,7 +374,8 @@
       "reasonPlaceholder": "Ex: Consulta de rotina",
       "scheduledAtPast": "A data e hora não podem estar no passado.",
       "submit": "Salvar Consulta",
-      "genericError": "Não foi possível salvar a consulta. Tente novamente."
+      "genericError": "Não foi possível salvar a consulta. Tente novamente.",
+      "successToast": "Consulta agendada com sucesso!"
     },
     "wizard": {
       "stepProfessional": "Profissional",
@@ -379,7 +418,8 @@
       "photoUrlPlaceholder": "https://...",
       "photoUrlHint": "Upload de arquivo ainda não é suportado — cole o link de uma foto já hospedada.",
       "submit": "Salvar Marco",
-      "genericError": "Não foi possível salvar o marco. Tente novamente."
+      "genericError": "Não foi possível salvar o marco. Tente novamente.",
+      "successToast": "Marco registrado com sucesso!"
     },
     "wizard": {
       "stepCore": "O que aconteceu?",
@@ -390,7 +430,17 @@
     "edit": {
       "action": "Editar marco: {{title}}",
       "title": "Editar Marco",
-      "submit": "Salvar Alterações"
+      "submit": "Salvar Alterações",
+      "successToast": "Marco atualizado com sucesso!"
+    },
+    "delete": {
+      "action": "Excluir marco: {{title}}",
+      "confirmTitle": "Excluir este marco?",
+      "confirmDescription": "Isso vai apagar permanentemente o marco \"{{title}}\". Essa ação não pode ser desfeita.",
+      "confirmDismiss": "Cancelar",
+      "confirmAction": "Excluir",
+      "genericError": "Não foi possível excluir o marco. Tente novamente.",
+      "successToast": "Marco excluído com sucesso."
     }
   },
   "notifications": {

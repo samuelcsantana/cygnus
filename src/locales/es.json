@@ -12,6 +12,20 @@
     "datePicker": {
       "placeholder": "dd-mm-aaaa",
       "openLabel": "Abrir calendario"
+    },
+    "theme": {
+      "label": "Tema",
+      "light": "Claro",
+      "dark": "Oscuro",
+      "system": "Sistema",
+      "switchAria": "Tema: {{current}}. Toca para cambiar."
+    },
+    "offline": {
+      "message": "Estás sin conexión. Algunas acciones pueden no funcionar hasta que vuelva la conexión."
+    },
+    "babyFilter": {
+      "groupLabel": "Filtrar por hijo/a",
+      "all": "Todos"
     }
   },
   "nav": {
@@ -174,7 +188,8 @@
       "avatarColorGroupLabel": "Color del borde del avatar",
       "avatarColorOption": "Color {{number}}",
       "submit": "Crear Perfil",
-      "genericError": "No se pudo guardar. Inténtalo de nuevo."
+      "genericError": "No se pudo guardar. Inténtalo de nuevo.",
+      "successToast": "¡Perfil creado con éxito!"
     },
     "wizard": {
       "stepProfile": "Perfil",
@@ -185,7 +200,8 @@
     "edit": {
       "action": "Editar perfil de {{name}}",
       "title": "Editar Perfil",
-      "submit": "Guardar Cambios"
+      "submit": "Guardar Cambios",
+      "successToast": "¡Perfil actualizado con éxito!"
     },
     "delete": {
       "sectionTitle": "Zona de Peligro",
@@ -195,7 +211,8 @@
       "confirmDescription": "Esto eliminará permanentemente el perfil de {{name}}, incluyendo vacunas, consultas e hitos registrados. Esta acción no se puede deshacer.",
       "confirmDismiss": "Cancelar",
       "confirmAction": "Eliminar",
-      "genericError": "No se pudo eliminar el perfil. Inténtalo de nuevo."
+      "genericError": "No se pudo eliminar el perfil. Inténtalo de nuevo.",
+      "successToast": "Perfil eliminado con éxito."
     }
   },
   "vaccines": {
@@ -222,7 +239,8 @@
     "apply": {
       "title": "Aplicar Vacuna",
       "submit": "Guardar Registro",
-      "genericError": "No se pudo registrar la vacuna. Inténtalo de nuevo."
+      "genericError": "No se pudo registrar la vacuna. Inténtalo de nuevo.",
+      "successToast": "¡Vacuna aplicada con éxito!"
     },
     "registerAction": "Registrar Vacuna",
     "applicationDetails": {
@@ -247,6 +265,13 @@
       "back": "Volver",
       "submit": "Guardar vacuna",
       "genericError": "No se pudo registrar la vacuna. Inténtalo de nuevo.",
+      "successToast": "¡Vacuna registrada con éxito!",
+      "addAnother": {
+        "title": "¡{{name}} registrada!",
+        "prompt": "¿Deseas registrar otra dosis ahora?",
+        "action": "Agregar otra",
+        "done": "Finalizar"
+      },
       "type": {
         "catalog": {
           "title": "Calendario obligatorio",
@@ -284,6 +309,15 @@
       "sourceLabel": {
         "campaign": "Campaña",
         "custom": "Otra vacuna"
+      },
+      "delete": {
+        "action": "Eliminar registro de {{name}}",
+        "confirmTitle": "¿Eliminar este registro de vacuna?",
+        "confirmDescription": "Esto eliminará permanentemente el registro de \"{{name}}\". Esta acción no se puede deshacer.",
+        "confirmDismiss": "Cancelar",
+        "confirmAction": "Eliminar",
+        "genericError": "No se pudo eliminar el registro. Inténtalo de nuevo.",
+        "successToast": "Registro eliminado con éxito."
       }
     }
   },
@@ -306,19 +340,23 @@
     "reschedule": {
       "action": "Reprogramar",
       "title": "Reprogramar Consulta",
-      "submit": "Guardar Cambios"
+      "submit": "Guardar Cambios",
+      "successToast": "¡Consulta reprogramada con éxito!"
     },
     "detail": {
       "action": "Ver Detalles",
       "title": "Detalles de la Consulta",
       "notesLabel": "Notas",
       "saveNotes": "Guardar Notas",
+      "notesSavedToast": "Notas guardadas.",
       "markCompleted": "Marcar como Completada",
       "cancelAppointment": "Cancelar Consulta",
       "cancelConfirmTitle": "¿Cancelar esta consulta?",
       "cancelConfirmDescription": "Esta acción no se puede deshacer. La consulta con {{doctorName}} se marcará como cancelada.",
       "cancelConfirmAction": "Sí, cancelar consulta",
       "cancelConfirmDismiss": "Volver",
+      "cancelSuccessToast": "Consulta cancelada.",
+      "completeSuccessToast": "Consulta marcada como completada.",
       "genericError": "No se pudo actualizar la consulta."
     },
     "form": {
@@ -336,7 +374,8 @@
       "reasonPlaceholder": "Ej: Consulta de rutina",
       "scheduledAtPast": "La fecha y hora no pueden estar en el pasado.",
       "submit": "Guardar Consulta",
-      "genericError": "No se pudo guardar la consulta. Inténtalo de nuevo."
+      "genericError": "No se pudo guardar la consulta. Inténtalo de nuevo.",
+      "successToast": "¡Consulta agendada con éxito!"
     },
     "wizard": {
       "stepProfessional": "Profesional",
@@ -379,7 +418,8 @@
       "photoUrlPlaceholder": "https://...",
       "photoUrlHint": "La subida de archivos aún no es compatible — pega el enlace de una foto ya alojada.",
       "submit": "Guardar Hito",
-      "genericError": "No se pudo guardar el hito. Inténtalo de nuevo."
+      "genericError": "No se pudo guardar el hito. Inténtalo de nuevo.",
+      "successToast": "¡Hito registrado con éxito!"
     },
     "wizard": {
       "stepCore": "¿Qué pasó?",
@@ -390,7 +430,17 @@
     "edit": {
       "action": "Editar hito: {{title}}",
       "title": "Editar Hito",
-      "submit": "Guardar Cambios"
+      "submit": "Guardar Cambios",
+      "successToast": "¡Hito actualizado con éxito!"
+    },
+    "delete": {
+      "action": "Eliminar hito: {{title}}",
+      "confirmTitle": "¿Eliminar este hito?",
+      "confirmDescription": "Esto eliminará permanentemente el hito \"{{title}}\". Esta acción no se puede deshacer.",
+      "confirmDismiss": "Cancelar",
+      "confirmAction": "Eliminar",
+      "genericError": "No se pudo eliminar el hito. Inténtalo de nuevo.",
+      "successToast": "Hito eliminado con éxito."
     }
   },
   "notifications": {

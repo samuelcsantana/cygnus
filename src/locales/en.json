@@ -12,6 +12,20 @@
     "datePicker": {
       "placeholder": "dd-mm-yyyy",
       "openLabel": "Open calendar"
+    },
+    "theme": {
+      "label": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System",
+      "switchAria": "Theme: {{current}}. Tap to switch."
+    },
+    "offline": {
+      "message": "You're offline. Some actions may not work until the connection comes back."
+    },
+    "babyFilter": {
+      "groupLabel": "Filter by child",
+      "all": "All"
     }
   },
   "nav": {
@@ -174,7 +188,8 @@
       "avatarColorGroupLabel": "Avatar border color",
       "avatarColorOption": "Color {{number}}",
       "submit": "Create Profile",
-      "genericError": "Could not save. Please try again."
+      "genericError": "Could not save. Please try again.",
+      "successToast": "Profile created successfully!"
     },
     "wizard": {
       "stepProfile": "Profile",
@@ -185,7 +200,8 @@
     "edit": {
       "action": "Edit {{name}}'s profile",
       "title": "Edit Profile",
-      "submit": "Save Changes"
+      "submit": "Save Changes",
+      "successToast": "Profile updated successfully!"
     },
     "delete": {
       "sectionTitle": "Danger Zone",
@@ -195,7 +211,8 @@
       "confirmDescription": "This will permanently delete {{name}}'s profile, including recorded vaccines, appointments and milestones. This action cannot be undone.",
       "confirmDismiss": "Cancel",
       "confirmAction": "Delete",
-      "genericError": "Could not delete the profile. Please try again."
+      "genericError": "Could not delete the profile. Please try again.",
+      "successToast": "Profile deleted successfully."
     }
   },
   "vaccines": {
@@ -222,7 +239,8 @@
     "apply": {
       "title": "Apply Vaccine",
       "submit": "Save Record",
-      "genericError": "Could not record the vaccine. Please try again."
+      "genericError": "Could not record the vaccine. Please try again.",
+      "successToast": "Vaccine applied successfully!"
     },
     "registerAction": "Register Vaccine",
     "applicationDetails": {
@@ -247,6 +265,13 @@
       "back": "Back",
       "submit": "Save vaccine",
       "genericError": "Could not register the vaccine. Please try again.",
+      "successToast": "Vaccine registered successfully!",
+      "addAnother": {
+        "title": "{{name}} registered!",
+        "prompt": "Would you like to register another dose now?",
+        "action": "Add another",
+        "done": "Done"
+      },
       "type": {
         "catalog": {
           "title": "Required schedule",
@@ -284,6 +309,15 @@
       "sourceLabel": {
         "campaign": "Campaign",
         "custom": "Other vaccine"
+      },
+      "delete": {
+        "action": "Delete {{name}}'s record",
+        "confirmTitle": "Delete this vaccine record?",
+        "confirmDescription": "This will permanently delete the \"{{name}}\" record. This action cannot be undone.",
+        "confirmDismiss": "Cancel",
+        "confirmAction": "Delete",
+        "genericError": "Could not delete the record. Please try again.",
+        "successToast": "Record deleted successfully."
       }
     }
   },
@@ -306,19 +340,23 @@
     "reschedule": {
       "action": "Reschedule",
       "title": "Reschedule Appointment",
-      "submit": "Save Changes"
+      "submit": "Save Changes",
+      "successToast": "Appointment rescheduled successfully!"
     },
     "detail": {
       "action": "View Details",
       "title": "Appointment Details",
       "notesLabel": "Notes",
       "saveNotes": "Save Notes",
+      "notesSavedToast": "Notes saved.",
       "markCompleted": "Mark as Completed",
       "cancelAppointment": "Cancel Appointment",
       "cancelConfirmTitle": "Cancel this appointment?",
       "cancelConfirmDescription": "This can't be undone. The appointment with {{doctorName}} will be marked as cancelled.",
       "cancelConfirmAction": "Yes, cancel appointment",
       "cancelConfirmDismiss": "Go back",
+      "cancelSuccessToast": "Appointment cancelled.",
+      "completeSuccessToast": "Appointment marked as completed.",
       "genericError": "Could not update the appointment."
     },
     "form": {
@@ -336,7 +374,8 @@
       "reasonPlaceholder": "E.g. Routine check-up",
       "scheduledAtPast": "The date and time cannot be in the past.",
       "submit": "Save Appointment",
-      "genericError": "Could not save the appointment. Please try again."
+      "genericError": "Could not save the appointment. Please try again.",
+      "successToast": "Appointment scheduled successfully!"
     },
     "wizard": {
       "stepProfessional": "Professional",
@@ -379,7 +418,8 @@
       "photoUrlPlaceholder": "https://...",
       "photoUrlHint": "File upload isn't supported yet — paste the link to an already-hosted photo.",
       "submit": "Save Milestone",
-      "genericError": "Could not save the milestone. Please try again."
+      "genericError": "Could not save the milestone. Please try again.",
+      "successToast": "Milestone recorded successfully!"
     },
     "wizard": {
       "stepCore": "What happened?",
@@ -390,7 +430,17 @@
     "edit": {
       "action": "Edit milestone: {{title}}",
       "title": "Edit Milestone",
-      "submit": "Save Changes"
+      "submit": "Save Changes",
+      "successToast": "Milestone updated successfully!"
+    },
+    "delete": {
+      "action": "Delete milestone: {{title}}",
+      "confirmTitle": "Delete this milestone?",
+      "confirmDescription": "This will permanently delete the \"{{title}}\" milestone. This action cannot be undone.",
+      "confirmDismiss": "Cancel",
+      "confirmAction": "Delete",
+      "genericError": "Could not delete the milestone. Please try again.",
+      "successToast": "Milestone deleted successfully."
     }
   },
   "notifications": {
