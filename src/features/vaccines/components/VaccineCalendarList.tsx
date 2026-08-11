@@ -2,8 +2,13 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Baby } from '@/features/babies/api/babies.schemas'
+import { useDebouncedValue } from '@/hooks/useDebouncedValue'
+import { usePagedList } from '@/hooks/usePagedList'
 import { cn } from '@/lib/utils'
 import { BabyFilterChips } from '@/shared/components/BabyFilterChips'
+import { LoadMoreButton } from '@/shared/components/LoadMoreButton'
+import { NoSearchResults } from '@/shared/components/NoSearchResults'
+import { SearchInput } from '@/shared/components/SearchInput'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 
 import type { VaccineItemWithBaby } from '../api/vaccines.hooks'
@@ -31,23 +36,53 @@ const STATUS_ICON_GLYPH: Record<VaccineItemWithBaby['status'], string> = {
 // baby it belongs to, so a family with several children sees one urgency-sorted
 // list instead of one full section repeated per child.
 export function VaccineCalendarList({ items, babies }: VaccineCalendarListProps) {
+  const { t } = useTranslation()
   const [applyTarget, setApplyTarget] = useState<VaccineItemWithBaby | null>(null)
   const [babyFilter, setBabyFilter] = useState<string | null>(null)
+  const [search, setSearch] = useState('')
+  const debouncedSearch = useDebouncedValue(search)
   const babyById = new Map(babies.map((baby) => [baby.id, baby]))
 
-  const filteredItems = babyFilter ? items.filter((item) => item.babyId === babyFilter) : items
+  const babyFiltered = babyFilter ? items.filter((item) => item.babyId === babyFilter) : items
+  const normalizedSearch = debouncedSearch.trim().toLowerCase()
+  const filteredItems = normalizedSearch
+    ? babyFiltered.filter(
+        (item) =>
+          item.name.toLowerCase().includes(normalizedSearch) ||
+          item.description.toLowerCase().includes(normalizedSearch),
+      )
+    : babyFiltered
+
+  const { visibleItems, hasMore, loadMore } = usePagedList(filteredItems, `${normalizedSearch}|${babyFilter}`)
 
   return (
     <div>
-      <BabyFilterChips babies={babies} value={babyFilter} onChange={setBabyFilter} className="mb-4" />
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <BabyFilterChips babies={babies} value={babyFilter} onChange={setBabyFilter} />
+        <SearchInput
+          id="vaccine-search"
+          label={t('vaccines.search.label')}
+          value={search}
+          onChange={setSearch}
+          placeholder={t('common.search.placeholder')}
+          className="sm:w-64"
+        />
+      </div>
 
-      <ul className="flex flex-col gap-2">
-        {filteredItems.map((item) => (
-          <li key={`${item.babyId}-${item.vaccineId}`}>
-            <VaccineRow item={item} baby={babyById.get(item.babyId)} onApply={() => setApplyTarget(item)} />
-          </li>
-        ))}
-      </ul>
+      {filteredItems.length === 0 ? (
+        <NoSearchResults />
+      ) : (
+        <>
+          <ul className="flex flex-col gap-2">
+            {visibleItems.map((item) => (
+              <li key={`${item.babyId}-${item.vaccineId}`}>
+                <VaccineRow item={item} baby={babyById.get(item.babyId)} onApply={() => setApplyTarget(item)} />
+              </li>
+            ))}
+          </ul>
+          {hasMore && <LoadMoreButton onClick={loadMore} label={t('common.loadMore')} />}
+        </>
+      )}
 
       <ApplyVaccineDialog
         babyId={applyTarget?.babyId ?? ''}

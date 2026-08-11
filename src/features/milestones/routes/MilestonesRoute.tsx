@@ -2,9 +2,14 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
+import { useDebouncedValue } from '@/hooks/useDebouncedValue'
+import { usePagedList } from '@/hooks/usePagedList'
 import { cn } from '@/lib/utils'
 import { BabyFilterChips } from '@/shared/components/BabyFilterChips'
 import { EmptyState } from '@/shared/components/EmptyState'
+import { LoadMoreButton } from '@/shared/components/LoadMoreButton'
+import { NoSearchResults } from '@/shared/components/NoSearchResults'
+import { SearchInput } from '@/shared/components/SearchInput'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 
 import { useAllBabiesMilestones } from '../api/milestones.hooks'
@@ -22,16 +27,34 @@ export function MilestonesRoute() {
   const [activeCategory, setActiveCategory] = useState<MilestoneCategory | 'ALL'>('ALL')
   const [babyFilter, setBabyFilter] = useState<string | null>(null)
   const [isAddOpen, setIsAddOpen] = useState(false)
+  const [search, setSearch] = useState('')
+  const debouncedSearch = useDebouncedValue(search)
 
-  if (isEmpty) {
-    return <Navigate to="/dashboard" replace />
-  }
-
+  // Hooks below must run unconditionally on every render (rules-of-hooks) —
+  // `items` is simply `[]` while isEmpty is true, so this is safe to compute
+  // before the early return.
+  const normalizedSearch = debouncedSearch.trim().toLowerCase()
   const filteredItems = [
     ...(activeCategory === 'ALL' ? items : items.filter((item) => item.category === activeCategory)).filter(
       (item) => !babyFilter || item.babyId === babyFilter,
     ),
-  ].sort((a, b) => b.achievedAt.localeCompare(a.achievedAt))
+  ]
+    .filter(
+      (item) =>
+        !normalizedSearch ||
+        item.title.toLowerCase().includes(normalizedSearch) ||
+        (item.description ?? '').toLowerCase().includes(normalizedSearch),
+    )
+    .sort((a, b) => b.achievedAt.localeCompare(a.achievedAt))
+
+  const { visibleItems, hasMore, loadMore } = usePagedList(
+    filteredItems,
+    `${normalizedSearch}|${babyFilter}|${activeCategory}`,
+  )
+
+  if (isEmpty) {
+    return <Navigate to="/dashboard" replace />
+  }
 
   return (
     <div className="animate-fade-in-up">
@@ -73,7 +96,17 @@ export function MilestonesRoute() {
         />
       ) : (
         <>
-          <BabyFilterChips babies={babies} value={babyFilter} onChange={setBabyFilter} className="mb-4" />
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <BabyFilterChips babies={babies} value={babyFilter} onChange={setBabyFilter} />
+            <SearchInput
+              id="milestone-search"
+              label={t('milestones.search.label')}
+              value={search}
+              onChange={setSearch}
+              placeholder={t('common.search.placeholder')}
+              className="sm:w-64"
+            />
+          </div>
 
           <div className="mb-8 flex flex-wrap gap-2">
             <button
@@ -105,7 +138,14 @@ export function MilestonesRoute() {
             })}
           </div>
 
-          <MilestoneTimeline items={filteredItems} babies={babies} />
+          {filteredItems.length === 0 ? (
+            <NoSearchResults />
+          ) : (
+            <>
+              <MilestoneTimeline items={visibleItems} babies={babies} />
+              {hasMore && <LoadMoreButton onClick={loadMore} label={t('common.loadMore')} />}
+            </>
+          )}
         </>
       )}
     </div>
