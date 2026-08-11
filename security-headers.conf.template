@@ -1,0 +1,26 @@
+# Included from every `location` block that defines its own `add_header` —
+# nginx does NOT inherit add_header from a parent context once a block
+# defines even one of its own, so these must be repeated explicitly rather
+# than only declared once at the `server` level (a location with e.g. its
+# own Cache-Control would otherwise silently drop these).
+#
+# This file is a *.template processed by the official nginx image's
+# entrypoint (docker-entrypoint.d/20-envsubst-on-templates.sh) via
+# `envsubst`, substituting ${API_ORIGIN} from the container's environment
+# and writing the result to /etc/nginx/conf.d/security-headers.conf before
+# nginx starts — that env var is set in the Dockerfile's runtime stage from
+# the same VITE_API_BASE_URL build arg already used to bake the API origin
+# into the JS bundle, so the CSP always matches whatever API the frontend
+# was actually built to call, in dev/Docker and in production alike. Only
+# variables that are genuinely set in the container's env get substituted,
+# so this is safe from clobbering nginx's own $uri/$host-style variables
+# elsewhere in the config (those aren't OS env vars).
+#
+# NOTE: no Strict-Transport-Security (HSTS) here — this server only listens on
+# :80, TLS termination isn't configured yet. Add HSTS once HTTPS is live in
+# front of this container (e.g. at a reverse proxy/load balancer), otherwise
+# it would incorrectly promise a secure transport that doesn't exist yet.
+add_header X-Content-Type-Options "nosniff" always;
+add_header X-Frame-Options "DENY" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ${API_ORIGIN}; frame-ancestors 'none';" always;
