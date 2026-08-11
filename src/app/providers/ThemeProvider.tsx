@@ -1,17 +1,7 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 
-export type ThemeMode = 'light' | 'dark' | 'system'
-type ResolvedTheme = 'light' | 'dark'
+import { ThemeContext, type ResolvedTheme, type ThemeMode } from './theme-context'
 
-interface ThemeContextValue {
-  /** The user's stored preference — may be 'system'. */
-  theme: ThemeMode
-  /** The actual light/dark value currently applied to the document. */
-  resolvedTheme: ResolvedTheme
-  setTheme: (theme: ThemeMode) => void
-}
-
-const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
 const STORAGE_KEY = 'theme'
 const DARK_MEDIA_QUERY = '(prefers-color-scheme: dark)'
 
@@ -67,12 +57,4 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   }
 
   return <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme }}>{children}</ThemeContext.Provider>
-}
-
-export function useTheme(): ThemeContextValue {
-  const context = useContext(ThemeContext)
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider')
-  }
-  return context
 }

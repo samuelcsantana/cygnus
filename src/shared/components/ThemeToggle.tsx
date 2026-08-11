@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
-import { useTheme, type ThemeMode } from '@/app/providers/ThemeProvider'
+import type { ThemeMode } from '@/app/providers/theme-context'
+import { useTheme } from '@/hooks/useTheme'
 import { cn } from '@/lib/utils'
 import { MonitorIcon } from '@/shared/icons/monitor-icon'
 import { MoonIcon } from '@/shared/icons/moon-icon'
