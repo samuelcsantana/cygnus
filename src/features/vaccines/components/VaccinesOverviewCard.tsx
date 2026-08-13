@@ -23,11 +23,12 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
   const { t } = useTranslation()
   const babyById = new Map(babies.map((baby) => [baby.id, baby]))
 
-  const appliedCount = items.filter((item) => item.status === 'APPLIED').length
-  const progressPct = items.length > 0 ? Math.round((appliedCount / items.length) * 100) : 0
+  const routineItems = items.filter((item) => item.recommendationKind === 'ROUTINE')
+  const appliedCount = routineItems.filter((item) => item.status === 'APPLIED').length
+  const progressPct = routineItems.length > 0 ? Math.round((appliedCount / routineItems.length) * 100) : 0
 
   const urgentItems = [...items]
-    .filter((item) => item.status !== 'APPLIED')
+    .filter((item) => item.status !== 'APPLIED' && item.status !== 'GUIDANCE')
     .sort((a, b) => {
       if (a.status !== b.status) return a.status === 'DELAYED' ? -1 : 1
       return a.recommendedAgeInMonths - b.recommendedAgeInMonths

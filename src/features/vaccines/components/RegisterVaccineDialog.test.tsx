@@ -13,8 +13,10 @@ const pendingItem: VaccineItem = {
   vaccineId: '11111111-1111-4111-8111-111111111111',
   name: 'Hepatite B',
   description: 'Protects against hepatitis B.',
+  guidance: null,
   doseNumber: 1,
   recommendedAgeInMonths: 0,
+  recommendationKind: 'ROUTINE',
   status: 'PENDING',
   applicationDate: null,
   notes: null,
@@ -42,13 +44,24 @@ const baby = {
 
 const otherBaby = { ...baby, id: otherBabyId, name: 'Baby Two' }
 
+const catalogMetadata = {
+  version: 'PNI-2026-CHILD-2026-07-29',
+  sourceName: 'Calendário Nacional de Vacinação 2026 — Criança',
+  sourceOrganization: 'Ministério da Saúde do Brasil',
+  sourceUrl: 'https://www.gov.br/saude/pt-br/vacinacao/calendario',
+  sourceUpdatedAt: '2026-07-29',
+  effectiveFrom: '2026-07-29',
+  minimumAgeInMonths: 0,
+  maximumAgeInMonths: 119,
+}
+
 // A single-baby household auto-selects and skips the picker step, so most
 // tests here can exercise the wizard exactly as if babyId/pendingItems were still props.
 beforeEach(() => {
   server.use(
     http.get(`${config.apiBaseUrl}/babies`, () => HttpResponse.json([baby])),
     http.get(`${config.apiBaseUrl}/babies/:babyId/vaccines`, () =>
-      HttpResponse.json([{ ageInMonths: 0, items: [pendingItem] }]),
+      HttpResponse.json({ metadata: catalogMetadata, groups: [{ ageInMonths: 0, items: [pendingItem] }] }),
     ),
   )
 })

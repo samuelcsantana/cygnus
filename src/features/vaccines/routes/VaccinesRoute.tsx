@@ -17,12 +17,13 @@ import { AdhocVaccineList } from '../components/AdhocVaccineList'
 import { RegisterVaccineDialog } from '../components/RegisterVaccineDialog'
 import { VaccineCalendarList } from '../components/VaccineCalendarList'
 import { VaccineCalendarSkeleton } from '../components/VaccineCalendarSkeleton'
+import { VaccineCatalogNotice } from '../components/VaccineCatalogNotice'
 
 type Filter = 'ALL' | VaccineStatus
 
 export function VaccinesRoute() {
   const { t } = useTranslation()
-  const { isPending, isError, isEmpty, babies, items } = useAllBabiesVaccineCalendars()
+  const { isPending, isError, isEmpty, babies, items, metadata } = useAllBabiesVaccineCalendars()
   const [filter, setFilter] = useState<Filter>('ALL')
   const [isRegisterOpen, setRegisterOpen] = useState(false)
   const [editTarget, setEditTarget] = useState<Baby | null>(null)
@@ -35,6 +36,7 @@ export function VaccinesRoute() {
     APPLIED: items.filter((item) => item.status === 'APPLIED').length,
     PENDING: items.filter((item) => item.status === 'PENDING').length,
     DELAYED: items.filter((item) => item.status === 'DELAYED').length,
+    GUIDANCE: items.filter((item) => item.status === 'GUIDANCE').length,
   }
 
   const familyStripItems = babies.map((baby) => ({
@@ -43,7 +45,7 @@ export function VaccinesRoute() {
   }))
 
   const filteredItems = (filter === 'ALL' ? items : items.filter((item) => item.status === filter)).sort((a, b) => {
-    const rank = { DELAYED: 0, PENDING: 1, APPLIED: 2 } as const
+    const rank = { DELAYED: 0, GUIDANCE: 1, PENDING: 2, APPLIED: 3 } as const
     if (a.status !== b.status) return rank[a.status] - rank[b.status]
     return a.recommendedAgeInMonths - b.recommendedAgeInMonths
   })
@@ -68,6 +70,8 @@ export function VaccinesRoute() {
       </div>
 
       <RegisterVaccineDialog open={isRegisterOpen} onOpenChange={setRegisterOpen} />
+
+      {metadata && <VaccineCatalogNotice metadata={metadata} className="mb-6" />}
 
       {isPending ? (
         <VaccineCalendarSkeleton />
@@ -108,6 +112,7 @@ export function VaccinesRoute() {
                 ['APPLIED', t('vaccines.filterApplied', { count: counts.APPLIED })],
                 ['PENDING', t('vaccines.filterPending', { count: counts.PENDING })],
                 ['DELAYED', t('vaccines.filterDelayed', { count: counts.DELAYED })],
+                ['GUIDANCE', t('vaccines.filterGuidance', { count: counts.GUIDANCE })],
               ] as const
             ).map(([value, label]) => (
               <button

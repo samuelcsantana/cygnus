@@ -63,9 +63,9 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
   const [lastRegisteredName, setLastRegisteredName] = useState('')
 
   const calendar = useVaccineCalendar(selectedBabyId)
-  const pendingItems = (calendar.data ?? [])
+  const pendingItems = (calendar.data?.groups ?? [])
     .flatMap((group) => group.items)
-    .filter((item) => item.status !== 'APPLIED')
+    .filter((item) => item.status !== 'APPLIED' && item.recommendationKind !== 'RECURRING')
 
   const applyVaccine = useApplyVaccine(selectedBabyId)
   const registerAdhocVaccine = useRegisterAdhocVaccine(selectedBabyId)
@@ -274,7 +274,11 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
                             item.status === 'DELAYED' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-800',
                           )}
                         >
-                          {item.status === 'DELAYED' ? t('vaccines.status.delayed') : t('vaccines.status.pending')}
+                          {item.status === 'DELAYED'
+                            ? t('vaccines.status.delayed')
+                            : item.status === 'GUIDANCE'
+                              ? t('vaccines.status.guidance')
+                              : t('vaccines.status.pending')}
                         </span>
                       </button>
                     ))
