@@ -15,25 +15,48 @@ function PopoverTrigger({
   return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
 }
 
+/**
+ * Radix wires DialogTitle to its Dialog automatically, but does not do the same
+ * for Popover — so a PopoverContent (which is `role="dialog"`) shipped with no
+ * accessible name unless every call site remembered to pass `aria-labelledby`.
+ * PopoverTitle registers its generated id here instead, and PopoverContent
+ * points at it. A popover with no title falls back to whatever `aria-label` the
+ * call site passes, exactly as before.
+ */
+const PopoverTitleIdContext = React.createContext<{
+  generatedId: string
+  registerTitle: (id: string | null) => void
+} | null>(null)
+
 function PopoverContent({
   className,
   align = "center",
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+  const generatedId = React.useId()
+  const [titleId, setTitleId] = React.useState<string | null>(null)
+  const contextValue = React.useMemo(
+    () => ({ generatedId, registerTitle: setTitleId }),
+    [generatedId]
+  )
+
   return (
-    <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Content
-        data-slot="popover-content"
-        align={align}
-        sideOffset={sideOffset}
-        className={cn(
-          "z-50 flex w-72 origin-(--radix-popover-content-transform-origin) flex-col gap-2.5 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
-          className
-        )}
-        {...props}
-      />
-    </PopoverPrimitive.Portal>
+    <PopoverTitleIdContext.Provider value={contextValue}>
+      <PopoverPrimitive.Portal>
+        <PopoverPrimitive.Content
+          data-slot="popover-content"
+          align={align}
+          sideOffset={sideOffset}
+          aria-labelledby={titleId ?? undefined}
+          className={cn(
+            "z-50 flex w-72 origin-(--radix-popover-content-transform-origin) flex-col gap-2.5 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+            className
+          )}
+          {...props}
+        />
+      </PopoverPrimitive.Portal>
+    </PopoverTitleIdContext.Provider>
   )
 }
 
@@ -53,10 +76,21 @@ function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function PopoverTitle({ className, ...props }: React.ComponentProps<"h2">) {
+function PopoverTitle({ className, id, ...props }: React.ComponentProps<"h2">) {
+  const context = React.useContext(PopoverTitleIdContext)
+  const resolvedId = id ?? context?.generatedId
+  const registerTitle = context?.registerTitle
+
+  React.useEffect(() => {
+    if (!registerTitle || !resolvedId) return
+    registerTitle(resolvedId)
+    return () => registerTitle(null)
+  }, [registerTitle, resolvedId])
+
   return (
     <div
       data-slot="popover-title"
+      id={resolvedId}
       className={cn("font-medium", className)}
       {...props}
     />

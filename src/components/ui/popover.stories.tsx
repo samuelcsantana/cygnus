@@ -18,7 +18,11 @@ const meta = {
       description: {
         component:
           'Anchored overlay for secondary detail. Also the container behind the date picker field, ' +
-          'which mounts a `Calendar` inside it.',
+          'which mounts a `Calendar` inside it.\n\n' +
+          '`PopoverContent` is a `role="dialog"`, so it owes an accessible name. Radix wires ' +
+          '`DialogTitle` to its dialog automatically but does not do the same here, so this ' +
+          'component registers `PopoverTitle`\'s id through context and points `aria-labelledby` ' +
+          'at it — the call site gets the name for free instead of having to remember it.',
       },
     },
   },
@@ -33,12 +37,9 @@ export const Default: Story = {
       <PopoverTrigger asChild>
         <Button variant="outline">Por que esta vacina?</Button>
       </PopoverTrigger>
-      {/* PopoverContent is a role="dialog" and therefore needs an accessible
-          name. Radix does not wire PopoverTitle to it automatically the way
-          DialogTitle is wired, so the name has to be supplied at the call site. */}
-      <PopoverContent className="w-80" aria-labelledby="vaccine-popover-title">
+      <PopoverContent className="w-80">
         <PopoverHeader>
-          <PopoverTitle id="vaccine-popover-title">Tríplice Viral</PopoverTitle>
+          <PopoverTitle>Tríplice Viral</PopoverTitle>
           <PopoverDescription>
             Protege contra sarampo, caxumba e rubéola. Primeira dose aos 12 meses, segunda aos 15 meses,
             conforme o calendário nacional.
