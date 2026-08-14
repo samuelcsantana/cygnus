@@ -1,6 +1,6 @@
 # E2E tests (Playwright)
 
-Covers the critical end-user journeys named in `CLAUDE.md` Section 10:
+Covers the critical end-user journeys named in `AGENTS.md` Section 10:
 register + log in, add a baby, log a vaccine as applied, schedule an
 appointment. Everything else stays in Vitest/RTL component tests.
 

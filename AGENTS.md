@@ -1,6 +1,6 @@
-# CLAUDE.md - Frontend React Guidelines for "Meu Neném" (production domain TBD)
+# AGENTS.md - Frontend React Guidelines for "Meu Neném" (production domain TBD)
 
-This is the React frontend for the `cygnus-api` backend. This document mirrors the backend's `CLAUDE.md` conventions, adapted to a modern React + TypeScript stack.
+This is the React frontend for the `cygnus-api` backend. This document mirrors the backend's `AGENTS.md` conventions, adapted to a modern React + TypeScript stack.
 
 ## 0. What This Application Is
 

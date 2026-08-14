@@ -2,7 +2,7 @@
 
 Frontend React (Vite + TypeScript) do "Meu Neném" — app mobile-first que ajuda pais a acompanhar a saúde e o desenvolvimento dos filhos (vacinas, consultas e marcos de desenvolvimento).
 
-Consome a API `cygnus-api` (backend separado). Veja `CLAUDE.md` para as convenções completas de arquitetura, estilo e commits deste repositório.
+Consome a API `cygnus-api` (backend separado). Veja `AGENTS.md` para as convenções completas de arquitetura, estilo e commits deste repositório.
 
 ## Stack
 
