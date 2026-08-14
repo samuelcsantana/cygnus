@@ -68,7 +68,7 @@ export const VaccineStatus: Story = {
     docs: {
       description: {
         story:
-          'The three states a vaccine can be in. A parent scanning this list under stress should ' +
+          'The four states a vaccine can be in. A parent scanning this list under stress should ' +
           'not have to distinguish teal from amber to know what is overdue — the icon and the ' +
           'word carry the same information the color does.',
       },
@@ -87,6 +87,10 @@ export const VaccineStatus: Story = {
       <Badge className="bg-rose-50 text-rose-700">
         <AlertCircleIcon />
         Atrasada
+      </Badge>
+      <Badge className="bg-sky-50 text-sky-700">
+        <AlertCircleIcon />
+        Orientação
       </Badge>
     </div>
   ),
