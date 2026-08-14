@@ -149,7 +149,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  /* Meu Neném brand primary — CLAUDE.md Section 0 / DESIGN.md.
+  /* Meu Neném brand primary — AGENTS.md Section 0 / DESIGN.md.
      teal-700 (#186560), not the reference's literal teal-500 (#2A9D8F):
      --primary drives both white-on-fill (buttons) and fill-on-white (text
      links/eyebrows) contexts, and #2A9D8F fails WCAG AA (~3.3:1) in both —

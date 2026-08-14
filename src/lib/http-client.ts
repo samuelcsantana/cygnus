@@ -40,7 +40,7 @@ function isApiErrorBody(value: unknown): value is ApiErrorBody {
  * of each triggering their own POST /auth/refresh.
  *
  * Exported so non-JSON callers (e.g. lib/upload.ts) can apply the same
- * single-refresh-then-retry behavior instead of duplicating it (CLAUDE.md
+ * single-refresh-then-retry behavior instead of duplicating it (AGENTS.md
  * Section 6: this behavior must live in one place).
  */
 let refreshPromise: Promise<boolean> | null = null

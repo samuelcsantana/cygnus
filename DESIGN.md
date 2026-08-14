@@ -3,14 +3,14 @@
 Source of truth: `samuelcsantana/BabyCareAppDesign` (private GitHub repo, a
 Figma Make export — `src/App.tsx`). Cloned locally for reference at
 `D:\github\BabyCareAppDesign` during the redesign. Supersedes the original
-Figma file + the `#0f5653` teal documented previously in `CLAUDE.md` Section
+Figma file + the `#0f5653` teal documented previously in `AGENTS.md` Section
 0; the Figma file is still the reference for any screen this repo's
 `App.tsx` doesn't cover.
 
 All values below are already wired into `src/index.css`'s `@theme` block —
 this file exists so future screens can be built by copying class names
 directly instead of re-deriving hex values from the reference by eye (see
-`CLAUDE.md` Section 0's note on why that went wrong the first time).
+`AGENTS.md` Section 0's note on why that went wrong the first time).
 
 ## Color
 
