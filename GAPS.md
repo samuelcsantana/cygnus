@@ -40,6 +40,19 @@ Severidade usa a mesma escala do checklist existente:
 - [x] 🟢 **Borda de vacina `DELAYED` usa a cor de `PENDING`** — `VaccineCalendarList.tsx:103` corrigido para `border-rose-100`.
 - [x] 🟢 **Diálogos sem proteção de altura consistente** — `max-h-[85vh] overflow-y-auto` padronizado em `RescheduleDialog.tsx`, `AppointmentDetailDialog.tsx`, `DeleteAccountDialog.tsx` (`AddAppointmentDialog.tsx` já tinha).
 
+- [ ] 🟡 **Contraste de tokens abaixo de AA (3 pares)** — encontrado pela suíte de acessibilidade do Storybook (axe rodando em cada story, 2026-08-14). São dívidas anteriores ao Storybook, não regressões:
+  - `--color-ink-faint` (`#9aa5b4`) sobre branco → **2,49:1** (mínimo AA para texto normal: 4,5:1). É o pior caso e o mais espalhado: 25 usos em código de app, sempre como texto secundário pequeno (10-12px) — `StepIndicator`, `WelcomeDashboard`, `AppointmentCard`, `FamilyStrip`.
+  - `--destructive` sobre `destructive/10` (`#e7000b` sobre `#fde5e7`) → **3,98:1**. Afeta a variante `destructive` de `Button` e `Badge`, o `AlertDialog` de confirmação e o toast de erro.
+  - `muted-foreground` sobre `muted` (`#737373` sobre `#f5f5f5`) → **4,34:1**. Falta pouco; afeta `AvatarGroupCount` e superfícies `muted` com texto normal.
+
+  Corrigir exige mexer em token de marca (o `DESIGN.md` os traz do Figma), então é **decisão de design, não refactor** — por isso ficou em aberto. Enquanto isso, a regra `color-contrast` do axe está desligada **apenas** nas stories que expõem esses três pares, via `src/test/a11y-known-issues.ts`; todas as outras regras seguem valendo nelas, e todas as outras stories seguem cobradas em `color-contrast`. Ao corrigir um token, apagar a exceção correspondente: a suíte passa a provar a correção em vez de confiar nela.
+
+- [ ] 🟡 **Tokens `ink`/`ink-muted`/`ink-faint` não invertem no dark mode** — são hex fixos no `@theme`, sem contraparte em `.dark`. Visível no Storybook alternando o tema: texto secundário de card (`text-ink-muted`, `#5A6478`) sobre superfície escura fica bem abaixo de AA. A suíte axe roda hoje só no tema claro, então **não** cobre isso — rodar as stories também em dark é o próximo passo natural, e provavelmente revela mais casos.
+
+- [ ] 🟢 **`RadioGroup`: seleção não acompanha o foco** — as setas movem o foco entre as opções (roving tabindex funciona), mas não marcam a opção; é preciso `Space`. O padrão WAI-ARIA de radio group recomenda que a seleção acompanhe o foco. Nada fica inalcançável por teclado — é uma tecla a mais, não uma barreira. Documentado e coberto por teste de interação em `radio-group.stories.tsx`.
+
+- [ ] 🟢 **`PopoverContent` não tem nome acessível automático** — é `role="dialog"`, mas o Radix não liga `PopoverTitle` a ele como faz com `DialogTitle`, então cada uso precisa passar `aria-labelledby` na mão (axe: `aria-dialog-name`). Hoje é responsabilidade do call site; valeria embutir no componente.
+
 **Verificado e sem problema:** i18n com as mesmas 410 chaves nos 3 locales, sem faltas/sobras; nenhum `<table>` no código; status de vacina/marco sempre combina cor com ícone/texto; estados de erro distintos do skeleton nas 5 rotas principais.
 
 **Precisa verificação manual (não testável só lendo código):** focus trap/retorno de foco em diálogos Radix; anúncio real de toasts via leitor de tela; quebra de layout em zoom 200%/fonte grande do SO.
