@@ -137,12 +137,18 @@ parent learns the mapping once.
 | Vaccine `APPLIED` / Appointment `COMPLETED` | teal |
 | Vaccine `PENDING` | amber |
 | Vaccine `DELAYED` | rose |
+| Vaccine `GUIDANCE` | sky (stock Tailwind — see below) |
 | Appointment `SCHEDULED` | violet |
 | Milestone `MOTOR` | teal |
 | Milestone `LANGUAGE` | violet |
 | Milestone `SOCIAL` | amber |
 | Milestone `COGNITIVE` | rose |
 | Cancelled / `OTHER` | neutral slate |
+
+`sky` is the one accent outside the brand palette: it marks catalogue *guidance* rather than a dose a
+child owes, and reusing teal or amber for that would have collided with "done" and "pending". It is
+not pinned in `@theme`, so it resolves to stock Tailwind. Its 700/800/900 steps are the ones in use
+(5.6:1 to 9.1:1 on the tinted grounds) — the same 600-step trap the other families have applies here.
 
 ## Typography
 

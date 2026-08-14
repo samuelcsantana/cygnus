@@ -15,6 +15,8 @@ import type {
   ApplyVaccineInput,
   CreateAdhocVaccineInput,
   VaccineAgeGroup,
+  VaccineCalendar,
+  VaccineCatalogMetadata,
   VaccineItem,
 } from './vaccines.schemas'
 
@@ -44,6 +46,7 @@ export interface BabyVaccineCalendarEntry {
 
 export interface AllBabiesVaccineCalendars {
   babies: Baby[]
+  metadata: VaccineCatalogMetadata | null
   isPending: boolean
   isError: boolean
   isEmpty: boolean
@@ -68,7 +71,7 @@ export function useAllBabiesVaccineCalendars(): AllBabiesVaccineCalendars {
 
   const perBaby: BabyVaccineCalendarEntry[] = babyList.map((baby, index) => {
     const result = results[index]
-    const groups = result?.data ?? []
+    const groups = result?.data?.groups ?? []
     return {
       baby,
       groups,
@@ -80,6 +83,7 @@ export function useAllBabiesVaccineCalendars(): AllBabiesVaccineCalendars {
 
   return {
     babies: babyList,
+    metadata: results.find((result) => result.data)?.data?.metadata ?? null,
     isPending: babies.isPending || (babies.isSuccess && results.some((result) => result.isPending)),
     isError: babies.isError || results.some((result) => result.isError),
     isEmpty: babies.isSuccess && babyList.length === 0,
@@ -99,11 +103,16 @@ export function useApplyVaccine(babyId: string | null) {
   return useMutation({
     mutationFn: ({ vaccineId, input }: ApplyVaccineVariables) => applyVaccine(babyId!, vaccineId, input),
     onSuccess: (updatedItem) => {
-      queryClient.setQueryData<VaccineAgeGroup[]>(vaccinesQueryKey(babyId ?? ''), (prev) =>
-        prev?.map((group) => ({
-          ...group,
-          items: group.items.map((item) => (item.vaccineId === updatedItem.vaccineId ? updatedItem : item)),
-        })),
+      queryClient.setQueryData<VaccineCalendar>(vaccinesQueryKey(babyId ?? ''), (prev) =>
+        prev
+          ? {
+              ...prev,
+              groups: prev.groups.map((group) => ({
+                ...group,
+                items: group.items.map((item) => (item.vaccineId === updatedItem.vaccineId ? updatedItem : item)),
+              })),
+            }
+          : prev,
       )
     },
   })
