@@ -257,7 +257,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
                         <span
                           className={cn(
                             'flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] text-sm font-extrabold',
-                            item.status === 'DELAYED' ? 'bg-rose-50 text-rose-500' : 'bg-amber-50 text-amber-500',
+                            item.status === 'DELAYED' ? 'bg-rose-50 text-rose-700' : 'bg-amber-50 text-amber-700',
                           )}
                         >
                           {item.status === 'DELAYED' ? '!' : '○'}

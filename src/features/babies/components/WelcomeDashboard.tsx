@@ -45,8 +45,8 @@ interface StepItem {
 }
 
 const VACCINE_STATUS_STYLE: Record<PreviewVaccineItem['status'], { bg: string; text: string; symbol: string }> = {
-  taken: { bg: 'bg-teal-50', text: 'text-teal-600', symbol: '✓' },
-  overdue: { bg: 'bg-rose-50', text: 'text-rose-600', symbol: '!' },
+  taken: { bg: 'bg-teal-50', text: 'text-teal-700', symbol: '✓' },
+  overdue: { bg: 'bg-rose-50', text: 'text-rose-700', symbol: '!' },
   pending: { bg: 'bg-amber-50', text: 'text-amber-700', symbol: '○' },
 }
 
@@ -176,7 +176,7 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
               )
             })}
             <div className="mt-0.5 flex items-center gap-2 rounded-lg bg-surface px-2.5 py-2">
-              <SparkleIcon className="h-3.5 w-3.5 flex-shrink-0 text-amber-500" />
+              <SparkleIcon className="h-3.5 w-3.5 flex-shrink-0 text-amber-700" />
               <p className="text-[11px] text-ink-muted">{t('babies.dashboard.previewMilestones.footerNote')}</p>
             </div>
           </div>

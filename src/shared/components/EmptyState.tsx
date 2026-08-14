@@ -8,7 +8,9 @@ const TONE_CLASSES: Record<EmptyStateTone, string> = {
   slate: 'bg-slate-50 text-ink-faint',
   teal: 'bg-teal-50 text-teal-600',
   violet: 'bg-violet-50 text-violet-600',
-  amber: 'bg-amber-50 text-amber-600',
+  // amber-600 on amber-50 is 2.93:1 — under the 3:1 floor icons owe as
+  // non-text content. The other tones already clear it.
+  amber: 'bg-amber-50 text-amber-700',
   rose: 'bg-rose-50 text-rose-500',
 }
 
