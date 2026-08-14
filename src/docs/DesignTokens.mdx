@@ -58,13 +58,23 @@ headings. It deliberately avoids the cold clinical look of most health apps — 
     }}
   />
   <ColorItem
-    title="surface / ink"
-    subtitle="App shell background and the three text levels."
+    title="surface / ink — light"
+    subtitle="App shell background and the three text levels. ink-faint is #5F6E81, not the reference's #9AA5B4 — see the deviations table below."
     colors={{
       surface: '#F6F7F4',
       ink: '#1A2332',
       'ink-muted': '#5A6478',
-      'ink-faint': '#9AA5B4',
+      'ink-faint': '#5F6E81',
+    }}
+  />
+  <ColorItem
+    title="surface / ink — dark"
+    subtitle="The same four redefined under .dark, since fixed hex values do not invert on their own."
+    colors={{
+      surface: '#131313',
+      ink: '#F2F5F9',
+      'ink-muted': '#AAB4C4',
+      'ink-faint': '#8B95A5',
     }}
   />
 </ColorPalette>
