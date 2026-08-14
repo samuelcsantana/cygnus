@@ -40,18 +40,25 @@ Severidade usa a mesma escala do checklist existente:
 - [x] 🟢 **Borda de vacina `DELAYED` usa a cor de `PENDING`** — `VaccineCalendarList.tsx:103` corrigido para `border-rose-100`.
 - [x] 🟢 **Diálogos sem proteção de altura consistente** — `max-h-[85vh] overflow-y-auto` padronizado em `RescheduleDialog.tsx`, `AppointmentDetailDialog.tsx`, `DeleteAccountDialog.tsx` (`AddAppointmentDialog.tsx` já tinha).
 
-- [ ] 🟡 **Contraste de tokens abaixo de AA (3 pares)** — encontrado pela suíte de acessibilidade do Storybook (axe rodando em cada story, 2026-08-14). São dívidas anteriores ao Storybook, não regressões:
-  - `--color-ink-faint` (`#9aa5b4`) sobre branco → **2,49:1** (mínimo AA para texto normal: 4,5:1). É o pior caso e o mais espalhado: 25 usos em código de app, sempre como texto secundário pequeno (10-12px) — `StepIndicator`, `WelcomeDashboard`, `AppointmentCard`, `FamilyStrip`.
-  - `--destructive` sobre `destructive/10` (`#e7000b` sobre `#fde5e7`) → **3,98:1**. Afeta a variante `destructive` de `Button` e `Badge`, o `AlertDialog` de confirmação e o toast de erro.
-  - `muted-foreground` sobre `muted` (`#737373` sobre `#f5f5f5`) → **4,34:1**. Falta pouco; afeta `AvatarGroupCount` e superfícies `muted` com texto normal.
+- [x] 🟡 **Contraste de tokens abaixo de AA (3 pares)** — encontrado pela suíte de acessibilidade do Storybook (axe rodando em cada story, 2026-08-14) e **corrigido no mesmo dia**. Eram dívidas anteriores ao Storybook, não regressões:
+  - `--color-ink-faint` `#9AA5B4` → `#5F6E81`. Era **2,49:1** sobre branco; agora ≥4,75:1 em todos os fundos em que é realmente pintado (branco, `--color-surface`, `slate-50`, `slate-100`). Efeito colateral registrado: comprime a base da escala `ink` — `ink-muted` e `ink-faint` ficam mais próximos do que a referência pretendia.
+  - `--destructive` `oklch(0.577 …)` → `oklch(0.529 …)`. Era **3,98:1** como texto sobre o próprio tint de 10%; agora 4,77:1 no tint e 6,04:1 sobre branco.
+  - `--muted-foreground` `oklch(0.556 …)` → `oklch(0.532 …)`. Era **4,34:1** sobre `--muted`; agora 4,80:1.
 
-  Corrigir exige mexer em token de marca (o `DESIGN.md` os traz do Figma), então é **decisão de design, não refactor** — por isso ficou em aberto. Enquanto isso, a regra `color-contrast` do axe está desligada **apenas** nas stories que expõem esses três pares, via `src/test/a11y-known-issues.ts`; todas as outras regras seguem valendo nelas, e todas as outras stories seguem cobradas em `color-contrast`. Ao corrigir um token, apagar a exceção correspondente: a suíte passa a provar a correção em vez de confiar nela.
+  Segue a mesma decisão (e o mesmo motivo) já registrada para `--primary`, que a referência do Figma define como teal-500 e o app usa em teal-700. Cada desvio está comentado no ponto de definição em `src/index.css` e tabelado no `DESIGN.md`.
 
-- [ ] 🟡 **Tokens `ink`/`ink-muted`/`ink-faint` não invertem no dark mode** — são hex fixos no `@theme`, sem contraparte em `.dark`. Visível no Storybook alternando o tema: texto secundário de card (`text-ink-muted`, `#5A6478`) sobre superfície escura fica bem abaixo de AA. A suíte axe roda hoje só no tema claro, então **não** cobre isso — rodar as stories também em dark é o próximo passo natural, e provavelmente revela mais casos.
+- [x] 🟡 **Uso de shades claros (400/500) como texto e como ícone** — mesma classe de bug, encontrada na varredura que veio junto. Glifos de status (`✓`/`!`/`○`) são **texto**, então devem 4,5:1, não os 3:1 de conteúdo não-textual:
+  - `VaccineCalendarList.STATUS_ICON_CLASS` e `RegisterVaccineDialog` — `teal-600`/`rose-500`/`amber-500` sobre o próprio tint 50 (4,09 / 3,50 / 2,45) → shades 700.
+  - `WelcomeDashboard.VACCINE_STATUS_STYLE` — `teal-600`/`rose-600` (4,09 / 4,31) → 700.
+  - Ícones abaixo de 3:1: `DashboardRoute` (`amber-500` sobre `amber-50`, 2,45), `InviteRedeemRoute` e `WelcomeDashboard` (`amber-500` sobre branco/surface, 2,68 / 2,49), `EmptyState` tone amber (`amber-600` sobre `amber-50`, 2,93) → `amber-700`.
 
-- [ ] 🟢 **`RadioGroup`: seleção não acompanha o foco** — as setas movem o foco entre as opções (roving tabindex funciona), mas não marcam a opção; é preciso `Space`. O padrão WAI-ARIA de radio group recomenda que a seleção acompanhe o foco. Nada fica inalcançável por teclado — é uma tecla a mais, não uma barreira. Documentado e coberto por teste de interação em `radio-group.stories.tsx`.
+  `VaccineStatusBadge` — o badge que o usuário de fato lê — já usava os shades 700 corretos.
 
-- [ ] 🟢 **`PopoverContent` não tem nome acessível automático** — é `role="dialog"`, mas o Radix não liga `PopoverTitle` a ele como faz com `DialogTitle`, então cada uso precisa passar `aria-labelledby` na mão (axe: `aria-dialog-name`). Hoje é responsabilidade do call site; valeria embutir no componente.
+- [x] 🟡 **Tokens `ink`/`surface` não invertiam no dark mode** — eram hex fixos no `@theme`, sem contraparte em `.dark`, então `bg-surface` renderizava uma laje quase branca no tema escuro e `text-ink-muted` (`#5A6478`) ficava muito abaixo de AA sobre card escuro. Adicionados overrides em `.dark` medidos contra `--card`: `ink` 16,4:1, `ink-muted` 8,6:1, `ink-faint` 5,9:1, `surface` `oklch(0.185 0 0)`. A suíte agora tem stories fixadas em `globals: { theme: 'dark' }`, então o axe cobre os dois temas — antes só via o claro, que foi exatamente como esses tokens chegaram até aqui.
+
+- [x] 🟢 **`PopoverContent` não tinha nome acessível automático** — é `role="dialog"`, e o Radix não liga `PopoverTitle` a ele como faz com `DialogTitle` (axe: `aria-dialog-name`). Resolvido **no componente**, não em cada uso: `PopoverTitle` registra seu id via contexto e `PopoverContent` aponta `aria-labelledby` para ele. Um popover sem título continua caindo no `aria-label` do call site, como antes.
+
+- [ ] 🟢 **`RadioGroup`: seleção não acompanha o foco** — as setas movem o foco entre as opções (roving tabindex funciona), mas não marcam a opção; é preciso `Space`. O padrão WAI-ARIA de radio group recomenda que a seleção acompanhe o foco. Nada fica inalcançável por teclado — é uma tecla a mais, não uma barreira. Comportamento do Radix, não do app: mudar exigiria contornar o primitivo. Documentado e coberto por teste de interação em `radio-group.stories.tsx`.
 
 **Verificado e sem problema:** i18n com as mesmas 410 chaves nos 3 locales, sem faltas/sobras; nenhum `<table>` no código; status de vacina/marco sempre combina cor com ícone/texto; estados de erro distintos do skeleton nas 5 rotas principais.
 

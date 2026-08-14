@@ -16,8 +16,10 @@ Three things, in order of how much work they save:
 
 1. **It is the accessibility suite.** Every story runs through axe on each build. A violation fails
    the run rather than sitting in a panel — `parameters.a11y.test` is set to `error` in
-   `.storybook/preview.tsx`. The handful of known token-level exceptions are enumerated, one by one,
-   in `src/test/a11y-known-issues.ts`, and each is tracked in `GAPS.md`.
+   `.storybook/preview.tsx` — and there are no standing exceptions. Setting it up immediately paid
+   for itself: it found four token pairs below the WCAG thresholds, a `role="dialog"` shipping with
+   no accessible name, and an `ink` scale with no dark-mode counterpart. All are fixed; the suite is
+   what keeps them fixed.
 2. **It is where interactive behaviour is pinned down.** Stories with a `play` function are real
    tests: they open dialogs, tab through radio groups, type into fields and assert the result. They
    run headless in CI via `npm run test:storybook`, so a regression in focus handling or keyboard

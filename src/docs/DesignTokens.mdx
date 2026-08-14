@@ -93,20 +93,29 @@ step; the `400`/`500` steps are for fills, borders and decoration.**
   </div>
 </Unstyled>
 
-### Known contrast debt
+### Where the tokens deviate from the Figma reference
 
-Three pairs currently sit below the AA 4.5:1 threshold for normal text. They are pre-existing, found
-by this Storybook's own axe suite, and tracked in `GAPS.md`:
+Four values are deliberately not the reference's. Each was below a WCAG threshold, each was caught
+by this Storybook's own axe suite, and each is commented at the point of definition in
+`src/index.css`:
 
-| Pair | Ratio | Where it shows |
-| --- | --- | --- |
-| `ink-faint` on white | 2.49:1 | Small secondary text — `StepIndicator`, dashboard previews, card footnotes |
-| `destructive` on `destructive/10` | 3.98:1 | Destructive `Button`/`Badge`, confirmation dialogs, error toasts |
-| `muted-foreground` on `muted` | 4.34:1 | `AvatarGroupCount` and other muted surfaces |
+| Token | Reference | Shipped | Why |
+| --- | --- | --- | --- |
+| `--primary` | `#2A9D8F` (teal-500) | `#186560` (teal-700) | 3.3:1 — predates this Storybook |
+| `--color-ink-faint` | `#9AA5B4` | `#5F6E81` | 2.49:1 on white, used as 10–12px copy in 25 places |
+| `--destructive` | `oklch(0.577 …)` | `oklch(0.529 …)` | 3.98:1 as text on its own 10% tint |
+| `--muted-foreground` | `oklch(0.556 …)` | `oklch(0.532 …)` | 4.34:1 on `--muted` |
 
-Fixing them means changing brand tokens sourced from Figma, so it is a design decision rather than a
-refactor. Until then the `color-contrast` axe rule is disabled on exactly the stories that expose
-these three pairs — see `src/test/a11y-known-issues.ts` — and nowhere else.
+Darkening `ink-faint` compresses the bottom of the ink scale — `ink-muted` and `ink-faint` now read
+closer together than the reference intended. That is the cost of the token being legible at all, and
+it is a trade worth naming rather than hiding.
+
+The `ink` scale and `surface` are fixed hex values, so they do not invert on their own. They are
+redefined under `.dark` with ratios measured against `--card`, the darkest surface they land on:
+`ink` 16.4:1, `ink-muted` 8.6:1, `ink-faint` 5.9:1.
+
+There are **no** standing exceptions in the a11y suite: every story is checked with
+`color-contrast` enabled, in both themes.
 
 ## Per-feature color map
 
