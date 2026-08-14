@@ -45,7 +45,17 @@
   --color-surface: #f6f7f4;
   --color-ink: #1a2332;
   --color-ink-muted: #5a6478;
-  --color-ink-faint: #9aa5b4;
+  /* Tertiary text. #5F6E81, not the reference's literal #9AA5B4: that value
+     lands at 2.49:1 on white, well under the WCAG AA 4.5:1 floor for normal
+     text, and it is used as small (10-12px) secondary copy in 25 places. Same
+     call, and same reason, as --primary below. #5F6E81 clears 4.5:1 on every
+     background it is actually painted on (white, --color-surface, slate-50,
+     slate-100 — worst case 4.75:1).
+
+     Consequence worth knowing: this compresses the ink scale at the bottom, so
+     `ink-muted` and `ink-faint` now read closer together than the reference
+     intended. That is the cost of the token being legible at all. */
+  --color-ink-faint: #5f6e81;
 }
 
 @layer base {
@@ -151,10 +161,15 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  /* Darkened from shadcn's stock 0.556: that renders #737373, which is 4.34:1
+     on --muted (#F5F5F5) — just under AA. 0.532 gives 4.80:1. */
+  --muted-foreground: oklch(0.532 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
+  /* Darkened from shadcn's stock 0.577. This token is used as *text* on a 10%
+     tint of itself (Button/Badge `destructive`), and at 0.577 that pairing is
+     3.98:1. At 0.529 it is 4.77:1 on the tint and 6.04:1 on white. */
+  --destructive: oklch(0.529 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: #2a9d8f;
@@ -175,6 +190,16 @@
 }
 
 .dark {
+  /* The brand scale in @theme is light-mode-only: `surface` and the three
+     `ink` steps are fixed hex values, so without these overrides `bg-surface`
+     stayed a near-white slab in dark mode and `text-ink-muted` (#5A6478) sat
+     far below AA on a dark card. Ratios below are against --card (oklch .205),
+     the darkest surface these are painted on. */
+  --color-surface: oklch(0.185 0 0);
+  --color-ink: #f2f5f9; /* 16.4:1 */
+  --color-ink-muted: #aab4c4; /* 8.6:1 */
+  --color-ink-faint: #8b95a5; /* 5.9:1 */
+
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
