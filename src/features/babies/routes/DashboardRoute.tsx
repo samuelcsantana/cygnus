@@ -113,7 +113,7 @@ export function DashboardRoute() {
           label={t('babies.dashboard.statMilestonesLabel')}
           value={`${milestones.items.length}`}
           sub={t('babies.dashboard.statMilestonesSub')}
-          iconClassName="bg-amber-50 text-amber-500"
+          iconClassName="bg-amber-50 text-amber-700"
         />
         <StatCard
           icon={<HeartIcon className="h-5 w-5" />}

@@ -1,0 +1,57 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Design System/Introduction" />
+
+# Meu Neném — Design System
+
+The component library behind **Meu Neném**, a mobile-first app that helps parents track a child's
+vaccines, pediatric appointments and developmental milestones.
+
+This Storybook is the living documentation for that library: the primitives in `src/components/ui`
+(shadcn/ui sources, customised in place) and the composed components in `src/shared/components`.
+
+## What this Storybook is actually for
+
+Three things, in order of how much work they save:
+
+1. **It is the accessibility suite.** Every story runs through axe on each build. A violation fails
+   the run rather than sitting in a panel — `parameters.a11y.test` is set to `error` in
+   `.storybook/preview.tsx` — and there are no standing exceptions. Setting it up immediately paid
+   for itself: it found four token pairs below the WCAG thresholds, a `role="dialog"` shipping with
+   no accessible name, and an `ink` scale with no dark-mode counterpart. All are fixed; the suite is
+   what keeps them fixed.
+2. **It is where interactive behaviour is pinned down.** Stories with a `play` function are real
+   tests: they open dialogs, tab through radio groups, type into fields and assert the result. They
+   run headless in CI via `npm run test:storybook`, so a regression in focus handling or keyboard
+   navigation breaks the build.
+3. **It is the state catalogue.** Loading, error, empty and disabled are documented as first-class
+   stories, not left as something each screen improvises. `EmptyState` and `NoSearchResults` are
+   separate components for exactly that reason.
+
+## Conventions worth knowing before reading the stories
+
+**No hardcoded user-facing text.** Every string a parent reads comes from `src/locales/*.json` in
+pt-BR, English and Spanish. Use the 🌐 toolbar control to switch locale and confirm a component holds
+up — several stories are there specifically to be looked at in all three.
+
+**Light and dark are both real.** The theme switcher in the toolbar toggles the `dark` class on
+`<html>`, which is the same mechanism `ThemeProvider` uses in the app. A component that only works in
+one theme is a bug, not a variant.
+
+**Color never carries meaning alone.** Vaccine and appointment status always pair a color with an
+icon and a word. A parent checking whether a dose is overdue should not have to distinguish amber
+from rose to find out.
+
+**Touch targets have a floor.** This app is used one-handed on a phone. Icon-only primary actions in
+dense lists use the `icon-touch` button size, which meets the WCAG 2.5.5 44×44 minimum even where the
+icon itself is drawn smaller.
+
+## Running it
+
+```bash
+npm run storybook        # dev server on :6006
+npm run build-storybook  # static build
+npm run test:storybook   # every story as a test, headless Chromium
+```
+
+The test command needs a browser once: `npx playwright install chromium`.

@@ -30,3 +30,27 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # Runs every story as a test in a real headless Chromium: render smoke tests,
+  # the `play` function assertions, and axe on each story. Kept as its own job
+  # because it needs a browser download the jsdom suite above does not.
+  storybook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Test stories (interaction + accessibility)
+        run: npm run test:storybook
+
+      - name: Build Storybook
+        run: npm run build-storybook

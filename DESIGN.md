@@ -36,7 +36,33 @@ directly instead of re-deriving hex values from the reference by eye (see
 | `surface` | `#F6F7F4` | App shell page background |
 | `ink` | `#1A2332` | Primary text |
 | `ink-muted` | `#5A6478` | Secondary text |
-| `ink-faint` | `#9AA5B4` | Tertiary/placeholder text |
+| `ink-faint` | `#5F6E81` | Tertiary/placeholder text (**not** the reference's `#9AA5B4` — see below) |
+
+### Contrast deviations from the reference
+
+Four tokens deliberately do not match the reference. Each was measured below a
+WCAG threshold and each is commented at its point of definition in
+`src/index.css`. The Storybook accessibility suite (axe on every story, both
+themes, no standing exceptions) is what found three of them and is what keeps
+all four from regressing.
+
+| Token | Reference | Shipped | Measured problem |
+|---|---|---|---|
+| `--primary` | `#2A9D8F` teal-500 | `#186560` teal-700 | ~3.3:1 both as fill and as text |
+| `--color-ink-faint` | `#9AA5B4` | `#5F6E81` | 2.49:1 on white, used as 10–12px copy in 25 places |
+| `--destructive` | `oklch(0.577 0.245 27.325)` | `oklch(0.529 …)` | 3.98:1 as text on its own 10% tint |
+| `--muted-foreground` | `oklch(0.556 0 0)` | `oklch(0.532 0 0)` | 4.34:1 on `--muted` |
+
+Darkening `ink-faint` compresses the bottom of the ink scale: `ink-muted` and
+`ink-faint` now read closer together than the reference intended. Accepted
+deliberately — the alternative is a tertiary text level that cannot be read.
+
+### Dark mode
+
+`surface` and the three `ink` steps are fixed hex values, so they do not invert
+on their own; `.dark` in `src/index.css` redefines all four. Ratios are measured
+against `--card` (the darkest surface they are painted on): `ink` 16.4:1,
+`ink-muted` 8.6:1, `ink-faint` 5.9:1.
 
 Darker text-safe shades (`teal-800`+ excepted — see below; `amber-600/700`,
 `rose-600/700`, `violet-600/700`, etc.) are **not** overridden — they

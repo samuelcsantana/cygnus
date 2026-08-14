@@ -67,7 +67,7 @@ export function InviteRedeemRoute() {
         </div>
       ) : preview.data.expired || preview.data.alreadyUsed ? (
         <div className="max-w-md">
-          <AlertCircleIcon className="text-amber-500 mx-auto mb-4 h-10 w-10" />
+          <AlertCircleIcon className="text-amber-700 mx-auto mb-4 h-10 w-10" />
           <h1 className="text-2xl font-bold text-ink">
             {preview.data.expired ? t('invites.redeem.expiredTitle') : t('invites.redeem.alreadyUsedTitle')}
           </h1>

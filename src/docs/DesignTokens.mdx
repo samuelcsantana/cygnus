@@ -1,0 +1,180 @@
+import { ColorItem, ColorPalette, Meta, Typeset, Unstyled } from '@storybook/addon-docs/blocks'
+
+<Meta title="Design System/Design Tokens" />
+
+# Design Tokens
+
+Every value below is wired into the `@theme` block in `src/index.css`, which is what makes
+`bg-teal-500`, `text-ink-muted` and `rounded-2xl` resolve. The committed source of truth is
+[`DESIGN.md`](https://github.com/samuelcsantana/cygnus/blob/main/DESIGN.md); this page renders the
+same values so they can be seen rather than read as hex codes.
+
+The brand language is "soft-modern": teal primary, warm neutral surfaces, generous radii, Nunito for
+headings. It deliberately avoids the cold clinical look of most health apps — a parent opens this at
+3am, not a clinician at a workstation.
+
+## Brand palette
+
+<ColorPalette>
+  <ColorItem
+    title="teal"
+    subtitle="Primary brand — --primary, --ring. Also the 'done' state: applied vaccines, completed appointments."
+    colors={{
+      50: '#E8F5F3',
+      100: '#C7E9E4',
+      200: '#8ED3CA',
+      400: '#43BAB0',
+      500: '#2A9D8F',
+      600: '#21837A',
+      700: '#186560',
+    }}
+  />
+  <ColorItem
+    title="amber"
+    subtitle="Pending vaccines, social milestones."
+    colors={{
+      50: '#FEF3E8',
+      100: '#FDDDB8',
+      400: '#F4A261',
+      500: '#E8853A',
+    }}
+  />
+  <ColorItem
+    title="rose"
+    subtitle="Delayed vaccines, alerts, cognitive milestones."
+    colors={{
+      50: '#FEF0F1',
+      400: '#E8727A',
+      500: '#D95560',
+    }}
+  />
+  <ColorItem
+    title="violet"
+    subtitle="Scheduled appointments, language milestones."
+    colors={{
+      50: '#F0EEFF',
+      400: '#8B80F9',
+      500: '#6C63FF',
+    }}
+  />
+  <ColorItem
+    title="surface / ink"
+    subtitle="App shell background and the three text levels."
+    colors={{
+      surface: '#F6F7F4',
+      ink: '#1A2332',
+      'ink-muted': '#5A6478',
+      'ink-faint': '#9AA5B4',
+    }}
+  />
+</ColorPalette>
+
+### Which shade is a text color
+
+Only the light and decorative shades are pinned to the reference. The darker `600`/`700` steps of
+amber, rose and violet are **not** overridden — they fall through to stock Tailwind, which is dark
+enough to stay readable.
+
+That distinction is load-bearing: the original design reference uses shades like `amber-400` and
+`amber-500` as text on light backgrounds, and those fail WCAG AA. **Status text uses the `600`/`700`
+step; the `400`/`500` steps are for fills, borders and decoration.**
+
+<Unstyled>
+  <div className="flex flex-wrap items-center gap-3 py-2">
+    <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-teal-700">
+      ✓ Aplicada — teal-700 on teal-50
+    </span>
+    <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
+      ◷ Pendente — amber-700 on amber-50
+    </span>
+    <span className="rounded-full bg-rose-50 px-3 py-1 text-xs font-medium text-rose-700">
+      ! Atrasada — rose-700 on rose-50
+    </span>
+  </div>
+</Unstyled>
+
+### Where the tokens deviate from the Figma reference
+
+Four values are deliberately not the reference's. Each was below a WCAG threshold, each was caught
+by this Storybook's own axe suite, and each is commented at the point of definition in
+`src/index.css`:
+
+| Token | Reference | Shipped | Why |
+| --- | --- | --- | --- |
+| `--primary` | `#2A9D8F` (teal-500) | `#186560` (teal-700) | 3.3:1 — predates this Storybook |
+| `--color-ink-faint` | `#9AA5B4` | `#5F6E81` | 2.49:1 on white, used as 10–12px copy in 25 places |
+| `--destructive` | `oklch(0.577 …)` | `oklch(0.529 …)` | 3.98:1 as text on its own 10% tint |
+| `--muted-foreground` | `oklch(0.556 …)` | `oklch(0.532 …)` | 4.34:1 on `--muted` |
+
+Darkening `ink-faint` compresses the bottom of the ink scale — `ink-muted` and `ink-faint` now read
+closer together than the reference intended. That is the cost of the token being legible at all, and
+it is a trade worth naming rather than hiding.
+
+The `ink` scale and `surface` are fixed hex values, so they do not invert on their own. They are
+redefined under `.dark` with ratios measured against `--card`, the darkest surface they land on:
+`ink` 16.4:1, `ink-muted` 8.6:1, `ink-faint` 5.9:1.
+
+There are **no** standing exceptions in the a11y suite: every story is checked with
+`color-contrast` enabled, in both themes.
+
+## Per-feature color map
+
+Not one global accent: each concept is colored consistently across every screen it appears on, so a
+parent learns the mapping once.
+
+| Concept | Color |
+| --- | --- |
+| Vaccine `APPLIED` / Appointment `COMPLETED` | teal |
+| Vaccine `PENDING` | amber |
+| Vaccine `DELAYED` | rose |
+| Appointment `SCHEDULED` | violet |
+| Milestone `MOTOR` | teal |
+| Milestone `LANGUAGE` | violet |
+| Milestone `SOCIAL` | amber |
+| Milestone `COGNITIVE` | rose |
+| Cancelled / `OTHER` | neutral slate |
+
+## Typography
+
+Two self-hosted variable fonts, loaded through `@fontsource-variable` rather than a CDN — no
+third-party request on first paint, and no layout shift when it fails.
+
+<Typeset
+  fontFamily="'Nunito Variable', sans-serif"
+  fontSizes={[32, 24, 20, 18]}
+  fontWeight={800}
+  sampleText="Primeiros passos da Helena"
+/>
+
+**Headings** — Nunito Variable, weights 700–900, exposed as `font-display` / `--font-heading`.
+
+<Typeset
+  fontFamily="'Inter Variable', sans-serif"
+  fontSizes={[16, 14, 13, 12]}
+  sampleText="Tríplice viral, segunda dose, aplicada em 18 de março"
+/>
+
+**Body** — Inter Variable, exposed as `font-sans` and applied to `<body>`.
+
+## Radius
+
+Base `--radius` is `0.625rem` (10px); the rest of the scale derives from it. `--radius-2xl` lands on
+18px exactly, which is the card radius the design reference uses.
+
+<Unstyled>
+  <div className="flex flex-wrap items-end gap-4 py-2">
+    {[
+      ['rounded-sm', 'sm'],
+      ['rounded-md', 'md'],
+      ['rounded-lg', 'lg'],
+      ['rounded-xl', 'xl'],
+      ['rounded-2xl', '2xl'],
+      ['rounded-3xl', '3xl'],
+    ].map(([className, label]) => (
+      <div key={label} className="flex flex-col items-center gap-2">
+        <div className={`size-16 bg-teal-100 ring-1 ring-teal-200 ${className}`} />
+        <span className="text-ink-muted text-xs">{label}</span>
+      </div>
+    ))}
+  </div>
+</Unstyled>
