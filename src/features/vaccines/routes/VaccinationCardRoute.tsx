@@ -10,6 +10,7 @@ import { PrinterIcon } from '@/shared/icons/printer-icon'
 
 import { useAdhocVaccines, useVaccineCalendar } from '../api/vaccines.hooks'
 import type { VaccineStatus } from '../api/vaccines.schemas'
+import { VaccineCatalogNotice } from '../components/VaccineCatalogNotice'
 
 interface CardRow {
   key: string
@@ -23,6 +24,7 @@ const STATUS_BADGE_CLASS: Record<VaccineStatus, string> = {
   APPLIED: 'bg-teal-50 text-teal-700',
   DELAYED: 'bg-rose-50 text-rose-600',
   PENDING: 'bg-amber-50 text-amber-700',
+  GUIDANCE: 'bg-sky-50 text-sky-700',
 }
 
 /**
@@ -40,7 +42,7 @@ export function VaccinationCardRoute() {
   const calendar = useVaccineCalendar(babyId)
   const adhoc = useAdhocVaccines(babyId)
 
-  const catalogRows: CardRow[] = (calendar.data ?? []).flatMap((group) =>
+  const catalogRows: CardRow[] = (calendar.data?.groups ?? []).flatMap((group) =>
     group.items.map((item) => ({
       key: `catalog-${item.vaccineId}`,
       date: item.applicationDate,
@@ -138,11 +140,17 @@ export function VaccinationCardRoute() {
                     ? t('vaccines.status.applied', { date: row.date ? formatDateDisplay(row.date, i18n.language) : '' })
                     : row.status === 'DELAYED'
                       ? t('vaccines.status.delayed')
-                      : t('vaccines.status.pending')}
+                      : row.status === 'GUIDANCE'
+                        ? t('vaccines.status.guidance')
+                        : t('vaccines.status.pending')}
                 </span>
               </div>
             ))}
           </div>
+        )}
+
+        {calendar.data?.metadata && (
+          <VaccineCatalogNotice metadata={calendar.data.metadata} className="mt-6 print:border-slate-200 print:bg-white" />
         )}
       </div>
     </div>

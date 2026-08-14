@@ -1,7 +1,10 @@
 import { z } from 'zod'
 
-export const vaccineStatusSchema = z.enum(['PENDING', 'APPLIED', 'DELAYED'])
+export const vaccineStatusSchema = z.enum(['PENDING', 'APPLIED', 'DELAYED', 'GUIDANCE'])
 export type VaccineStatus = z.infer<typeof vaccineStatusSchema>
+
+export const vaccineRecommendationKindSchema = z.enum(['ROUTINE', 'CONDITIONAL', 'RECURRING'])
+export type VaccineRecommendationKind = z.infer<typeof vaccineRecommendationKindSchema>
 
 export const vaccineRecordSourceSchema = z.enum(['CATALOG', 'CAMPAIGN', 'CUSTOM'])
 export type VaccineRecordSource = z.infer<typeof vaccineRecordSourceSchema>
@@ -29,8 +32,10 @@ export const vaccineItemSchema = z.object({
   vaccineId: z.string().uuid(),
   name: z.string(),
   description: z.string(),
+  guidance: z.string().nullable(),
   doseNumber: z.number(),
   recommendedAgeInMonths: z.number(),
+  recommendationKind: vaccineRecommendationKindSchema,
   status: vaccineStatusSchema,
   applicationDate: z.string().nullable(),
   notes: z.string().nullable(),
@@ -47,7 +52,23 @@ export const vaccineAgeGroupSchema = z.object({
 })
 export type VaccineAgeGroup = z.infer<typeof vaccineAgeGroupSchema>
 
-export const vaccineCalendarSchema = z.array(vaccineAgeGroupSchema)
+export const vaccineCatalogMetadataSchema = z.object({
+  version: z.string(),
+  sourceName: z.string(),
+  sourceOrganization: z.string(),
+  sourceUrl: z.string().url(),
+  sourceUpdatedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  effectiveFrom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  minimumAgeInMonths: z.number().int().nonnegative(),
+  maximumAgeInMonths: z.number().int().nonnegative(),
+})
+export type VaccineCatalogMetadata = z.infer<typeof vaccineCatalogMetadataSchema>
+
+export const vaccineCalendarSchema = z.object({
+  metadata: vaccineCatalogMetadataSchema,
+  groups: z.array(vaccineAgeGroupSchema),
+})
+export type VaccineCalendar = z.infer<typeof vaccineCalendarSchema>
 
 export const applyVaccineSchema = z.object({
   applicationDate: z

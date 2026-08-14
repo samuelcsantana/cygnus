@@ -265,13 +265,21 @@
     "filterApplied": "Tomadas ({{count}})",
     "filterPending": "Pendentes ({{count}})",
     "filterDelayed": "Atrasadas ({{count}})",
+    "filterGuidance": "Orientações ({{count}})",
     "ageGroupLabel_one": "{{count}} mês",
     "ageGroupLabel_other": "{{count}} meses",
     "doseLabel": "{{count}}ª dose",
     "status": {
       "pending": "Pendente",
       "delayed": "Atrasada",
-      "applied": "Aplicada em {{date}}"
+      "applied": "Aplicada em {{date}}",
+      "guidance": "Orientação"
+    },
+    "catalog": {
+      "title": "Calendário oficial e orientações clínicas",
+      "source": "Fonte: {{organization}}, atualizada em {{date}}.",
+      "openSource": "Abrir calendário oficial",
+      "disclaimer": "Este acompanhamento é informativo e não substitui a carteira de vacinação nem a avaliação de uma unidade de saúde. Recomendações anuais, condicionais ou com data prevista anterior à vigência deste catálogo aparecem como orientação e nunca são marcadas automaticamente como atrasadas."
     },
     "empty": {
       "title": "Nenhuma vacina encontrada",

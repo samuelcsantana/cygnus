@@ -265,13 +265,21 @@
     "filterApplied": "Applied ({{count}})",
     "filterPending": "Pending ({{count}})",
     "filterDelayed": "Delayed ({{count}})",
+    "filterGuidance": "Guidance ({{count}})",
     "ageGroupLabel_one": "{{count}} month",
     "ageGroupLabel_other": "{{count}} months",
     "doseLabel": "Dose {{count}}",
     "status": {
       "pending": "Pending",
       "delayed": "Delayed",
-      "applied": "Applied on {{date}}"
+      "applied": "Applied on {{date}}",
+      "guidance": "Guidance"
+    },
+    "catalog": {
+      "title": "Official calendar and clinical guidance",
+      "source": "Source: {{organization}}, updated on {{date}}.",
+      "openSource": "Open official calendar",
+      "disclaimer": "This tracker is informational and does not replace the vaccination card or an assessment by a health service. Annual, conditional, or doses due before this catalog became effective are shown as guidance and are never automatically marked overdue."
     },
     "empty": {
       "title": "No vaccines found",

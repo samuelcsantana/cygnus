@@ -10,8 +10,10 @@ function itemWithStatus(status: VaccineItem['status']): VaccineItem {
     vaccineId: 'v1',
     name: 'BCG',
     description: 'desc',
+    guidance: null,
     doseNumber: 1,
     recommendedAgeInMonths: 0,
+    recommendationKind: 'ROUTINE',
     status,
     applicationDate: status === 'APPLIED' ? '2026-01-01' : null,
     notes: null,
@@ -35,5 +37,11 @@ describe('VaccineStatusBadge', () => {
   it('shows the application date when applied', () => {
     renderWithProviders(<VaccineStatusBadge item={itemWithStatus('APPLIED')} />)
     expect(screen.getByText(/Aplicada em/)).toBeInTheDocument()
+  })
+
+  it('renders guidance without presenting it as overdue', () => {
+    renderWithProviders(<VaccineStatusBadge item={itemWithStatus('GUIDANCE')} />)
+    expect(screen.getByText('Orientação')).toBeInTheDocument()
+    expect(screen.queryByText('Atrasada')).not.toBeInTheDocument()
   })
 })

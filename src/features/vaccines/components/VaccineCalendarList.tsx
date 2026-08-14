@@ -26,12 +26,14 @@ const STATUS_ICON_CLASS: Record<VaccineItemWithBaby['status'], string> = {
   APPLIED: 'bg-teal-50 text-teal-700',
   DELAYED: 'bg-rose-50 text-rose-700',
   PENDING: 'bg-amber-50 text-amber-700',
+  GUIDANCE: 'bg-sky-50 text-sky-700',
 }
 
 const STATUS_ICON_GLYPH: Record<VaccineItemWithBaby['status'], string> = {
   APPLIED: '✓',
   DELAYED: '!',
   PENDING: '○',
+  GUIDANCE: '?',
 }
 
 // Renders a single, merged, household-wide list — each row tagged with which
@@ -135,7 +137,7 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
         </p>
       </div>
       <div className="hidden flex-1 sm:block">
-        <p className="text-xs text-ink-muted">{item.description}</p>
+        <p className="text-xs text-ink-muted">{item.guidance ?? item.description}</p>
       </div>
       <VaccineStatusBadge item={item} />
     </>
@@ -146,7 +148,7 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
     item.status === 'DELAYED' ? 'border border-rose-100' : 'border border-transparent',
   )
 
-  if (item.status === 'APPLIED') {
+  if (item.status === 'APPLIED' || item.recommendationKind === 'RECURRING') {
     return <div className={rowClass}>{content}</div>
   }
 

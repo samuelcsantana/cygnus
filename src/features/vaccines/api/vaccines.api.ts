@@ -10,11 +10,11 @@ import {
   type AdhocVaccineRecord,
   type ApplyVaccineInput,
   type CreateAdhocVaccineInput,
-  type VaccineAgeGroup,
+  type VaccineCalendar,
   type VaccineItem,
 } from './vaccines.schemas'
 
-export async function fetchVaccineCalendar(babyId: string): Promise<VaccineAgeGroup[]> {
+export async function fetchVaccineCalendar(babyId: string): Promise<VaccineCalendar> {
   const response = await httpClient.get<unknown>(`/babies/${babyId}/vaccines`)
   return vaccineCalendarSchema.parse(response)
 }
