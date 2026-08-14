@@ -65,7 +65,8 @@ npx playwright install chromium   # uma vez, para a suíte de testes
 npm run test:storybook            # cada story como teste
 ```
 
-O deploy para GitHub Pages acontece a cada push na `main` (`.github/workflows/storybook.yml`).
+O deploy para GitHub Pages acontece a cada push na `main` (`.github/workflows/storybook.yml`), que
+liga o Pages sozinho na primeira execução — não é preciso mexer em Settings.
 
 ## Docker
 
