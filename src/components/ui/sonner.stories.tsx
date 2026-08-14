@@ -2,8 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { toast } from 'sonner'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 
-import { KNOWN_CONTRAST_DEBT } from '@/test/a11y-known-issues'
-
 import { Button } from './button'
 import { Toaster } from './sonner'
 
@@ -23,9 +21,6 @@ const meta = {
     // The Toaster itself renders nothing until a toast is fired, so an empty
     // Controls table here would be misleading.
     controls: { disable: true },
-    // The trigger row includes the destructive button, whose token pair is
-    // below AA — see src/test/a11y-known-issues.ts.
-    ...KNOWN_CONTRAST_DEBT,
   },
 } satisfies Meta<typeof Toaster>
 

@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 
 import { TrashIcon } from '@/shared/icons/trash-icon'
-import { KNOWN_CONTRAST_DEBT } from '@/test/a11y-known-issues'
 
 import {
   AlertDialog,
@@ -32,9 +31,6 @@ const meta = {
           'a tinted surface instead of a solid red alarm.',
       },
     },
-    // Every story here renders the destructive surface, whose token pair is
-    // below AA — see src/test/a11y-known-issues.ts.
-    ...KNOWN_CONTRAST_DEBT,
   },
 } satisfies Meta<typeof AlertDialog>
 

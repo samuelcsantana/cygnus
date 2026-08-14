@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import { KNOWN_CONTRAST_DEBT } from '@/test/a11y-known-issues'
-
 import type { Step } from './StepIndicator'
 import { StepIndicator } from './StepIndicator'
 
@@ -23,10 +21,6 @@ const meta = {
           'violet for appointments, amber for milestones).',
       },
     },
-    // Inactive step labels use `text-ink-faint` (#9aa5b4) on white — 2.49:1,
-    // the largest contrast gap in the token set. See
-    // src/test/a11y-known-issues.ts.
-    ...KNOWN_CONTRAST_DEBT,
   },
   args: { steps: STEPS },
   argTypes: {

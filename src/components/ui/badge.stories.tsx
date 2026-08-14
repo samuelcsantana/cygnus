@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { AlertCircleIcon } from '@/shared/icons/alert-circle-icon'
 import { CheckIcon } from '@/shared/icons/check-icon'
 import { ClockIcon } from '@/shared/icons/clock-icon'
-import { KNOWN_CONTRAST_DEBT } from '@/test/a11y-known-issues'
 
 import { Badge } from './badge'
 
@@ -36,8 +35,6 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 
 export const Variants: Story = {
-  // Includes the destructive variant — see src/test/a11y-known-issues.ts.
-  parameters: { ...KNOWN_CONTRAST_DEBT },
   render: (args) => (
     <div className="flex flex-wrap items-center gap-3">
       <Badge {...args} variant="default">
@@ -57,6 +54,12 @@ export const Variants: Story = {
       </Badge>
     </div>
   ),
+}
+
+export const VariantsDark: Story = {
+  name: 'Variants (dark theme)',
+  globals: { theme: 'dark' },
+  render: Variants.render,
 }
 
 export const VaccineStatus: Story = {

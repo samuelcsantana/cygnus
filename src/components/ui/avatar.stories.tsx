@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
-import { KNOWN_CONTRAST_DEBT } from '@/test/a11y-known-issues'
 
 import { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarImage } from './avatar'
 
@@ -111,9 +110,6 @@ export const WithBadge: Story = {
 
 export const Group: Story = {
   name: 'Group (household)',
-  // The "+2" counter uses muted-foreground on muted, which lands at 4.34:1 —
-  // just under AA. See src/test/a11y-known-issues.ts.
-  parameters: { ...KNOWN_CONTRAST_DEBT },
   render: () => (
     <AvatarGroup>
       {BABIES.map((baby) => {

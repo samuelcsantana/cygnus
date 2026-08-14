@@ -3,7 +3,6 @@ import { expect, fn, userEvent, within } from 'storybook/test'
 
 import { PlusIcon } from '@/shared/icons/plus-icon'
 import { TrashIcon } from '@/shared/icons/trash-icon'
-import { KNOWN_CONTRAST_DEBT } from '@/test/a11y-known-issues'
 
 import { Button } from './button'
 
@@ -51,11 +50,11 @@ export const Variants: Story = {
         story:
           '`destructive` is deliberately a tinted surface rather than a solid red fill — the ' +
           'destructive actions in this app (deleting a milestone, removing a guardian) are always ' +
-          'behind a confirmation dialog, so the button itself does not need to shout. That tint is ' +
-          'also the one pair here below AA: see `src/test/a11y-known-issues.ts`.',
+          'behind a confirmation dialog, so the button itself does not need to shout. The tint was ' +
+          'below AA until `--destructive` was darkened — the a11y check on this story is what ' +
+          'caught it, and is what keeps it fixed.',
       },
     },
-    ...KNOWN_CONTRAST_DEBT,
   },
   render: (args) => (
     <div className="flex flex-wrap items-center gap-3">
@@ -101,8 +100,6 @@ export const Sizes: Story = {
 }
 
 export const WithIcon: Story = {
-  // Includes the destructive variant — see src/test/a11y-known-issues.ts.
-  parameters: { ...KNOWN_CONTRAST_DEBT },
   render: (args) => (
     <div className="flex flex-wrap items-center gap-3">
       <Button {...args}>

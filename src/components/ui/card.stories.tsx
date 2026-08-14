@@ -89,6 +89,25 @@ export const Loading: Story = {
   ),
 }
 
+export const Dark: Story = {
+  name: 'Dark theme',
+  // Pins the theme instead of following the toolbar, so the a11y suite actually
+  // runs axe against the dark palette. Without a story like this the whole
+  // check only ever sees light mode — which is how the ink-* tokens shipped
+  // with no dark counterpart at all.
+  globals: { theme: 'dark' },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The same card in dark mode. The `ink` scale is redefined under `.dark` because the ' +
+          'brand tokens are fixed hex values that do not invert on their own.',
+      },
+    },
+  },
+  render: Default.render,
+}
+
 export const ErrorState: Story = {
   name: 'Error',
   render: (args) => (
