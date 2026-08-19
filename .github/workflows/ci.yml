@@ -46,8 +46,37 @@ jobs:
 
       - run: npm ci
 
+      # Keyed on the *resolved* Playwright version, not the range in
+      # package.json ("^1.62.1" can resolve to different builds, and each one
+      # expects its own browser revision) and not on a lockfile hash (which
+      # would discard a perfectly good browser on any unrelated dependency
+      # bump).
+      - name: Resolve Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright.outputs.version }}
+
+      # This was an unconditional `playwright install --with-deps` and it hung
+      # on the Chromium download three runs in a row — long enough to burn the
+      # job each time, without a single story having run. Caching takes the
+      # download off the common path entirely; the job now only depends on the
+      # Playwright CDN when the version actually changes.
       - name: Install Chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+
+      # The OS packages `--with-deps` pulls in live outside
+      # ~/.cache/ms-playwright, so a cache hit restores the browser but not
+      # what it links against. This half runs every time regardless.
+      - name: Install Chromium system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
 
       - name: Test stories (interaction + accessibility)
         run: npm run test:storybook
