@@ -74,12 +74,19 @@ third-party cookies outright and Chrome is moving the same way, so cross-site au
 unreliable — broken in a real browser today, not in principle.
 
 Proxying removes the question instead of answering it: same-origin is stricter than same-site, so `Strict` cookies
-work by construction, and CORS never enters the picture. Two consequences worth knowing:
+work by construction, and CORS never enters the picture. Three consequences worth knowing:
 
 - The rewrite order in `vercel.json` matters. `/api/:path*` must come **before** the SPA catch-all, which matches
   everything; Vercel takes the first match.
-- Vercel's proxy caps a request body at about 4.5 MB, while the upload route accepts 5 MB. A file in that gap fails
-  at the edge with a 413 the API never sees.
+- Vercel forwards the **original** `Host` header to the destination, not the destination's own host —
+  verified in the API's request log, which records `host: <the vercel hostname>` for a proxied call. That matters
+  because `upload.routes.ts` builds a photo's public URL from `request.headers.host`, so behind the proxy it
+  returns `https://<this app>/uploads/…`. Without a matching rewrite that path falls through to the SPA catch-all
+  and answers `200 text/html`, and every uploaded photo renders as a broken image with nothing in any log to say
+  why. Hence the second rewrite for `/uploads/*`: it makes the API's self-referential URL true rather than
+  teaching the API about the proxy's path prefix.
+- Vercel's proxy caps a request body at about 4.5 MB, while the upload route accepts 5 MB
+  (`multipart` `fileSize: 5 * 1024 * 1024`). A file in that gap fails at the edge with a 413 the API never sees.
 
 The Docker/nginx target is unaffected and still calls an absolute origin: the `Dockerfile` passes
 `VITE_API_BASE_URL` as a build arg, and Vite gives a real environment variable precedence over `.env` files, so
