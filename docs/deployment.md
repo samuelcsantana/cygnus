@@ -22,17 +22,23 @@ Ported from `security-headers.conf.template` into `vercel.json`:
 | `Referrer-Policy` | `strict-origin-when-cross-origin` |
 | `Content-Security-Policy` | see below |
 
-Two deliberate differences from the nginx version:
+Two parts of the CSP look permissive and are not — both files now carry them:
 
-**1. The CSP allows the Sentry ingest host.** The nginx CSP is `connect-src 'self' ${API_ORIGIN}` — nothing else.
-Ported literally, it would have **silently blocked every Sentry event**, because the browser refuses the POST to
-`o325983.ingest.us.sentry.io` before it leaves the page. Error reporting would have looked wired up and reported
-nothing, which is worse than having no Sentry at all.
+**`connect-src` names the Sentry ingest host.** The SDK POSTs events to `o325983.ingest.us.sentry.io`, and a CSP
+without it makes the browser refuse that POST before it leaves the page: error reporting looks wired up and reports
+nothing, which is worse than having no Sentry at all. This was originally a Vercel-only fix; the nginx template
+carries it now too, so the two agree again.
 
-The nginx template still lacks it. It is not wrong there *yet* only because that path has never run in an
-environment with a real DSN. Fix it there before self-hosting.
+**`img-src` allows `blob:` and any `https:` host.** Not laxness. The milestone photo field previews a chosen file
+through `URL.createObjectURL` — a `blob:` URL — before it uploads, and both `Milestone.photoUrl` and
+`Baby.avatarUrl` accept a pasted image URL on any host, by design (locally picked avatars are inlined as `data:`
+URLs, which is why that source stays). `img-src 'self' data:` would have turned every uploaded photo and every
+pasted URL into a broken image in production, while working perfectly under `vite dev`, which serves no CSP at all.
+Tightening it to the API origin means removing the paste-a-URL feature first — a product decision, not a header one.
 
-**2. No `Strict-Transport-Security`.** Not an omission: Vercel already sends
+One deliberate difference from the nginx version remains:
+
+**No `Strict-Transport-Security` in `vercel.json`.** Not an omission: Vercel already sends
 `max-age=63072000; includeSubDomains; preload` on its own. The nginx template deliberately omits HSTS too, for the
 opposite reason — it listens on `:80` with no TLS in front, so promising a secure transport would be a lie.
 
@@ -49,16 +55,18 @@ nothing.
 | Variable | Source | State |
 |---|---|---|
 | `VITE_SENTRY_DSN` | `.env.production`, committed | set — a DSN is not a credential, see the comment in that file |
-| `VITE_API_BASE_URL` | `.env.production`, committed | **empty** |
+| `VITE_API_BASE_URL` | `.env.production`, committed | `https://api.cygnus.samuelsantana.dev` |
 
-`VITE_API_BASE_URL` being empty is the open item: **`cygnus-api` is not deployed anywhere.** The frontend builds
-and serves fine without it, but nothing that needs the backend — login included — can work. Until the API has a
-home, this deployment is a public shell.
+That host is not a free choice. The auth cookies are issued `SameSite=Strict`, so the browser only returns them to
+a **same-site** destination — the same registrable domain. A frontend on `*.vercel.app` calling an API on
+`*.onrender.com` would see login return 200, set a cookie, and then 401 on every request after it, which reads as a
+broken session rather than a domain mistake. Both hosts sitting under `samuelsantana.dev` is what makes the session
+work at all.
 
-When the API does land, two things have to change together, or the app breaks in a way that is annoying to debug:
+Two files carry the origin and both have to move together, or the build succeeds and the app fails at runtime:
 
 1. `VITE_API_BASE_URL` in `.env.production`
-2. the `connect-src` in **both** `vercel.json` and `security-headers.conf.template`
+2. the `connect-src` in `vercel.json`
 
 The nginx template derives its `${API_ORIGIN}` from the same build arg automatically. `vercel.json` cannot — it is
 static JSON, so the origin is written out literally and has to be kept in step by hand.

@@ -23,4 +23,17 @@
 add_header X-Content-Type-Options "nosniff" always;
 add_header X-Frame-Options "DENY" always;
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ${API_ORIGIN}; frame-ancestors 'none';" always;
+#
+# `img-src` allows `blob:` and any `https:` host because both are load-bearing,
+# not permissive by accident: the milestone photo field previews a chosen file
+# through URL.createObjectURL (a blob: URL) before it uploads, and both
+# `Milestone.photoUrl` and `Baby.avatarUrl` accept a pasted image URL on any
+# host by design. Narrowing this to the API origin would not tighten anything
+# real — it would silently stop those images from rendering. Locally uploaded
+# avatars are inlined as data: URLs, which is why that stays too.
+#
+# `connect-src` carries the Sentry ingest host as well as the API: the SDK POSTs
+# events to it, and a CSP that omits it drops error reporting without any error
+# of its own. Keep in step with `vercel.json`, which spells out the same policy
+# by hand for the Vercel deployment.
+add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' ${API_ORIGIN} https://o325983.ingest.us.sentry.io; frame-ancestors 'none';" always;
