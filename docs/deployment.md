@@ -55,21 +55,35 @@ nothing.
 | Variable | Source | State |
 |---|---|---|
 | `VITE_SENTRY_DSN` | `.env.production`, committed | set — a DSN is not a credential, see the comment in that file |
-| `VITE_API_BASE_URL` | `.env.production`, committed | `https://api.cygnus.samuelsantana.dev` |
+| `VITE_API_BASE_URL` | `.env.production`, committed | `/api` — a path, not an origin. See below |
 
-That host is not a free choice. The auth cookies are issued `SameSite=Strict`, so the browser only returns them to
-a **same-site** destination — the same registrable domain. A frontend on `*.vercel.app` calling an API on
-`*.onrender.com` would see login return 200, set a cookie, and then 401 on every request after it, which reads as a
-broken session rather than a domain mistake. Both hosts sitting under `samuelsantana.dev` is what makes the session
-work at all.
+## The API is proxied, not called directly
 
-Two files carry the origin and both have to move together, or the build succeeds and the app fails at runtime:
+`vercel.json` rewrites `/api/*` to `https://cygnus-api.onrender.com/*`. The browser therefore only ever talks to
+this app's own origin, and the API is never a cross-origin destination from the page's point of view.
 
-1. `VITE_API_BASE_URL` in `.env.production`
-2. the `connect-src` in `vercel.json`
+That is not a convenience. The auth cookies are issued `SameSite=Strict`, so a browser sends them only to a
+same-site destination — the same registrable domain. The original plan put the API on
+`api.cygnus.samuelsantana.dev` to satisfy that, but **Render only offers custom domains on paid instances**, so the
+API cannot leave `*.onrender.com`. A frontend on `samuelsantana.dev` calling `*.onrender.com` directly is a
+cross-site pair: login returns 200, the browser stores the cookie and then declines to send it back, and every
+request after it 401s — a failure that reads as a broken session rather than a domain problem.
 
-The nginx template derives its `${API_ORIGIN}` from the same build arg automatically. `vercel.json` cannot — it is
-static JSON, so the origin is written out literally and has to be kept in step by hand.
+Relaxing the cookies to `SameSite=None` is the obvious alternative and it is a dead end. Safari's ITP blocks
+third-party cookies outright and Chrome is moving the same way, so cross-site auth cookies are not weaker, they are
+unreliable — broken in a real browser today, not in principle.
+
+Proxying removes the question instead of answering it: same-origin is stricter than same-site, so `Strict` cookies
+work by construction, and CORS never enters the picture. Two consequences worth knowing:
+
+- The rewrite order in `vercel.json` matters. `/api/:path*` must come **before** the SPA catch-all, which matches
+  everything; Vercel takes the first match.
+- Vercel's proxy caps a request body at about 4.5 MB, while the upload route accepts 5 MB. A file in that gap fails
+  at the edge with a 413 the API never sees.
+
+The Docker/nginx target is unaffected and still calls an absolute origin: the `Dockerfile` passes
+`VITE_API_BASE_URL` as a build arg, and Vite gives a real environment variable precedence over `.env` files, so
+`/api` here never reaches that build.
 
 ## SPA routing
 
