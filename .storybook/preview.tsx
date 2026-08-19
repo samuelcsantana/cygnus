@@ -17,7 +17,7 @@ interface DecoratorProps {
 /**
  * Drives the app's real i18next instance from the toolbar's `locale` global, so
  * every story can be inspected in all three shipped locales. Components must
- * never hardcode user-facing text (see AGENTS.md §8) — switching the locale here
+ * never hardcode user-facing text (it lives in src/locales/*.json) — switching the locale here
  * is how that rule gets verified visually.
  */
 function I18nDecorator({ locale, children }: DecoratorProps & { locale: string }) {

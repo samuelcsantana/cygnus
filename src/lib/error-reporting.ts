@@ -3,8 +3,8 @@ import * as Sentry from '@sentry/react'
 const dsn = import.meta.env.VITE_SENTRY_DSN
 
 /**
- * No-ops until VITE_SENTRY_DSN is set (there's no Sentry project yet — see
- * PRODUCTION_READINESS.md). Call once, before the app renders.
+ * No-ops until VITE_SENTRY_DSN is set (there is no Sentry project yet).
+ * Call once, before the app renders.
  */
 export function initErrorReporting(): void {
   if (!dsn) return

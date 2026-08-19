@@ -12,7 +12,7 @@ const meta = {
         component:
           'Always bound to a control through `htmlFor`. A floating label with no association is ' +
           'invisible to a screen reader and steals the click target from the input, so it is not ' +
-          'an accepted pattern in this codebase (AGENTS.md §7).',
+          'an accepted pattern in this codebase.',
       },
     },
   },

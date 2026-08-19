@@ -2,7 +2,7 @@
 
 Frontend React (Vite + TypeScript) do "Meu Neném" — app mobile-first que ajuda pais a acompanhar a saúde e o desenvolvimento dos filhos (vacinas, consultas e marcos de desenvolvimento).
 
-Consome a API `cygnus-api` (backend separado). Veja `AGENTS.md` para as convenções completas de arquitetura, estilo e commits deste repositório.
+Consome a API `cygnus-api` (backend separado).
 
 ## Stack
 
@@ -51,8 +51,8 @@ Não é vitrine: é parte da suíte de testes.
 
 - **Acessibilidade** — o axe roda em cada story a cada build, e `parameters.a11y.test = 'error'`
   transforma violação em falha, não em aviso. As exceções conhecidas (três pares de token abaixo de
-  AA, anteriores ao Storybook) estão enumeradas uma a uma em `src/test/a11y-known-issues.ts` e
-  rastreadas no `GAPS.md` — nenhuma é silenciosa.
+  AA, anteriores ao Storybook) estão enumeradas uma a uma em `src/test/a11y-known-issues.ts` —
+  nenhuma é silenciosa.
 - **Interação** — stories com `play` são testes de verdade: abrem diálogos, navegam por teclado,
   digitam em campos e verificam o resultado. Rodam headless no CI, então regressão de foco ou de
   navegação por teclado quebra o build.

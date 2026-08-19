@@ -7,7 +7,7 @@ interface NotificationTypeMeta {
 
 /**
  * Display-only mapping — the API has no icon/color field, only `type`.
- * Colors follow DESIGN.md: vaccine reminders are rose, appointment
+ * Colors follow the design reference: vaccine reminders are rose, appointment
  * reminders are violet (matching the accent used for each feature
  * elsewhere in the app).
  */

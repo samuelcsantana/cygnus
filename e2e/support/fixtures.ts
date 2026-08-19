@@ -17,8 +17,8 @@ export function uniqueTestUser(label: string): TestUser {
 }
 
 /**
- * POST /auth/register never authenticates the user (see cygnus-api
- * AGENTS.md), so this always goes through both screens — register, then
+ * POST /auth/register never authenticates the user — it creates the account
+ * and returns no session — so this always goes through both screens: register, then
  * log in — exactly like a real first-time user would.
  */
 export async function registerAndLogin(page: Page, user: TestUser): Promise<void> {

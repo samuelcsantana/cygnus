@@ -11,7 +11,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Text field. Two rules from AGENTS.md §7 are load-bearing here and are demonstrated ' +
+          'Text field. Two accessibility rules are load-bearing here and are demonstrated ' +
           'below: every input has an associated `<label>`, and an error is linked through ' +
           '`aria-describedby` rather than being a red border a screen reader never announces.',
       },
