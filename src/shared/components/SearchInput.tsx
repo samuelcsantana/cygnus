@@ -13,7 +13,7 @@ interface SearchInputProps {
 }
 
 // A visually-icon-only search affordance still needs a real associated
-// <label> for screen reader users (AGENTS.md Section 7) — kept off-screen
+// <label> for screen reader users — kept off-screen
 // with sr-only rather than dropped in favor of just aria-label/placeholder.
 export function SearchInput({ id, label, value, onChange, placeholder, className }: SearchInputProps) {
   return (

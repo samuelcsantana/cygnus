@@ -19,7 +19,7 @@ interface EmptyStateProps {
   title: string
   description: string
   action?: ReactNode
-  /** Matches the section's accent color (see DESIGN.md's per-feature map). Defaults to neutral. */
+  /** Matches the section's accent color from the per-feature accent map. Defaults to neutral. */
   tone?: EmptyStateTone
 }
 

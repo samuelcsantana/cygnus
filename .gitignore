@@ -31,3 +31,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Agent instructions and planning docs — kept on disk, out of the public repo.
+# CLAUDE.md documents how docs/ is laid out; see its "Planning docs" section.
+/CLAUDE.md
+/docs/

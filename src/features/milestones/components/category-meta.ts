@@ -9,7 +9,7 @@ interface CategoryMeta {
 
 /**
  * Display-only mapping — the API has no icon/color field, only `category`.
- * Colors follow DESIGN.md's category table (not a 1:1 hue-per-category with
+ * Colors follow the committed design reference's category table (not a 1:1 hue-per-category with
  * other features — e.g. MOTOR is teal here but vaccine "applied" is also
  * teal; that's intentional, matching the design reference exactly).
  */

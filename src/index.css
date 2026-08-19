@@ -20,7 +20,7 @@
     }
   }
 
-  /* Brand palette — sourced from samuelcsantana/BabyCareAppDesign (see DESIGN.md) */
+  /* Brand palette — sourced from the committed design reference */
   --color-teal-50: #e8f5f3;
   --color-teal-100: #c7e9e4;
   --color-teal-200: #8ed3ca;
@@ -149,12 +149,12 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  /* Meu Neném brand primary — AGENTS.md Section 0 / DESIGN.md.
+  /* Brand primary.
      teal-700 (#186560), not the reference's literal teal-500 (#2A9D8F):
      --primary drives both white-on-fill (buttons) and fill-on-white (text
      links/eyebrows) contexts, and #2A9D8F fails WCAG AA (~3.3:1) in both —
-     the same class of bug already fixed once in this codebase per
-     PRODUCTION_READINESS.md. teal-500 is kept for purely decorative use
+     the same class of bug already fixed once in this codebase.
+     teal-500 is kept for purely decorative use
      (icon chips, gradients) via literal `bg-teal-500` classes instead. */
   --primary: #186560;
   --primary-foreground: #ffffff;

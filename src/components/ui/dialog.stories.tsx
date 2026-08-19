@@ -24,7 +24,7 @@ const meta = {
         component:
           'Every create/edit flow in the app is a dialog. Focus trapping, focus restore, `Esc` to ' +
           'close and the `aria-labelledby`/`aria-describedby` wiring come from Radix — that is ' +
-          'precisely why shadcn/Radix was chosen over hand-rolled primitives (AGENTS.md §3). ' +
+          'precisely why shadcn/Radix was chosen over hand-rolled primitives. ' +
           'The one thing added on top is `max-h-[85vh] overflow-y-auto`, after the accessibility ' +
           'pass found long forms overflowing the viewport with no way to scroll on mobile.',
       },

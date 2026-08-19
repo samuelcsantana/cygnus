@@ -12,7 +12,7 @@ interface BabyFilterChipsProps {
   className?: string
 }
 
-// Local (non-global) per-list baby filter — AGENTS.md deliberately has no
+// Local (non-global) per-list baby filter — this codebase deliberately has no
 // global "currently selected baby" store, so this is plain component state
 // owned by whichever list renders the chips, not Zustand.
 export function BabyFilterChips({ babies, value, onChange, className }: BabyFilterChipsProps) {
