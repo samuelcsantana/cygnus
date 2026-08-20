@@ -1,0 +1,18 @@
+{
+  /*
+   * Exists so Module Federation can emit `.d.ts` files for the exposed modules.
+   *
+   * The federation plugin generates its own tsconfig and points `extends` at the project root's.
+   * That file is solution-style — `files: []` plus references — and carries no `jsx` option, so the
+   * generator failed with TS17004 on every JSX line in the exposed component while the bundle built
+   * fine. Extending the application's config instead is what puts `jsx: react-jsx` in scope.
+   *
+   * `noEmit` is dropped because emitting declarations is the entire job here; the generator sets
+   * `emitDeclarationOnly` and an `outDir` on top of this.
+   */
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "noEmit": false
+  },
+  "include": ["mf", "src/shared"]
+}

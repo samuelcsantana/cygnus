@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { VaccineScheduleWidget, type ScheduleItem } from '../vaccine-schedule';
+import type { ScheduleItem } from '../../src/shared/public-schedule';
+import { VaccineScheduleWidget } from '../vaccine-schedule';
 import { EMBED_SOURCE, PROTOCOL_VERSION, isEmbedMessage, type EmbedMessage } from '../protocol';
 
 const SCHEDULE: ScheduleItem[] = [

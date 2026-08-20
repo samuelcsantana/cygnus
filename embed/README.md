@@ -26,7 +26,7 @@ the host's CSS cannot reach in and the widget's cannot leak out. The choice is a
 | JavaScript isolation | none — runs on the host's origin, with access to its DOM | full — separate origin and JS context |
 | Trust required from the host | the host is trusting this code | none |
 | Layout | reflows with the host for free | host must size the frame; the frame reports its height by `postMessage` |
-| Cost | one ~2.5 kB gzip request | a second document |
+| Cost | one ~2.7 kB gzip request | a second document |
 
 **Pick the iframe if you do not control the widget's source.** Pick the script tag if you do, and
 want it to lay out like the rest of the page.
@@ -62,6 +62,12 @@ a widget that can move the page it sits in is a widget nobody pastes into their 
 one sending `frame-src 'self'` will block the iframe. Neither is a bug in the widget and neither can
 be fixed from this side — the host has to allow `cygnus.samuelsantana.dev`. The iframe usually has
 the easier path, because `frame-src` tends to be looser than `script-src` in real policies.
+
+**The response is validated row by row, and malformed rows are dropped rather than thrown on.** The
+schedule is a list of independent entries, so one bad row is not a reason to show a visitor an error
+instead of the other twenty-seven — but a response with no `schedule` list at all is, because that
+means the endpoint changed shape. The guard lives in `src/shared/public-schedule.ts`, hand-written
+rather than delegated to Zod: everything the embed shares has to hold the no-dependencies line.
 
 **The API surface it reads is deliberately narrow.** `GET /public/vaccine-schedule` is the only
 unauthenticated, any-origin endpoint in the API, and it answers `Access-Control-Allow-Origin: *`

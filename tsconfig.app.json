@@ -32,5 +32,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", ".storybook", "embed"]
+  "include": ["src", ".storybook", "embed", "mf"]
 }
