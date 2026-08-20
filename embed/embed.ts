@@ -1,8 +1,9 @@
+import { DEFAULT_API_ORIGIN } from '../src/shared/public-schedule';
+
 import { VaccineScheduleWidget } from './vaccine-schedule';
 import type { EmbedMessage } from './protocol';
 
 const ELEMENT_NAME = 'cygnus-vaccine-schedule';
-const DEFAULT_API_ORIGIN = 'https://cygnus.samuelsantana.dev/api';
 
 /**
  * Script-tag variant: a custom element rendered directly into the host's DOM.

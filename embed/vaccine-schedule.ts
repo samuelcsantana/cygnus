@@ -1,12 +1,6 @@
-import { EMBED_SOURCE, PROTOCOL_VERSION, type EmbedMessage } from './protocol';
+import { APP_ORIGIN, fetchPublicSchedule, formatAge, type ScheduleItem } from '../src/shared/public-schedule';
 
-export interface ScheduleItem {
-  id: string;
-  name: string;
-  description: string;
-  recommendedAgeInMonths: number;
-  doseNumber: number;
-}
+import { EMBED_SOURCE, PROTOCOL_VERSION, type EmbedMessage } from './protocol';
 
 export interface WidgetOptions {
   /** Origin serving the Cygnus API. Overridable so the same bundle works in dev and on a preview. */
@@ -15,16 +9,6 @@ export interface WidgetOptions {
   limit?: number;
   /** Called for every outbound message, so the two variants can differ in transport only. */
   emit: (message: EmbedMessage) => void;
-}
-
-const APP_ORIGIN_FALLBACK = 'https://cygnus.samuelsantana.dev';
-
-function formatAge(months: number): string {
-  if (months === 0) return 'Ao nascer';
-  if (months < 12) return `${months} ${months === 1 ? 'mês' : 'meses'}`;
-  const years = months / 12;
-  const rounded = Number.isInteger(years) ? years : Math.round(years * 10) / 10;
-  return `${rounded} ${rounded === 1 ? 'ano' : 'anos'}`;
 }
 
 /**
@@ -108,16 +92,8 @@ export class VaccineScheduleWidget {
     this.paint(`<p class="state">Carregando o calendário vacinal…</p>`);
 
     try {
-      const response = await fetch(`${this.options.apiOrigin}/public/vaccine-schedule`, {
-        // No cookies, ever. The endpoint is wildcard-CORS, and a browser would refuse the pairing
-        // anyway — being explicit documents that this widget has no access to anyone's session.
-        credentials: 'omit',
-      });
-
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-      const body = (await response.json()) as { schedule: ScheduleItem[] };
-      this.paintSchedule(body.schedule);
+      const schedule = await fetchPublicSchedule(this.options.apiOrigin);
+      this.paintSchedule(schedule);
       this.emitSize('ready');
     } catch (error) {
       const reason = error instanceof Error ? error.message : 'unknown';
@@ -149,7 +125,7 @@ export class VaccineScheduleWidget {
         <p class="title">Calendário vacinal</p>
         <p class="subtitle">Programa Nacional de Imunizações — primeiras ${items.length} doses</p>
         <ul>${rows}</ul>
-        <p class="footer"><a href="${APP_ORIGIN_FALLBACK}" data-navigate>Acompanhar as vacinas do seu bebê →</a></p>
+        <p class="footer"><a href="${APP_ORIGIN}" data-navigate>Acompanhar as vacinas do seu bebê →</a></p>
       </div>
     `);
 
@@ -162,7 +138,7 @@ export class VaccineScheduleWidget {
         source: EMBED_SOURCE,
         version: PROTOCOL_VERSION,
         type: 'navigate',
-        url: APP_ORIGIN_FALLBACK,
+        url: APP_ORIGIN,
       });
     });
 
