@@ -21,6 +21,8 @@
   },
   "include": [
     "vite.config.ts",
+    "vite.embed.config.ts",
+    "vite.embed-iframe.config.ts",
     "vitest.config.ts",
     "vitest.storybook.config.ts",
     "playwright.config.ts",
