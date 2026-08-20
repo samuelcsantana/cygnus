@@ -108,6 +108,12 @@ A host wanting another language has no supported path today.
 **`remoteEntry.js` has a stable, unhashed filename**, so it cannot carry a long cache — it is served
 `max-age=600`. Everything behind it is content-hashed and served `immutable`.
 
+Getting that second half to actually happen took a correction, caught on a preview deployment rather
+than by reading the config: **Vercel applies every matching `headers` rule and the last one wins.**
+A general `/mf/(.*)` rule listed after a specific `/mf/assets/(.*)` one silently overwrote
+`immutable` with `max-age=600` — the config looked right, the chunks were re-validated every ten
+minutes, and nothing anywhere reported a problem. General first, specific after.
+
 **Availability is now shared.** A host page that mounts this widget depends on this origin being up.
 That is the cost of runtime resolution, it is not hypothetical, and a host that has not wrapped the
 mount in an error boundary will take a blank page instead of a missing widget. This is the one
