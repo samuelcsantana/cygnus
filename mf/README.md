@@ -63,9 +63,9 @@ something the host owns, and by then the symptom is several layers from the caus
 time rather than a subtly broken tree.
 
 **`runtimeProbe` exists to make the negotiation observable.** It returns `React.useState` and
-`React.createElement` by reference rather than a version string, because both sides report `19.2.x`
-whether or not they share an instance — a version match proves nothing, while reference equality can
-only hold if exactly one copy exists. Host-side:
+`React.createElement` by reference rather than a version string: a matching version proves nothing,
+since two copies of the same React are still two objects, while reference equality can only hold if
+exactly one exists. Host-side:
 
 ```js
 const { runtimeProbe } = await loadRemote('cygnus/runtimeProbe')
@@ -75,6 +75,16 @@ runtimeProbe().useState === React.useState // true ⇒ one React, negotiated
 The obvious alternative — the host stamping a marker onto `React` before loading — does not survive
 contact with reality: an ES module namespace object is sealed, so the write throws where it is not
 silently dropped.
+
+The version is still worth reporting, because a *mismatch* is informative in the other direction.
+Measured against the Next 16 host at `samuelsantana.dev/micro-frontends`: this container is compiled
+against React 19.2.8 and reports `19.3.0-canary-*` — the build Next vendors for its App Router.
+A remote announcing a version it does not ship can only have been handed one.
+
+Note what that implies about `requiredVersion`. Under strict semver a prerelease does not satisfy
+`^19.0.0`; the federation runtime accepted it. Had it refused, the remote would have fallen back to
+its own React, rendered perfectly, and broken later — which is the whole reason the probe runs on
+every load rather than once, by hand, at integration time.
 
 ## Limitations, and the ones that will bite
 

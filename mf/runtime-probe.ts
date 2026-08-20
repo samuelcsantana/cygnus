@@ -9,10 +9,14 @@ import * as React from 'react'
  * its instance to the share scope, the remote asked for one, and the versions were compatible enough
  * that the container handed over the host's rather than falling back to the remote's own.
  *
- * **Why this returns function references and not a version string.** Both bundles would report
- * `19.2.x` whether or not they share an instance — a version match proves nothing. Two copies of the
- * same React are two distinct objects, so reference equality is the only assertion that can fail when
- * the sharing fails.
+ * **Why this returns function references and not a version string.** A matching version proves
+ * nothing: two copies of the same React are still two distinct objects. Reference equality is the
+ * only assertion that can fail when the sharing fails.
+ *
+ * The version is reported anyway, because a *mismatched* one is informative in the other direction.
+ * Measured against the Next 16 host at samuelsantana.dev: this container is compiled against 19.2.8
+ * and reports `19.3.0-canary-*`, the build Next vendors for its App Router. A remote announcing a
+ * version it does not ship can only have been handed one.
  *
  * **Why not a marker written onto the React object.** The obvious probe is for the host to stamp a
  * value on `React` before loading the remote and have the remote read it back. It does not survive
