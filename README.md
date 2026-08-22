@@ -50,9 +50,11 @@ mesmo `@theme` que o app usa.
 Não é vitrine: é parte da suíte de testes.
 
 - **Acessibilidade** — o axe roda em cada story a cada build, e `parameters.a11y.test = 'error'`
-  transforma violação em falha, não em aviso. As exceções conhecidas (três pares de token abaixo de
-  AA, anteriores ao Storybook) estão enumeradas uma a uma em `src/test/a11y-known-issues.ts` —
-  nenhuma é silenciosa.
+  transforma violação em falha, não em aviso. **Não existe lista de exceções**: nenhuma story
+  desliga a checagem, e uma violação derruba o build. Os quatro tokens que ficavam abaixo de AA
+  (`--primary`, `--color-ink-faint`, `--destructive`, `--muted-foreground`) foram escurecidos em vez
+  de dispensados — cada um traz a medição e o motivo comentados no ponto de definição, em
+  `src/index.css`.
 - **Interação** — stories com `play` são testes de verdade: abrem diálogos, navegam por teclado,
   digitam em campos e verificam o resultado. Rodam headless no CI, então regressão de foco ou de
   navegação por teclado quebra o build.
