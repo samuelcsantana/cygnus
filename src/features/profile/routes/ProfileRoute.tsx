@@ -62,7 +62,7 @@ export function ProfileRoute() {
       <div className="flex flex-col gap-5">
         <section className="rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <h3 className="font-display mb-4 text-base font-extrabold text-ink">{t('profile.language.sectionTitle')}</h3>
-          <LanguageSwitcher className="w-full max-w-xs" />
+          <LanguageSwitcher variant="field" className="w-full max-w-xs" />
           <h3 className="font-display mt-5 mb-4 text-base font-extrabold text-ink">{t('common.theme.label')}</h3>
           <ThemeToggle className="w-auto rounded-full border border-slate-200 px-3" />
         </section>
