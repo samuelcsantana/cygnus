@@ -60,7 +60,7 @@ export function FamilyStrip({ items, onEdit }: FamilyStripProps) {
                   {t('babies.dashboard.familyStripDelayed', { count: delayedVaccineCount })}
                 </p>
               ) : (
-                <p className="text-[11px] font-bold text-teal-600">{t('babies.dashboard.familyStripUpToDate')}</p>
+                <p className="text-[11px] font-bold text-teal-700">{t('babies.dashboard.familyStripUpToDate')}</p>
               )}
             </div>
             {/* Touch target: the -inset-2.5 pseudo-element expands the tappable
@@ -74,7 +74,7 @@ export function FamilyStrip({ items, onEdit }: FamilyStripProps) {
                 type="button"
                 onClick={() => onEdit(baby)}
                 aria-label={t('babies.edit.action', { name: baby.name })}
-                className="relative rounded-lg p-1.5 text-ink-faint opacity-60 transition-opacity hover:bg-muted hover:text-teal-600 hover:opacity-100 focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100"
+                className="relative rounded-lg p-1.5 text-ink-faint opacity-60 transition-opacity hover:bg-muted hover:text-teal-700 hover:opacity-100 focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100"
               >
                 <span className="absolute -inset-2.5" aria-hidden="true" />
                 <PencilIcon className="h-3.5 w-3.5" />

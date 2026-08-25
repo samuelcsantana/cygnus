@@ -57,7 +57,7 @@ export function AppShellLayout() {
 
   return (
     <div className="flex min-h-screen flex-col bg-surface">
-      <header className="print:hidden sticky top-0 z-20 hidden items-center gap-6 border-b border-border bg-white/90 px-8 py-3 backdrop-blur-md md:flex">
+      <header className="print:hidden sticky top-0 z-20 hidden items-center gap-6 border-b border-border bg-card/90 px-8 py-3 backdrop-blur-md md:flex">
         <Link to="/dashboard" className="flex flex-shrink-0 items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500 text-white shadow-md">
             <LogoIcon className="h-5 w-5" />
@@ -108,7 +108,7 @@ export function AppShellLayout() {
         </div>
       </header>
 
-      <header className="print:hidden sticky top-0 z-20 flex items-center justify-between border-b border-border bg-white/80 px-5 py-4 backdrop-blur-md md:hidden">
+      <header className="print:hidden sticky top-0 z-20 flex items-center justify-between border-b border-border bg-card/80 px-5 py-4 backdrop-blur-md md:hidden">
         <div className="flex items-center space-x-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500 text-white">
             <LogoIcon className="h-4 w-4" />
@@ -139,7 +139,7 @@ export function AppShellLayout() {
         <Outlet />
       </main>
 
-      <nav className="pb-safe print:hidden fixed right-0 bottom-0 left-0 z-30 flex justify-around border-t border-border bg-white/90 p-2 shadow-[0_-4px_24px_rgba(0,0,0,0.02)] backdrop-blur-md md:hidden">
+      <nav className="pb-safe print:hidden fixed right-0 bottom-0 left-0 z-30 flex justify-around border-t border-border bg-card/90 p-2 shadow-[0_-4px_24px_rgba(0,0,0,0.02)] backdrop-blur-md md:hidden">
         {navItems.map((item) => (
           <MobileNavItem key={item.to} {...item} disabled={!hasBabies && item.to !== '/notifications'} />
         ))}

@@ -39,7 +39,7 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
     <div className="flex flex-col rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
             <SyringeIcon className="h-[18px] w-[18px]" />
           </span>
           <h3 className="font-display text-base font-extrabold text-ink">{t('nav.vaccines')}</h3>

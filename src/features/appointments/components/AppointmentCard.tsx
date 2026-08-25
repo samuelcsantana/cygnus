@@ -46,7 +46,7 @@ export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails
             <span
               className={cn(
                 'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl',
-                isScheduled ? 'bg-violet-50 text-violet-500' : 'bg-teal-50 text-teal-600',
+                isScheduled ? 'bg-violet-50 text-violet-500' : 'bg-teal-50 text-teal-700',
               )}
             >
               <StethoscopeIcon className="h-5 w-5" />

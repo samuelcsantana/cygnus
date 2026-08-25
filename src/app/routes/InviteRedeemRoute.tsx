@@ -84,7 +84,7 @@ export function InviteRedeemRoute() {
               className="mx-auto mb-4 h-20 w-20 rounded-full object-cover shadow-md"
             />
           ) : (
-            <div className="bg-teal-50 text-teal-600 mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full">
+            <div className="bg-teal-50 text-teal-700 mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full">
               <UsersIcon className="h-9 w-9" />
             </div>
           )}

@@ -52,7 +52,7 @@ const VACCINE_STATUS_STYLE: Record<PreviewVaccineItem['status'], { bg: string; t
 
 const MILESTONE_CATEGORY_STYLE: Record<string, { bg: string; text: string }> = {
   social: { bg: 'bg-amber-50', text: 'text-amber-700' },
-  motor: { bg: 'bg-teal-50', text: 'text-teal-600' },
+  motor: { bg: 'bg-teal-50', text: 'text-teal-700' },
   language: { bg: 'bg-violet-50', text: 'text-violet-600' },
 }
 
@@ -119,7 +119,7 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
           title={t('babies.dashboard.previewVaccines.cardTitle')}
           titleClassName="text-teal-800"
           subtitle={t('babies.dashboard.previewVaccines.cardSubtitle')}
-          subtitleClassName="text-teal-600"
+          subtitleClassName="text-teal-700"
         >
           <div className="flex flex-col gap-2.5">
             {vaccineItems.map((item, index) => {
@@ -145,7 +145,7 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
                 <span className="text-[11px] text-ink-muted">
                   {t('babies.dashboard.previewVaccines.progressLabel')}
                 </span>
-                <span className="text-[11px] font-bold text-teal-600">65%</span>
+                <span className="text-[11px] font-bold text-teal-700">65%</span>
               </div>
               <div className="h-1.5 overflow-hidden rounded-full bg-muted">
                 <div className="h-full w-[65%] rounded-full bg-gradient-to-r from-teal-500 to-teal-400" />
@@ -209,7 +209,7 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
                 <span
                   className={cn(
                     'flex-shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold',
-                    item.status === 'scheduled' ? 'bg-violet-50 text-violet-600' : 'bg-teal-50 text-teal-600',
+                    item.status === 'scheduled' ? 'bg-violet-50 text-violet-600' : 'bg-teal-50 text-teal-700',
                   )}
                 >
                   {item.status === 'scheduled' ? t('appointments.status.scheduled') : t('appointments.status.completed')}
@@ -256,7 +256,7 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
                     <StepIcon className="h-6 w-6 text-white" />
                   </div>
                   <div className="mx-auto mb-2 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-teal-50">
-                    <span className="text-[11px] font-extrabold text-teal-600">{index + 1}</span>
+                    <span className="text-[11px] font-extrabold text-teal-700">{index + 1}</span>
                   </div>
                   <p className="font-display mb-1 text-sm font-extrabold text-ink">{step.title}</p>
                   <p className="text-xs leading-relaxed text-ink-muted">{step.description}</p>
@@ -281,7 +281,7 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
         <button
           type="button"
           onClick={openAddBabyDialog}
-          className="inline-flex flex-shrink-0 items-center gap-2 rounded-xl bg-amber-500 px-6 py-3 font-display text-sm font-extrabold text-white shadow-lg shadow-amber-900/20 transition-transform hover:-translate-y-0.5"
+          className="inline-flex flex-shrink-0 items-center gap-2 rounded-xl bg-amber-500 px-6 py-3 font-display text-sm font-extrabold text-amber-950 shadow-lg shadow-amber-900/20 transition-transform hover:-translate-y-0.5"
         >
           <PlusIcon className="h-4 w-4" />
           {t('babies.dashboard.bottomCtaAction')}

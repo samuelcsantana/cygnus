@@ -133,7 +133,7 @@ export function ProfileRoute() {
                       type="button"
                       onClick={() => setEditTarget(baby)}
                       aria-label={t('babies.edit.action', { name: baby.name })}
-                      className="flex-shrink-0 rounded-lg p-1.5 text-ink-faint transition-colors hover:bg-muted hover:text-teal-600"
+                      className="flex-shrink-0 rounded-lg p-1.5 text-ink-faint transition-colors hover:bg-muted hover:text-teal-700"
                     >
                       <PencilIcon className="h-3.5 w-3.5" />
                     </button>

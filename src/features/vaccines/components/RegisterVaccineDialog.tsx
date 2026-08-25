@@ -167,7 +167,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] bg-teal-50 text-teal-600">
+            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] bg-teal-50 text-teal-700">
               <SyringeIcon className="h-[18px] w-[18px]" />
             </span>
             {step === 'details' ? t('vaccines.register.detailsTitle') : t('vaccines.register.title')}
@@ -202,7 +202,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
                   label: t('vaccines.register.type.catalog.title'),
                   description: t('vaccines.register.type.catalog.description'),
                   media: (
-                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
                       <CalendarIcon className="h-5 w-5" />
                     </span>
                   ),
@@ -366,7 +366,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
         ) : step === 'details' ? (
           <form onSubmit={onSubmit} className="animate-fade-in-up space-y-4" noValidate>
             <div className="flex items-center gap-3 rounded-xl bg-teal-50 px-4 py-3">
-              <SyringeIcon className="h-5 w-5 flex-shrink-0 text-teal-600" />
+              <SyringeIcon className="h-5 w-5 flex-shrink-0 text-teal-700" />
               <p className="font-bold text-ink">{summaryName}</p>
             </div>
 
@@ -392,7 +392,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
           // historical doses in one sitting instead of closing/reopening the
           // dialog for each one.
           <div className="animate-fade-in-up space-y-5 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 text-teal-600">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 text-teal-700">
               <CheckIcon className="h-7 w-7" />
             </div>
             <div>

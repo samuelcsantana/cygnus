@@ -99,7 +99,7 @@ export function DashboardRoute() {
           label={t('babies.dashboard.statVaccinesAppliedLabel')}
           value={`${appliedCount}`}
           sub={t('babies.dashboard.statVaccinesAppliedSub', { count: pendingCount })}
-          iconClassName="bg-teal-50 text-teal-600"
+          iconClassName="bg-teal-50 text-teal-700"
         />
         <StatCard
           icon={<StethoscopeIcon className="h-5 w-5" />}
