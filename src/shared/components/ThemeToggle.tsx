@@ -40,7 +40,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
       aria-label={t('common.theme.switchAria', { current: t(`common.theme.${theme}`) })}
       title={t(`common.theme.${theme}`)}
       className={cn(
-        'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-ink-faint transition-colors hover:bg-slate-100 hover:text-ink',
+        'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-ink-faint transition-colors hover:bg-muted hover:text-ink',
         className,
       )}
     >
