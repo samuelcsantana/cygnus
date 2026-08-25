@@ -3,8 +3,25 @@ import { useEffect } from 'react'
 
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
 
-import { getCurrentUser, loginUser, logoutUser, registerUser } from './auth.api'
-import type { LoginInput, RegisterInput } from './auth.schemas'
+import {
+  getCurrentUser,
+  loginUser,
+  logoutUser,
+  registerUser,
+  requestPasswordResetCode,
+  requestPasswordlessCode,
+  verifyPasswordReset,
+  verifyPasswordlessCode,
+} from './auth.api'
+import type {
+  AssistedRequestInput,
+  LoginInput,
+  PasswordResetVerifyInput,
+  RegisterInput,
+} from './auth.schemas'
+
+/** Which assisted flow the user picked on the login screen. */
+export type AssistedMode = 'passwordless' | 'reset'
 
 export const currentUserQueryKey = ['auth', 'me'] as const
 
@@ -69,6 +86,37 @@ export function useLogout() {
       // mounted at this point, and clearing immediately makes them refetch with the
       // now-gone cookie, producing an unwanted 401 → hard-redirect flash before the SPA
       // navigation lands.
+    },
+  })
+}
+
+/**
+ * Requests a code. Both variants resolve the same way for an unknown address,
+ * so the caller must not branch on the result to say anything about the
+ * account — see auth.api.ts.
+ */
+export function useRequestAssistedCode(mode: AssistedMode) {
+  return useMutation({
+    mutationFn: (input: AssistedRequestInput) =>
+      mode === 'reset' ? requestPasswordResetCode(input) : requestPasswordlessCode(input),
+  })
+}
+
+/**
+ * Redeems the code and, for a reset, sets the new password at the same time.
+ * Both endpoints end in a session, so this mirrors useLogin: the response
+ * carries no user payload, and only the submitted e-mail is known here.
+ */
+export function useVerifyAssistedCode(mode: AssistedMode) {
+  const setIdentity = useAuthIdentityStore((state) => state.setIdentity)
+
+  return useMutation({
+    mutationFn: (input: PasswordResetVerifyInput) =>
+      mode === 'reset'
+        ? verifyPasswordReset(input)
+        : verifyPasswordlessCode({ email: input.email, code: input.code }),
+    onSuccess: (_data, variables) => {
+      setIdentity({ id: null, email: variables.email, name: null })
     },
   })
 }

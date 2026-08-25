@@ -13,12 +13,23 @@ export const router = createBrowserRouter([
     hydrateFallbackElement: <RouteHydrateFallback />,
     children: [
       {
-        path: '/login',
-        lazy: () => import('@/features/auth/routes/LoginRoute').then((m) => ({ Component: m.LoginRoute })),
-      },
-      {
-        path: '/register',
-        lazy: () => import('@/features/auth/routes/RegisterRoute').then((m) => ({ Component: m.RegisterRoute })),
+        // One parent for both auth screens, so the segmented control switching
+        // between them swaps only the form. Rendered as siblings — each route
+        // wrapping its own <AuthLayout> — React saw a different subtree at that
+        // position and rebuilt the whole card, brand panel and hero <img>
+        // included. Lazy on the layout too: the shell is shared by the two
+        // routes but must not ride along in the entry chunk for signed-in users.
+        lazy: () => import('@/features/auth/components/AuthLayout').then((m) => ({ Component: m.AuthLayout })),
+        children: [
+          {
+            path: '/login',
+            lazy: () => import('@/features/auth/routes/LoginRoute').then((m) => ({ Component: m.LoginRoute })),
+          },
+          {
+            path: '/register',
+            lazy: () => import('@/features/auth/routes/RegisterRoute').then((m) => ({ Component: m.RegisterRoute })),
+          },
+        ],
       },
       {
         // Deliberately not nested under ProtectedLayout: the invite preview must

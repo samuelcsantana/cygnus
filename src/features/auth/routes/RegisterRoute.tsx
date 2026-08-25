@@ -1,27 +1,31 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
-import { AuthLayout } from '../components/AuthLayout'
 import { RegisterForm } from '../components/RegisterForm'
 
 export function RegisterRoute() {
   const { t } = useTranslation()
 
   return (
-    <AuthLayout>
-      <div className="mb-10 text-center lg:text-left">
-        <h2 className="font-display text-3xl font-extrabold text-ink">{t('auth.register.title')}</h2>
-        <p className="mt-2 text-ink-muted">{t('auth.register.subtitle')}</p>
+    <>
+      <div className="mt-7 mb-6">
+        <h1 className="font-display text-2xl font-extrabold tracking-tight text-balance text-ink">
+          {t('auth.register.title')}
+        </h1>
+        <p className="mt-1.5 text-[13.5px] text-ink-muted">{t('auth.register.subtitle')}</p>
       </div>
 
       <RegisterForm />
 
-      <p className="mt-8 text-center text-sm text-ink-muted">
+      <p className="mt-6 text-center text-[13px] text-ink-muted">
         {t('auth.register.hasAccount')}{' '}
-        <Link to="/login" className="text-primary font-semibold hover:underline">
+        <Link
+          to="/login"
+          className="rounded-sm font-semibold text-emerald-700 underline-offset-4 hover:underline focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none dark:text-emerald-400"
+        >
           {t('auth.register.loginLink')}
         </Link>
       </p>
-    </AuthLayout>
+    </>
   )
 }

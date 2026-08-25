@@ -22,16 +22,19 @@ export function uniqueTestUser(label: string): TestUser {
  * log in — exactly like a real first-time user would.
  */
 export async function registerAndLogin(page: Page, user: TestUser): Promise<void> {
+  // `exact: true` on the password fields: getByLabel matches substrings, and
+  // both auth forms carry a reveal toggle labelled "Mostrar senha" /
+  // "Ocultar senha", which a loose match would pick up as a second element.
   await page.goto('/register')
   await page.getByLabel('Nome completo').fill(user.name)
   await page.getByLabel('E-mail').fill(user.email)
-  await page.getByLabel('Senha').fill(user.password)
-  await page.getByRole('button', { name: 'Criar Conta' }).click()
+  await page.getByLabel('Senha', { exact: true }).fill(user.password)
+  await page.getByRole('button', { name: 'Criar conta gratuitamente' }).click()
 
   await expect(page).toHaveURL(/\/login$/)
 
   await page.getByLabel('E-mail').fill(user.email)
-  await page.getByLabel('Senha').fill(user.password)
+  await page.getByLabel('Senha', { exact: true }).fill(user.password)
   await page.getByRole('button', { name: 'Entrar na Conta' }).click()
 
   await expect(page).toHaveURL(/\/dashboard$/)
