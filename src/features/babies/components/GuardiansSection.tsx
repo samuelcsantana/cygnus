@@ -42,7 +42,7 @@ export function GuardiansSection({ babyId, babyName, className }: GuardiansSecti
   const isCurrentUserOwner = currentUserRole === 'OWNER'
 
   return (
-    <div className={cn('rounded-2xl border border-slate-100 bg-slate-50/50 p-5', className)}>
+    <div className={cn('rounded-2xl border border-border bg-muted/50 p-5', className)}>
       <div className="mb-4 flex items-start justify-between gap-3">
         <div className="flex items-start gap-2">
           <UsersIcon className="text-primary mt-0.5 h-4 w-4 flex-shrink-0" />
@@ -109,7 +109,7 @@ function GuardianRow({ guardian, babyId, babyName, canRemove, canLeave }: Guardi
   }
 
   return (
-    <li className="flex items-center gap-3 rounded-xl bg-white p-3 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
+    <li className="flex items-center gap-3 rounded-xl bg-card p-3 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-bold text-ink">{guardian.name}</p>
         <p className="truncate text-xs text-ink-muted">{guardian.email}</p>
@@ -196,7 +196,7 @@ function InvitePanel({ babyId }: InvitePanelProps) {
   }
 
   return (
-    <div className="mb-4 rounded-xl bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
+    <div className="mb-4 rounded-xl bg-card p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
       {inviteLink ? (
         <div>
           <Label htmlFor="invite-link">{t('babies.guardians.invite.linkLabel')}</Label>

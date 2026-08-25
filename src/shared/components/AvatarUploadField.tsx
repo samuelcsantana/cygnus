@@ -97,7 +97,7 @@ export function AvatarUploadField({
     <div className={cn('flex items-center gap-4', className)}>
       <div className="relative flex-shrink-0">
         <div
-          className={cn('h-20 w-20 overflow-hidden rounded-full bg-slate-100', value && color && 'border-4')}
+          className={cn('h-20 w-20 overflow-hidden rounded-full bg-muted', value && color && 'border-4')}
           style={value && color ? { borderColor: color } : undefined}
         >
           {value ? (

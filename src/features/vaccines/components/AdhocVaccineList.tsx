@@ -38,7 +38,7 @@ export function AdhocVaccineList({ babies }: AdhocVaccineListProps) {
   }
 
   return (
-    <div className="mt-5 rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+    <div className="mt-5 rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
       <div className="mb-4">
         <h3 className="font-display text-base font-extrabold text-ink">{t('vaccines.adhoc.sectionTitle')}</h3>
         <p className="mt-0.5 text-sm text-ink-muted">{t('vaccines.adhoc.sectionDescription')}</p>
@@ -77,7 +77,7 @@ function AdhocVaccineRow({ item, baby }: AdhocVaccineRowProps) {
   }
 
   return (
-    <li className="flex items-center gap-3 rounded-2xl border border-transparent bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
+    <li className="flex items-center gap-3 rounded-2xl border border-transparent bg-card p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
       {baby && (
         <span
           title={baby.name}

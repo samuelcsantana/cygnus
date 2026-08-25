@@ -11,7 +11,7 @@ export function VaccineCalendarSkeleton() {
       </div>
       <ul className="flex flex-col gap-2">
         {[0, 1, 2, 3, 4].map((rowIndex) => (
-          <li key={rowIndex} className="flex items-center gap-3.5 rounded-2xl bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
+          <li key={rowIndex} className="flex items-center gap-3.5 rounded-2xl bg-card p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
             <Skeleton className="h-9 w-9 flex-shrink-0 rounded-[10px]" />
             <div className="flex-1 space-y-2">
               <Skeleton className="h-4 w-40" />

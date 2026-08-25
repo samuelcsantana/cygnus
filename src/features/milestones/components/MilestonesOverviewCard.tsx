@@ -26,7 +26,7 @@ export function MilestonesOverviewCard({ babies, items, isPending, isError }: Mi
   const latest = [...items].sort((a, b) => b.achievedAt.localeCompare(a.achievedAt)).slice(0, MAX_ITEMS)
 
   return (
-    <div className="flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+    <div className="flex flex-col rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">

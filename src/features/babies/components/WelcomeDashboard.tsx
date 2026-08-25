@@ -91,6 +91,11 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
           <p className="mb-7 max-w-xl text-[15px] leading-relaxed text-white/80">
             {t('babies.dashboard.welcomeDescription')}
           </p>
+          {/* Literal white, not `bg-card`, and it must stay that way: this button
+              sits on the teal hero panel, which is the same colour in both themes.
+              A card-coloured surface here goes near-black in dark and the teal
+              label on it collapses to an unreadable ratio — the panel does not
+              flip, so nothing painted on it may flip either. */}
           <button
             type="button"
             onClick={openAddBabyDialog}
@@ -142,7 +147,7 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
                 </span>
                 <span className="text-[11px] font-bold text-teal-600">65%</span>
               </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-1.5 overflow-hidden rounded-full bg-muted">
                 <div className="h-full w-[65%] rounded-full bg-gradient-to-r from-teal-500 to-teal-400" />
               </div>
             </div>
@@ -237,7 +242,7 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
       </div>
 
       {/* Steps */}
-      <div className="mb-7 rounded-3xl bg-white p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-8">
+      <div className="mb-7 rounded-3xl bg-card p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-8">
         <p className="font-display mb-5 text-center text-base font-extrabold text-ink">
           {t('babies.dashboard.stepsSectionTitle')}
         </p>
@@ -308,7 +313,7 @@ function PreviewCard({
   children,
 }: PreviewCardProps) {
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
+    <div className="overflow-hidden rounded-2xl bg-card shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
       <div className={cn('flex items-center gap-2.5 bg-gradient-to-br px-5 py-4', gradientClassName)}>
         <div className={cn('flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px]', iconClassName)}>
           {icon}

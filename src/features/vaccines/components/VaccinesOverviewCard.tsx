@@ -36,7 +36,7 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
     .slice(0, MAX_ITEMS)
 
   return (
-    <div className="flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+    <div className="flex flex-col rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
@@ -55,7 +55,7 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
             <span className="font-semibold text-ink">{t('vaccines.progressLabel')}</span>
             <span className="text-primary font-bold">{progressPct}%</span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+          <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div
               className="h-full rounded-full bg-gradient-to-r from-teal-500 to-teal-400 transition-all duration-500"
               style={{ width: `${progressPct}%` }}

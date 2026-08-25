@@ -60,24 +60,24 @@ export function ProfileRoute() {
       </div>
 
       <div className="flex flex-col gap-5">
-        <section className="rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <h3 className="font-display mb-4 text-base font-extrabold text-ink">{t('profile.language.sectionTitle')}</h3>
           <LanguageSwitcher variant="field" className="w-full max-w-xs" />
           <h3 className="font-display mt-5 mb-4 text-base font-extrabold text-ink">{t('common.theme.label')}</h3>
-          <ThemeToggle className="w-auto rounded-full border border-slate-200 px-3" />
+          <ThemeToggle className="w-auto rounded-full border border-border px-3" />
         </section>
 
-        <section className="rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <h3 className="font-display mb-5 text-base font-extrabold text-ink">{t('profile.form.sectionTitle')}</h3>
           <ProfileForm user={currentUser.data} />
         </section>
 
-        <section className="rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <h3 className="font-display mb-5 text-base font-extrabold text-ink">{t('profile.password.sectionTitle')}</h3>
           <ChangePasswordForm />
         </section>
 
-        <section className="rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <div className="mb-5 flex items-center justify-between">
             <h3 className="font-display text-base font-extrabold text-ink">{t('profile.babies.sectionTitle')}</h3>
             {babyList.length > 0 && (
@@ -133,7 +133,7 @@ export function ProfileRoute() {
                       type="button"
                       onClick={() => setEditTarget(baby)}
                       aria-label={t('babies.edit.action', { name: baby.name })}
-                      className="flex-shrink-0 rounded-lg p-1.5 text-ink-faint transition-colors hover:bg-slate-100 hover:text-teal-600"
+                      className="flex-shrink-0 rounded-lg p-1.5 text-ink-faint transition-colors hover:bg-muted hover:text-teal-600"
                     >
                       <PencilIcon className="h-3.5 w-3.5" />
                     </button>
@@ -144,7 +144,7 @@ export function ProfileRoute() {
           )}
         </section>
 
-        <section className="rounded-2xl border border-rose-100 bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+        <section className="rounded-2xl border border-rose-100 bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <h3 className="font-display mb-2 text-base font-extrabold text-ink">{t('profile.delete.sectionTitle')}</h3>
           <p className="mb-5 text-sm text-ink-muted">{t('profile.delete.sectionDescription')}</p>
           <DeleteAccountDialog onDeleted={() => navigate('/login', { replace: true })} />

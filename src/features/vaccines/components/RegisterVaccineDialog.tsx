@@ -250,7 +250,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
                         type="button"
                         onClick={() => setSelectedVaccineId(item.vaccineId)}
                         className={cn(
-                          'flex w-full items-center gap-3 border-b border-slate-50 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-slate-50',
+                          'flex w-full items-center gap-3 border-b border-border px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-muted',
                           selectedVaccineId === item.vaccineId && 'bg-teal-50/60',
                         )}
                       >
@@ -303,7 +303,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
                         type="button"
                         onClick={() => setCampaignName(suggestion)}
                         className={cn(
-                          'block w-full border-b border-slate-50 px-4 py-2.5 text-left text-sm transition-colors last:border-b-0 hover:bg-slate-50',
+                          'block w-full border-b border-border px-4 py-2.5 text-left text-sm transition-colors last:border-b-0 hover:bg-muted',
                           campaignName === suggestion ? 'font-bold text-ink' : 'text-ink-muted',
                         )}
                       >

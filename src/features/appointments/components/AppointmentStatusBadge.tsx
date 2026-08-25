@@ -17,7 +17,7 @@ export function AppointmentStatusBadge({ status }: { status: AppointmentStatus }
 
   if (status === 'CANCELLED') {
     return (
-      <Badge variant="outline" className="border-slate-200 bg-slate-100 text-ink-muted">
+      <Badge variant="outline" className="border-border bg-muted text-ink-muted">
         {t('appointments.status.cancelled')}
       </Badge>
     )

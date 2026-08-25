@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 type EmptyStateTone = 'slate' | 'teal' | 'violet' | 'amber' | 'rose'
 
 const TONE_CLASSES: Record<EmptyStateTone, string> = {
-  slate: 'bg-slate-50 text-ink-faint',
+  slate: 'bg-muted text-ink-faint',
   teal: 'bg-teal-50 text-teal-600',
   violet: 'bg-violet-50 text-violet-600',
   // amber-600 on amber-50 is 2.93:1 — under the 3:1 floor icons owe as
@@ -25,7 +25,7 @@ interface EmptyStateProps {
 
 export function EmptyState({ icon, title, description, action, tone = 'slate' }: EmptyStateProps) {
   return (
-    <div className="rounded-[2rem] border border-slate-100 bg-white p-12 text-center shadow-sm">
+    <div className="rounded-[2rem] border border-border bg-card p-12 text-center shadow-sm">
       <div className={cn('mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full', TONE_CLASSES[tone])}>
         {icon}
       </div>

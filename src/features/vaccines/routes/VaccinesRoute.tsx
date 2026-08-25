@@ -97,7 +97,7 @@ export function VaccinesRoute() {
               <Link
                 key={baby.id}
                 to={`/vaccines/${baby.id}/card`}
-                className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-[13px] font-semibold text-ink-muted shadow-sm transition-colors hover:bg-slate-50 hover:text-ink"
+                className="inline-flex items-center gap-1.5 rounded-full bg-card px-3.5 py-1.5 text-[13px] font-semibold text-ink-muted shadow-sm transition-colors hover:bg-muted hover:text-ink"
               >
                 <PrinterIcon className="h-3.5 w-3.5" />
                 {t('vaccines.card.viewAction', { name: baby.name })}
@@ -121,7 +121,7 @@ export function VaccinesRoute() {
                 onClick={() => setFilter(value)}
                 className={cn(
                   'rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors',
-                  filter === value ? 'bg-primary text-white' : 'bg-white text-ink-muted shadow-sm hover:bg-slate-50',
+                  filter === value ? 'bg-primary text-white' : 'bg-card text-ink-muted shadow-sm hover:bg-muted',
                 )}
               >
                 {label}

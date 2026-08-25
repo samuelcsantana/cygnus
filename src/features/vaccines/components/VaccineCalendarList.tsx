@@ -144,7 +144,7 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
   )
 
   const rowClass = cn(
-    'flex w-full items-center gap-3 rounded-2xl bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]',
+    'flex w-full items-center gap-3 rounded-2xl bg-card p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]',
     item.status === 'DELAYED' ? 'border border-rose-100' : 'border border-transparent',
   )
 
@@ -153,7 +153,7 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
   }
 
   return (
-    <button type="button" onClick={onApply} className={cn(rowClass, 'text-left transition-colors hover:bg-slate-50/50')}>
+    <button type="button" onClick={onApply} className={cn(rowClass, 'text-left transition-colors hover:bg-muted/50')}>
       {content}
     </button>
   )

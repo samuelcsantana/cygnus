@@ -25,7 +25,7 @@ export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails
   return (
     <div
       className={cn(
-        'rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6',
+        'rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6',
         isScheduled ? 'border-[1.5px] border-violet-200' : 'border-[1.5px] border-transparent',
       )}
     >
@@ -83,7 +83,7 @@ export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails
           <button
             type="button"
             onClick={onReschedule}
-            className="flex-1 rounded-xl border-2 border-slate-100 py-2.5 text-sm font-bold text-ink-muted transition-colors hover:border-slate-200 hover:bg-slate-50"
+            className="flex-1 rounded-xl border-2 border-border py-2.5 text-sm font-bold text-ink-muted transition-colors hover:border-border hover:bg-muted"
           >
             {t('appointments.reschedule.action')}
           </button>

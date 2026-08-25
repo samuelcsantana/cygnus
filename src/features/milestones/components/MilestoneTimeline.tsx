@@ -40,7 +40,7 @@ export function MilestoneTimeline({ items, babies }: MilestoneTimelineProps) {
 
   return (
     <div className="relative ml-5 max-w-3xl sm:ml-8">
-      <div className="absolute top-5 bottom-5 left-5 w-0.5 bg-slate-200" />
+      <div className="absolute top-5 bottom-5 left-5 w-0.5 bg-muted" />
 
       <div className="space-y-4">
         {items.map((milestone) => (
@@ -93,14 +93,14 @@ function MilestoneCard({ milestone, baby, locale, onEdit }: MilestoneCardProps) 
     <div className="group relative flex items-start gap-5">
       <div
         className={cn(
-          'relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-[3px] bg-white text-base',
+          'relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-[3px] bg-card text-base',
           meta.nodeClass,
         )}
       >
         {meta.emoji}
       </div>
 
-      <div className="relative flex-1 rounded-2xl bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] sm:p-5">
+      <div className="relative flex-1 rounded-2xl bg-card p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] sm:p-5">
         <div className="mb-1.5 flex items-start justify-between gap-2">
           <h3 className="font-display text-[15px] font-extrabold text-ink">{milestone.title}</h3>
           <div className="flex flex-shrink-0 items-center gap-1">
@@ -120,7 +120,7 @@ function MilestoneCard({ milestone, baby, locale, onEdit }: MilestoneCardProps) 
                 type="button"
                 onClick={onEdit}
                 aria-label={t('milestones.edit.action', { title: milestone.title })}
-                className="relative text-ink-faint hover:text-ink rounded-lg p-1 opacity-60 transition-opacity hover:bg-slate-100 hover:opacity-100 focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100"
+                className="relative text-ink-faint hover:text-ink rounded-lg p-1 opacity-60 transition-opacity hover:bg-muted hover:opacity-100 focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100"
               >
                 <span className="absolute -inset-3" aria-hidden="true" />
                 <PencilIcon className="h-3.5 w-3.5" />

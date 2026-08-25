@@ -86,7 +86,7 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
               </p>
             )}
 
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
               <Button
                 type="button"
                 variant="outline"

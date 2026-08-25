@@ -38,7 +38,7 @@ export function SelectorCardGroup({
         <label
           key={option.value}
           className={cn(
-            'has-data-checked:border-primary has-data-checked:bg-primary/5 flex cursor-pointer rounded-2xl border-2 border-slate-100 transition-all hover:border-slate-200',
+            'has-data-checked:border-primary has-data-checked:bg-primary/5 flex cursor-pointer rounded-2xl border-2 border-border transition-all hover:border-border',
             layout === 'vertical' ? 'items-start gap-3.5 p-4' : 'items-center gap-3 p-3',
           )}
         >

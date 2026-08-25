@@ -94,7 +94,7 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
             // descendant, even though the click handler itself never calls submit.
             <div key="profile" className="animate-fade-in-up">
               <BabyProfileFields register={register} control={control} errors={errors} />
-              <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+              <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <Button type="button" onClick={handleContinue}>
                   {t('babies.wizard.continue')}
                 </Button>
@@ -103,7 +103,7 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
           ) : (
             <form key="health" onSubmit={onSubmit} noValidate className="animate-fade-in-up">
               <BabyHealthFields control={control} />
-              <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+              <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <button
                   type="button"
                   onClick={() => setStep('profile')}

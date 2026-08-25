@@ -47,7 +47,7 @@ export function BabyProfileFields({ register, control, errors }: BabyProfileFiel
           onColorChange={avatarColorField.field.onChange}
           colorOptions={avatarColorOptions}
           colorGroupLabel={t('babies.form.avatarColorGroupLabel')}
-          fallback={<UserIcon className="h-8 w-8 text-slate-400" />}
+          fallback={<UserIcon className="h-8 w-8 text-ink-faint" />}
           uploadLabel={t('babies.form.avatarUploadAria')}
           removeLabel={t('babies.form.avatarRemoveAria')}
           urlPlaceholder={t('babies.form.avatarUrlPlaceholder')}

@@ -114,7 +114,7 @@ export function MilestonesRoute() {
               onClick={() => setActiveCategory('ALL')}
               className={cn(
                 'rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors',
-                activeCategory === 'ALL' ? 'bg-primary text-white' : 'bg-white text-ink-muted shadow-sm hover:bg-slate-50',
+                activeCategory === 'ALL' ? 'bg-primary text-white' : 'bg-card text-ink-muted shadow-sm hover:bg-muted',
               )}
             >
               {t('milestones.filterAll')}
@@ -129,7 +129,7 @@ export function MilestonesRoute() {
                   onClick={() => setActiveCategory(category)}
                   className={cn(
                     'rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors',
-                    isActive ? meta.solidClass : 'bg-white text-ink-muted shadow-sm hover:bg-slate-50',
+                    isActive ? meta.solidClass : 'bg-card text-ink-muted shadow-sm hover:bg-muted',
                   )}
                 >
                   {meta.emoji} {t(`milestones.category.${category.toLowerCase()}`)}

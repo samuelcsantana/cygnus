@@ -92,8 +92,8 @@ export function VaccinationCardRoute() {
         </button>
       </div>
 
-      <div className="print:rounded-none print:border-0 print:p-0 print:shadow-none rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm sm:p-8">
-        <div className="mb-6 flex items-center gap-3 border-b border-slate-100 pb-6">
+      <div className="print:rounded-none print:border-0 print:p-0 print:shadow-none rounded-[2rem] border border-border bg-card p-6 shadow-sm sm:p-8">
+        <div className="mb-6 flex items-center gap-3 border-b border-border pb-6">
           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-teal-500 text-white">
             <LogoIcon className="h-5 w-5" />
           </div>
@@ -116,7 +116,7 @@ export function VaccinationCardRoute() {
         ) : rows.length === 0 ? (
           <p className="py-10 text-center text-ink-muted">{t('vaccines.card.empty')}</p>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-border">
             <div className="text-ink-faint hidden gap-x-4 pb-2 text-xs font-bold tracking-wide uppercase sm:flex">
               <span className="w-28 flex-shrink-0">{t('vaccines.card.columnDate')}</span>
               <span className="min-w-[10rem] flex-1">{t('vaccines.card.columnVaccine')}</span>
@@ -150,7 +150,7 @@ export function VaccinationCardRoute() {
         )}
 
         {calendar.data?.metadata && (
-          <VaccineCatalogNotice metadata={calendar.data.metadata} className="mt-6 print:border-slate-200 print:bg-white" />
+          <VaccineCatalogNotice metadata={calendar.data.metadata} className="mt-6 print:border-border print:bg-card" />
         )}
       </div>
     </div>

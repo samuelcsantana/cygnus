@@ -4,7 +4,7 @@ export function AppointmentsSkeleton() {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2" aria-hidden="true">
       {[0, 1, 2, 3].map((index) => (
-        <div key={index} className="rounded-2xl border-[1.5px] border-transparent bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+        <div key={index} className="rounded-2xl border-[1.5px] border-transparent bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <div className="mb-3 flex items-start justify-between gap-3">
             <div className="flex items-center gap-3.5">
               <Skeleton className="h-11 w-11 flex-shrink-0 rounded-xl" />
