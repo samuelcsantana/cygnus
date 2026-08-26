@@ -587,6 +587,7 @@
     "title": "Notificações 🔔",
     "bellAria_one": "Notificações, {{count}} não lida",
     "bellAria_other": "Notificações, {{count}} não lidas",
+    "unreadCountUnavailable": "Carregando as notificações…",
     "unreadCount_one": "{{count}} não lida",
     "unreadCount_other": "{{count}} não lidas",
     "markAllRead": "Marcar todas como lidas",
