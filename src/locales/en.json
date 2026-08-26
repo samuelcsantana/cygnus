@@ -451,6 +451,7 @@
   "appointments": {
     "title": "Appointments",
     "summary": "{{completed}} completed · {{scheduled}} scheduled",
+    "summaryUnavailable": "Loading appointments…",
     "scheduleAction": "Schedule Appointment",
     "dateLabel": "Date",
     "genericError": "Could not load appointments.",

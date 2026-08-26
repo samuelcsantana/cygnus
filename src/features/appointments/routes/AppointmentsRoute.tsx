@@ -37,9 +37,23 @@ export function AppointmentsRoute() {
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <h2 className="font-display text-3xl font-extrabold text-ink">{t('appointments.title')}</h2>
-          <p className="mt-1 text-lg text-ink-muted">
-            {t('appointments.summary', { completed: completedCount, scheduled: scheduledCount })}
-          </p>
+          {/* Without the list, both counts are zeros derived from an empty
+              array. Printed unconditionally they sat directly above "Não foi
+              possível carregar as consultas." — the page asserted a count and
+              then admitted, one line down, that it had read nothing. Same
+              shape as the vaccine summary, same treatment. */}
+          {isError ? (
+            // Nothing here on error: the message below already says the list
+            // did not load, and repeating it in a subtitle only competes with
+            // it for attention.
+            null
+          ) : (
+            <p className="mt-1 text-lg text-ink-muted">
+              {isPending
+                ? t('appointments.summaryUnavailable')
+                : t('appointments.summary', { completed: completedCount, scheduled: scheduledCount })}
+            </p>
+          )}
         </div>
         <button
           type="button"

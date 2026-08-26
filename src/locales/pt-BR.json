@@ -451,6 +451,7 @@
   "appointments": {
     "title": "Consultas",
     "summary": "{{completed}} realizadas · {{scheduled}} agendadas",
+    "summaryUnavailable": "Carregando as consultas…",
     "scheduleAction": "Agendar Consulta",
     "dateLabel": "Data",
     "genericError": "Não foi possível carregar as consultas.",
