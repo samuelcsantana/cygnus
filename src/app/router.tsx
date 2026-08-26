@@ -32,6 +32,24 @@ export const router = createBrowserRouter([
         ],
       },
       {
+        // Public on purpose, and lazy like every other route: a privacy policy
+        // that demands a login to be read does not do the thing it exists to
+        // do. Both paths render the same component — the structure is shared
+        // and only the copy differs.
+        path: '/privacidade',
+        lazy: () =>
+          import('@/features/legal/routes/LegalDocumentRoute').then((m) => ({
+            Component: () => <m.LegalDocumentRoute documentId="privacy" />,
+          })),
+      },
+      {
+        path: '/termos',
+        lazy: () =>
+          import('@/features/legal/routes/LegalDocumentRoute').then((m) => ({
+            Component: () => <m.LegalDocumentRoute documentId="terms" />,
+          })),
+      },
+      {
         // Deliberately not nested under ProtectedLayout: the invite preview must
         // render for logged-out visitors too (see InviteRedeemRoute.tsx).
         path: '/invites/:code',

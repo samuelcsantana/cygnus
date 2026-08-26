@@ -667,6 +667,71 @@
       "alreadyUsedDescription": "This invite has already been used by someone else."
     }
   },
+  "legal": {
+    "versionLine": "Version {{version}} · in force from {{date}}",
+    "draftNotice": {
+      "title": "This text is not in force yet",
+      "body": "The legal content on this page is a structural draft and needs professional review before it means anything. The data inventory below, however, describes what the app actually collects today."
+    },
+    "pendingSections": "The sections below are listed so it is clear what still has to be written. None of them has final text yet.",
+    "inventory": {
+      "title": "What the app collects",
+      "intro": "Taken from this app's data contracts, not written from memory.",
+      "categories": {
+        "account": {
+          "label": "Account",
+          "detail": "Name, e-mail and password. The password is never sent or stored in readable form."
+        },
+        "child": {
+          "label": "Child profile",
+          "detail": "Name, date of birth, photo and avatar colour."
+        },
+        "health": {
+          "label": "Health",
+          "detail": "Allergies, and vaccines given with batch, place, professional and a photo of the record."
+        },
+        "appointments": {
+          "label": "Appointments",
+          "detail": "Date, professional, specialty, place, reason and notes."
+        },
+        "milestones": {
+          "label": "Milestones",
+          "detail": "Title, description, date and photo."
+        },
+        "sharing": {
+          "label": "Sharing",
+          "detail": "The e-mail of anyone you invite as a guardian and the date they accepted."
+        }
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "sectionsTitle": "Sections still to write",
+      "sections": [
+        "Who controls the data and how to reach them",
+        "The legal basis for each kind of processing",
+        "How long each category is kept",
+        "Who the data is shared with, infrastructure providers included",
+        "How to exercise access, correction, portability and deletion rights",
+        "What an invited guardian can see about a child",
+        "How changes to this policy are announced"
+      ]
+    },
+    "terms": {
+      "title": "Terms of Use",
+      "sectionsTitle": "Sections still to write",
+      "sections": [
+        "What the service is, and what it is not",
+        "This app does not replace medical advice",
+        "Responsibilities of users and of anyone sharing a profile",
+        "Closing an account and what happens to the data",
+        "Limitation of liability",
+        "Governing law and jurisdiction"
+      ]
+    },
+    "footerPrivacy": "Privacy",
+    "footerTerms": "Terms"
+  },
   "errors": {
     "boundary": {
       "title": "Something went wrong",
