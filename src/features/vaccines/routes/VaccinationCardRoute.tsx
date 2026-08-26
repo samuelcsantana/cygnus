@@ -72,6 +72,8 @@ export function VaccinationCardRoute() {
   const isPending = babies.isPending || calendar.isPending || adhoc.isPending
   const isError = calendar.isError || adhoc.isError
 
+  const hasPrintableCard = !isPending && !isError && rows.length > 0
+
   return (
     <div className="mx-auto max-w-3xl">
       <div className="print:hidden mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -82,10 +84,17 @@ export function VaccinationCardRoute() {
           <ArrowLeftIcon className="h-4 w-4" />
           {t('common.back')}
         </Link>
+        {/* Printing is offered only when there are rows to print. Unconditional,
+            this button sent "Não foi possível carregar a carteira de vacinação."
+            to paper under the heading "Carteira de Vacinação" — and while the
+            queries were still retrying it printed "Carregando…". A vaccination
+            card is a document people hand to a clinic; an error message
+            wearing that title is worse than no page at all. */}
         <button
           type="button"
           onClick={() => window.print()}
-          className="inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-md shadow-emerald-900/20 transition-colors hover:bg-primary/90"
+          disabled={!hasPrintableCard}
+          className="inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-md shadow-emerald-900/20 transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:shadow-none"
         >
           <PrinterIcon className="h-4 w-4" />
           {t('vaccines.card.printAction')}
