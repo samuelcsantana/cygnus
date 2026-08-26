@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { soleBaby, useBabies } from '@/features/babies/api/babies.hooks'
 import { todayDateString } from '@/lib/date'
 import { BabyPickerStep } from '@/shared/components/BabyPickerStep'
@@ -99,8 +99,8 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
             <CloseIcon className="h-4 w-4" />
           </button>
           <SparkleIcon className="mb-2 h-8 w-8 text-white" />
-          <h2 className="font-display text-xl font-extrabold text-white">{t('milestones.form.createTitle')}</h2>
-          <p className="mt-1 text-sm text-white/80">{t('milestones.form.createSubtitle')}</p>
+          <DialogTitle className="font-display text-xl font-extrabold text-white">{t('milestones.form.createTitle')}</DialogTitle>
+          <DialogDescription className="mt-1 text-sm text-white/80">{t('milestones.form.createSubtitle')}</DialogDescription>
         </div>
 
         <div className="p-7">
