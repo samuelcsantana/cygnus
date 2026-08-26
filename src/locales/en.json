@@ -513,6 +513,7 @@
   },
   "milestones": {
     "title": "Developmental Milestones",
+    "summaryUnavailable": "Loading milestones…",
     "summary_one": "{{count}} special moment recorded",
     "summary_other": "{{count}} special moments recorded",
     "action": "Record Milestone",

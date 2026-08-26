@@ -513,6 +513,7 @@
   },
   "milestones": {
     "title": "Hitos de Desarrollo",
+    "summaryUnavailable": "Cargando los hitos…",
     "summary_one": "{{count}} momento especial registrado",
     "summary_other": "{{count}} momentos especiales registrados",
     "action": "Registrar Hito",
