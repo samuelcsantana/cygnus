@@ -101,7 +101,16 @@ export function DeleteAccountDialog({ onDeleted }: DeleteAccountDialogProps) {
             </p>
           )}
 
-          <div className="flex justify-end">
+          {/* Cancelar vem antes, e existe porque este era o único diálogo do
+              app sem saída rotulada: os controles eram "Excluir conta
+              permanentemente" e o X do canto, nada mais. Todos os outros
+              oferecem um "Cancelar" ao lado da ação primária — e o que não
+              oferecia era justamente o irreversível, onde a escolha segura
+              deveria ser pelo menos tão fácil de alcançar quanto a destrutiva. */}
+          <div className="flex justify-end gap-3">
+            <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isSubmitting}>
+              {t('common.cancel')}
+            </Button>
             <Button type="submit" variant="destructive" disabled={isSubmitting}>
               {isSubmitting ? t('common.saving') : t('profile.delete.confirmAction')}
             </Button>
