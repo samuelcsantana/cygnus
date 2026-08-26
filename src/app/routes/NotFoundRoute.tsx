@@ -20,7 +20,13 @@ export function NotFoundRoute() {
       <p className="text-primary text-sm font-semibold tracking-wider uppercase">{t('errors.notFound.eyebrow')}</p>
       <h1 className="text-2xl font-bold text-ink">{t('errors.notFound.title')}</h1>
       <p className="max-w-md text-ink-muted">{t('errors.notFound.description')}</p>
-      <Button asChild>
+      {/* h-12 and a real width, not the raw Button default. This screen has no
+          app shell — it is the router's top-level catch-all, so there is no nav
+          and no header — which makes this link the only way out. At 117x32 it
+          was the same size the invite CTA had before it was fixed, and for the
+          same reason: a screen whose whole purpose is one action was drawing
+          that action smaller than any form submit in the app. */}
+      <Button asChild className="mt-2 h-12 w-full max-w-xs text-[15px] font-semibold">
         <Link to="/">{t('errors.notFound.backHome')}</Link>
       </Button>
     </div>
