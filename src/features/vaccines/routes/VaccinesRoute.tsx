@@ -23,7 +23,7 @@ type Filter = 'ALL' | VaccineStatus
 
 export function VaccinesRoute() {
   const { t } = useTranslation()
-  const { isPending, isError, isEmpty, babies, items, metadata } = useAllBabiesVaccineCalendars()
+  const { isPending, isError, isEmpty, babies, items, metadata, perBaby } = useAllBabiesVaccineCalendars()
   const [filter, setFilter] = useState<Filter>('ALL')
   const [isRegisterOpen, setRegisterOpen] = useState(false)
   const [editTarget, setEditTarget] = useState<Baby | null>(null)
@@ -39,10 +39,17 @@ export function VaccinesRoute() {
     GUIDANCE: items.filter((item) => item.status === 'GUIDANCE').length,
   }
 
-  const familyStripItems = babies.map((baby) => ({
-    baby,
-    delayedVaccineCount: items.filter((item) => item.babyId === baby.id && item.status === 'DELAYED').length,
-  }))
+  // Por filho, e não pelo agregado: uma requisição pode falhar enquanto as
+  // outras respondem, e marcar todas como desconhecidas por causa de uma seria
+  // trocar um erro por outro.
+  const familyStripItems = babies.map((baby) => {
+    const entry = perBaby.find((candidate) => candidate.baby.id === baby.id)
+    return {
+      baby,
+      delayedVaccineCount: items.filter((item) => item.babyId === baby.id && item.status === 'DELAYED').length,
+      vaccineStatusKnown: entry ? !entry.isPending && !entry.isError : false,
+    }
+  })
 
   const filteredItems = (filter === 'ALL' ? items : items.filter((item) => item.status === filter)).sort((a, b) => {
     const rank = { DELAYED: 0, GUIDANCE: 1, PENDING: 2, APPLIED: 3 } as const
@@ -55,9 +62,21 @@ export function VaccinesRoute() {
       <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <h2 className="font-display text-3xl font-extrabold text-ink">{t('vaccines.title')}</h2>
-          <p className="mt-1 text-lg text-ink-muted">
-            {t('vaccines.summary', { applied: counts.APPLIED, delayed: counts.DELAYED, pending: counts.PENDING })}
-          </p>
+          {/* Sem o calendário, `counts` é três zeros vindos de uma lista vazia.
+              Impressos aqui, ficavam logo acima da mensagem de erro — a página
+              afirmava "0 tomadas · 0 atrasadas · 0 pendentes" e, três linhas
+              abaixo, admitia não ter conseguido ler nada. */}
+          {isError ? (
+            // Nada aqui no erro: a mensagem abaixo já diz que o calendário não
+            // carregou, e repetir num subtítulo só rouba a atenção dela.
+            null
+          ) : (
+            <p className="mt-1 text-lg text-ink-muted">
+              {isPending
+                ? t('vaccines.summaryUnavailable')
+                : t('vaccines.summary', { applied: counts.APPLIED, delayed: counts.DELAYED, pending: counts.PENDING })}
+            </p>
+          )}
         </div>
         <button
           type="button"

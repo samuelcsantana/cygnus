@@ -217,6 +217,7 @@
       "overdueBannerHousehold_other": "para {{count}} hijos. Agenda cuanto antes.",
       "viewVaccines": "Ver vacunas →",
       "statVaccinesAppliedLabel": "Vacunas aplicadas",
+      "statVaccinesUnavailableSub": "No se pudo cargar",
       "statVaccinesAppliedSub_one": "{{count}} pendiente",
       "statVaccinesAppliedSub_other": "{{count}} pendientes",
       "statNextAppointmentLabel": "Próxima consulta",
@@ -230,7 +231,8 @@
       "noAppointmentsScheduled": "Sin consultas agendadas",
       "familyStripDelayed_one": "{{count}} vacuna atrasada",
       "familyStripDelayed_other": "{{count}} vacunas atrasadas",
-      "familyStripUpToDate": "Vacunas al día"
+      "familyStripUpToDate": "Vacunas al día",
+      "familyStripVaccinesUnknown": "No se pudieron verificar las vacunas"
     },
     "form": {
       "title": "Nuevo Perfil",
@@ -319,6 +321,7 @@
   "vaccines": {
     "title": "Vacunas",
     "summary": "{{applied}} aplicadas · {{delayed}} atrasadas · {{pending}} pendientes",
+    "summaryUnavailable": "Cargando el calendario…",
     "genericError": "No se pudo cargar el calendario de vacunas.",
     "progressLabel": "Progreso del calendario",
     "filterAll": "Todas",
