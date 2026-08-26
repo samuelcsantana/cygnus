@@ -101,7 +101,7 @@ export function LanguageSwitcher({ variant = 'compact', className }: LanguageSwi
             value={language.value}
             // The selected row is marked three ways — tint, weight and the
             // primitive's check — so the state never rests on colour alone.
-            className="h-9 rounded-lg pr-8 pl-2.5 data-[state=checked]:bg-emerald-50 dark:data-[state=checked]:bg-emerald-950/40 data-[state=checked]:font-semibold data-[state=checked]:text-emerald-700 dark:data-[state=checked]:text-emerald-300 dark:data-[state=checked]:bg-emerald-500/10 dark:data-[state=checked]:text-emerald-400"
+            className="h-9 rounded-lg pr-8 pl-2.5 data-[state=checked]:bg-emerald-50 data-[state=checked]:font-semibold data-[state=checked]:text-emerald-700 dark:data-[state=checked]:bg-emerald-500/10 dark:data-[state=checked]:text-emerald-400"
           >
             {language.label}
           </SelectItem>
