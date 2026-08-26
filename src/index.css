@@ -179,10 +179,17 @@
   --muted-foreground: oklch(0.532 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
-  /* Darkened from shadcn's stock 0.577. This token is used as *text* on a 10%
-     tint of itself (Button/Badge `destructive`), and at 0.577 that pairing is
-     3.98:1. At 0.529 it is 4.77:1 on the tint and 6.04:1 on white. */
-  --destructive: oklch(0.529 0.245 27.325);
+  /* Darkened well past shadcn's stock 0.577, and the reason is structural: this
+     token is used as *text* on a tint of **itself** (Button/Badge `destructive`),
+     so moving it moves both sides of the pairing and the ratio saturates. The
+     surface underneath the tint decides the outcome, and the component cannot
+     know what that surface is.
+     Measured at 0.49, text on `bg-destructive/10`: 5.07:1 on white, 4.86:1 on
+     the rose danger-zone wash, 4.66:1 on `--muted`. The previous 0.529 read
+     4.55 / 4.36 / 4.18 — passing only on white, and only by 0.05.
+     The 4.77 this comment used to claim was never reproducible; re-measuring
+     0.529 on the tint gives 4.55. */
+  --destructive: oklch(0.49 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: #059669;
@@ -227,7 +234,15 @@
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  /* Brightened from 0.704 for the same pairing as the light token, measured on
+     the surfaces this button actually lands on: 4.81:1 on `--card`, 4.66:1 on
+     the rose-950/40 danger-zone wash (was 4.64 / 4.46).
+     Known bound: on a dark `--muted` surface the pairing tops out at 4.29:1 and
+     no lightness fixes it — the red channel is already clipped, so brightening
+     the text brightens the tint by the same amount. No destructive control in
+     this app sits on that surface; putting one there would need an opaque fill
+     rather than a tint of the text colour. */
+  --destructive: oklch(0.74 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: #34d399;
