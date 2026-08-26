@@ -33,16 +33,32 @@ export function AppointmentScheduleFields({ register, control, errors }: Appoint
                 value={field.value}
                 onValueChange={field.onChange}
                 aria-invalid={!!errors.date}
+                aria-describedby={dateErrorKey ? 'date-error' : undefined}
                 className="mt-2"
               />
             )}
           />
-          {dateErrorKey && <p className="text-destructive mt-1 text-sm">{t(dateErrorKey)}</p>}
+          {dateErrorKey && (
+            <p id="date-error" className="text-destructive mt-1 text-sm">
+              {t(dateErrorKey)}
+            </p>
+          )}
         </div>
         <div>
           <Label htmlFor="time">{t('appointments.form.timeLabel')}</Label>
-          <Input id="time" type="time" aria-invalid={!!errors.time} className="mt-2" {...register('time')} />
-          {timeErrorKey && <p className="text-destructive mt-1 text-sm">{t(timeErrorKey)}</p>}
+          <Input
+            id="time"
+            type="time"
+            aria-invalid={!!errors.time}
+            aria-describedby={timeErrorKey ? 'time-error' : undefined}
+            className="mt-2"
+            {...register('time')}
+          />
+          {timeErrorKey && (
+            <p id="time-error" className="text-destructive mt-1 text-sm">
+              {t(timeErrorKey)}
+            </p>
+          )}
         </div>
       </div>
 

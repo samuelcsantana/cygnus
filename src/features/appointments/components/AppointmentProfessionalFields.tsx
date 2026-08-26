@@ -29,10 +29,15 @@ export function AppointmentProfessionalFields({ register, control, errors }: App
             id="doctorName"
             placeholder={t('appointments.form.doctorNamePlaceholder')}
             aria-invalid={!!errors.doctorName}
+            aria-describedby={doctorNameErrorKey ? 'doctorName-error' : undefined}
             className="mt-2"
             {...register('doctorName')}
           />
-          {doctorNameErrorKey && <p className="text-destructive mt-1 text-sm">{t(doctorNameErrorKey)}</p>}
+          {doctorNameErrorKey && (
+            <p id="doctorName-error" className="text-destructive mt-1 text-sm">
+              {t(doctorNameErrorKey)}
+            </p>
+          )}
         </div>
         <div>
           <Label htmlFor="specialty">{t('appointments.form.specialtyLabel')}</Label>
