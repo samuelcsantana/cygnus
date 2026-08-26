@@ -324,6 +324,7 @@
     "summaryUnavailable": "Loading the schedule…",
     "genericError": "Could not load the vaccine calendar.",
     "progressLabel": "Calendar progress",
+    "statusFilter": { "groupLabel": "Filter by status" },
     "filterAll": "All",
     "filterApplied": "Applied ({{count}})",
     "filterPending": "Pending ({{count}})",
@@ -522,6 +523,7 @@
     "summary_other": "{{count}} special moments recorded",
     "action": "Record Milestone",
     "genericError": "Could not load milestones.",
+    "categoryFilter": { "groupLabel": "Filter by category" },
     "filterAll": "All",
     "category": {
       "motor": "Motor",

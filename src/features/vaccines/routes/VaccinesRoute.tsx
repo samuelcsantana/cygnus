@@ -124,7 +124,10 @@ export function VaccinesRoute() {
             ))}
           </div>
 
-          <div className="mb-6 flex flex-wrap gap-2">
+          {/* Same treatment as the milestone category row and the shared
+              BabyFilterChips: the group carries a name, each chip carries its
+              pressed state. Selection was previously fill colour only. */}
+          <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label={t('vaccines.statusFilter.groupLabel')}>
             {(
               [
                 ['ALL', t('vaccines.filterAll')],
@@ -137,6 +140,7 @@ export function VaccinesRoute() {
               <button
                 key={value}
                 type="button"
+                aria-pressed={filter === value}
                 onClick={() => setFilter(value)}
                 className={cn(
                   'rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors',
