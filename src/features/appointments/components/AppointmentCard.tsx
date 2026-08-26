@@ -99,7 +99,18 @@ export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails
         <button
           type="button"
           onClick={onViewDetails}
-          className="mt-4 w-full rounded-xl bg-emerald-50 dark:bg-emerald-950/40 py-2.5 text-sm font-bold text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-100 dark:hover:bg-emerald-900/40"
+          className={cn(
+            'mt-4 w-full rounded-xl py-2.5 text-sm font-bold transition-colors',
+            // Cancelada é neutra, não verde. O DESIGN.md já mapeia
+            // `Appointment CANCELLED` para slate neutro, e o badge no topo do
+            // cartão segue isso — só este botão não seguia, porque o ternário
+            // era binário (agendada ou "todo o resto") e jogava cancelada no
+            // mesmo balde de concluída. Consulta cancelada com botão verde lê
+            // como se estivesse tudo certo com ela.
+            appointment.status === 'CANCELLED'
+              ? 'bg-muted text-ink-muted hover:bg-muted/70'
+              : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/40',
+          )}
         >
           {t('appointments.detail.action')}
         </button>
