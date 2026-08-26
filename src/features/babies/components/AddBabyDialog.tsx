@@ -54,7 +54,16 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
   }
 
   const onSubmit = handleSubmit(async (values) => {
-    await createBaby.mutateAsync(values)
+    try {
+      // Sem este catch a rejeição vira unhandled rejection: o diálogo fica
+      // aberto, o botão volta ao normal e nada é dito. A pessoa clica de novo,
+      // e se a falha tiver sido parcial isso duplica o registro. Os formulários
+      // compartilhados (BabyForm, MilestoneForm, AppointmentForm) já faziam
+      // isto; os assistentes que têm formulário próprio ficaram de fora.
+      await createBaby.mutateAsync(values)
+    } catch {
+      return // a mensagem aparece abaixo, a partir de createBaby.error
+    }
     toast.success(t('babies.form.successToast'))
     onOpenChange(false)
   })
@@ -115,6 +124,11 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
                   {isSubmitting ? t('common.saving') : t('babies.form.submit')}
                 </Button>
               </div>
+              {createBaby.isError && (
+                <p role="alert" className="text-destructive mt-4 text-sm">
+                  {t('babies.form.genericError')}
+                </p>
+              )}
             </form>
           )}
         </div>
