@@ -25,9 +25,21 @@ export function NotificationsRoute() {
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h2 className="font-display text-3xl font-extrabold text-ink">{t('notifications.title')}</h2>
-          <p className="mt-1 text-lg text-ink-muted">
-            {t('notifications.unreadCount', { count: unreadItems.length })}
-          </p>
+          {/* unreadItems comes from `data ?? []`, so it is empty while the
+              query is pending and while it failed — and "0 não lida" is a
+              reassuring sentence to read when the truth is that nothing was
+              fetched. Fifth screen with this shape. */}
+          {notifications.isError ? (
+            // Nothing on error: the message below already says the list did not
+            // load.
+            null
+          ) : (
+            <p className="mt-1 text-lg text-ink-muted">
+              {notifications.isPending
+                ? t('notifications.unreadCountUnavailable')
+                : t('notifications.unreadCount', { count: unreadItems.length })}
+            </p>
+          )}
         </div>
         {unreadItems.length > 0 && (
           <button type="button" onClick={markAllRead} className="text-primary text-sm font-bold">

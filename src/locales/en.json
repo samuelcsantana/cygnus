@@ -150,6 +150,7 @@
       "subtitle": "Which child is this for?"
     },
     "dashboard": {
+      "loadError": "Could not load the family data.",
       "welcomeHeading": "Welcome to Meu Neném!",
       "welcomeDescription": "Track vaccines, appointments and the most special milestones of your children's growth — all organized in one place, so you never miss an important moment.",
       "welcomeCta": "Add Your First Child",
@@ -587,6 +588,7 @@
     "title": "Notifications 🔔",
     "bellAria_one": "Notifications, {{count}} unread",
     "bellAria_other": "Notifications, {{count}} unread",
+    "unreadCountUnavailable": "Loading notifications…",
     "unreadCount_one": "{{count}} unread",
     "unreadCount_other": "{{count}} unread",
     "markAllRead": "Mark all as read",

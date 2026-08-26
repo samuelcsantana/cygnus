@@ -150,6 +150,7 @@
       "subtitle": "Para qual criança é isso?"
     },
     "dashboard": {
+      "loadError": "Não foi possível carregar os dados da família.",
       "welcomeHeading": "Bem-vindo(a) ao Meu Neném!",
       "welcomeDescription": "Acompanhe vacinas, consultas e os marcos mais especiais do crescimento dos seus filhos — tudo organizado em um só lugar, para você nunca perder um momento importante.",
       "welcomeCta": "Cadastrar Primeiro Filho",
@@ -587,6 +588,7 @@
     "title": "Notificações 🔔",
     "bellAria_one": "Notificações, {{count}} não lida",
     "bellAria_other": "Notificações, {{count}} não lidas",
+    "unreadCountUnavailable": "Carregando as notificações…",
     "unreadCount_one": "{{count}} não lida",
     "unreadCount_other": "{{count}} não lidas",
     "markAllRead": "Marcar todas como lidas",
