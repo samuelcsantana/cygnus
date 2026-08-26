@@ -321,6 +321,7 @@
     "summary": "{{applied}} tomadas · {{delayed}} atrasadas · {{pending}} pendentes",
     "genericError": "Não foi possível carregar o calendário de vacinas.",
     "progressLabel": "Progresso do calendário",
+    "statusFilter": { "groupLabel": "Filtrar por situação" },
     "filterAll": "Todas",
     "filterApplied": "Tomadas ({{count}})",
     "filterPending": "Pendentes ({{count}})",
@@ -517,6 +518,7 @@
     "summary_other": "{{count}} momentos especiais registrados",
     "action": "Registrar Marco",
     "genericError": "Não foi possível carregar os marcos.",
+    "categoryFilter": { "groupLabel": "Filtrar por categoria" },
     "filterAll": "Todos",
     "category": {
       "motor": "Motor",

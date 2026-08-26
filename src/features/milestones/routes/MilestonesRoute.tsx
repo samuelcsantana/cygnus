@@ -108,9 +108,16 @@ export function MilestonesRoute() {
             />
           </div>
 
-          <div className="mb-8 flex flex-wrap gap-2">
+          {/* role/aria-label/aria-pressed, matching BabyFilterChips right
+              above it. Without them this row is a bare list of buttons: its
+              first chip is also labelled "Todos", so a screen reader announced
+              "Todos, button" twice on this screen with nothing to tell the two
+              filters apart, and the selected category was conveyed by fill
+              colour alone. */}
+          <div className="mb-8 flex flex-wrap gap-2" role="group" aria-label={t('milestones.categoryFilter.groupLabel')}>
             <button
               type="button"
+              aria-pressed={activeCategory === 'ALL'}
               onClick={() => setActiveCategory('ALL')}
               className={cn(
                 'rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors',
@@ -126,6 +133,7 @@ export function MilestonesRoute() {
                 <button
                   key={category}
                   type="button"
+                  aria-pressed={isActive}
                   onClick={() => setActiveCategory(category)}
                   className={cn(
                     'rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors',

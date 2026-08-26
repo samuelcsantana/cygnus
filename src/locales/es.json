@@ -321,6 +321,7 @@
     "summary": "{{applied}} aplicadas · {{delayed}} atrasadas · {{pending}} pendientes",
     "genericError": "No se pudo cargar el calendario de vacunas.",
     "progressLabel": "Progreso del calendario",
+    "statusFilter": { "groupLabel": "Filtrar por situación" },
     "filterAll": "Todas",
     "filterApplied": "Aplicadas ({{count}})",
     "filterPending": "Pendientes ({{count}})",
@@ -517,6 +518,7 @@
     "summary_other": "{{count}} momentos especiales registrados",
     "action": "Registrar Hito",
     "genericError": "No se pudieron cargar los hitos.",
+    "categoryFilter": { "groupLabel": "Filtrar por categoría" },
     "filterAll": "Todos",
     "category": {
       "motor": "Motor",
