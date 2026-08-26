@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AppShellLayout } from './routes/AppShellLayout'
 import { NotFoundRoute } from './routes/NotFoundRoute'
 import { ProtectedLayout } from './routes/ProtectedLayout'
+import { RouteErrorRoute } from './routes/RouteErrorRoute'
 import { RouteHydrateFallback } from './routes/RouteHydrateFallback'
 
 // Route-level code splitting: each feature page (and its forms, dialogs,
@@ -11,6 +12,11 @@ import { RouteHydrateFallback } from './routes/RouteHydrateFallback'
 export const router = createBrowserRouter([
   {
     hydrateFallbackElement: <RouteHydrateFallback />,
+    // Na raiz, para cobrir toda rota filha. Sem isto o React Router mostra a
+    // própria tela de desenvolvimento — "Unexpected Application Error!" mais o
+    // stack — ao usuário final, e o ErrorBoundary do App.tsx nunca vê o caso:
+    // erro de rota é tratado pelo roteador antes de subir para o React.
+    errorElement: <RouteErrorRoute />,
     children: [
       {
         // One parent for both auth screens, so the segmented control switching
