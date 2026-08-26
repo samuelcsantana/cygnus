@@ -61,7 +61,19 @@ export function MilestonesRoute() {
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <h2 className="font-display text-3xl font-extrabold text-ink">{t('milestones.title')}</h2>
-          <p className="mt-1 text-lg text-ink-muted">{t('milestones.summary', { count: items.length })}</p>
+          {/* Without the list, items.length is zero because nothing loaded, not
+              because nothing was recorded — and "0 momentos especiais
+              registrados" reads as a fact about the family. Fourth screen with
+              this shape; same treatment as the other three. */}
+          {isError ? (
+            // Nothing on error: the message below already says the timeline did
+            // not load, and a subtitle repeating it only competes with it.
+            null
+          ) : (
+            <p className="mt-1 text-lg text-ink-muted">
+              {isPending ? t('milestones.summaryUnavailable') : t('milestones.summary', { count: items.length })}
+            </p>
+          )}
         </div>
         <button
           type="button"

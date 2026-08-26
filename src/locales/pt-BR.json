@@ -517,6 +517,7 @@
   },
   "milestones": {
     "title": "Marcos de Desenvolvimento",
+    "summaryUnavailable": "Carregando os marcos…",
     "summary_one": "{{count}} momento especial registrado",
     "summary_other": "{{count}} momentos especiais registrados",
     "action": "Registrar Marco",
