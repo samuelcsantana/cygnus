@@ -92,9 +92,16 @@ export function InviteRedeemRoute() {
             {t('invites.redeem.title', { babyName: preview.data.babyName })}
           </h1>
           <p className="mt-2 text-ink-muted">{t('invites.redeem.description')}</p>
+          {/* h-12 and full width, matching AuthSubmitButton rather than the
+              Button default. This is the only action on the screen — the whole
+              page exists for this one tap — and at the raw h-8 default it was
+              117x32, the smallest primary action in the app while every other
+              primary path is 44px or taller. The fill stays --primary: which
+              colour a primary action takes is still an open decision, and
+              scale is fixable without settling it. */}
           <Button
             type="button"
-            className="mt-6"
+            className="mt-6 h-12 w-full text-[15px] font-semibold"
             onClick={handleAccept}
             disabled={redeemInvite.isPending || currentUser.isPending}
           >
