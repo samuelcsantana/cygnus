@@ -1,7 +1,7 @@
 import { AxeBuilder } from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 
-import { addBaby, registerAndLogin, uniqueTestUser } from './support/fixtures.js'
+import { addBaby, openAddBabyDialog, registerAndLogin, uniqueTestUser } from './support/fixtures.js'
 
 /**
  * Routes wrap their content in a fade/slide entrance animation
@@ -37,8 +37,8 @@ test.describe('accessibility (WCAG 2 A/AA)', () => {
     // Empty-state dashboard (no children yet).
     await expectNoViolations(page)
 
-    await page.getByRole('link', { name: 'Começar Agora: Adicionar Criança' }).click()
-    await expectNoViolations(page) // /add-baby form
+    await openAddBabyDialog(page)
+    await expectNoViolations(page) // o diálogo de novo perfil
 
     await addBaby(page, { name: 'Sofia E2E', birthDate: '2025-04-20', gender: 'Menina' })
     await expectNoViolations(page) // populated dashboard

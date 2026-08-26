@@ -7,5 +7,5 @@ test('a new user can register and log in', async ({ page }) => {
 
   await registerAndLogin(page, user)
 
-  await expect(page.getByRole('link', { name: 'Começar Agora: Adicionar Criança' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Cadastrar Primeiro Filho' })).toBeVisible()
 })

@@ -46,12 +46,36 @@ export interface TestBaby {
   gender: 'Menino' | 'Menina'
 }
 
-/** Runs from /add-baby (either the empty-state redirect or a direct nav). */
+/**
+ * Opens the "add child" dialog from the dashboard's empty state.
+ *
+ * There is no `/add-baby` route any more: the navigation rebuild replaced it
+ * with a dialog, so the flow never leaves `/dashboard`. The specs asserted a
+ * URL change here and were failing against an app that had simply stopped
+ * navigating.
+ */
+export async function openAddBabyDialog(page: Page): Promise<void> {
+  await page.getByRole('button', { name: 'Cadastrar Primeiro Filho' }).click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+}
+
+/**
+ * Fills and submits the "add child" dialog, which must already be open.
+ *
+ * **Two steps, not one.** The dialog is a wizard — "Perfil" then "Saúde" — and
+ * "Criar Perfil" only exists on the second. The specs clicked it straight after
+ * filling the name and waited 30s for a button that was one screen away.
+ * The health step is all optional fields, so it is submitted as it comes.
+ */
 export async function addBaby(page: Page, baby: TestBaby): Promise<void> {
   await page.getByLabel('Nome da Criança').fill(baby.name)
   await page.getByLabel('Data de Nascimento').fill(baby.birthDate)
   await page.getByRole('radio', { name: baby.gender }).click()
+  await page.getByRole('button', { name: 'Continuar' }).click()
+
   await page.getByRole('button', { name: 'Criar Perfil' }).click()
 
+  // O diálogo fechar é o sinal de sucesso — não há navegação para esperar.
+  await expect(page.getByRole('dialog')).toBeHidden()
   await expect(page).toHaveURL(/\/dashboard$/)
 }
