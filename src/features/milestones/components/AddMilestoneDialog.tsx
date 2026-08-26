@@ -75,7 +75,16 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
   }
 
   const onSubmit = handleSubmit(async (values) => {
-    await createMilestone.mutateAsync(values)
+    try {
+      // Sem este catch a rejeição vira unhandled rejection: o diálogo fica
+      // aberto, o botão volta ao normal e nada é dito. A pessoa clica de novo,
+      // e se a falha tiver sido parcial isso duplica o registro. Os formulários
+      // compartilhados (BabyForm, MilestoneForm, AppointmentForm) já faziam
+      // isto; os assistentes que têm formulário próprio ficaram de fora.
+      await createMilestone.mutateAsync(values)
+    } catch {
+      return // a mensagem aparece abaixo, a partir de createMilestone.error
+    }
     toast.success(t('milestones.form.successToast'))
     onOpenChange(false)
   })
@@ -151,6 +160,11 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
                 <Button type="submit" disabled={isSubmitting} className="bg-foreground text-background hover:bg-foreground/90">
                   {isSubmitting ? t('common.saving') : t('milestones.form.submit')}
                 </Button>
+                {createMilestone.isError && (
+                  <p role="alert" className="text-destructive w-full text-sm">
+                    {t('milestones.form.genericError')}
+                  </p>
+                )}
               </div>
             </form>
           )}

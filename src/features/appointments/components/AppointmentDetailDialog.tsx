@@ -40,13 +40,25 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
 
   async function handleSaveNotes() {
     if (!appointment) return
-    await updateAppointment.mutateAsync({ appointmentId: appointment.id, input: { notes: notes || null } })
+    // A mensagem de erro já é renderizada acima a partir de updateAppointment
+    // .isError; o que faltava era o catch. Sem ele a rejeição sobe como
+    // unhandled rejection e vira evento de crash no Sentry para uma falha que
+    // a tela já está tratando.
+    try {
+      await updateAppointment.mutateAsync({ appointmentId: appointment.id, input: { notes: notes || null } })
+    } catch {
+      return
+    }
     toast.success(t('appointments.detail.notesSavedToast'))
   }
 
   async function handleSetStatus(status: 'COMPLETED' | 'CANCELLED') {
     if (!appointment) return
-    await updateAppointment.mutateAsync({ appointmentId: appointment.id, input: { status, notes: notes || null } })
+    try {
+      await updateAppointment.mutateAsync({ appointmentId: appointment.id, input: { status, notes: notes || null } })
+    } catch {
+      return
+    }
     toast.success(
       status === 'CANCELLED'
         ? t('appointments.detail.cancelSuccessToast')

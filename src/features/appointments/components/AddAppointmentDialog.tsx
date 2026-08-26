@@ -70,7 +70,16 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
   }
 
   const onSubmit = handleSubmit(async (values) => {
-    await createAppointment.mutateAsync(values)
+    try {
+      // Sem este catch a rejeição vira unhandled rejection: o diálogo fica
+      // aberto, o botão volta ao normal e nada é dito. A pessoa clica de novo,
+      // e se a falha tiver sido parcial isso duplica o registro. Os formulários
+      // compartilhados (BabyForm, MilestoneForm, AppointmentForm) já faziam
+      // isto; os assistentes que têm formulário próprio ficaram de fora.
+      await createAppointment.mutateAsync(values)
+    } catch {
+      return // a mensagem aparece abaixo, a partir de createAppointment.error
+    }
     toast.success(t('appointments.form.successToast'))
     onOpenChange(false)
   })
@@ -147,6 +156,11 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
                   {isSubmitting ? t('common.saving') : t('appointments.form.submit')}
                 </Button>
               </div>
+              {createAppointment.isError && (
+                <p role="alert" className="text-destructive mt-4 text-sm">
+                  {t('appointments.form.genericError')}
+                </p>
+              )}
             </form>
           )}
         </div>
