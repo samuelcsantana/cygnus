@@ -115,17 +115,29 @@ export function AppShellLayout() {
           </div>
           <span className="font-display text-lg font-extrabold text-ink">{t('common.appName')}</span>
         </div>
+        {/* All three controls are 44x44, which is the AAA target size and also
+            the only way this row is internally consistent: the two icon
+            buttons were 32x32 from p-1.5 around a 20px icon while ThemeToggle
+            beside them was 36x36. Nothing moves visually — the fills are
+            transparent and the icons stay centred at their own size — so the
+            growth is hit area only. ThemeToggle takes the size through
+            className rather than gaining a variant, since 44px is right here
+            and not at its other call sites. */}
         <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={openAddBabyDialog}
             aria-label={t('babies.addChild')}
-            className="rounded-lg p-1.5 text-emerald-700 dark:text-emerald-300"
+            className="flex h-11 w-11 items-center justify-center rounded-lg text-emerald-700 dark:text-emerald-300"
           >
             <PlusIcon className="h-5 w-5" />
           </button>
-          <ThemeToggle />
-          <Link to="/profile" aria-label={t('profile.nav.viewProfile')} className="rounded-lg p-1.5 text-ink-muted">
+          <ThemeToggle className="h-11 w-11" />
+          <Link
+            to="/profile"
+            aria-label={t('profile.nav.viewProfile')}
+            className="flex h-11 w-11 items-center justify-center rounded-lg text-ink-muted"
+          >
             <UserIcon className="h-5 w-5" />
           </Link>
         </div>
