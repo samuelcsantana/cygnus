@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Outlet } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 
 import authHeroUrl from '@/assets/auth-hero.avif'
 
@@ -179,6 +179,19 @@ export function AuthLayout() {
 
         <p className="text-center text-xs text-ink-faint">
           {t('auth.brand.copyright', { year: new Date().getFullYear() })} · {t('auth.brand.footerNote')}
+        </p>
+        {/* Os dois documentos ficam alcançáveis das telas públicas, que é onde
+            alguém decide se cria a conta. Links de texto inline: o critério
+            2.5.8 tem exceção para eles, e crescê-los mudaria a tipografia do
+            rodapé sem melhorar a ergonomia. */}
+        <p className="text-center text-xs text-ink-faint">
+          <Link to="/privacidade" className="underline-offset-4 hover:underline">
+            {t('legal.footerPrivacy')}
+          </Link>
+          {' · '}
+          <Link to="/termos" className="underline-offset-4 hover:underline">
+            {t('legal.footerTerms')}
+          </Link>
         </p>
       </div>
     </div>

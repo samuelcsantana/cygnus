@@ -667,6 +667,71 @@
       "alreadyUsedDescription": "Esta invitación ya fue utilizada por otra persona."
     }
   },
+  "legal": {
+    "versionLine": "Versión {{version}} · vigente desde {{date}}",
+    "draftNotice": {
+      "title": "Este texto aún no está vigente",
+      "body": "El contenido jurídico de esta página es un borrador de estructura y necesita revisión profesional antes de tener valor. El inventario de datos de abajo, en cambio, describe lo que la aplicación recoge hoy."
+    },
+    "pendingSections": "Las secciones siguientes están listadas para dejar claro qué falta redactar. Ninguna tiene texto definitivo todavía.",
+    "inventory": {
+      "title": "Qué recoge la aplicación",
+      "intro": "Extraído de los contratos de datos de esta aplicación, no redactado de memoria.",
+      "categories": {
+        "account": {
+          "label": "Cuenta",
+          "detail": "Nombre, correo y contraseña. La contraseña nunca se envía ni se guarda en texto legible."
+        },
+        "child": {
+          "label": "Perfil del niño",
+          "detail": "Nombre, fecha de nacimiento, foto y color del avatar."
+        },
+        "health": {
+          "label": "Salud",
+          "detail": "Alergias y vacunas aplicadas con lote, lugar, profesional y foto del comprobante."
+        },
+        "appointments": {
+          "label": "Consultas",
+          "detail": "Fecha, profesional, especialidad, lugar, motivo y notas."
+        },
+        "milestones": {
+          "label": "Hitos",
+          "detail": "Título, descripción, fecha y foto."
+        },
+        "sharing": {
+          "label": "Compartir",
+          "detail": "El correo de quien invitas como responsable y la fecha en que aceptó."
+        }
+      }
+    },
+    "privacy": {
+      "title": "Política de Privacidad",
+      "sectionsTitle": "Secciones por redactar",
+      "sections": [
+        "Quién controla los datos y cómo contactarlo",
+        "La base legal de cada tratamiento",
+        "Cuánto tiempo se conserva cada categoría",
+        "Con quién se comparten los datos, proveedores de infraestructura incluidos",
+        "Cómo ejercer los derechos de acceso, corrección, portabilidad y supresión",
+        "Qué puede ver un responsable invitado sobre un niño",
+        "Cómo se anuncian los cambios de esta política"
+      ]
+    },
+    "terms": {
+      "title": "Términos de Uso",
+      "sectionsTitle": "Secciones por redactar",
+      "sections": [
+        "Qué es el servicio y qué no es",
+        "Esta aplicación no sustituye la orientación médica",
+        "Responsabilidades de quien usa y de quien comparte un perfil",
+        "Cierre de cuenta y qué pasa con los datos",
+        "Limitación de responsabilidad",
+        "Ley aplicable y jurisdicción"
+      ]
+    },
+    "footerPrivacy": "Privacidad",
+    "footerTerms": "Términos"
+  },
   "errors": {
     "boundary": {
       "title": "Algo salió mal",
