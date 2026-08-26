@@ -33,7 +33,19 @@ export function StepIndicator({ steps, currentStepId, accentClassName = 'bg-prim
               >
                 {isCompleted ? <CheckIcon className="h-3 w-3" /> : index + 1}
               </span>
-              <span className={cn('text-xs font-semibold', isActive ? 'text-ink' : 'text-ink-faint')}>
+              {/* Rótulo escondido só visualmente abaixo de `sm`, nunca
+                  removido. Os três rótulos somados dão ~420px de min-content, e
+                  como DialogContent é um grid cujo item não encolhe abaixo
+                  disso (`min-width: auto`), o painel inteiro era arrastado para
+                  420 dentro de uma tela de 390 — rolagem horizontal dentro do
+                  diálogo. `sr-only` preserva o texto para leitor de tela, e o
+                  passo atual continua nomeado no corpo do diálogo. */}
+              <span
+                className={cn(
+                  'sr-only text-xs font-semibold sm:not-sr-only',
+                  isActive ? 'text-ink' : 'text-ink-faint',
+                )}
+              >
                 {step.label}
               </span>
             </div>
