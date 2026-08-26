@@ -304,7 +304,8 @@
       "removeConfirmAction": "Remove",
       "leaveSuccessToast": "You left the profile.",
       "removeSuccessToast": "Guardian removed successfully.",
-      "removeGenericError": "Could not complete the action. Please try again.",
+      "leaveGenericError": "Could not leave the profile. Please try again.",
+      "removeGenericError": "Could not remove the guardian. Please try again.",
       "invite": {
         "emailLabel": "Invitee's email (optional)",
         "emailPlaceholder": "name@example.com",
