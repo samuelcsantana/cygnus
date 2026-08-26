@@ -17,6 +17,27 @@ interface BabyProfileFieldsProps {
   errors: FieldErrors<BabyFormInput>
 }
 
+/**
+ * Os hexes ficam literais aqui **de propósito**: o valor escolhido é gravado
+ * em `avatarColor` e volta do banco como string, então não pode ser um
+ * `var(--color-…)` resolvido em tempo de render.
+ *
+ * O que não podia ficar implícito é a origem. Três destes são cópia exata de
+ * tokens do `@theme` (`src/index.css`), e sem esta anotação um token mudar
+ * deixaria a paleta divergindo em silêncio — o `CLAUDE.md` §4 diz que o
+ * `@theme` é a fonte única de cor.
+ *
+ *   #E8853A  = --color-amber-500
+ *   #D95560  = --color-rose-500
+ *   #6C63FF  = --color-violet-500
+ *   #2A9D8F  = nada. É o teal da rampa apagada em 25/08/2026 (ver o comentário
+ *              no topo do @theme). Os três irmãos são tokens vivos; este é
+ *              fóssil, e continua sendo oferecido como opção. Trocá-lo é
+ *              escolha de marca, não de implementação — registrado na fila.
+ *
+ * Trocar a paleta **não** altera avatares já salvos: muda o que é oferecido,
+ * não o que está gravado.
+ */
 const AVATAR_BORDER_COLORS = ['#2A9D8F', '#E8853A', '#D95560', '#6C63FF']
 
 export function BabyProfileFields({ register, control, errors }: BabyProfileFieldsProps) {
