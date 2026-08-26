@@ -304,7 +304,8 @@
       "removeConfirmAction": "Eliminar",
       "leaveSuccessToast": "Saliste del perfil.",
       "removeSuccessToast": "Responsable eliminado con éxito.",
-      "removeGenericError": "No se pudo completar la acción. Inténtalo de nuevo.",
+      "leaveGenericError": "No se pudo salir del perfil. Inténtalo de nuevo.",
+      "removeGenericError": "No se pudo eliminar al responsable. Inténtalo de nuevo.",
       "invite": {
         "emailLabel": "Correo del invitado (opcional)",
         "emailPlaceholder": "nombre@ejemplo.com",

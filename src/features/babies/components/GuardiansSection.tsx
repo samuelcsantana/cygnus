@@ -104,7 +104,12 @@ function GuardianRow({ guardian, babyId, babyName, canRemove, canLeave }: Guardi
       await removeGuardian.mutateAsync(guardian.userId)
       toast.success(canLeave ? t('babies.guardians.leaveSuccessToast') : t('babies.guardians.removeSuccessToast'))
     } catch {
-      toast.error(t('babies.guardians.removeGenericError'))
+      // Ramifica como o sucesso logo acima. Sem isto a falha era a única
+      // mensagem do app que não dizia o que tinha falhado — "não foi possível
+      // concluir a ação" — enquanto todas as outras nomeiam a coisa. E aqui
+      // pesa mais: o AlertDialog já fechou, então este toast é tudo o que a
+      // pessoa vê.
+      toast.error(t(canLeave ? 'babies.guardians.leaveGenericError' : 'babies.guardians.removeGenericError'))
     }
   }
 
