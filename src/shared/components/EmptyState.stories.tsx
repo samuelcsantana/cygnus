@@ -23,7 +23,7 @@ const meta = {
     },
   },
   argTypes: {
-    tone: { control: 'inline-radio', options: ['slate', 'teal', 'violet', 'amber', 'rose'] },
+    tone: { control: 'inline-radio', options: ['slate', 'emerald', 'violet', 'amber', 'rose'] },
     icon: { table: { disable: true } },
     action: { table: { disable: true } },
   },
@@ -34,7 +34,7 @@ type Story = StoryObj<typeof meta>
 
 export const Vaccines: Story = {
   args: {
-    tone: 'teal',
+    tone: 'emerald',
     icon: <SyringeIcon className="h-10 w-10" />,
     title: 'Nenhuma vacina registrada',
     description:

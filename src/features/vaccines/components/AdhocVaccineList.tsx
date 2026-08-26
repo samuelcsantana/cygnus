@@ -100,7 +100,7 @@ function AdhocVaccineRow({ item, baby }: AdhocVaccineRowProps) {
       <span
         className={cn(
           'flex-shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold',
-          item.source === 'CAMPAIGN' ? 'bg-violet-50 text-violet-600' : 'bg-amber-50 text-amber-700',
+          item.source === 'CAMPAIGN' ? 'bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300' : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300',
         )}
       >
         {item.source === 'CAMPAIGN' ? t('vaccines.adhoc.sourceLabel.campaign') : t('vaccines.adhoc.sourceLabel.custom')}
@@ -112,7 +112,7 @@ function AdhocVaccineRow({ item, baby }: AdhocVaccineRowProps) {
             <button
               type="button"
               aria-label={t('vaccines.adhoc.delete.action', { name: item.customName })}
-              className="text-destructive relative rounded-lg p-1.5 opacity-60 transition-opacity hover:bg-rose-50 hover:opacity-100 focus-visible:opacity-100"
+              className="text-destructive relative rounded-lg p-1.5 opacity-60 transition-opacity hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:opacity-100 focus-visible:opacity-100"
             >
               <span className="absolute -inset-2.5" aria-hidden="true" />
               <TrashIcon className="h-3.5 w-3.5" />

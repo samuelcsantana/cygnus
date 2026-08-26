@@ -51,7 +51,7 @@ function DeleteMilestoneConfirm({ onConfirm }: ConfirmProps) {
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
-        <AlertDialogMedia className="bg-rose-50 text-rose-500">
+        <AlertDialogMedia className="bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-300">
           <TrashIcon />
         </AlertDialogMedia>
         <AlertDialogHeader>

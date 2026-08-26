@@ -29,12 +29,12 @@ export function MilestonesOverviewCard({ babies, items, isPending, isError }: Mi
     <div className="flex flex-col rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-300">
             <SparkleIcon className="h-[18px] w-[18px]" />
           </span>
           <h3 className="font-display text-base font-extrabold text-ink">{t('nav.milestones')}</h3>
         </div>
-        <Link to="/milestones" className="text-xs font-bold text-teal-700">
+        <Link to="/milestones" className="text-xs font-bold text-emerald-700 dark:text-emerald-300">
           {t('babies.dashboard.viewAll')}
         </Link>
       </div>

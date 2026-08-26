@@ -110,7 +110,7 @@ export function AvatarUploadField({
           type="button"
           onClick={() => fileInputRef.current?.click()}
           aria-label={uploadLabel}
-          className="bg-primary absolute -right-1 -bottom-1 flex h-7 w-7 items-center justify-center rounded-full text-white shadow-sm ring-2 ring-white transition-colors hover:brightness-95"
+          className="bg-primary absolute -right-1 -bottom-1 flex h-7 w-7 items-center justify-center rounded-full text-primary-foreground shadow-sm ring-2 ring-white transition-colors hover:brightness-95"
         >
           <CameraIcon className="h-3.5 w-3.5" />
         </button>

@@ -45,15 +45,15 @@ interface StepItem {
 }
 
 const VACCINE_STATUS_STYLE: Record<PreviewVaccineItem['status'], { bg: string; text: string; symbol: string }> = {
-  taken: { bg: 'bg-teal-50', text: 'text-teal-700', symbol: '✓' },
-  overdue: { bg: 'bg-rose-50', text: 'text-rose-700', symbol: '!' },
-  pending: { bg: 'bg-amber-50', text: 'text-amber-700', symbol: '○' },
+  taken: { bg: 'bg-emerald-50 dark:bg-emerald-950/40', text: 'text-emerald-700 dark:text-emerald-300', symbol: '✓' },
+  overdue: { bg: 'bg-rose-50 dark:bg-rose-950/40', text: 'text-rose-700 dark:text-rose-300', symbol: '!' },
+  pending: { bg: 'bg-amber-50 dark:bg-amber-950/40', text: 'text-amber-700 dark:text-amber-300', symbol: '○' },
 }
 
 const MILESTONE_CATEGORY_STYLE: Record<string, { bg: string; text: string }> = {
-  social: { bg: 'bg-amber-50', text: 'text-amber-700' },
-  motor: { bg: 'bg-teal-50', text: 'text-teal-700' },
-  language: { bg: 'bg-violet-50', text: 'text-violet-600' },
+  social: { bg: 'bg-amber-50 dark:bg-amber-950/40', text: 'text-amber-700 dark:text-amber-300' },
+  motor: { bg: 'bg-emerald-50 dark:bg-emerald-950/40', text: 'text-emerald-700 dark:text-emerald-300' },
+  language: { bg: 'bg-violet-50 dark:bg-violet-950/40', text: 'text-violet-600 dark:text-violet-300' },
 }
 
 const STEP_ICONS = [PlusIcon, SyringeIcon, DashboardIcon]
@@ -77,7 +77,7 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
   return (
     <div>
       {/* Hero */}
-      <div className="relative mb-7 overflow-hidden rounded-3xl bg-gradient-to-br from-teal-500 to-teal-700 p-8 sm:p-11">
+      <div className="relative mb-7 overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-700 to-emerald-900 p-8 sm:p-11">
         <div className="pointer-events-none absolute -top-12 -right-12 h-60 w-60 rounded-full bg-white/5" />
         <div className="pointer-events-none absolute -right-16 -bottom-20 h-80 w-80 rounded-full bg-white/[0.04]" />
         <div className="relative">
@@ -91,15 +91,15 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
           <p className="mb-7 max-w-xl text-[15px] leading-relaxed text-white/80">
             {t('babies.dashboard.welcomeDescription')}
           </p>
-          {/* Literal white, not `bg-card`, and it must stay that way: this button
-              sits on the teal hero panel, which is the same colour in both themes.
-              A card-coloured surface here goes near-black in dark and the teal
-              label on it collapses to an unreadable ratio — the panel does not
-              flip, so nothing painted on it may flip either. */}
+          {/* Literal white, and no `dark:` on the label either: this button sits
+              on the emerald hero panel, which is the same colour in both themes.
+              A card-coloured surface here goes near-black in dark, and a light
+              emerald label would then be painted on white — the panel does not
+              flip, so nothing painted on it may flip. */}
           <button
             type="button"
             onClick={openAddBabyDialog}
-            className="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 font-display text-base font-extrabold text-teal-700 shadow-lg shadow-black/10 transition-transform hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 font-display text-base font-extrabold text-emerald-700 shadow-lg shadow-black/10 transition-transform hover:-translate-y-0.5"
           >
             <PlusIcon className="h-5 w-5" />
             {t('babies.dashboard.welcomeCta')}
@@ -113,13 +113,13 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
       </p>
       <div className="mb-7 grid grid-cols-1 gap-3.5 md:grid-cols-2">
         <PreviewCard
-          gradientClassName="from-teal-50 to-teal-100"
-          iconClassName="bg-teal-500"
+          gradientClassName="from-emerald-50 to-emerald-100 dark:from-emerald-950/50 dark:to-emerald-900/40"
+          iconClassName="bg-emerald-600"
           icon={<SyringeIcon className="h-[18px] w-[18px] text-white" />}
           title={t('babies.dashboard.previewVaccines.cardTitle')}
-          titleClassName="text-teal-800"
+          titleClassName="text-emerald-800 dark:text-emerald-300"
           subtitle={t('babies.dashboard.previewVaccines.cardSubtitle')}
-          subtitleClassName="text-teal-700"
+          subtitleClassName="text-emerald-700 dark:text-emerald-300"
         >
           <div className="flex flex-col gap-2.5">
             {vaccineItems.map((item, index) => {
@@ -145,23 +145,23 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
                 <span className="text-[11px] text-ink-muted">
                   {t('babies.dashboard.previewVaccines.progressLabel')}
                 </span>
-                <span className="text-[11px] font-bold text-teal-700">65%</span>
+                <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300">65%</span>
               </div>
               <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                <div className="h-full w-[65%] rounded-full bg-gradient-to-r from-teal-500 to-teal-400" />
+                <div className="h-full w-[65%] rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400" />
               </div>
             </div>
           </div>
         </PreviewCard>
 
         <PreviewCard
-          gradientClassName="from-amber-50 to-amber-100"
-          iconClassName="bg-amber-500"
+          gradientClassName="from-amber-50 to-amber-100 dark:from-amber-950/50 dark:to-amber-900/40"
+          iconClassName="bg-amber-700"
           icon={<SparkleIcon className="h-[18px] w-[18px] text-white" />}
           title={t('babies.dashboard.previewMilestones.cardTitle')}
-          titleClassName="text-amber-900"
+          titleClassName="text-amber-900 dark:text-amber-200"
           subtitle={t('babies.dashboard.previewMilestones.cardSubtitle')}
-          subtitleClassName="text-amber-700"
+          subtitleClassName="text-amber-700 dark:text-amber-300"
         >
           <div className="flex flex-col gap-2.5">
             {milestoneItems.map((item, index) => {
@@ -181,25 +181,25 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
               )
             })}
             <div className="mt-0.5 flex items-center gap-2 rounded-lg bg-surface px-2.5 py-2">
-              <SparkleIcon className="h-3.5 w-3.5 flex-shrink-0 text-amber-700" />
+              <SparkleIcon className="h-3.5 w-3.5 flex-shrink-0 text-amber-700 dark:text-amber-300" />
               <p className="text-[11px] text-ink-muted">{t('babies.dashboard.previewMilestones.footerNote')}</p>
             </div>
           </div>
         </PreviewCard>
 
         <PreviewCard
-          gradientClassName="from-violet-50 to-violet-100"
-          iconClassName="bg-violet-500"
+          gradientClassName="from-violet-50 to-violet-100 dark:from-violet-950/50 dark:to-violet-900/40"
+          iconClassName="bg-violet-600"
           icon={<StethoscopeIcon className="h-[18px] w-[18px] text-white" />}
           title={t('babies.dashboard.previewAppointments.cardTitle')}
-          titleClassName="text-violet-900"
+          titleClassName="text-violet-900 dark:text-violet-200"
           subtitle={t('babies.dashboard.previewAppointments.cardSubtitle')}
-          subtitleClassName="text-violet-600"
+          subtitleClassName="text-violet-600 dark:text-violet-300"
         >
           <div className="flex flex-col gap-2">
             {appointmentItems.map((item, index) => (
               <div key={index} className="flex items-center gap-2.5 rounded-lg bg-surface px-2.5 py-2">
-                <StethoscopeIcon className="h-4 w-4 flex-shrink-0 text-violet-500" />
+                <StethoscopeIcon className="h-4 w-4 flex-shrink-0 text-violet-500 dark:text-violet-300" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-xs font-bold text-ink">{item.doctorName}</p>
                   <p className="text-[10px] text-ink-faint">
@@ -209,7 +209,7 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
                 <span
                   className={cn(
                     'flex-shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold',
-                    item.status === 'scheduled' ? 'bg-violet-50 text-violet-600' : 'bg-teal-50 text-teal-700',
+                    item.status === 'scheduled' ? 'bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300' : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300',
                   )}
                 >
                   {item.status === 'scheduled' ? t('appointments.status.scheduled') : t('appointments.status.completed')}
@@ -221,17 +221,17 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
         </PreviewCard>
 
         <PreviewCard
-          gradientClassName="from-rose-50 to-rose-100"
-          iconClassName="bg-rose-500"
+          gradientClassName="from-rose-50 to-rose-100 dark:from-rose-950/50 dark:to-rose-900/40"
+          iconClassName="bg-rose-600"
           icon={<BellIcon className="h-[18px] w-[18px] text-white" />}
           title={t('babies.dashboard.previewNotifications.cardTitle')}
-          titleClassName="text-rose-900"
+          titleClassName="text-rose-900 dark:text-rose-200"
           subtitle={t('babies.dashboard.previewNotifications.cardSubtitle')}
-          subtitleClassName="text-rose-600"
+          subtitleClassName="text-rose-600 dark:text-rose-300"
         >
           <div className="flex flex-col gap-2">
             {notificationItems.map((item, index) => (
-              <div key={index} className="flex items-center gap-2.5 rounded-lg bg-rose-50/60 px-2.5 py-2">
+              <div key={index} className="flex items-center gap-2.5 rounded-lg bg-rose-50/60 dark:bg-rose-950/40 px-2.5 py-2">
                 <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-rose-500" />
                 <p className="flex-1 text-xs text-ink">{item.text}</p>
               </div>
@@ -252,17 +252,17 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
             return (
               <Fragment key={index}>
                 <div className="text-center">
-                  <div className="mx-auto mb-3 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-teal-400 shadow-md shadow-teal-900/20">
+                  <div className="mx-auto mb-3 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gradient-to-br from-emerald-700 to-emerald-600 shadow-md shadow-emerald-900/20">
                     <StepIcon className="h-6 w-6 text-white" />
                   </div>
-                  <div className="mx-auto mb-2 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-teal-50">
-                    <span className="text-[11px] font-extrabold text-teal-700">{index + 1}</span>
+                  <div className="mx-auto mb-2 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/40">
+                    <span className="text-[11px] font-extrabold text-emerald-700 dark:text-emerald-300">{index + 1}</span>
                   </div>
                   <p className="font-display mb-1 text-sm font-extrabold text-ink">{step.title}</p>
                   <p className="text-xs leading-relaxed text-ink-muted">{step.description}</p>
                 </div>
                 {index < steps.length - 1 && (
-                  <span className="hidden text-2xl text-teal-100 sm:block" aria-hidden="true">
+                  <span className="hidden text-2xl text-emerald-100 sm:block" aria-hidden="true">
                     →
                   </span>
                 )}
@@ -273,7 +273,7 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
       </div>
 
       {/* Bottom CTA */}
-      <div className="flex flex-col items-start justify-between gap-5 rounded-2xl bg-gradient-to-br from-amber-50 to-rose-50 p-6 sm:flex-row sm:items-center">
+      <div className="flex flex-col items-start justify-between gap-5 rounded-2xl bg-gradient-to-br from-amber-50 to-rose-50 dark:from-amber-950/50 dark:to-rose-950/50 p-6 sm:flex-row sm:items-center">
         <div>
           <p className="font-display mb-1 text-base font-extrabold text-ink">{t('babies.dashboard.bottomCtaTitle')}</p>
           <p className="text-[13px] text-ink-muted">{t('babies.dashboard.bottomCtaDescription')}</p>

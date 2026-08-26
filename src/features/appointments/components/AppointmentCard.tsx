@@ -46,7 +46,7 @@ export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails
             <span
               className={cn(
                 'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl',
-                isScheduled ? 'bg-violet-50 text-violet-500' : 'bg-teal-50 text-teal-700',
+                isScheduled ? 'bg-violet-50 dark:bg-violet-950/40 text-violet-500 dark:text-violet-300' : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300',
               )}
             >
               <StethoscopeIcon className="h-5 w-5" />
@@ -90,7 +90,7 @@ export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails
           <button
             type="button"
             onClick={onViewDetails}
-            className="flex-1 rounded-xl bg-violet-50 py-2.5 text-sm font-bold text-violet-700 transition-colors hover:bg-violet-100"
+            className="flex-1 rounded-xl bg-violet-50 dark:bg-violet-950/40 py-2.5 text-sm font-bold text-violet-700 dark:text-violet-300 transition-colors hover:bg-violet-100 dark:hover:bg-violet-900/40"
           >
             {t('appointments.detail.action')}
           </button>
@@ -99,7 +99,7 @@ export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails
         <button
           type="button"
           onClick={onViewDetails}
-          className="mt-4 w-full rounded-xl bg-teal-50 py-2.5 text-sm font-bold text-teal-700 transition-colors hover:bg-teal-100"
+          className="mt-4 w-full rounded-xl bg-emerald-50 dark:bg-emerald-950/40 py-2.5 text-sm font-bold text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-100 dark:hover:bg-emerald-900/40"
         >
           {t('appointments.detail.action')}
         </button>

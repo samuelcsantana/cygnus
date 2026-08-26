@@ -20,14 +20,22 @@
     }
   }
 
-  /* Brand palette — sourced from the committed design reference */
-  --color-teal-50: #e8f5f3;
-  --color-teal-100: #c7e9e4;
-  --color-teal-200: #8ed3ca;
-  --color-teal-400: #43bab0;
-  --color-teal-500: #2a9d8f;
-  --color-teal-600: #21837a;
-  --color-teal-700: #186560;
+  /* The brand green is Tailwind's stock **emerald**, so it is not redefined
+     here — there is no `--color-emerald-*` block on purpose.
+
+     It used to be a hand-tuned teal ramp. That ramp is gone (25/08/2026):
+     the auth screens had already been built against emerald, and keeping two
+     greens meant every screen had to declare which one it belonged to. Using
+     the stock ramp also removes a trap the custom one had — `text-teal-800`
+     was in use while only 50/100/200/400/500/600/700 were defined, so that one
+     class silently resolved to stock Tailwind teal, a different hue from its
+     six siblings.
+
+     Consequence to respect: stock shades do **not** flip with the theme, and
+     the tokens above do. So a tint used as a fill behind text needs an
+     explicit `dark:` counterpart at the call site, and the fill and the text
+     have to move together — changing only one turns white-on-white into
+     dark-on-dark, which reads as fixed and is not. */
 
   --color-amber-50: #fef3e8;
   --color-amber-100: #fdddb8;
@@ -149,14 +157,19 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  /* Brand primary.
-     teal-700 (#186560), not the reference's literal teal-500 (#2A9D8F):
+  /* Brand primary — emerald-700, and the shade is measured, not picked.
      --primary drives both white-on-fill (buttons) and fill-on-white (text
-     links/eyebrows) contexts, and #2A9D8F fails WCAG AA (~3.3:1) in both —
-     the same class of bug already fixed once in this codebase.
-     teal-500 is kept for purely decorative use
-     (icon chips, gradients) via literal `bg-teal-500` classes instead. */
-  --primary: #186560;
+     links/eyebrows). Those are the same ratio, so one number decides both,
+     and it is the measurement the old teal-500 failed at ~3.3:1.
+
+     Against white: emerald-500 2.54, emerald-600 3.77, emerald-700 5.48.
+     emerald-600 is the obvious pick — it is what the auth screens use for
+     focus rings — and it does not clear AA for text. On emerald-50, which is
+     what the tinted badges are painted on, emerald-700 is still 5.10.
+
+     The 400/500/600 steps stay available for decorative fills that carry
+     nothing, or that carry an icon and only owe the 3:1 graphical floor. */
+  --primary: #047857;
   --primary-foreground: #ffffff;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -172,7 +185,7 @@
   --destructive: oklch(0.529 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: #2a9d8f;
+  --ring: #059669;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -181,12 +194,12 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #2a9d8f;
+  --sidebar-primary: #059669;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: #2a9d8f;
+  --sidebar-ring: #059669;
 }
 
 .dark {
@@ -206,7 +219,7 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: #3fa39c;
+  --primary: #34d399;
   --primary-foreground: oklch(0.145 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
@@ -217,7 +230,7 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: #3fa39c;
+  --ring: #34d399;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -225,10 +238,10 @@
   --chart-5: oklch(0.269 0 0);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: #3fa39c;
+  --sidebar-primary: #34d399;
   --sidebar-primary-foreground: oklch(0.145 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: #3fa39c;
+  --sidebar-ring: #34d399;
 }

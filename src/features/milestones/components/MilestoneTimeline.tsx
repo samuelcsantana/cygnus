@@ -132,7 +132,7 @@ function MilestoneCard({ milestone, baby, locale, onEdit }: MilestoneCardProps) 
                   <button
                     type="button"
                     aria-label={t('milestones.delete.action', { title: milestone.title })}
-                    className="text-destructive relative rounded-lg p-1 opacity-60 transition-opacity hover:bg-rose-50 hover:opacity-100 focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100"
+                    className="text-destructive relative rounded-lg p-1 opacity-60 transition-opacity hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:opacity-100 focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100"
                   >
                     <span className="absolute -inset-3" aria-hidden="true" />
                     <TrashIcon className="h-3.5 w-3.5" />

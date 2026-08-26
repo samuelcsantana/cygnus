@@ -27,7 +27,7 @@ export function MobileNavItem({ to, icon, label, disabled, badge }: MobileNavIte
     <NavLink
       to={to}
       className={({ isActive }) =>
-        cn(baseClass, isActive ? 'bg-primary text-white' : 'text-ink-muted hover:text-ink-muted')
+        cn(baseClass, isActive ? 'bg-primary text-primary-foreground' : 'text-ink-muted hover:text-ink-muted')
       }
     >
       <span className="relative mb-1 h-6 w-6">

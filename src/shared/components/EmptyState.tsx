@@ -2,16 +2,16 @@ import type { ReactNode } from 'react'
 
 import { cn } from '@/lib/utils'
 
-type EmptyStateTone = 'slate' | 'teal' | 'violet' | 'amber' | 'rose'
+type EmptyStateTone = 'slate' | 'emerald' | 'violet' | 'amber' | 'rose'
 
 const TONE_CLASSES: Record<EmptyStateTone, string> = {
   slate: 'bg-muted text-ink-faint',
-  teal: 'bg-teal-50 text-teal-700',
-  violet: 'bg-violet-50 text-violet-600',
+  emerald: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300',
+  violet: 'bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300',
   // amber-600 on amber-50 is 2.93:1 — under the 3:1 floor icons owe as
   // non-text content. The other tones already clear it.
-  amber: 'bg-amber-50 text-amber-700',
-  rose: 'bg-rose-50 text-rose-500',
+  amber: 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300',
+  rose: 'bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-300',
 }
 
 interface EmptyStateProps {

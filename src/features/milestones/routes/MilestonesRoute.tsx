@@ -114,7 +114,7 @@ export function MilestonesRoute() {
               onClick={() => setActiveCategory('ALL')}
               className={cn(
                 'rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors',
-                activeCategory === 'ALL' ? 'bg-primary text-white' : 'bg-card text-ink-muted shadow-sm hover:bg-muted',
+                activeCategory === 'ALL' ? 'bg-primary text-primary-foreground' : 'bg-card text-ink-muted shadow-sm hover:bg-muted',
               )}
             >
               {t('milestones.filterAll')}

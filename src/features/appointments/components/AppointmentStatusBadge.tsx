@@ -9,7 +9,7 @@ export function AppointmentStatusBadge({ status }: { status: AppointmentStatus }
 
   if (status === 'COMPLETED') {
     return (
-      <Badge variant="outline" className="border-teal-100 bg-teal-50 text-teal-700">
+      <Badge variant="outline" className="border-emerald-100 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
         {t('appointments.status.completed')}
       </Badge>
     )
@@ -24,7 +24,7 @@ export function AppointmentStatusBadge({ status }: { status: AppointmentStatus }
   }
 
   return (
-    <Badge variant="outline" className="border-violet-100 bg-violet-50 text-violet-700">
+    <Badge variant="outline" className="border-violet-100 bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300">
       {t('appointments.status.scheduled')}
     </Badge>
   )

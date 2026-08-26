@@ -29,7 +29,7 @@ export function TopNavItem({ to, icon, label, disabled, badge }: TopNavItemProps
     <NavLink
       to={to}
       className={({ isActive }) =>
-        cn(baseClass, isActive ? 'bg-primary text-white' : 'text-ink-muted hover:bg-teal-50 hover:text-teal-700')
+        cn(baseClass, isActive ? 'bg-primary text-primary-foreground' : 'text-ink-muted hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 dark:hover:text-emerald-300')
       }
     >
       <span className="flex-shrink-0">{icon}</span>

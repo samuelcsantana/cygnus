@@ -67,7 +67,7 @@ export function InviteRedeemRoute() {
         </div>
       ) : preview.data.expired || preview.data.alreadyUsed ? (
         <div className="max-w-md">
-          <AlertCircleIcon className="text-amber-700 mx-auto mb-4 h-10 w-10" />
+          <AlertCircleIcon className="text-amber-700 dark:text-amber-300 mx-auto mb-4 h-10 w-10" />
           <h1 className="text-2xl font-bold text-ink">
             {preview.data.expired ? t('invites.redeem.expiredTitle') : t('invites.redeem.alreadyUsedTitle')}
           </h1>
@@ -84,7 +84,7 @@ export function InviteRedeemRoute() {
               className="mx-auto mb-4 h-20 w-20 rounded-full object-cover shadow-md"
             />
           ) : (
-            <div className="bg-teal-50 text-teal-700 mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full">
+            <div className="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full">
               <UsersIcon className="h-9 w-9" />
             </div>
           )}

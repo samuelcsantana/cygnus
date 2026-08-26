@@ -62,7 +62,7 @@ export function VaccinesRoute() {
         <button
           type="button"
           onClick={() => setRegisterOpen(true)}
-          className="inline-flex items-center justify-center rounded-2xl bg-teal-600 px-6 py-3 font-bold text-white shadow-lg shadow-teal-900/20 transition-all hover:bg-teal-700 active:scale-[0.98]"
+          className="inline-flex items-center justify-center rounded-2xl bg-primary px-6 py-3 font-bold text-primary-foreground shadow-lg shadow-emerald-900/20 transition-all hover:bg-primary/90 active:scale-[0.98]"
         >
           <PlusIcon className="mr-2 h-5 w-5" />
           {t('vaccines.registerAction')}
@@ -82,7 +82,7 @@ export function VaccinesRoute() {
           icon={<SyringeIcon className="h-10 w-10" />}
           title={t('vaccines.empty.title')}
           description={t('vaccines.empty.description')}
-          tone="teal"
+          tone="emerald"
         />
       ) : (
         <>
@@ -121,7 +121,7 @@ export function VaccinesRoute() {
                 onClick={() => setFilter(value)}
                 className={cn(
                   'rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors',
-                  filter === value ? 'bg-primary text-white' : 'bg-card text-ink-muted shadow-sm hover:bg-muted',
+                  filter === value ? 'bg-primary text-primary-foreground' : 'bg-card text-ink-muted shadow-sm hover:bg-muted',
                 )}
               >
                 {label}

@@ -79,15 +79,15 @@ export function DashboardRoute() {
       </div>
 
       {delayedItems.length > 0 && (
-        <div className="mb-6 flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3">
-          <span className="flex-shrink-0 text-rose-500">
+        <div className="mb-6 flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 dark:bg-rose-950/40 px-4 py-3">
+          <span className="flex-shrink-0 text-rose-500 dark:text-rose-300">
             <AlertCircleIcon className="h-4 w-4" />
           </span>
-          <p className="text-[13px] font-medium text-rose-700">
+          <p className="text-[13px] font-medium text-rose-700 dark:text-rose-300">
             <strong>{t('babies.dashboard.overdueBanner', { count: delayedItems.length })}</strong>{' '}
             {t('babies.dashboard.overdueBannerHousehold', { count: affectedChildrenCount })}
           </p>
-          <Link to="/vaccines" className="ml-auto flex-shrink-0 text-xs font-bold whitespace-nowrap text-rose-700">
+          <Link to="/vaccines" className="ml-auto flex-shrink-0 text-xs font-bold whitespace-nowrap text-rose-700 dark:text-rose-300">
             {t('babies.dashboard.viewVaccines')}
           </Link>
         </div>
@@ -99,28 +99,28 @@ export function DashboardRoute() {
           label={t('babies.dashboard.statVaccinesAppliedLabel')}
           value={`${appliedCount}`}
           sub={t('babies.dashboard.statVaccinesAppliedSub', { count: pendingCount })}
-          iconClassName="bg-teal-50 text-teal-700"
+          iconClassName="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300"
         />
         <StatCard
           icon={<StethoscopeIcon className="h-5 w-5" />}
           label={t('babies.dashboard.statNextAppointmentLabel')}
           value={nextAppointment ? formatDateDisplay(nextAppointment.scheduledAt.slice(0, 10), i18n.language) : '—'}
           sub={nextAppointment ? `${nextAppointment.doctorName} · ${nextAppointmentBaby?.name ?? ''}` : t('babies.dashboard.statNextAppointmentEmpty')}
-          iconClassName="bg-violet-50 text-violet-500"
+          iconClassName="bg-violet-50 dark:bg-violet-950/40 text-violet-500 dark:text-violet-300"
         />
         <StatCard
           icon={<SparkleIcon className="h-5 w-5" />}
           label={t('babies.dashboard.statMilestonesLabel')}
           value={`${milestones.items.length}`}
           sub={t('babies.dashboard.statMilestonesSub')}
-          iconClassName="bg-amber-50 text-amber-700"
+          iconClassName="bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300"
         />
         <StatCard
           icon={<HeartIcon className="h-5 w-5" />}
           label={t('babies.dashboard.statLastAppointmentLabel')}
           value={lastAppointment ? formatDateDisplay(lastAppointment.scheduledAt.slice(0, 10), i18n.language) : '—'}
           sub={lastAppointment ? `${lastAppointment.doctorName} · ${lastAppointmentBaby?.name ?? ''}` : '—'}
-          iconClassName="bg-rose-50 text-rose-500"
+          iconClassName="bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-300"
         />
       </div>
 

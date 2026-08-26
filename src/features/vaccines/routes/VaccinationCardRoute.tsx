@@ -21,9 +21,9 @@ interface CardRow {
 }
 
 const STATUS_BADGE_CLASS: Record<VaccineStatus, string> = {
-  APPLIED: 'bg-teal-50 text-teal-700',
-  DELAYED: 'bg-rose-50 text-rose-600',
-  PENDING: 'bg-amber-50 text-amber-700',
+  APPLIED: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300',
+  DELAYED: 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-300',
+  PENDING: 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300',
   GUIDANCE: 'bg-sky-50 text-sky-700',
 }
 
@@ -85,7 +85,7 @@ export function VaccinationCardRoute() {
         <button
           type="button"
           onClick={() => window.print()}
-          className="inline-flex items-center gap-2 rounded-2xl bg-teal-600 px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-teal-900/20 transition-colors hover:bg-teal-700"
+          className="inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-md shadow-emerald-900/20 transition-colors hover:bg-primary/90"
         >
           <PrinterIcon className="h-4 w-4" />
           {t('vaccines.card.printAction')}
@@ -94,7 +94,7 @@ export function VaccinationCardRoute() {
 
       <div className="print:rounded-none print:border-0 print:p-0 print:shadow-none rounded-[2rem] border border-border bg-card p-6 shadow-sm sm:p-8">
         <div className="mb-6 flex items-center gap-3 border-b border-border pb-6">
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-teal-500 text-white">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <LogoIcon className="h-5 w-5" />
           </div>
           <div className="min-w-0">
