@@ -125,21 +125,25 @@ function GuardianRow({ guardian, babyId, babyName, canRemove, canLeave }: Guardi
 
       {(canRemove || canLeave) && (
         <AlertDialog>
+          {/* asChild has to land on the button itself. Wrapping it in a <span>
+              hands Radix's trigger props — type, aria-haspopup, aria-expanded —
+              to an element whose implicit role accepts none of them, which axe
+              reports as aria-allowed-attr, WCAG 2 A. The wrapper bought nothing:
+              the -inset expander below positions against the button, which is
+              already relative. */}
           <AlertDialogTrigger asChild>
-            <span className="relative inline-flex flex-shrink-0">
-              <button
-                type="button"
-                aria-label={
-                  canLeave
-                    ? t('babies.guardians.leaveAction')
-                    : t('babies.guardians.removeAction', { name: guardian.name })
-                }
-                className="text-destructive relative rounded-lg p-1.5 opacity-60 transition-opacity hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:opacity-100 focus-visible:opacity-100"
-              >
-                <span className="absolute -inset-2.5" aria-hidden="true" />
-                <TrashIcon className="h-3.5 w-3.5" />
-              </button>
-            </span>
+            <button
+              type="button"
+              aria-label={
+                canLeave
+                  ? t('babies.guardians.leaveAction')
+                  : t('babies.guardians.removeAction', { name: guardian.name })
+              }
+              className="text-destructive relative inline-flex flex-shrink-0 rounded-lg p-1.5 opacity-60 transition-opacity hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:opacity-100 focus-visible:opacity-100"
+            >
+              <span className="absolute -inset-2.5" aria-hidden="true" />
+              <TrashIcon className="h-3.5 w-3.5" />
+            </button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>

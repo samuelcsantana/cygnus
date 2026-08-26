@@ -127,17 +127,20 @@ function MilestoneCard({ milestone, baby, locale, onEdit }: MilestoneCardProps) 
               </button>
             </span>
             <AlertDialog>
+              {/* asChild has to land on the button itself — same note as in
+                  GuardiansSection. A <span> here put aria-expanded on a role
+                  that cannot carry it, once per row: twelve nodes on a timeline
+                  of twelve milestones, and every one of them invisible to the
+                  a11y sweep while it ran against an account with no children. */}
               <AlertDialogTrigger asChild>
-                <span className="relative inline-flex">
-                  <button
-                    type="button"
-                    aria-label={t('milestones.delete.action', { title: milestone.title })}
-                    className="text-destructive relative rounded-lg p-1 opacity-60 transition-opacity hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:opacity-100 focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100"
-                  >
-                    <span className="absolute -inset-3" aria-hidden="true" />
-                    <TrashIcon className="h-3.5 w-3.5" />
-                  </button>
-                </span>
+                <button
+                  type="button"
+                  aria-label={t('milestones.delete.action', { title: milestone.title })}
+                  className="text-destructive relative inline-flex rounded-lg p-1 opacity-60 transition-opacity hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:opacity-100 focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100"
+                >
+                  <span className="absolute -inset-3" aria-hidden="true" />
+                  <TrashIcon className="h-3.5 w-3.5" />
+                </button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
