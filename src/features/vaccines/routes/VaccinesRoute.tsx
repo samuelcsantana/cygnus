@@ -62,9 +62,21 @@ export function VaccinesRoute() {
       <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <h2 className="font-display text-3xl font-extrabold text-ink">{t('vaccines.title')}</h2>
-          <p className="mt-1 text-lg text-ink-muted">
-            {t('vaccines.summary', { applied: counts.APPLIED, delayed: counts.DELAYED, pending: counts.PENDING })}
-          </p>
+          {/* Sem o calendário, `counts` é três zeros vindos de uma lista vazia.
+              Impressos aqui, ficavam logo acima da mensagem de erro — a página
+              afirmava "0 tomadas · 0 atrasadas · 0 pendentes" e, três linhas
+              abaixo, admitia não ter conseguido ler nada. */}
+          {isError ? (
+            // Nada aqui no erro: a mensagem abaixo já diz que o calendário não
+            // carregou, e repetir num subtítulo só rouba a atenção dela.
+            null
+          ) : (
+            <p className="mt-1 text-lg text-ink-muted">
+              {isPending
+                ? t('vaccines.summaryUnavailable')
+                : t('vaccines.summary', { applied: counts.APPLIED, delayed: counts.DELAYED, pending: counts.PENDING })}
+            </p>
+          )}
         </div>
         <button
           type="button"

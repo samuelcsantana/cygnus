@@ -321,6 +321,7 @@
   "vaccines": {
     "title": "Vaccines",
     "summary": "{{applied}} taken · {{delayed}} overdue · {{pending}} pending",
+    "summaryUnavailable": "Loading the schedule…",
     "genericError": "Could not load the vaccine calendar.",
     "progressLabel": "Calendar progress",
     "filterAll": "All",

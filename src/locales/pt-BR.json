@@ -321,6 +321,7 @@
   "vaccines": {
     "title": "Vacinas",
     "summary": "{{applied}} tomadas · {{delayed}} atrasadas · {{pending}} pendentes",
+    "summaryUnavailable": "Carregando o calendário…",
     "genericError": "Não foi possível carregar o calendário de vacinas.",
     "progressLabel": "Progresso do calendário",
     "filterAll": "Todas",
