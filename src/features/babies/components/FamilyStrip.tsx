@@ -32,8 +32,16 @@ interface FamilyStripProps {
 export function FamilyStrip({ items, onEdit }: FamilyStripProps) {
   const { t } = useTranslation()
 
+  // Rola no celular e quebra linha no desktop.
+  //
+  // Rolagem horizontal é o padrão certo para uma fila de chips num telefone,
+  // mas a 1440px com seis filhos o último cartão ficava cortado no meio da
+  // palavra, sem nenhuma indicação de que havia mais — lia como defeito de
+  // layout, não como convite a rolar. No desktop sobra espaço vertical, então
+  // quebrar linha não esconde nada e dispensa medir transbordo com JS só para
+  // desenhar um degradê na borda.
   return (
-    <div className="flex gap-3 overflow-x-auto pb-1">
+    <div className="flex gap-3 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-x-visible">
       {items.map(({ baby, delayedVaccineCount, vaccineStatusKnown }) => {
         const avatarAppearance = babyAvatarAppearance(baby.id, baby.avatarColor)
         return (
