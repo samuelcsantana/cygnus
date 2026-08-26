@@ -100,8 +100,21 @@ function MilestoneCard({ milestone, baby, locale, onEdit }: MilestoneCardProps) 
         {meta.emoji}
       </div>
 
-      <div className="relative flex-1 rounded-2xl bg-card p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] sm:p-5">
-        <div className="mb-1.5 flex items-start justify-between gap-2">
+      {/* `min-w-0` não é decoração: `flex-1` sozinho é `flex: 1 1 0%`, mas um
+          item flex não encolhe abaixo do mínimo intrínseco do próprio conteúdo
+          enquanto `min-width` for `auto`. O cabeçalho deste cartão (título +
+          categoria + data + dois botões) tem mínimo maior do que a coluna
+          disponível a 390px, então o cartão ficava 26px mais largo que a linha
+          e a página inteira ganhava scroll horizontal. A linha-pai já tinha
+          `min-w-0`; faltava aqui. */}
+      <div className="relative min-w-0 flex-1 rounded-2xl bg-card p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] sm:p-5">
+        {/* `flex-wrap`: o grupo da direita (categoria + data + editar +
+            excluir) é `flex-shrink-0` e mede ~193px. A 390px o cabeçalho tem
+            238px, então título e grupo juntos não cabem e o grupo transbordava
+            o cartão em 26px, levando a página inteira a rolar na horizontal.
+            Truncar o título perderia o nome do marco, que é o conteúdo; deixar
+            o grupo cair para a linha de baixo não perde nada. */}
+        <div className="mb-1.5 flex flex-wrap items-start justify-between gap-2">
           <h3 className="font-display text-[15px] font-extrabold text-ink">{milestone.title}</h3>
           <div className="flex flex-shrink-0 items-center gap-1">
             <span className={cn('rounded-full px-2.5 py-0.5 text-[11px] font-semibold', meta.badgeClass)}>

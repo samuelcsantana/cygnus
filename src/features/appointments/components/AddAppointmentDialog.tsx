@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { soleBaby, useBabies } from '@/features/babies/api/babies.hooks'
 import { BabyPickerStep } from '@/shared/components/BabyPickerStep'
 import { StepIndicator, type Step as StepIndicatorStep } from '@/shared/components/StepIndicator'
@@ -94,8 +94,8 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
             <CloseIcon className="h-4 w-4" />
           </button>
           <StethoscopeIcon className="mb-2 h-8 w-8 text-white" />
-          <h2 className="font-display text-xl font-extrabold text-white">{t('appointments.form.createTitle')}</h2>
-          <p className="mt-1 text-sm text-white/80">{t('appointments.form.createSubtitle')}</p>
+          <DialogTitle className="font-display text-xl font-extrabold text-white">{t('appointments.form.createTitle')}</DialogTitle>
+          <DialogDescription className="mt-1 text-sm text-white/80">{t('appointments.form.createSubtitle')}</DialogDescription>
         </div>
 
         <div className="p-7">

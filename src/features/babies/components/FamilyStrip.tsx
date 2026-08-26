@@ -9,6 +9,16 @@ import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarCol
 export interface FamilyStripItem {
   baby: Baby
   delayedVaccineCount: number
+  /**
+   * Falso enquanto o calendário da criança não carregou — carregando ou erro.
+   *
+   * Sem isto o chip lê `delayedVaccineCount === 0` e anuncia "Vacinas em dia",
+   * que é o valor que uma lista vazia produz **também quando a requisição
+   * falhou**. Num app cuja razão de existir é acompanhar o calendário do PNI,
+   * afirmar que a criança está em dia sem ter o dado é a pior falha possível:
+   * a pessoa não vê erro nenhum e conclui que não há nada a fazer.
+   */
+  vaccineStatusKnown: boolean
 }
 
 interface FamilyStripProps {
@@ -32,7 +42,7 @@ export function FamilyStrip({ items, onEdit }: FamilyStripProps) {
   // desenhar um degradê na borda.
   return (
     <div className="flex gap-3 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-x-visible">
-      {items.map(({ baby, delayedVaccineCount }) => {
+      {items.map(({ baby, delayedVaccineCount, vaccineStatusKnown }) => {
         const avatarAppearance = babyAvatarAppearance(baby.id, baby.avatarColor)
         return (
           <div
@@ -63,7 +73,14 @@ export function FamilyStrip({ items, onEdit }: FamilyStripProps) {
             <div className="min-w-0 pr-1">
               <p className="truncate text-[13px] font-bold text-ink">{baby.name}</p>
               <p className="text-[11px] text-ink-muted">{t('babies.monthsOld', { count: ageInMonths(baby.birthDate) })}</p>
-              {delayedVaccineCount > 0 ? (
+              {/* A ordem importa: o caso "não sei" vem antes de qualquer
+                  afirmação. Um atraso conhecido ainda é reportado, porque essa
+                  informação é sempre verdadeira quando existe. */}
+              {!vaccineStatusKnown ? (
+                <p className="text-[11px] font-bold text-ink-faint">
+                  {t('babies.dashboard.familyStripVaccinesUnknown')}
+                </p>
+              ) : delayedVaccineCount > 0 ? (
                 <p className="text-[11px] font-bold text-rose-600 dark:text-rose-300">
                   {t('babies.dashboard.familyStripDelayed', { count: delayedVaccineCount })}
                 </p>

@@ -13,7 +13,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { CloseIcon } from '@/shared/icons/close-icon'
 import { PencilIcon } from '@/shared/icons/pencil-icon'
 import { TrashIcon } from '@/shared/icons/trash-icon'
@@ -46,8 +46,8 @@ export function EditBabyDialog({ baby, onOpenChange }: EditBabyDialogProps) {
             <CloseIcon className="h-4 w-4" />
           </button>
           <PencilIcon className="mb-2 h-8 w-8 text-white" />
-          <h2 className="font-display text-xl font-extrabold text-white">{t('babies.edit.title')}</h2>
-          {baby && <p className="mt-1 text-sm text-white/80">{baby.name}</p>}
+          <DialogTitle className="font-display text-xl font-extrabold text-white">{t('babies.edit.title')}</DialogTitle>
+          {baby && <DialogDescription className="mt-1 text-sm text-white/80">{baby.name}</DialogDescription>}
         </div>
 
         {baby && (

@@ -25,11 +25,24 @@ export type AssistedMode = 'passwordless' | 'reset'
 
 export const currentUserQueryKey = ['auth', 'me'] as const
 
-export function useCurrentUser() {
+interface CurrentUserOptions {
+  /**
+   * Set on a **public** route that asks who is signed in without requiring it.
+   * A 401 then means "nobody", not "your session expired", so the global
+   * unauthorized handler is skipped and the visitor stays where they are.
+   *
+   * The protected shell must leave this off: there a 401 really is expiry, and
+   * the redirect to /login is the correct answer.
+   */
+  expectsAnonymous?: boolean
+}
+
+export function useCurrentUser({ expectsAnonymous = false }: CurrentUserOptions = {}) {
   return useQuery({
     queryKey: currentUserQueryKey,
     queryFn: getCurrentUser,
     staleTime: 5 * 60_000,
+    meta: { expectsAnonymous },
   })
 }
 

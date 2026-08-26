@@ -217,6 +217,7 @@
       "overdueBannerHousehold_other": "for {{count}} children. Schedule it as soon as possible.",
       "viewVaccines": "View vaccines →",
       "statVaccinesAppliedLabel": "Vaccines applied",
+      "statVaccinesUnavailableSub": "Could not load",
       "statVaccinesAppliedSub_one": "{{count}} pending",
       "statVaccinesAppliedSub_other": "{{count}} pending",
       "statNextAppointmentLabel": "Next appointment",
@@ -230,7 +231,8 @@
       "noAppointmentsScheduled": "No appointments scheduled",
       "familyStripDelayed_one": "{{count}} overdue vaccine",
       "familyStripDelayed_other": "{{count}} overdue vaccines",
-      "familyStripUpToDate": "Vaccines up to date"
+      "familyStripUpToDate": "Vaccines up to date",
+      "familyStripVaccinesUnknown": "Could not check vaccines"
     },
     "form": {
       "title": "New Profile",
@@ -319,6 +321,7 @@
   "vaccines": {
     "title": "Vaccines",
     "summary": "{{applied}} taken · {{delayed}} overdue · {{pending}} pending",
+    "summaryUnavailable": "Loading the schedule…",
     "genericError": "Could not load the vaccine calendar.",
     "progressLabel": "Calendar progress",
     "filterAll": "All",

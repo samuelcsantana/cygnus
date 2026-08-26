@@ -62,10 +62,18 @@ export function DashboardRoute() {
   const nextAppointmentBaby = babyList.find((baby) => baby.id === nextAppointment?.babyId)
   const lastAppointmentBaby = babyList.find((baby) => baby.id === lastAppointment?.babyId)
 
-  const familyStripItems = babyList.map((baby) => ({
-    baby,
-    delayedVaccineCount: delayedItems.filter((item) => item.babyId === baby.id).length,
-  }))
+  // O estado vem de `perBaby`, não de `babyList`: cada criança tem sua própria
+  // requisição de calendário, e uma pode falhar enquanto as outras respondem.
+  // Derivar do agregado marcaria as seis como desconhecidas por causa de uma.
+  const familyStripItems = babyList.map((baby) => {
+    const entry = vaccines.perBaby.find((candidate) => candidate.baby.id === baby.id)
+    return {
+      baby,
+      delayedVaccineCount: delayedItems.filter((item) => item.babyId === baby.id).length,
+      // Sem entrada, o padrão é "não sei" — nunca "em dia".
+      vaccineStatusKnown: entry ? !entry.isPending && !entry.isError : false,
+    }
+  })
 
   const affectedChildrenCount = new Set(delayedItems.map((item) => item.babyId)).size
 
@@ -94,11 +102,18 @@ export function DashboardRoute() {
       )}
 
       <div className="mb-6 grid grid-cols-2 gap-3.5 lg:grid-cols-4">
+        {/* Mesmo motivo do chip da família: com o calendário fora do ar,
+            `items` é uma lista vazia e a conta dá zero — um número que se lê
+            como fato. O travessão diz "não sei", que é o que de fato se sabe. */}
         <StatCard
           icon={<SyringeIcon className="h-5 w-5" />}
           label={t('babies.dashboard.statVaccinesAppliedLabel')}
-          value={`${appliedCount}`}
-          sub={t('babies.dashboard.statVaccinesAppliedSub', { count: pendingCount })}
+          value={vaccines.isError || vaccines.isPending ? '—' : `${appliedCount}`}
+          sub={
+            vaccines.isError || vaccines.isPending
+              ? t('babies.dashboard.statVaccinesUnavailableSub')
+              : t('babies.dashboard.statVaccinesAppliedSub', { count: pendingCount })
+          }
           iconClassName="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300"
         />
         <StatCard

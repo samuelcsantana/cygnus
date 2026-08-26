@@ -14,13 +14,24 @@ import { UsersIcon } from '@/shared/icons/users-icon'
  * Sits outside ProtectedLayout (see router.tsx) so it renders the invite
  * preview for logged-out visitors too — only the "accept" action itself
  * requires an authenticated session (see handleAccept).
+ *
+ * That arrangement is not self-enforcing: it also depends on the
+ * `expectsAnonymous` flag below, without which this route's own 401 boots the
+ * visitor to /login. `InviteRedeemRoute.test.tsx` is what keeps the two in
+ * sync.
  */
 export function InviteRedeemRoute() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { code = '' } = useParams<{ code: string }>()
   const preview = useInvitePreview(code)
-  const currentUser = useCurrentUser()
+  // `expectsAnonymous` is load-bearing here, not a precaution: this route sits
+  // outside ProtectedLayout precisely so a logged-out visitor can read the
+  // invite, and without the flag the 401 from /auth/me trips the global
+  // unauthorized handler and hard-navigates them to /login before the preview
+  // ever paints. The screen would then be unreachable for the exact audience
+  // it exists to serve — someone who followed an invite link.
+  const currentUser = useCurrentUser({ expectsAnonymous: true })
   const redeemInvite = useRedeemInvite(code)
 
   const handleAccept = async () => {
