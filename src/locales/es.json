@@ -42,6 +42,7 @@
     "appointments": "Consultas",
     "milestones": "Hitos",
     "notifications": "Notificaciones",
+    "logoutError": "No se pudo cerrar la sesión. Sigues conectado; inténtalo de nuevo.",
     "logout": "Cerrar sesión"
   },
   "auth": {
