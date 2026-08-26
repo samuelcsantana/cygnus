@@ -109,7 +109,7 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
           {step === 'baby' ? (
             <div key="baby" className="animate-fade-in-up">
               <BabyPickerStep babies={babyList} value={selectedBabyId} onSelect={setSelectedBabyId} />
-              <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+              <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <Button
                   type="button"
                   disabled={!selectedBabyId}
@@ -127,7 +127,7 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
             // descendant, even though the click handler itself never calls submit.
             <div key="core" className="animate-fade-in-up">
               <MilestoneCoreFields control={control} register={register} errors={errors} />
-              <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+              <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <Button
                   type="button"
                   onClick={handleContinueFromCore}
@@ -140,7 +140,7 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
           ) : (
             <form key="details" onSubmit={onSubmit} noValidate className="animate-fade-in-up">
               <MilestoneDetailFields register={register} control={control} errors={errors} />
-              <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+              <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <button
                   type="button"
                   onClick={() => setStep('core')}
@@ -148,7 +148,7 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
                 >
                   {t('milestones.wizard.back')}
                 </button>
-                <Button type="submit" disabled={isSubmitting} className="bg-slate-900 text-white hover:bg-slate-800">
+                <Button type="submit" disabled={isSubmitting} className="bg-foreground text-background hover:bg-foreground/90">
                   {isSubmitting ? t('common.saving') : t('milestones.form.submit')}
                 </Button>
               </div>

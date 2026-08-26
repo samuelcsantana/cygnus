@@ -20,7 +20,7 @@ export function NotificationsPanel({ notifications, onMarkRead, compact = true }
   }
 
   return (
-    <ul className={cn('divide-y divide-slate-100', compact && 'max-h-96 overflow-y-auto')}>
+    <ul className={cn('divide-y divide-border', compact && 'max-h-96 overflow-y-auto')}>
       {notifications.map((notification) => {
         const isUnread = !notification.readAt
         const meta = NOTIFICATION_TYPE_META[notification.type]
@@ -30,7 +30,7 @@ export function NotificationsPanel({ notifications, onMarkRead, compact = true }
               type="button"
               onClick={() => isUnread && onMarkRead(notification.id)}
               className={cn(
-                'flex w-full items-start gap-3 px-3 py-3 text-left transition-colors hover:bg-slate-50',
+                'flex w-full items-start gap-3 px-3 py-3 text-left transition-colors hover:bg-muted',
                 isUnread && 'bg-primary/5',
                 compact ? 'gap-2' : 'gap-3.5',
               )}

@@ -36,7 +36,7 @@ export const Required: Story = {
     <div className="grid max-w-sm gap-2">
       <Label {...args} htmlFor="required-input">
         Nome do bebê
-        <span className="text-rose-500" aria-hidden>
+        <span className="text-rose-500 dark:text-rose-300" aria-hidden>
           *
         </span>
       </Label>

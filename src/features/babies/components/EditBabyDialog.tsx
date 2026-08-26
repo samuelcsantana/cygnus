@@ -36,7 +36,7 @@ export function EditBabyDialog({ baby, onOpenChange }: EditBabyDialogProps) {
   return (
     <Dialog open={!!baby} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton={false} className="max-h-[90vh] overflow-y-auto p-0 sm:max-w-lg lg:max-w-3xl">
-        <div className="relative bg-gradient-to-br from-teal-500 to-teal-400 px-7 pt-7 pb-6">
+        <div className="relative bg-gradient-to-br from-emerald-700 to-emerald-600 px-7 pt-7 pb-6">
           <button
             type="button"
             onClick={() => onOpenChange(false)}
@@ -74,7 +74,7 @@ export function EditBabyDialog({ baby, onOpenChange }: EditBabyDialogProps) {
                 <>
                   <GuardiansSection babyId={baby.id} babyName={baby.name} />
 
-                  <div className="rounded-2xl border border-rose-100 bg-rose-50/50 p-5">
+                  <div className="rounded-2xl border border-rose-100 bg-rose-50/50 dark:bg-rose-950/40 p-5">
                     <h3 className="font-display mb-1 text-sm font-extrabold text-ink">
                       {t('babies.delete.sectionTitle')}
                     </h3>

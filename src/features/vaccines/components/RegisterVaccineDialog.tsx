@@ -167,7 +167,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] bg-teal-50 text-teal-600">
+            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
               <SyringeIcon className="h-[18px] w-[18px]" />
             </span>
             {step === 'details' ? t('vaccines.register.detailsTitle') : t('vaccines.register.title')}
@@ -175,7 +175,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
         </DialogHeader>
 
         {step !== 'confirmation' && (
-          <StepIndicator steps={steps} currentStepId={step} accentClassName="bg-teal-500" />
+          <StepIndicator steps={steps} currentStepId={step} accentClassName="bg-emerald-600" />
         )}
 
         {step === 'baby' ? (
@@ -202,7 +202,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
                   label: t('vaccines.register.type.catalog.title'),
                   description: t('vaccines.register.type.catalog.description'),
                   media: (
-                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
                       <CalendarIcon className="h-5 w-5" />
                     </span>
                   ),
@@ -212,7 +212,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
                   label: t('vaccines.register.type.campaign.title'),
                   description: t('vaccines.register.type.campaign.description'),
                   media: (
-                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300">
                       <BellIcon className="h-5 w-5" />
                     </span>
                   ),
@@ -222,7 +222,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
                   label: t('vaccines.register.type.custom.title'),
                   description: t('vaccines.register.type.custom.description'),
                   media: (
-                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300">
                       <PencilIcon className="h-5 w-5" />
                     </span>
                   ),
@@ -233,10 +233,10 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
         ) : step === 'select' ? (
           <div className="animate-fade-in-up space-y-5">
             {choice === 'CATALOG' && (
-              <div className="overflow-hidden rounded-2xl border border-teal-100">
-                <div className="flex items-center gap-2 bg-teal-50 px-4 py-2.5">
-                  <CalendarIcon className="h-3.5 w-3.5 flex-shrink-0 text-teal-700" />
-                  <p className="text-xs font-bold text-teal-700">{t('vaccines.register.catalogPicker.label')}</p>
+              <div className="overflow-hidden rounded-2xl border border-emerald-100">
+                <div className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/40 px-4 py-2.5">
+                  <CalendarIcon className="h-3.5 w-3.5 flex-shrink-0 text-emerald-700 dark:text-emerald-300" />
+                  <p className="text-xs font-bold text-emerald-700 dark:text-emerald-300">{t('vaccines.register.catalogPicker.label')}</p>
                 </div>
                 <div className="max-h-56 overflow-y-auto">
                   {pendingItems.length === 0 ? (
@@ -250,14 +250,14 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
                         type="button"
                         onClick={() => setSelectedVaccineId(item.vaccineId)}
                         className={cn(
-                          'flex w-full items-center gap-3 border-b border-slate-50 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-slate-50',
-                          selectedVaccineId === item.vaccineId && 'bg-teal-50/60',
+                          'flex w-full items-center gap-3 border-b border-border px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-muted',
+                          selectedVaccineId === item.vaccineId && 'bg-emerald-50/60 dark:bg-emerald-950/40',
                         )}
                       >
                         <span
                           className={cn(
                             'flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] text-sm font-extrabold',
-                            item.status === 'DELAYED' ? 'bg-rose-50 text-rose-700' : 'bg-amber-50 text-amber-700',
+                            item.status === 'DELAYED' ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300' : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300',
                           )}
                         >
                           {item.status === 'DELAYED' ? '!' : '○'}
@@ -271,7 +271,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
                         <span
                           className={cn(
                             'flex-shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold',
-                            item.status === 'DELAYED' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-800',
+                            item.status === 'DELAYED' ? 'bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300' : 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300',
                           )}
                         >
                           {item.status === 'DELAYED'
@@ -290,9 +290,9 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
             {choice === 'CAMPAIGN' && (
               <div className="space-y-3">
                 <div className="overflow-hidden rounded-2xl border border-violet-100">
-                  <div className="flex items-center gap-2 bg-violet-50 px-4 py-2.5">
-                    <BellIcon className="h-3.5 w-3.5 flex-shrink-0 text-violet-700" />
-                    <p className="text-xs font-bold text-violet-700">
+                  <div className="flex items-center gap-2 bg-violet-50 dark:bg-violet-950/40 px-4 py-2.5">
+                    <BellIcon className="h-3.5 w-3.5 flex-shrink-0 text-violet-700 dark:text-violet-300" />
+                    <p className="text-xs font-bold text-violet-700 dark:text-violet-300">
                       {t('vaccines.register.campaignPicker.suggestedLabel')}
                     </p>
                   </div>
@@ -303,7 +303,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
                         type="button"
                         onClick={() => setCampaignName(suggestion)}
                         className={cn(
-                          'block w-full border-b border-slate-50 px-4 py-2.5 text-left text-sm transition-colors last:border-b-0 hover:bg-slate-50',
+                          'block w-full border-b border-border px-4 py-2.5 text-left text-sm transition-colors last:border-b-0 hover:bg-muted',
                           campaignName === suggestion ? 'font-bold text-ink' : 'text-ink-muted',
                         )}
                       >
@@ -327,9 +327,9 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
 
             {choice === 'CUSTOM' && (
               <div className="space-y-4">
-                <div className="flex items-center gap-2 rounded-xl bg-amber-50 px-4 py-2.5">
-                  <PencilIcon className="h-3.5 w-3.5 flex-shrink-0 text-amber-700" />
-                  <p className="text-xs font-bold text-amber-700">{t('vaccines.register.custom.sectionLabel')}</p>
+                <div className="flex items-center gap-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 px-4 py-2.5">
+                  <PencilIcon className="h-3.5 w-3.5 flex-shrink-0 text-amber-700 dark:text-amber-300" />
+                  <p className="text-xs font-bold text-amber-700 dark:text-amber-300">{t('vaccines.register.custom.sectionLabel')}</p>
                 </div>
                 <div>
                   <Label htmlFor="customName">{t('vaccines.register.custom.nameLabel')}</Label>
@@ -365,8 +365,8 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
           </div>
         ) : step === 'details' ? (
           <form onSubmit={onSubmit} className="animate-fade-in-up space-y-4" noValidate>
-            <div className="flex items-center gap-3 rounded-xl bg-teal-50 px-4 py-3">
-              <SyringeIcon className="h-5 w-5 flex-shrink-0 text-teal-600" />
+            <div className="flex items-center gap-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 px-4 py-3">
+              <SyringeIcon className="h-5 w-5 flex-shrink-0 text-emerald-700 dark:text-emerald-300" />
               <p className="font-bold text-ink">{summaryName}</p>
             </div>
 
@@ -392,7 +392,7 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
           // historical doses in one sitting instead of closing/reopening the
           // dialog for each one.
           <div className="animate-fade-in-up space-y-5 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 text-teal-600">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
               <CheckIcon className="h-7 w-7" />
             </div>
             <div>

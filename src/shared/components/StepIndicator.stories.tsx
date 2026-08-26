@@ -17,7 +17,7 @@ const meta = {
       description: {
         component:
           'Progress marker for the multi-step creation dialogs. The accent color is passed in ' +
-          'rather than fixed, so each feature keeps its own section color (teal for vaccines, ' +
+          'rather than fixed, so each feature keeps its own section color (emerald for vaccines, ' +
           'violet for appointments, amber for milestones).',
       },
     },
@@ -48,7 +48,7 @@ export const PerFeatureAccent: Story = {
   args: { currentStepId: 'vaccine' },
   render: (args) => (
     <div className="space-y-6">
-      <StepIndicator {...args} accentClassName="bg-teal-500" />
+      <StepIndicator {...args} accentClassName="bg-emerald-600" />
       <StepIndicator {...args} accentClassName="bg-violet-500" />
       <StepIndicator {...args} accentClassName="bg-amber-500" />
     </div>

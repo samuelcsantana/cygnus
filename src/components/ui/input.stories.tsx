@@ -54,7 +54,7 @@ export const Invalid: Story = {
     <div className="grid max-w-sm gap-2">
       <Label htmlFor="birth-date">Data de nascimento</Label>
       <Input {...args} id="birth-date" type="date" aria-invalid aria-describedby="birth-date-error" />
-      <p id="birth-date-error" className="text-xs text-rose-600">
+      <p id="birth-date-error" className="text-xs text-rose-600 dark:text-rose-300">
         A data de nascimento não pode estar no futuro.
       </p>
     </div>

@@ -29,7 +29,7 @@ export function AllergiesTagInput({ id, value, onChange, placeholder, removeLabe
   }
 
   return (
-    <div className="focus-within:border-primary focus-within:ring-primary/10 mt-2 flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 focus-within:bg-white focus-within:ring-4">
+    <div className="focus-within:border-primary focus-within:ring-primary/10 mt-2 flex flex-wrap items-center gap-2 rounded-2xl border border-border bg-muted px-3 py-2 focus-within:bg-card focus-within:ring-4">
       {value.map((item) => (
         <span
           key={item}

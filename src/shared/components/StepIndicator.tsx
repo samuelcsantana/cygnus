@@ -28,7 +28,7 @@ export function StepIndicator({ steps, currentStepId, accentClassName = 'bg-prim
               <span
                 className={cn(
                   'flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[11px] font-bold transition-colors duration-200',
-                  isCompleted || isActive ? cn(accentClassName, 'text-white') : 'bg-slate-100 text-ink-faint',
+                  isCompleted || isActive ? cn(accentClassName, 'text-white') : 'bg-muted text-ink-faint',
                 )}
               >
                 {isCompleted ? <CheckIcon className="h-3 w-3" /> : index + 1}
@@ -41,7 +41,7 @@ export function StepIndicator({ steps, currentStepId, accentClassName = 'bg-prim
               <div
                 className={cn(
                   'mx-2 h-0.5 w-7 flex-shrink-0 rounded-full transition-colors duration-200',
-                  isCompleted ? accentClassName : 'bg-slate-100',
+                  isCompleted ? accentClassName : 'bg-muted',
                 )}
               />
             )}

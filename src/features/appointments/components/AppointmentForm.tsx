@@ -51,7 +51,7 @@ export function AppointmentForm({ defaultValues, onSubmit, submitLabel, onCancel
         </p>
       )}
 
-      <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+      <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
         {showCancel && (
           <button
             type="button"

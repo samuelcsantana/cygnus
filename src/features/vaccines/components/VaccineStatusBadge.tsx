@@ -10,7 +10,7 @@ export function VaccineStatusBadge({ item }: { item: VaccineItem }) {
 
   if (item.status === 'APPLIED') {
     return (
-      <Badge variant="outline" className="border-teal-100 bg-teal-50 text-teal-700">
+      <Badge variant="outline" className="border-emerald-100 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
         {t('vaccines.status.applied', {
           date: item.applicationDate ? formatDateDisplay(item.applicationDate, i18n.language) : '',
         })}
@@ -20,7 +20,7 @@ export function VaccineStatusBadge({ item }: { item: VaccineItem }) {
 
   if (item.status === 'DELAYED') {
     return (
-      <Badge variant="outline" className="border-rose-100 bg-rose-50 text-rose-700">
+      <Badge variant="outline" className="border-rose-100 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300">
         {t('vaccines.status.delayed')}
       </Badge>
     )
@@ -35,7 +35,7 @@ export function VaccineStatusBadge({ item }: { item: VaccineItem }) {
   }
 
   return (
-    <Badge variant="outline" className="border-amber-100 bg-amber-50 text-amber-700">
+    <Badge variant="outline" className="border-amber-100 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300">
       {t('vaccines.status.pending')}
     </Badge>
   )

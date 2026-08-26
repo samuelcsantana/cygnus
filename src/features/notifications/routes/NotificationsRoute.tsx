@@ -39,7 +39,7 @@ export function NotificationsRoute() {
       {notifications.isPending ? (
         <div className="animate-pulse space-y-2">
           {[0, 1, 2].map((index) => (
-            <div key={index} className="h-20 rounded-2xl bg-white shadow-sm" />
+            <div key={index} className="h-20 rounded-2xl bg-card shadow-sm" />
           ))}
         </div>
       ) : notifications.isError ? (
@@ -52,7 +52,7 @@ export function NotificationsRoute() {
           tone="rose"
         />
       ) : (
-        <div className="overflow-hidden rounded-2xl bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
+        <div className="overflow-hidden rounded-2xl bg-card shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
           <NotificationsPanel
             notifications={items}
             onMarkRead={(id) => markRead.mutate(id)}

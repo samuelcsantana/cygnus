@@ -62,7 +62,7 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton={false} className="max-h-[85vh] overflow-y-auto p-0 sm:max-w-lg">
-        <div className="relative bg-gradient-to-br from-teal-500 to-teal-400 px-7 pt-7 pb-6">
+        <div className="relative bg-gradient-to-br from-emerald-700 to-emerald-600 px-7 pt-7 pb-6">
           <button
             type="button"
             onClick={() => onOpenChange(false)}
@@ -83,7 +83,7 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
               { id: 'health', label: t('babies.wizard.stepHealth') },
             ]}
             currentStepId={step}
-            accentClassName="bg-teal-500"
+            accentClassName="bg-emerald-600"
             className="mb-6"
           />
 
@@ -94,7 +94,7 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
             // descendant, even though the click handler itself never calls submit.
             <div key="profile" className="animate-fade-in-up">
               <BabyProfileFields register={register} control={control} errors={errors} />
-              <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+              <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <Button type="button" onClick={handleContinue}>
                   {t('babies.wizard.continue')}
                 </Button>
@@ -103,7 +103,7 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
           ) : (
             <form key="health" onSubmit={onSubmit} noValidate className="animate-fade-in-up">
               <BabyHealthFields control={control} />
-              <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+              <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <button
                   type="button"
                   onClick={() => setStep('profile')}

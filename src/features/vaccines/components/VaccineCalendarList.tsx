@@ -23,9 +23,9 @@ interface VaccineCalendarListProps {
 // The glyphs below are text, not SVG, so these pairs owe the full 4.5:1 — the
 // 500/600 steps land between 2.45:1 and 4.09:1 on their own 50 tint.
 const STATUS_ICON_CLASS: Record<VaccineItemWithBaby['status'], string> = {
-  APPLIED: 'bg-teal-50 text-teal-700',
-  DELAYED: 'bg-rose-50 text-rose-700',
-  PENDING: 'bg-amber-50 text-amber-700',
+  APPLIED: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300',
+  DELAYED: 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300',
+  PENDING: 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300',
   GUIDANCE: 'bg-sky-50 text-sky-700',
 }
 
@@ -144,7 +144,7 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
   )
 
   const rowClass = cn(
-    'flex w-full items-center gap-3 rounded-2xl bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]',
+    'flex w-full items-center gap-3 rounded-2xl bg-card p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]',
     item.status === 'DELAYED' ? 'border border-rose-100' : 'border border-transparent',
   )
 
@@ -153,7 +153,7 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
   }
 
   return (
-    <button type="button" onClick={onApply} className={cn(rowClass, 'text-left transition-colors hover:bg-slate-50/50')}>
+    <button type="button" onClick={onApply} className={cn(rowClass, 'text-left transition-colors hover:bg-muted/50')}>
       {content}
     </button>
   )

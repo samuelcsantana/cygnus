@@ -42,7 +42,7 @@ export function GuardiansSection({ babyId, babyName, className }: GuardiansSecti
   const isCurrentUserOwner = currentUserRole === 'OWNER'
 
   return (
-    <div className={cn('rounded-2xl border border-slate-100 bg-slate-50/50 p-5', className)}>
+    <div className={cn('rounded-2xl border border-border bg-muted/50 p-5', className)}>
       <div className="mb-4 flex items-start justify-between gap-3">
         <div className="flex items-start gap-2">
           <UsersIcon className="text-primary mt-0.5 h-4 w-4 flex-shrink-0" />
@@ -109,7 +109,7 @@ function GuardianRow({ guardian, babyId, babyName, canRemove, canLeave }: Guardi
   }
 
   return (
-    <li className="flex items-center gap-3 rounded-xl bg-white p-3 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
+    <li className="flex items-center gap-3 rounded-xl bg-card p-3 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-bold text-ink">{guardian.name}</p>
         <p className="truncate text-xs text-ink-muted">{guardian.email}</p>
@@ -117,7 +117,7 @@ function GuardianRow({ guardian, babyId, babyName, canRemove, canLeave }: Guardi
       <span
         className={cn(
           'flex-shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold',
-          guardian.role === 'OWNER' ? 'bg-teal-50 text-teal-700' : 'bg-violet-50 text-violet-600',
+          guardian.role === 'OWNER' ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300' : 'bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300',
         )}
       >
         {guardian.role === 'OWNER' ? t('babies.guardians.roleOwner') : t('babies.guardians.roleGuardian')}
@@ -134,7 +134,7 @@ function GuardianRow({ guardian, babyId, babyName, canRemove, canLeave }: Guardi
                     ? t('babies.guardians.leaveAction')
                     : t('babies.guardians.removeAction', { name: guardian.name })
                 }
-                className="text-destructive relative rounded-lg p-1.5 opacity-60 transition-opacity hover:bg-rose-50 hover:opacity-100 focus-visible:opacity-100"
+                className="text-destructive relative rounded-lg p-1.5 opacity-60 transition-opacity hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:opacity-100 focus-visible:opacity-100"
               >
                 <span className="absolute -inset-2.5" aria-hidden="true" />
                 <TrashIcon className="h-3.5 w-3.5" />
@@ -196,7 +196,7 @@ function InvitePanel({ babyId }: InvitePanelProps) {
   }
 
   return (
-    <div className="mb-4 rounded-xl bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
+    <div className="mb-4 rounded-xl bg-card p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
       {inviteLink ? (
         <div>
           <Label htmlFor="invite-link">{t('babies.guardians.invite.linkLabel')}</Label>

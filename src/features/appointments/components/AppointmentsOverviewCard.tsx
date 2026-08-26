@@ -30,15 +30,15 @@ export function AppointmentsOverviewCard({ babies, items, isPending, isError }: 
     .slice(0, MAX_ITEMS)
 
   return (
-    <div className="flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+    <div className="flex flex-col rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300">
             <StethoscopeIcon className="h-[18px] w-[18px]" />
           </span>
           <h3 className="font-display text-base font-extrabold text-ink">{t('nav.appointments')}</h3>
         </div>
-        <Link to="/appointments" className="text-xs font-bold text-teal-700">
+        <Link to="/appointments" className="text-xs font-bold text-emerald-700 dark:text-emerald-300">
           {t('babies.dashboard.viewAll')}
         </Link>
       </div>
@@ -73,7 +73,7 @@ export function AppointmentsOverviewCard({ babies, items, isPending, isError }: 
                   <p className="truncate text-[13px] font-semibold text-ink">{appointment.doctorName}</p>
                   <p className="truncate text-[11px] text-ink-muted">{baby?.name}</p>
                 </div>
-                <span className="flex-shrink-0 rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-700">
+                <span className="flex-shrink-0 rounded-full bg-violet-100 dark:bg-violet-900/40 px-2 py-0.5 text-[11px] font-semibold text-violet-700 dark:text-violet-300">
                   {formatDateDisplay(date, i18n.language)}
                 </span>
               </div>

@@ -33,7 +33,7 @@ export const Default: Story = {
         <CardTitle>Próxima consulta</CardTitle>
         <CardDescription>Pediatra — Dra. Helena Marques</CardDescription>
         <CardAction>
-          <Badge className="bg-violet-50 text-violet-700">Em 3 dias</Badge>
+          <Badge className="bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300">Em 3 dias</Badge>
         </CardAction>
       </CardHeader>
       <CardContent className="text-ink-muted">
@@ -114,7 +114,7 @@ export const ErrorState: Story = {
     <Card {...args} className="max-w-sm">
       <CardHeader>
         <CardTitle>Consultas</CardTitle>
-        <CardDescription className="text-rose-600">
+        <CardDescription className="text-rose-600 dark:text-rose-300">
           Não foi possível carregar as consultas.
         </CardDescription>
       </CardHeader>

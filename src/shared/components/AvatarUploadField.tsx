@@ -97,7 +97,7 @@ export function AvatarUploadField({
     <div className={cn('flex items-center gap-4', className)}>
       <div className="relative flex-shrink-0">
         <div
-          className={cn('h-20 w-20 overflow-hidden rounded-full bg-slate-100', value && color && 'border-4')}
+          className={cn('h-20 w-20 overflow-hidden rounded-full bg-muted', value && color && 'border-4')}
           style={value && color ? { borderColor: color } : undefined}
         >
           {value ? (
@@ -110,7 +110,7 @@ export function AvatarUploadField({
           type="button"
           onClick={() => fileInputRef.current?.click()}
           aria-label={uploadLabel}
-          className="bg-primary absolute -right-1 -bottom-1 flex h-7 w-7 items-center justify-center rounded-full text-white shadow-sm ring-2 ring-white transition-colors hover:brightness-95"
+          className="bg-primary absolute -right-1 -bottom-1 flex h-7 w-7 items-center justify-center rounded-full text-primary-foreground shadow-sm ring-2 ring-white transition-colors hover:brightness-95"
         >
           <CameraIcon className="h-3.5 w-3.5" />
         </button>

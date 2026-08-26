@@ -31,7 +31,7 @@ export function BabyFilterChips({ babies, value, onChange, className }: BabyFilt
         aria-pressed={value === null}
         className={cn(
           'rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors',
-          value === null ? 'bg-primary text-white' : 'bg-white text-ink-muted shadow-sm hover:bg-slate-50',
+          value === null ? 'bg-primary text-primary-foreground' : 'bg-card text-ink-muted shadow-sm hover:bg-muted',
         )}
       >
         {t('common.babyFilter.all')}
@@ -47,7 +47,7 @@ export function BabyFilterChips({ babies, value, onChange, className }: BabyFilt
             aria-pressed={isActive}
             className={cn(
               'flex items-center gap-1.5 rounded-full py-1.5 pr-4 pl-1.5 text-[13px] font-semibold transition-colors',
-              isActive ? 'bg-primary text-white' : 'bg-white text-ink-muted shadow-sm hover:bg-slate-50',
+              isActive ? 'bg-primary text-primary-foreground' : 'bg-card text-ink-muted shadow-sm hover:bg-muted',
             )}
           >
             <span

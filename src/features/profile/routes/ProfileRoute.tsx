@@ -44,7 +44,7 @@ export function ProfileRoute() {
 
   return (
     <div className="animate-fade-in-up mx-auto max-w-3xl">
-      <div className="from-primary relative mb-7 overflow-hidden rounded-2xl bg-gradient-to-br to-teal-400 px-6 py-7 sm:px-8 sm:py-8">
+      <div className="from-primary relative mb-7 overflow-hidden rounded-2xl bg-gradient-to-br to-emerald-600 px-6 py-7 sm:px-8 sm:py-8">
         <div className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-14 right-16 h-28 w-28 rounded-full bg-white/10" />
         <div className="relative flex items-center gap-4">
@@ -60,24 +60,24 @@ export function ProfileRoute() {
       </div>
 
       <div className="flex flex-col gap-5">
-        <section className="rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <h3 className="font-display mb-4 text-base font-extrabold text-ink">{t('profile.language.sectionTitle')}</h3>
           <LanguageSwitcher variant="field" className="w-full max-w-xs" />
           <h3 className="font-display mt-5 mb-4 text-base font-extrabold text-ink">{t('common.theme.label')}</h3>
-          <ThemeToggle className="w-auto rounded-full border border-slate-200 px-3" />
+          <ThemeToggle className="w-auto rounded-full border border-border px-3" />
         </section>
 
-        <section className="rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <h3 className="font-display mb-5 text-base font-extrabold text-ink">{t('profile.form.sectionTitle')}</h3>
           <ProfileForm user={currentUser.data} />
         </section>
 
-        <section className="rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <h3 className="font-display mb-5 text-base font-extrabold text-ink">{t('profile.password.sectionTitle')}</h3>
           <ChangePasswordForm />
         </section>
 
-        <section className="rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <div className="mb-5 flex items-center justify-between">
             <h3 className="font-display text-base font-extrabold text-ink">{t('profile.babies.sectionTitle')}</h3>
             {babyList.length > 0 && (
@@ -85,7 +85,7 @@ export function ProfileRoute() {
                 type="button"
                 onClick={openAddBabyDialog}
                 aria-label={t('babies.addChild')}
-                className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-bold text-teal-700 transition-colors hover:bg-teal-50"
+                className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
               >
                 <PlusIcon className="h-3.5 w-3.5" />
                 {t('babies.addChild')}
@@ -95,7 +95,7 @@ export function ProfileRoute() {
           {babyList.length === 0 ? (
             <p className="text-sm text-ink-muted">
               {t('profile.babies.empty')}{' '}
-              <button type="button" onClick={openAddBabyDialog} className="font-bold text-teal-700">
+              <button type="button" onClick={openAddBabyDialog} className="font-bold text-emerald-700 dark:text-emerald-300">
                 {t('profile.babies.addFirst')}
               </button>
             </p>
@@ -110,7 +110,7 @@ export function ProfileRoute() {
                         src={baby.avatarUrl}
                         alt=""
                         className={cn(
-                          'h-10 w-10 flex-shrink-0 rounded-full bg-teal-50 object-cover',
+                          'h-10 w-10 flex-shrink-0 rounded-full bg-emerald-50 dark:bg-emerald-950/40 object-cover',
                           baby.avatarColor && 'border-2',
                         )}
                         style={baby.avatarColor ? { borderColor: baby.avatarColor } : undefined}
@@ -133,7 +133,7 @@ export function ProfileRoute() {
                       type="button"
                       onClick={() => setEditTarget(baby)}
                       aria-label={t('babies.edit.action', { name: baby.name })}
-                      className="flex-shrink-0 rounded-lg p-1.5 text-ink-faint transition-colors hover:bg-slate-100 hover:text-teal-600"
+                      className="flex-shrink-0 rounded-lg p-1.5 text-ink-faint transition-colors hover:bg-muted hover:text-emerald-700 dark:hover:text-emerald-300"
                     >
                       <PencilIcon className="h-3.5 w-3.5" />
                     </button>
@@ -144,7 +144,7 @@ export function ProfileRoute() {
           )}
         </section>
 
-        <section className="rounded-2xl border border-rose-100 bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+        <section className="rounded-2xl border border-rose-100 bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <h3 className="font-display mb-2 text-base font-extrabold text-ink">{t('profile.delete.sectionTitle')}</h3>
           <p className="mb-5 text-sm text-ink-muted">{t('profile.delete.sectionDescription')}</p>
           <DeleteAccountDialog onDeleted={() => navigate('/login', { replace: true })} />

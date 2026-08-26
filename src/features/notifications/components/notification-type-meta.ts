@@ -14,10 +14,10 @@ interface NotificationTypeMeta {
 export const NOTIFICATION_TYPE_META: Record<NotificationType, NotificationTypeMeta> = {
   VACCINE_DELAYED: {
     emoji: '💉',
-    iconClassName: 'bg-rose-50 text-rose-700',
+    iconClassName: 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300',
   },
   APPOINTMENT_UPCOMING: {
     emoji: '🩺',
-    iconClassName: 'bg-violet-50 text-violet-700',
+    iconClassName: 'bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300',
   },
 }

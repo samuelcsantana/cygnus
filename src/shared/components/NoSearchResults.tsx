@@ -8,8 +8,8 @@ export function NoSearchResults() {
   const { t } = useTranslation()
 
   return (
-    <div className="rounded-[2rem] border border-slate-100 bg-white p-12 text-center shadow-sm">
-      <div className="bg-slate-50 text-ink-faint mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full">
+    <div className="rounded-[2rem] border border-border bg-card p-12 text-center shadow-sm">
+      <div className="bg-muted text-ink-faint mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full">
         <SearchIcon className="h-7 w-7" />
       </div>
       <h3 className="mb-2 text-lg font-bold text-ink">{t('common.noSearchResults.title')}</h3>

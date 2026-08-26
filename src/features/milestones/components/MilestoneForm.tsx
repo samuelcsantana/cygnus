@@ -60,7 +60,7 @@ export function MilestoneForm({
         </p>
       )}
 
-      <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+      <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
         {showCancel && (
           <button
             type="button"
@@ -70,7 +70,7 @@ export function MilestoneForm({
             {t('common.cancel')}
           </button>
         )}
-        <Button type="submit" disabled={isSubmitting} className="bg-slate-900 text-white hover:bg-slate-800">
+        <Button type="submit" disabled={isSubmitting} className="bg-foreground text-background hover:bg-foreground/90">
           {isSubmitting ? t('common.saving') : submitLabel}
         </Button>
       </div>

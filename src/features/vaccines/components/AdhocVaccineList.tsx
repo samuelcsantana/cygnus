@@ -38,7 +38,7 @@ export function AdhocVaccineList({ babies }: AdhocVaccineListProps) {
   }
 
   return (
-    <div className="mt-5 rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+    <div className="mt-5 rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
       <div className="mb-4">
         <h3 className="font-display text-base font-extrabold text-ink">{t('vaccines.adhoc.sectionTitle')}</h3>
         <p className="mt-0.5 text-sm text-ink-muted">{t('vaccines.adhoc.sectionDescription')}</p>
@@ -77,7 +77,7 @@ function AdhocVaccineRow({ item, baby }: AdhocVaccineRowProps) {
   }
 
   return (
-    <li className="flex items-center gap-3 rounded-2xl border border-transparent bg-white p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
+    <li className="flex items-center gap-3 rounded-2xl border border-transparent bg-card p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]">
       {baby && (
         <span
           title={baby.name}
@@ -100,7 +100,7 @@ function AdhocVaccineRow({ item, baby }: AdhocVaccineRowProps) {
       <span
         className={cn(
           'flex-shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold',
-          item.source === 'CAMPAIGN' ? 'bg-violet-50 text-violet-600' : 'bg-amber-50 text-amber-700',
+          item.source === 'CAMPAIGN' ? 'bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300' : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300',
         )}
       >
         {item.source === 'CAMPAIGN' ? t('vaccines.adhoc.sourceLabel.campaign') : t('vaccines.adhoc.sourceLabel.custom')}
@@ -112,7 +112,7 @@ function AdhocVaccineRow({ item, baby }: AdhocVaccineRowProps) {
             <button
               type="button"
               aria-label={t('vaccines.adhoc.delete.action', { name: item.customName })}
-              className="text-destructive relative rounded-lg p-1.5 opacity-60 transition-opacity hover:bg-rose-50 hover:opacity-100 focus-visible:opacity-100"
+              className="text-destructive relative rounded-lg p-1.5 opacity-60 transition-opacity hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:opacity-100 focus-visible:opacity-100"
             >
               <span className="absolute -inset-2.5" aria-hidden="true" />
               <TrashIcon className="h-3.5 w-3.5" />

@@ -36,15 +36,15 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
     .slice(0, MAX_ITEMS)
 
   return (
-    <div className="flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+    <div className="flex flex-col rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
             <SyringeIcon className="h-[18px] w-[18px]" />
           </span>
           <h3 className="font-display text-base font-extrabold text-ink">{t('nav.vaccines')}</h3>
         </div>
-        <Link to="/vaccines" className="text-xs font-bold text-teal-700">
+        <Link to="/vaccines" className="text-xs font-bold text-emerald-700 dark:text-emerald-300">
           {t('babies.dashboard.viewAll')}
         </Link>
       </div>
@@ -55,9 +55,9 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
             <span className="font-semibold text-ink">{t('vaccines.progressLabel')}</span>
             <span className="text-primary font-bold">{progressPct}%</span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+          <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-teal-500 to-teal-400 transition-all duration-500"
+              className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
               style={{ width: `${progressPct}%` }}
             />
           </div>
@@ -80,7 +80,7 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
                 key={`${item.babyId}-${item.vaccineId}`}
                 className={cn(
                   'flex items-center gap-2.5 rounded-lg px-3 py-2.5',
-                  item.status === 'DELAYED' ? 'bg-rose-50' : 'bg-surface',
+                  item.status === 'DELAYED' ? 'bg-rose-50 dark:bg-rose-950/40' : 'bg-surface',
                 )}
               >
                 {baby && (
@@ -104,7 +104,7 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
                 <span
                   className={cn(
                     'flex-shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold',
-                    item.status === 'DELAYED' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-800',
+                    item.status === 'DELAYED' ? 'bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300' : 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300',
                   )}
                 >
                   {item.status === 'DELAYED' ? t('vaccines.status.delayed') : t('vaccines.status.pending')}

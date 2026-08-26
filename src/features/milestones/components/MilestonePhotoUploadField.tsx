@@ -102,7 +102,7 @@ export function MilestonePhotoUploadField({ id, value, onValueChange, className 
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="flex h-28 w-28 flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-slate-200 text-ink-faint transition-colors hover:border-primary hover:text-primary"
+          className="flex h-28 w-28 flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-border text-ink-faint transition-colors hover:border-primary hover:text-primary"
         >
           <UploadIcon className="h-5 w-5" />
           <span className="text-[11px] font-semibold">{t('milestones.form.photoUploadAction')}</span>

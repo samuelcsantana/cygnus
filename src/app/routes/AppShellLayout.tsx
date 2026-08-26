@@ -57,9 +57,9 @@ export function AppShellLayout() {
 
   return (
     <div className="flex min-h-screen flex-col bg-surface">
-      <header className="print:hidden sticky top-0 z-20 hidden items-center gap-6 border-b border-slate-100 bg-white/90 px-8 py-3 backdrop-blur-md md:flex">
+      <header className="print:hidden sticky top-0 z-20 hidden items-center gap-6 border-b border-border bg-card/90 px-8 py-3 backdrop-blur-md md:flex">
         <Link to="/dashboard" className="flex flex-shrink-0 items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500 text-white shadow-md">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md">
             <LogoIcon className="h-5 w-5" />
           </div>
           <span className="font-display text-xl font-extrabold tracking-tight text-ink">{t('common.appName')}</span>
@@ -77,7 +77,7 @@ export function AppShellLayout() {
             onClick={openAddBabyDialog}
             title={t('babies.addChild')}
             aria-label={t('babies.addChild')}
-            className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-dashed border-teal-200 px-3 py-1.5 text-xs font-bold text-teal-700 transition-colors hover:bg-teal-50"
+            className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-dashed border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
           >
             <PlusIcon className="h-3.5 w-3.5" />
             {t('babies.addChild')}
@@ -85,10 +85,10 @@ export function AppShellLayout() {
           <ThemeToggle />
           <Link
             to="/profile"
-            className="flex items-center gap-2.5 rounded-full py-1.5 pr-3 pl-1.5 transition-colors hover:bg-teal-50/60"
+            className="flex items-center gap-2.5 rounded-full py-1.5 pr-3 pl-1.5 transition-colors hover:bg-emerald-50/60 dark:hover:bg-emerald-950/40"
             title={t('profile.nav.viewProfile')}
           >
-            <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-700">
+            <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
               <UserIcon className="h-4 w-4" />
             </span>
             <span className="max-w-[10rem] truncate text-[13px] font-bold text-ink">
@@ -101,16 +101,16 @@ export function AppShellLayout() {
             disabled={logout.isPending}
             title={t('nav.logout')}
             aria-label={t('nav.logout')}
-            className="flex-shrink-0 rounded-lg p-2 text-ink-faint transition-colors hover:text-rose-500 disabled:opacity-60"
+            className="flex-shrink-0 rounded-lg p-2 text-ink-faint transition-colors hover:text-rose-500 dark:hover:text-rose-300 disabled:opacity-60"
           >
             <LogoutIcon className="h-4 w-4" />
           </button>
         </div>
       </header>
 
-      <header className="print:hidden sticky top-0 z-20 flex items-center justify-between border-b border-slate-200 bg-white/80 px-5 py-4 backdrop-blur-md md:hidden">
+      <header className="print:hidden sticky top-0 z-20 flex items-center justify-between border-b border-border bg-card/80 px-5 py-4 backdrop-blur-md md:hidden">
         <div className="flex items-center space-x-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500 text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <LogoIcon className="h-4 w-4" />
           </div>
           <span className="font-display text-lg font-extrabold text-ink">{t('common.appName')}</span>
@@ -120,7 +120,7 @@ export function AppShellLayout() {
             type="button"
             onClick={openAddBabyDialog}
             aria-label={t('babies.addChild')}
-            className="rounded-lg p-1.5 text-teal-700"
+            className="rounded-lg p-1.5 text-emerald-700 dark:text-emerald-300"
           >
             <PlusIcon className="h-5 w-5" />
           </button>
@@ -139,7 +139,7 @@ export function AppShellLayout() {
         <Outlet />
       </main>
 
-      <nav className="pb-safe print:hidden fixed right-0 bottom-0 left-0 z-30 flex justify-around border-t border-slate-200 bg-white/90 p-2 shadow-[0_-4px_24px_rgba(0,0,0,0.02)] backdrop-blur-md md:hidden">
+      <nav className="pb-safe print:hidden fixed right-0 bottom-0 left-0 z-30 flex justify-around border-t border-border bg-card/90 p-2 shadow-[0_-4px_24px_rgba(0,0,0,0.02)] backdrop-blur-md md:hidden">
         {navItems.map((item) => (
           <MobileNavItem key={item.to} {...item} disabled={!hasBabies && item.to !== '/notifications'} />
         ))}

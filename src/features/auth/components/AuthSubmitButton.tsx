@@ -12,14 +12,14 @@ interface AuthSubmitButtonProps {
 /**
  * The primary action on both auth screens.
  *
- * The fill is the design reference's emerald ramp (800 → 600, left to right),
- * not `--primary`: the reference's green is a different hue from the app's teal
- * token, and the two auth screens are the only place it appears. Promoting it
- * app-wide is a one-token change in index.css, not a change here.
+ * The fill is the emerald ramp as a gradient (800 → 600, left to right), which
+ * `--primary` cannot express: the token is one flat colour. Since 25/08/2026
+ * the app is emerald too — `--primary` is emerald-700 — so this is a gradient
+ * exception rather than the hue exception it used to be.
  *
  * `bg-emerald-800` is listed alongside the gradient on purpose — it beats the
- * variant's `bg-primary` in tailwind-merge (same group, last wins), so no stale
- * teal is left painting underneath. White text is pinned rather than inherited
+ * variant's `bg-primary` in tailwind-merge (same group, last wins), so nothing
+ * is left painting underneath. White text is pinned rather than inherited
  * from --primary-foreground, which flips to near-black in dark mode while this
  * fill stays emerald. Contrast: white on the stop under the centred label runs
  * 5.1–5.6:1; the 600 end alone would be 3.8:1, which is why no label is ever

@@ -1,5 +1,5 @@
 const PALETTE = [
-  { bg: 'bg-teal-500', text: 'text-white' },
+  { bg: 'bg-emerald-600', text: 'text-white' },
   { bg: 'bg-amber-500', text: 'text-white' },
   { bg: 'bg-rose-500', text: 'text-white' },
   { bg: 'bg-violet-500', text: 'text-white' },

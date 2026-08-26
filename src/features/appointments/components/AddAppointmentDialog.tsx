@@ -104,7 +104,7 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
           {step === 'baby' ? (
             <div key="baby" className="animate-fade-in-up">
               <BabyPickerStep babies={babyList} value={selectedBabyId} onSelect={setSelectedBabyId} />
-              <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+              <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <Button
                   type="button"
                   disabled={!selectedBabyId}
@@ -122,7 +122,7 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
             // descendant, even though the click handler itself never calls submit.
             <div key="professional" className="animate-fade-in-up">
               <AppointmentProfessionalFields register={register} control={control} errors={errors} />
-              <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+              <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <Button
                   type="button"
                   onClick={handleContinueFromProfessional}
@@ -135,7 +135,7 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
           ) : (
             <form key="schedule" onSubmit={onSubmit} noValidate className="animate-fade-in-up">
               <AppointmentScheduleFields register={register} control={control} errors={errors} />
-              <div className="mt-6 flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+              <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <button
                   type="button"
                   onClick={() => setStep('professional')}
