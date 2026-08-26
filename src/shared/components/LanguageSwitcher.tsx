@@ -34,9 +34,16 @@ const TRIGGER_BASE = 'focus-visible:border-emerald-600 focus-visible:ring-emeral
 // `h-*`: SelectTrigger sets its own height through that same variant, and a
 // plain utility loses to it on variant order. Matching the variant is also what
 // lets tailwind-merge drop the primitive's value instead of emitting both.
+// `dark:bg-transparent` is not redundant with the primitive's `bg-transparent`:
+// SelectTrigger also carries `dark:bg-input/30` and `dark:hover:bg-input/50`,
+// which only take effect in dark and which the compact variant must undo. Ghost
+// is the whole point here — the control is paired with ThemeToggle, which has no
+// fill in either theme, and without this the two stop matching the moment the
+// theme flips. Measured: ThemeToggle transparent in both, this one
+// `oklab(1 0 0 / 0.045)` in dark.
 const TRIGGER_VARIANT = {
   compact:
-    'h-9 gap-1.5 rounded-lg border-transparent px-2 text-[13px] font-medium text-ink-muted hover:bg-muted hover:text-ink data-[size=default]:h-9',
+    'h-9 gap-1.5 rounded-lg border-transparent px-2 text-[13px] font-medium text-ink-muted hover:bg-muted hover:text-ink data-[size=default]:h-9 dark:bg-transparent dark:hover:bg-muted',
   field:
     'h-11 gap-2 rounded-[10px] border-border bg-muted/50 px-3.5 text-sm text-ink data-[size=default]:h-11',
 } as const
