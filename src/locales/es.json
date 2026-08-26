@@ -738,6 +738,14 @@
       "description": "Encontramos un error inesperado. Intenta recargar la página — si el problema continúa, contacta al soporte.",
       "reload": "Recargar página"
     },
+    "offline": {
+      "title": "Sin conexión",
+      "description": "Esta parte de la aplicación aún no se había abierto, así que no está disponible sin conexión. Inténtalo de nuevo cuando vuelva la conexión."
+    },
+    "staleVersion": {
+      "title": "La aplicación se actualizó",
+      "description": "Apareció una versión nueva mientras esta pestaña estaba abierta y esta parte ya no se pudo cargar. Recarga para obtener la versión actual."
+    },
     "notFound": {
       "eyebrow": "Error 404",
       "title": "Página no encontrada",

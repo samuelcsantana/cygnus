@@ -738,6 +738,14 @@
       "description": "We ran into an unexpected error. Try reloading the page — if the problem continues, contact support.",
       "reload": "Reload page"
     },
+    "offline": {
+      "title": "No connection",
+      "description": "This part of the app had not been opened yet, so it is not available offline. Try again once you are back online."
+    },
+    "staleVersion": {
+      "title": "The app has been updated",
+      "description": "A new version became available while this tab was open, and this part could no longer be loaded. Reload to pick up the current version."
+    },
     "notFound": {
       "eyebrow": "Error 404",
       "title": "Page not found",
