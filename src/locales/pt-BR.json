@@ -143,6 +143,7 @@
   },
   "babies": {
     "addChild": "Adicionar Filho",
+    "monthsOld_zero": "{{count}} meses",
     "monthsOld_one": "{{count}} mês",
     "monthsOld_other": "{{count}} meses",
     "picker": {
@@ -219,6 +220,7 @@
       "viewVaccines": "Ver vacinas →",
       "statVaccinesAppliedLabel": "Vacinas tomadas",
       "statVaccinesUnavailableSub": "Não foi possível carregar",
+      "statVaccinesAppliedSub_zero": "{{count}} pendentes",
       "statVaccinesAppliedSub_one": "{{count}} pendente",
       "statVaccinesAppliedSub_other": "{{count}} pendentes",
       "statNextAppointmentLabel": "Próxima consulta",
@@ -331,6 +333,7 @@
     "filterPending": "Pendentes ({{count}})",
     "filterDelayed": "Atrasadas ({{count}})",
     "filterGuidance": "Orientações ({{count}})",
+    "ageGroupLabel_zero": "{{count}} meses",
     "ageGroupLabel_one": "{{count}} mês",
     "ageGroupLabel_other": "{{count}} meses",
     "doseLabel": "{{count}}ª dose",
@@ -520,6 +523,7 @@
   "milestones": {
     "title": "Marcos de Desenvolvimento",
     "summaryUnavailable": "Carregando os marcos…",
+    "summary_zero": "{{count}} momentos especiais registrados",
     "summary_one": "{{count}} momento especial registrado",
     "summary_other": "{{count}} momentos especiais registrados",
     "action": "Registrar Marco",
@@ -589,6 +593,7 @@
     "bellAria_one": "Notificações, {{count}} não lida",
     "bellAria_other": "Notificações, {{count}} não lidas",
     "unreadCountUnavailable": "Carregando as notificações…",
+    "unreadCount_zero": "{{count}} não lidas",
     "unreadCount_one": "{{count}} não lida",
     "unreadCount_other": "{{count}} não lidas",
     "markAllRead": "Marcar todas como lidas",
