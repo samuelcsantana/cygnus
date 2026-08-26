@@ -150,6 +150,7 @@
       "subtitle": "Para qual criança é isso?"
     },
     "dashboard": {
+      "loadError": "Não foi possível carregar os dados da família.",
       "welcomeHeading": "Bem-vindo(a) ao Meu Neném!",
       "welcomeDescription": "Acompanhe vacinas, consultas e os marcos mais especiais do crescimento dos seus filhos — tudo organizado em um só lugar, para você nunca perder um momento importante.",
       "welcomeCta": "Cadastrar Primeiro Filho",

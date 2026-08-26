@@ -150,6 +150,7 @@
       "subtitle": "¿Para cuál hijo es esto?"
     },
     "dashboard": {
+      "loadError": "No se pudieron cargar los datos de la familia.",
       "welcomeHeading": "¡Bienvenido(a) a Meu Neném!",
       "welcomeDescription": "Sigue las vacunas, consultas y los hitos más especiales del crecimiento de tus hijos — todo organizado en un solo lugar, para que nunca pierdas un momento importante.",
       "welcomeCta": "Registrar Primer Hijo",

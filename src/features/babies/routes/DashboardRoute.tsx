@@ -42,6 +42,33 @@ export function DashboardRoute() {
 
   const babyList = babies.data ?? []
 
+  // `data ?? []` is empty for three different reasons, and only one of them is
+  // "this family has no children". While the request is in flight or after it
+  // failed, falling through to WelcomeDashboard shows a parent of six the
+  // onboarding screen — "Bem-vindo(a) ao Meu Neném! Acompanhe vacinas…" — and
+  // then swaps it for their real dashboard. Measured by delaying GET /babies by
+  // 5s: the welcome copy rendered for the whole delay.
+  //
+  // The other widgets on this page already branch on their own pending/error;
+  // this query is different because it decides which screen exists at all.
+  if (babies.isPending) {
+    return (
+      <div className="animate-pulse space-y-6">
+        <div className="h-10 w-64 rounded-xl bg-card shadow-sm" />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[0, 1, 2].map((index) => (
+            <div key={index} className="h-28 rounded-2xl bg-card shadow-sm" />
+          ))}
+        </div>
+        <div className="h-24 rounded-2xl bg-card shadow-sm" />
+      </div>
+    )
+  }
+
+  if (babies.isError) {
+    return <p className="py-16 text-center text-ink-muted">{t('babies.dashboard.loadError')}</p>
+  }
+
   if (babyList.length === 0) {
     return (
       <div className="animate-fade-in-up">
