@@ -217,6 +217,7 @@
       "overdueBannerHousehold_other": "para {{count}} crianças. Agende o quanto antes.",
       "viewVaccines": "Ver vacinas →",
       "statVaccinesAppliedLabel": "Vacinas tomadas",
+      "statVaccinesUnavailableSub": "Não foi possível carregar",
       "statVaccinesAppliedSub_one": "{{count}} pendente",
       "statVaccinesAppliedSub_other": "{{count}} pendentes",
       "statNextAppointmentLabel": "Próxima consulta",
@@ -230,7 +231,8 @@
       "noAppointmentsScheduled": "Sem consultas agendadas",
       "familyStripDelayed_one": "{{count}} vacina atrasada",
       "familyStripDelayed_other": "{{count}} vacinas atrasadas",
-      "familyStripUpToDate": "Vacinas em dia"
+      "familyStripUpToDate": "Vacinas em dia",
+      "familyStripVaccinesUnknown": "Não foi possível verificar as vacinas"
     },
     "form": {
       "title": "Novo Perfil",
