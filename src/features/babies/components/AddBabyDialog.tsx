@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { StepIndicator } from '@/shared/components/StepIndicator'
 import { CloseIcon } from '@/shared/icons/close-icon'
 import { LogoIcon } from '@/shared/icons/logo-icon'
@@ -72,8 +72,8 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
             <CloseIcon className="h-4 w-4" />
           </button>
           <LogoIcon className="mb-2 h-8 w-8 text-white" />
-          <h2 className="font-display text-xl font-extrabold text-white">{t('babies.form.title')}</h2>
-          <p className="mt-1 text-sm text-white/80">{t('babies.form.subtitle')}</p>
+          <DialogTitle className="font-display text-xl font-extrabold text-white">{t('babies.form.title')}</DialogTitle>
+          <DialogDescription className="mt-1 text-sm text-white/80">{t('babies.form.subtitle')}</DialogDescription>
         </div>
 
         <div className="p-7">
