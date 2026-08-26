@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 
 import { useLogout } from '@/features/auth/api/auth.hooks'
@@ -49,7 +50,22 @@ export function AppShellLayout() {
   ]
 
   const handleLogout = async () => {
-    await logout.mutateAsync()
+    try {
+      await logout.mutateAsync()
+    } catch {
+      // Fica onde está, de propósito. O caminho tentador é limpar a identidade
+      // e navegar assim mesmo — a pessoa pediu para sair, afinal. Mas o cookie
+      // de sessão é HttpOnly: o cliente não consegue apagá-lo, e se o servidor
+      // não confirmou a saída, ele continua válido. Navegar deixaria alguém
+      // *parecendo* deslogado sem estar, e voltar para /dashboard reabriria a
+      // sessão pelo refresh silencioso. Num app de saúde infantil, num aparelho
+      // que pode ser compartilhado, essa mentira é pior que o erro.
+      //
+      // Falhar aqui é comum, não exótico: a API dorme no plano gratuito do
+      // Render e leva ~1 min para acordar.
+      toast.error(t('nav.logoutError'))
+      return
+    }
     navigate('/login', { replace: true })
   }
 

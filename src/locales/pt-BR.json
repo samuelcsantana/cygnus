@@ -42,6 +42,7 @@
     "appointments": "Consultas",
     "milestones": "Marcos",
     "notifications": "Notificações",
+    "logoutError": "Não foi possível sair da conta. Você continua conectado — tente novamente.",
     "logout": "Sair da conta"
   },
   "auth": {
