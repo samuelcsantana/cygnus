@@ -3,7 +3,6 @@
     "appName": "Meu Neném",
     "loading": "Carregando...",
     "myAccount": "Minha conta",
-    "comingSoonMessage": "Esta seção está em construção.",
     "back": "Voltar",
     "cancel": "Cancelar",
     "saving": "Salvando...",
@@ -461,7 +460,6 @@
     "summary": "{{completed}} realizadas · {{scheduled}} agendadas",
     "summaryUnavailable": "Carregando as consultas…",
     "scheduleAction": "Agendar Consulta",
-    "dateLabel": "Data",
     "genericError": "Não foi possível carregar as consultas.",
     "status": {
       "scheduled": "Agendada",
@@ -593,8 +591,6 @@
   },
   "notifications": {
     "title": "Notificações 🔔",
-    "bellAria_one": "Notificações, {{count}} não lida",
-    "bellAria_other": "Notificações, {{count}} não lidas",
     "unreadCountUnavailable": "Carregando as notificações…",
     "unreadCount_zero": "{{count}} não lidas",
     "unreadCount_one": "{{count}} não lida",
