@@ -88,7 +88,16 @@ export function AppShellLayout() {
       >
         {t('nav.skipToContent')}
       </a>
-      <header className="print:hidden sticky top-0 z-20 hidden items-center gap-6 border-b border-border bg-card/90 px-8 py-3 backdrop-blur-md md:flex">
+      {/* `flex-wrap` no próprio cabeçalho, e não só na `<nav>` de dentro.
+          Os três filhos do topo — logo, navegação e ações — não tinham para
+          onde ir quando o texto crescia: o logo e as ações são
+          `flex-shrink-0`, e a linha simplesmente estourava. Medido com o texto
+          a 200% num viewport de 1280 (WCAG 1.4.4): quatro rotas ganhavam
+          rolagem horizontal, e "Família Teste" e "Sair da conta" saíam da
+          tela — perda de função, não de estética.
+
+          A 100% nada se move: tudo cabe numa linha e o `wrap` nunca dispara. */}
+      <header className="print:hidden sticky top-0 z-20 hidden flex-wrap items-center gap-6 border-b border-border bg-card/90 px-8 py-3 backdrop-blur-md md:flex">
         <Link to="/dashboard" className="flex flex-shrink-0 items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md">
             <LogoIcon className="h-5 w-5" />
