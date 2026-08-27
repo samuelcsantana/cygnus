@@ -3,7 +3,6 @@
     "appName": "Meu Neném",
     "loading": "Loading...",
     "myAccount": "My account",
-    "comingSoonMessage": "This section is under construction.",
     "back": "Back",
     "cancel": "Cancel",
     "saving": "Saving...",
@@ -458,7 +457,6 @@
     "summary": "{{completed}} completed · {{scheduled}} scheduled",
     "summaryUnavailable": "Loading appointments…",
     "scheduleAction": "Schedule Appointment",
-    "dateLabel": "Date",
     "genericError": "Could not load appointments.",
     "status": {
       "scheduled": "Scheduled",
@@ -589,8 +587,6 @@
   },
   "notifications": {
     "title": "Notifications 🔔",
-    "bellAria_one": "Notifications, {{count}} unread",
-    "bellAria_other": "Notifications, {{count}} unread",
     "unreadCountUnavailable": "Loading notifications…",
     "unreadCount_one": "{{count}} unread",
     "unreadCount_other": "{{count}} unread",
