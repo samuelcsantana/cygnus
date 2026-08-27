@@ -6,10 +6,54 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 
-function Dialog({
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Root>) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />
+/**
+ * Editado à mão, contra a regra de não mexer no que a CLI do shadcn gera, e a
+ * razão está medida aqui.
+ *
+ * O Radix devolve o foco ao **gatilho** quando o diálogo fecha — mas só
+ * conhece um gatilho se for um `<DialogTrigger>`. Neste app **oito dos nove
+ * diálogos são controlados por estado** (`open={!!baby}`,
+ * `open={isAddBabyDialogOpen}`), e não há gatilho para o Radix guardar.
+ * Medido fechando cada um com Escape e lendo `document.activeElement` por 3s:
+ *
+ *   DeleteAccountDialog  (tem <DialogTrigger>)  -> "Excluir minha conta"
+ *   AddBabyDialog / EditBabyDialog              -> body
+ *   AddMilestoneDialog / AppointmentDetail…     -> body
+ *
+ * Ficar no `body` faz quem abriu pelo teclado voltar ao começo do documento e
+ * tabular tudo de novo — WCAG 2.4.3.
+ *
+ * **A captura fica aqui, na raiz, e não no `DialogContent`.** Duas tentativas
+ * anteriores falharam por isso: o `Content` só monta *depois* de o Radix ter
+ * movido o foco para dentro, então guardar `document.activeElement` de lá
+ * guarda um elemento do próprio diálogo — e restaurá-lo depois manda o foco
+ * para o nada. A raiz fica montada o tempo todo e vê `open` virar.
+ *
+ * Só restaura se o foco tiver ficado órfão no `body`: se a pessoa moveu o
+ * foco nesse meio-tempo, roubá-lo de volta é pior que o defeito.
+ */
+function Dialog({ open, onOpenChange, ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
+  const anteriorRef = React.useRef<HTMLElement | null>(null)
+  const abertoAntesRef = React.useRef(open)
+
+  React.useEffect(() => {
+    if (open && !abertoAntesRef.current) {
+      anteriorRef.current = document.activeElement as HTMLElement | null
+    }
+    if (!open && abertoAntesRef.current) {
+      const alvo = anteriorRef.current
+      // o Radix limpa o foco de forma assíncrona; esperar um quadro evita
+      // restaurar antes e ver o próprio Radix desfazer em seguida
+      requestAnimationFrame(() => {
+        if (!alvo || !alvo.isConnected) return
+        if (document.activeElement && document.activeElement !== document.body) return
+        alvo.focus()
+      })
+    }
+    abertoAntesRef.current = open
+  }, [open])
+
+  return <DialogPrimitive.Root data-slot="dialog" open={open} onOpenChange={onOpenChange} {...props} />
 }
 
 function DialogTrigger({
