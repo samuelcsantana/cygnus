@@ -73,6 +73,21 @@ export function AppShellLayout() {
 
   return (
     <div className="flex min-h-screen flex-col bg-surface">
+      {/* Primeiro elemento focável da página, invisível até receber foco.
+          Sem ele, quem navega por teclado atravessa a navegação inteira em
+          **toda** página antes de chegar no conteúdo — medido: 11 Tabs, com o
+          caminho passando por logo, cinco itens de menu, adicionar filho, tema,
+          conta e sair. WCAG 2.4.1, nível A.
+
+          `sr-only focus:not-sr-only` é o padrão: some do fluxo visual e volta
+          assim que o foco chega, para quem enxerga e navega por teclado ver
+          onde está. */}
+      <a
+        href="#conteudo"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-primary-foreground"
+      >
+        {t('nav.skipToContent')}
+      </a>
       <header className="print:hidden sticky top-0 z-20 hidden items-center gap-6 border-b border-border bg-card/90 px-8 py-3 backdrop-blur-md md:flex">
         <Link to="/dashboard" className="flex flex-shrink-0 items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md">
@@ -163,7 +178,7 @@ export function AppShellLayout() {
         <OfflineBanner />
       </div>
 
-      <main className="flex-1 p-5 pb-24 md:p-10 md:pb-10 lg:p-12 print:p-0">
+      <main id="conteudo" tabIndex={-1} className="flex-1 p-5 pb-24 md:p-10 md:pb-10 lg:p-12 print:p-0">
         <Outlet />
       </main>
 

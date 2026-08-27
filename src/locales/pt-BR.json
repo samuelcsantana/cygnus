@@ -37,6 +37,7 @@
     }
   },
   "nav": {
+    "skipToContent": "Pular para o conteúdo",
     "dashboard": "Início",
     "vaccines": "Vacinas",
     "appointments": "Consultas",
