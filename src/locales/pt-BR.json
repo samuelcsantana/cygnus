@@ -679,11 +679,12 @@
   },
   "legal": {
     "versionLine": "Versão {{version}} · em vigor a partir de {{date}}",
+    "sectionNeedsReview": "Esta seção ainda precisa de revisão profissional e não traz compromisso definitivo.",
+    "bindingLocaleNotice": "Este documento é publicado em português, que é a língua em que ele vale. A tradução desta interface não altera o texto acordado.",
     "draftNotice": {
       "title": "Este texto ainda não está em vigor",
       "body": "O conteúdo jurídico desta página é um rascunho de estrutura e precisa de revisão profissional antes de valer. O inventário de dados abaixo, porém, descreve o que o aplicativo realmente coleta hoje."
     },
-    "pendingSections": "As seções abaixo estão listadas para que se saiba o que falta redigir. Nenhuma delas tem texto definitivo ainda.",
     "inventory": {
       "title": "O que o aplicativo coleta",
       "intro": "Levantado a partir dos contratos de dados deste aplicativo, não redigido por estimativa.",
@@ -715,29 +716,10 @@
       }
     },
     "privacy": {
-      "title": "Política de Privacidade",
-      "sectionsTitle": "Seções a redigir",
-      "sections": [
-        "Quem é o controlador dos dados e como falar com ele",
-        "Base legal de cada tratamento, sob a LGPD",
-        "Por quanto tempo cada categoria é guardada",
-        "Com quem os dados são compartilhados, incluindo provedores de infraestrutura",
-        "Como exercer os direitos de acesso, correção, portabilidade e exclusão",
-        "Como um responsável convidado passa a ver os dados da criança",
-        "Como avisamos sobre mudanças nesta política"
-      ]
+      "title": "Política de Privacidade"
     },
     "terms": {
-      "title": "Termos de Uso",
-      "sectionsTitle": "Seções a redigir",
-      "sections": [
-        "O que o serviço é, e o que ele não é",
-        "Este aplicativo não substitui orientação médica",
-        "Responsabilidades de quem usa e de quem compartilha um perfil",
-        "Encerramento de conta e o que acontece com os dados",
-        "Limitação de responsabilidade",
-        "Foro e legislação aplicável"
-      ]
+      "title": "Termos de Uso"
     },
     "footerPrivacy": "Privacidade",
     "footerTerms": "Termos"

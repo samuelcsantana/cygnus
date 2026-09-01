@@ -674,11 +674,12 @@
   },
   "legal": {
     "versionLine": "Version {{version}} · in force from {{date}}",
+    "sectionNeedsReview": "This section still needs professional review and states no final commitment.",
+    "bindingLocaleNotice": "This document is published in Portuguese, which is the language in which it binds. Translating this interface does not change the agreed text.",
     "draftNotice": {
       "title": "This text is not in force yet",
       "body": "The legal content on this page is a structural draft and needs professional review before it means anything. The data inventory below, however, describes what the app actually collects today."
     },
-    "pendingSections": "The sections below are listed so it is clear what still has to be written. None of them has final text yet.",
     "inventory": {
       "title": "What the app collects",
       "intro": "Taken from this app's data contracts, not written from memory.",
@@ -710,29 +711,10 @@
       }
     },
     "privacy": {
-      "title": "Privacy Policy",
-      "sectionsTitle": "Sections still to write",
-      "sections": [
-        "Who controls the data and how to reach them",
-        "The legal basis for each kind of processing",
-        "How long each category is kept",
-        "Who the data is shared with, infrastructure providers included",
-        "How to exercise access, correction, portability and deletion rights",
-        "What an invited guardian can see about a child",
-        "How changes to this policy are announced"
-      ]
+      "title": "Privacy Policy"
     },
     "terms": {
-      "title": "Terms of Use",
-      "sectionsTitle": "Sections still to write",
-      "sections": [
-        "What the service is, and what it is not",
-        "This app does not replace medical advice",
-        "Responsibilities of users and of anyone sharing a profile",
-        "Closing an account and what happens to the data",
-        "Limitation of liability",
-        "Governing law and jurisdiction"
-      ]
+      "title": "Terms of Use"
     },
     "footerPrivacy": "Privacy",
     "footerTerms": "Terms"
