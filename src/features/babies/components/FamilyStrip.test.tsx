@@ -48,12 +48,25 @@ describe('FamilyStrip: o que o chip afirma sobre vacinas', () => {
     expect(screen.getByText(UP_TO_DATE)).toBeInTheDocument()
   })
 
+  /**
+   * A asserção casa a frase inteira, não o número solto.
+   *
+   * `getByText(/3/)` passou de 27/08 a 31/08/2026 e quebrou sozinha em 01/09,
+   * sem ninguém tocar no código: o chip também imprime a idade, a fixture nasceu
+   * em 01/06/2026, e nesse dia a criança completou **3 meses**. Dois elementos
+   * casaram com `/3/` — "3 meses" e "3 vacinas atrasadas" — e o testing-library
+   * reprova por ambiguidade, não por conteúdo errado.
+   *
+   * O digito sozinho nunca foi o que este teste queria provar. Casar a frase
+   * torna a asserção independente do calendário e mais específica: ela agora
+   * falha se a pluralização quebrar, o que a versão anterior deixava passar.
+   */
   it('reporta o atraso conhecido, que é verdadeiro sempre que existe', () => {
     renderWithProviders(
       <FamilyStrip items={[{ baby, delayedVaccineCount: 3, vaccineStatusKnown: true }]} onEdit={() => {}} />,
     )
 
-    expect(screen.getByText(/3/)).toBeInTheDocument()
+    expect(screen.getByText('3 vacinas atrasadas')).toBeInTheDocument()
     expect(screen.queryByText(UP_TO_DATE)).not.toBeInTheDocument()
   })
 })
