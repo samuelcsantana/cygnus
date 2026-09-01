@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
+import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { CalendarIcon } from '@/shared/icons/calendar-icon'
 import { PlusIcon } from '@/shared/icons/plus-icon'
@@ -55,14 +56,15 @@ export function AppointmentsRoute() {
             </p>
           )}
         </div>
-        <button
+        <Button
           type="button"
+          size="cta"
           onClick={() => setIsAddOpen(true)}
-          className="inline-flex items-center justify-center rounded-2xl bg-violet-600 px-6 py-3 font-bold text-white shadow-lg shadow-violet-600/30 transition-all hover:bg-violet-700 active:scale-[0.98]"
+          className="rounded-2xl shadow-lg shadow-emerald-900/20 active:scale-[0.98]"
         >
           <PlusIcon className="mr-2 h-5 w-5" />
           {t('appointments.scheduleAction')}
-        </button>
+        </Button>
       </div>
 
       <AddAppointmentDialog open={isAddOpen} onOpenChange={setIsAddOpen} />
@@ -78,13 +80,14 @@ export function AppointmentsRoute() {
           description={t('appointments.empty.description')}
           tone="violet"
           action={
-            <button
+            <Button
               type="button"
+          size="cta"
               onClick={() => setIsAddOpen(true)}
-              className="inline-flex items-center justify-center rounded-xl bg-violet-600 px-6 py-3 font-bold text-white shadow-md shadow-violet-600/20 transition-colors hover:bg-violet-700"
+              className="rounded-xl shadow-md shadow-emerald-900/20"
             >
               {t('appointments.empty.cta')}
-            </button>
+            </Button>
           }
         />
       ) : (

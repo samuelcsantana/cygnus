@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { BellIcon } from '@/shared/icons/bell-icon'
 import { DashboardIcon } from '@/shared/icons/dashboard-icon'
@@ -96,14 +97,15 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
               A card-coloured surface here goes near-black in dark, and a light
               emerald label would then be painted on white — the panel does not
               flip, so nothing painted on it may flip. */}
-          <button
+          <Button
             type="button"
+          size="cta"
             onClick={openAddBabyDialog}
-            className="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 font-display text-base font-extrabold text-emerald-700 shadow-lg shadow-black/10 transition-transform hover:-translate-y-0.5"
+            className="rounded-xl bg-white text-emerald-700 shadow-lg shadow-black/10 transition-transform hover:bg-white hover:-translate-y-0.5"
           >
             <PlusIcon className="h-5 w-5" />
             {t('babies.dashboard.welcomeCta')}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -278,14 +280,15 @@ export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
           <p className="font-display mb-1 text-base font-extrabold text-ink">{t('babies.dashboard.bottomCtaTitle')}</p>
           <p className="text-[13px] text-ink-muted">{t('babies.dashboard.bottomCtaDescription')}</p>
         </div>
-        <button
+        <Button
           type="button"
+          size="cta"
           onClick={openAddBabyDialog}
-          className="inline-flex flex-shrink-0 items-center gap-2 rounded-xl bg-amber-500 px-6 py-3 font-display text-sm font-extrabold text-amber-950 shadow-lg shadow-amber-900/20 transition-transform hover:-translate-y-0.5"
+          className="flex-shrink-0 rounded-xl shadow-lg shadow-emerald-900/20 transition-transform hover:-translate-y-0.5"
         >
           <PlusIcon className="h-4 w-4" />
           {t('babies.dashboard.bottomCtaAction')}
-        </button>
+        </Button>
       </div>
     </div>
   )
