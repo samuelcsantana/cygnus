@@ -504,6 +504,12 @@
       "reasonLabel": "Reason (Optional)",
       "reasonPlaceholder": "E.g. Routine check-up",
       "scheduledAtPast": "The date and time cannot be in the past.",
+      "completedAtFuture": "An appointment that already happened cannot have a future date.",
+      "intentLabel": "What would you like to do?",
+      "intentScheduled": "Book an appointment",
+      "intentScheduledHint": "An appointment set for a future date.",
+      "intentCompleted": "Record a past appointment",
+      "intentCompletedHint": "Keep a consultation that already happened in the history.",
       "submit": "Save Appointment",
       "genericError": "Could not save the appointment. Please try again.",
       "successToast": "Appointment scheduled successfully!"
