@@ -91,4 +91,51 @@ describe('AppointmentDetailDialog', () => {
     expect(patchCallCount).toBe(0)
     expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
   })
+  it('deletes the appointment and closes, for any status', async () => {
+    let deleted: string | null = null
+    server.use(
+      http.delete(`${config.apiBaseUrl}/babies/:babyId/appointments/:appointmentId`, ({ params }) => {
+        deleted = params.appointmentId as string
+        return new HttpResponse(null, { status: 204 })
+      }),
+    )
+
+    const user = userEvent.setup()
+    const onOpenChange = vi.fn()
+    // COMPLETED on purpose: cancelling only makes sense for a scheduled visit,
+    // and a typo in one that already happened had no way out before this.
+    renderWithProviders(
+      <AppointmentDetailDialog appointment={{ ...sampleAppointment, status: 'COMPLETED' }} onOpenChange={onOpenChange} />,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Excluir consulta' }))
+    await user.click(await screen.findByRole('button', { name: 'Excluir' }))
+
+    await waitFor(() => {
+      expect(deleted).toBe(sampleAppointment.id)
+    })
+    expect(onOpenChange).toHaveBeenCalledWith(false)
+  })
+
+  it('keeps the dialog open and says so when the delete fails', async () => {
+    server.use(
+      http.delete(`${config.apiBaseUrl}/babies/:babyId/appointments/:appointmentId`, () =>
+        HttpResponse.json({ message: 'boom' }, { status: 500 }),
+      ),
+    )
+
+    const user = userEvent.setup()
+    const onOpenChange = vi.fn()
+    renderWithProviders(<AppointmentDetailDialog appointment={sampleAppointment} onOpenChange={onOpenChange} />)
+
+    await user.click(screen.getByRole('button', { name: 'Excluir consulta' }))
+    await user.click(await screen.findByRole('button', { name: 'Excluir' }))
+
+    // Closing on a failure would look exactly like success and leave the row
+    // on screen with no explanation.
+    await waitFor(() => {
+      expect(onOpenChange).not.toHaveBeenCalledWith(false)
+    })
+  })
+
 })

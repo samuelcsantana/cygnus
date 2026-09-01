@@ -18,7 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 
-import { useUpdateAppointment } from '../api/appointments.hooks'
+import { useDeleteAppointment, useUpdateAppointment } from '../api/appointments.hooks'
 import type { Appointment } from '../api/appointments.schemas'
 import { AppointmentStatusBadge } from './AppointmentStatusBadge'
 
@@ -30,6 +30,7 @@ interface AppointmentDetailDialogProps {
 export function AppointmentDetailDialog({ appointment, onOpenChange }: AppointmentDetailDialogProps) {
   const { t } = useTranslation()
   const updateAppointment = useUpdateAppointment(appointment?.babyId ?? '')
+  const deleteAppointment = useDeleteAppointment(appointment?.babyId ?? '')
   const [notes, setNotes] = useState('')
 
   useEffect(() => {
@@ -50,6 +51,18 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
       return
     }
     toast.success(t('appointments.detail.notesSavedToast'))
+  }
+
+  async function handleDelete() {
+    if (!appointment) return
+    try {
+      await deleteAppointment.mutateAsync(appointment.id)
+    } catch {
+      toast.error(t('appointments.detail.deleteError'))
+      return
+    }
+    toast.success(t('appointments.detail.deleteSuccessToast'))
+    onOpenChange(false)
   }
 
   async function handleSetStatus(status: 'COMPLETED' | 'CANCELLED') {
@@ -141,6 +154,39 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
                   </Button>
                 </div>
               )}
+            </div>
+
+            {/* Excluir fica fora do bloco de `SCHEDULED` de propósito: cancelar
+                só faz sentido para o que está marcado, mas errar de digitação
+                acontece em qualquer estado — e desde que dá para registrar
+                consulta passada, "cancelar" um fato já ocorrido não quer dizer
+                nada. É a única saída para um registro que não deveria existir. */}
+            <div className="flex justify-start border-t border-border pt-4">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button type="button" variant="ghost" className="text-destructive" disabled={deleteAppointment.isPending}>
+                    {t('appointments.detail.deleteAppointment')}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t('appointments.detail.deleteConfirmTitle')}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t('appointments.detail.deleteConfirmDescription', { doctorName: appointment.doctorName })}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t('appointments.detail.deleteConfirmDismiss')}</AlertDialogCancel>
+                    <AlertDialogAction
+                      variant="destructive"
+                      onClick={handleDelete}
+                      disabled={deleteAppointment.isPending}
+                    >
+                      {t('appointments.detail.deleteConfirmAction')}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </div>
         )}
