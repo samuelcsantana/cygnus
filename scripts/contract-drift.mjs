@@ -60,6 +60,7 @@ const appointments = await import('../src/features/appointments/api/appointments
 const milestones = await import('../src/features/milestones/api/milestones.schemas.ts')
 const notifications = await import('../src/features/notifications/api/notifications.schemas.ts')
 const auth = await import('../src/features/auth/api/auth.schemas.ts')
+const legal = await import('../src/features/legal/api/legal.schemas.ts')
 
 /**
  * The map is explicit on purpose. Deriving which schema serves which endpoint
@@ -77,6 +78,7 @@ const ENDPOINTS = [
   { path: '/babies/{babyId}/appointments', method: 'get', schema: appointments.appointmentListSchema },
   { path: '/babies/{babyId}/milestones', method: 'get', schema: milestones.milestoneListSchema },
   { path: '/notifications', method: 'get', schema: notifications.notificationListSchema },
+  { path: '/legal/acceptances', method: 'get', schema: legal.legalAcceptanceListSchema },
 ]
 
 /** Unwraps `z.array(...)` and `.nullable()/.optional()` down to the object. */

@@ -676,6 +676,15 @@
     "versionLine": "Versión {{version}} · vigente desde {{date}}",
     "sectionNeedsReview": "Esta sección aún necesita revisión profesional y no establece ningún compromiso definitivo.",
     "bindingLocaleNotice": "Este documento se publica en portugués, que es el idioma en el que tiene validez. La traducción de esta interfaz no altera el texto acordado.",
+    "gate": {
+      "title": "Antes de continuar",
+      "description": "Actualizamos los documentos que rigen el uso de la aplicación. Léelos y acéptalos para continuar — la aplicación maneja datos de salud de un niño, y el consentimiento debe ser tuyo y quedar registrado.",
+      "versionLabel": "Versión {{version}}",
+      "readFirst": "Se abre en otra pantalla. Léelo antes de aceptar.",
+      "acceptAction": "He leído y acepto",
+      "genericError": "No fue posible registrar la aceptación. Inténtalo de nuevo.",
+      "noWayAround": "Sin la aceptación no es posible continuar. Puedes cerrar sesión en cualquier momento."
+    },
     "draftNotice": {
       "title": "Este texto aún no está vigente",
       "body": "El contenido jurídico de esta página es un borrador de estructura y necesita revisión profesional antes de tener valor. El inventario de datos de abajo, en cambio, describe lo que la aplicación recoge hoy."

@@ -676,6 +676,15 @@
     "versionLine": "Version {{version}} · in force from {{date}}",
     "sectionNeedsReview": "This section still needs professional review and states no final commitment.",
     "bindingLocaleNotice": "This document is published in Portuguese, which is the language in which it binds. Translating this interface does not change the agreed text.",
+    "gate": {
+      "title": "Before you continue",
+      "description": "We have updated the documents governing the use of this app. Read and accept them to continue — the app handles a child’s health data, and the consent has to be yours and on record.",
+      "versionLabel": "Version {{version}}",
+      "readFirst": "Opens on another screen. Read it before accepting.",
+      "acceptAction": "I have read and accept",
+      "genericError": "Could not record your acceptance. Please try again.",
+      "noWayAround": "You cannot continue without accepting. You may sign out at any time."
+    },
     "draftNotice": {
       "title": "This text is not in force yet",
       "body": "The legal content on this page is a structural draft and needs professional review before it means anything. The data inventory below, however, describes what the app actually collects today."
