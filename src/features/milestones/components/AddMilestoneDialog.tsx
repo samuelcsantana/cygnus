@@ -119,12 +119,7 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
             <div key="baby" className="animate-fade-in-up">
               <BabyPickerStep babies={babyList} value={selectedBabyId} onSelect={setSelectedBabyId} />
               <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
-                <Button
-                  type="button"
-                  disabled={!selectedBabyId}
-                  onClick={() => setStep('core')}
-                  className="bg-amber-700 text-white hover:bg-amber-800"
-                >
+                <Button type="button" disabled={!selectedBabyId} onClick={() => setStep('core')}>
                   {t('milestones.wizard.continue')}
                 </Button>
               </div>
@@ -137,11 +132,7 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
             <div key="core" className="animate-fade-in-up">
               <MilestoneCoreFields control={control} register={register} errors={errors} />
               <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
-                <Button
-                  type="button"
-                  onClick={handleContinueFromCore}
-                  className="bg-amber-700 text-white hover:bg-amber-800"
-                >
+                <Button type="button" onClick={handleContinueFromCore}>
                   {t('milestones.wizard.continue')}
                 </Button>
               </div>
@@ -157,7 +148,7 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
                 >
                   {t('milestones.wizard.back')}
                 </button>
-                <Button type="submit" disabled={isSubmitting} className="bg-foreground text-background hover:bg-foreground/90">
+                <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? t('common.saving') : t('milestones.form.submit')}
                 </Button>
                 {createMilestone.isError && (

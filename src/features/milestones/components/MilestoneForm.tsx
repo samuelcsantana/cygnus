@@ -70,7 +70,7 @@ export function MilestoneForm({
             {t('common.cancel')}
           </button>
         )}
-        <Button type="submit" disabled={isSubmitting} className="bg-foreground text-background hover:bg-foreground/90">
+        <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? t('common.saving') : submitLabel}
         </Button>
       </div>

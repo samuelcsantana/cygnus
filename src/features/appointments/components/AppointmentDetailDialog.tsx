@@ -136,12 +136,7 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                  <Button
-                    type="button"
-                    onClick={() => handleSetStatus('COMPLETED')}
-                    disabled={updateAppointment.isPending}
-                    className="bg-violet-600 text-white hover:bg-violet-700"
-                  >
+                  <Button type="button" onClick={() => handleSetStatus('COMPLETED')} disabled={updateAppointment.isPending}>
                     {t('appointments.detail.markCompleted')}
                   </Button>
                 </div>
