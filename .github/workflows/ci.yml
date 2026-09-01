@@ -25,6 +25,19 @@ jobs:
       - name: Typecheck
         run: npx tsc -b
 
+      # Compares the hand-written Zod schemas against cygnus-api's published
+      # openapi.json. It catches the one class of defect nothing else here
+      # catches: the API answers 200, the front's parse fails, and the screen
+      # says "could not load" with no error in the log and none in Sentry. That
+      # is how the vaccine calendar stayed broken for thirteen days.
+      #
+      # It fetches the contract over the network on every run. A committed copy
+      # would drop that dependency but would go stale, and a gate comparing
+      # against an old contract stays green while production drifts — the same
+      # silence it exists to break.
+      - name: Contract drift
+        run: npm run contract:check
+
       - name: Test
         run: npm run test
 
