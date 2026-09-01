@@ -149,4 +149,80 @@ describe('AddAppointmentDialog', () => {
     await user.click(continueButton)
     expect(screen.getByLabelText('Nome do Profissional')).toBeInTheDocument()
   })
+  it('records a consultation that already happened, and says so to the API', async () => {
+    let receivedBody: Record<string, unknown> = {}
+    server.use(
+      http.post(`${config.apiBaseUrl}/babies/:babyId/appointments`, async ({ request }) => {
+        receivedBody = (await request.json()) as Record<string, unknown>
+        return HttpResponse.json(
+          {
+            id: '22222222-2222-4222-8222-222222222222',
+            babyId,
+            scheduledAt: '2024-03-01T10:00:00.000Z',
+            doctorName: 'Dra. Ana Silva',
+            specialty: null,
+            location: null,
+            reason: null,
+            notes: null,
+            status: 'COMPLETED',
+            createdAt: '2024-03-10T00:00:00.000Z',
+          },
+          { status: 201 },
+        )
+      }),
+    )
+
+    const user = userEvent.setup()
+    renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
+
+    await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
+    await user.click(screen.getByRole('button', { name: 'Continuar' }))
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Data')).toBeInTheDocument()
+    })
+    await user.click(screen.getByRole('radio', { name: /Registrar consulta que já aconteceu/ }))
+
+    const pastDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString().slice(0, 10)
+    fireEvent.change(screen.getByLabelText('Data'), { target: { value: pastDate } })
+    fireEvent.change(screen.getByLabelText('Horário'), { target: { value: '10:00' } })
+    await user.click(screen.getByRole('button', { name: 'Salvar Consulta' }))
+
+    await waitFor(() => {
+      expect(receivedBody.status).toBe('COMPLETED')
+    })
+  })
+
+  // The mirror of the above, and the reason both are here: if only one passed,
+  // the screen would be back to what it was — one act, one direction.
+  it('still refuses a past date when the intent is to book', async () => {
+    let postCallCount = 0
+    server.use(
+      http.post(`${config.apiBaseUrl}/babies/:babyId/appointments`, () => {
+        postCallCount += 1
+        return HttpResponse.json({}, { status: 201 })
+      }),
+    )
+
+    const user = userEvent.setup()
+    renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
+
+    await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
+    await user.click(screen.getByRole('button', { name: 'Continuar' }))
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Data')).toBeInTheDocument()
+    })
+
+    const pastDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString().slice(0, 10)
+    fireEvent.change(screen.getByLabelText('Data'), { target: { value: pastDate } })
+    fireEvent.change(screen.getByLabelText('Horário'), { target: { value: '10:00' } })
+    await user.click(screen.getByRole('button', { name: 'Salvar Consulta' }))
+
+    await waitFor(() => {
+      expect(screen.getByText('A data e hora não podem estar no passado.')).toBeInTheDocument()
+    })
+    expect(postCallCount).toBe(0)
+  })
+
 })

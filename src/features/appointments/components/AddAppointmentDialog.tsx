@@ -43,6 +43,9 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
     formState: { errors, isSubmitting },
   } = useForm<AppointmentFormInput>({
     resolver: zodResolver(appointmentFormSchema),
+    // Booking is where the wizard starts; recording the past is the deliberate
+    // choice made on the schedule step.
+    defaultValues: { status: 'SCHEDULED' },
   })
 
   // Reset only when the dialog opens — not on every `babies.data` change —
@@ -50,7 +53,10 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
   // out from under the user while the dialog is already open.
   useEffect(() => {
     if (!open) return
-    reset()
+    // Back to booking, not to an empty intent — reset() with no argument would
+    // clear the field the schema requires, and the second open would submit
+    // without one.
+    reset({ status: 'SCHEDULED' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 

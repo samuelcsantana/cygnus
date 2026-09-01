@@ -28,7 +28,9 @@ export function AppointmentForm({ defaultValues, onSubmit, submitLabel, onCancel
     formState: { errors, isSubmitting },
   } = useForm<AppointmentFormInput>({
     resolver: zodResolver(appointmentFormSchema),
-    defaultValues,
+    // Booking is the default act; recording the past is the deliberate one. A
+    // caller can still override it — the reschedule flow passes its own values.
+    defaultValues: { status: 'SCHEDULED', ...defaultValues },
   })
 
   const handleFormSubmit = handleSubmit(async (values) => {

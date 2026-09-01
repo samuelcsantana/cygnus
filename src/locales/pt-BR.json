@@ -507,6 +507,12 @@
       "reasonLabel": "Motivo (Opcional)",
       "reasonPlaceholder": "Ex: Consulta de rotina",
       "scheduledAtPast": "A data e hora não podem estar no passado.",
+      "completedAtFuture": "Uma consulta que já aconteceu não pode ter data futura.",
+      "intentLabel": "O que você quer fazer?",
+      "intentScheduled": "Agendar consulta",
+      "intentScheduledHint": "Uma consulta marcada para uma data futura.",
+      "intentCompleted": "Registrar consulta que já aconteceu",
+      "intentCompletedHint": "Guardar no histórico uma consulta do passado.",
       "submit": "Salvar Consulta",
       "genericError": "Não foi possível salvar a consulta. Tente novamente.",
       "successToast": "Consulta agendada com sucesso!"

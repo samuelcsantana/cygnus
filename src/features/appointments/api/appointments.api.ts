@@ -28,6 +28,10 @@ export async function createAppointment(babyId: string, input: AppointmentFormIn
     specialty: input.specialty || undefined,
     location: input.location || undefined,
     reason: input.reason || undefined,
+    // Only sent when recording the past. SCHEDULED is the API's default and the
+    // contract is additive, so omitting it keeps the request byte-identical to
+    // what this app sent before COMPLETED existed.
+    status: input.status === 'COMPLETED' ? 'COMPLETED' : undefined,
   }
   const response = await httpClient.post<unknown>(`/babies/${babyId}/appointments`, body)
   return appointmentSchema.parse(response)
