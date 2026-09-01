@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom'
 
 import { useSyncAuthIdentity } from '@/features/auth/api/auth.hooks'
+import { LegalAcceptanceGate } from '@/features/legal/components/LegalAcceptanceGate'
 import { ApiError } from '@/lib/http-client'
 
 /**
@@ -32,5 +33,12 @@ export function ProtectedLayout() {
     )
   }
 
-  return <Outlet />
+  // Inside the session gate and outside everything else: consent is asked of a
+  // known person, and it has to be asked before any screen that shows a child's
+  // data. Inert while both documents are drafts — see LegalAcceptanceGate.
+  return (
+    <LegalAcceptanceGate>
+      <Outlet />
+    </LegalAcceptanceGate>
+  )
 }

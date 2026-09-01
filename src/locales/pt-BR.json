@@ -681,6 +681,15 @@
     "versionLine": "Versão {{version}} · em vigor a partir de {{date}}",
     "sectionNeedsReview": "Esta seção ainda precisa de revisão profissional e não traz compromisso definitivo.",
     "bindingLocaleNotice": "Este documento é publicado em português, que é a língua em que ele vale. A tradução desta interface não altera o texto acordado.",
+    "gate": {
+      "title": "Antes de continuar",
+      "description": "Atualizamos os documentos que regem o uso do aplicativo. Leia e aceite para continuar — o app lida com dados de saúde de uma criança, e o consentimento precisa ser seu e registrado.",
+      "versionLabel": "Versão {{version}}",
+      "readFirst": "Abre em outra tela. Leia antes de aceitar.",
+      "acceptAction": "Li e aceito",
+      "genericError": "Não foi possível registrar o aceite. Tente novamente.",
+      "noWayAround": "Sem o aceite não é possível continuar. Você pode sair da conta a qualquer momento."
+    },
     "draftNotice": {
       "title": "Este texto ainda não está em vigor",
       "body": "O conteúdo jurídico desta página é um rascunho de estrutura e precisa de revisão profissional antes de valer. O inventário de dados abaixo, porém, descreve o que o aplicativo realmente coleta hoje."
