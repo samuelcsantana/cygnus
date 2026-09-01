@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
+import { BINDING_LOCALE, legalContent } from '@/features/legal/content'
 import { AlertCircleIcon } from '@/shared/icons/alert-circle-icon'
 import { LogoIcon } from '@/shared/icons/logo-icon'
 import { DATA_CATEGORIES, LEGAL_DOCUMENTS, type LegalDocumentId } from '@/shared/legal'
@@ -27,9 +28,15 @@ export function LegalDocumentRoute({ documentId }: LegalDocumentRouteProps) {
   const { t, i18n } = useTranslation()
   const doc = LEGAL_DOCUMENTS[documentId]
   const outro = documentId === 'privacy' ? LEGAL_DOCUMENTS.terms : LEGAL_DOCUMENTS.privacy
+  const conteudo = legalContent(documentId)
+  const outroIdioma = !i18n.language.startsWith(BINDING_LOCALE.slice(0, 2))
 
   return (
-    <div className="mx-auto min-h-screen max-w-3xl px-5 py-10 sm:px-8">
+    /* `<main>` e não `<div>`: estas são as únicas telas do app que desenham a
+       própria página sem passar por um layout, e ficaram sem landmark
+       principal. Quem navega por landmarks não tinha como pular direto para o
+       documento — que é a única coisa que a página tem. */
+    <main className="mx-auto min-h-screen max-w-3xl px-5 py-10 sm:px-8">
       <Link to="/" className="text-ink-muted hover:text-ink inline-flex items-center gap-2 text-sm font-semibold">
         <span className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-lg">
           <LogoIcon className="h-4 w-4" />
@@ -68,21 +75,41 @@ export function LegalDocumentRoute({ documentId }: LegalDocumentRouteProps) {
         </dl>
       </section>
 
-      <section className="mt-8">
-        <h2 className="font-display text-xl font-bold text-ink">{t(`legal.${documentId}.sectionsTitle`)}</h2>
-        <p className="text-ink-muted mt-1 text-sm">{t('legal.pendingSections')}</p>
-        <ul className="text-ink-muted mt-4 list-disc space-y-2 pl-5 text-sm">
-          {(t(`legal.${documentId}.sections`, { returnObjects: true }) as string[]).map((titulo) => (
-            <li key={titulo}>{titulo}</li>
-          ))}
-        </ul>
-      </section>
+      {/* O documento em si. O texto vem de `features/legal/content`, não das
+          chaves de i18n: ele é artefato versionado, e a substituição pela versão
+          revisada tem de ser um arquivo só. Ver o cabeçalho daqueles arquivos. */}
+      {outroIdioma && (
+        <p className="text-ink-muted border-border mt-6 rounded-2xl border border-dashed p-4 text-sm">
+          {t('legal.bindingLocaleNotice')}
+        </p>
+      )}
+
+      <div className="mt-8 space-y-8">
+        {conteudo.sections.map((secao) => (
+          <section key={secao.id} id={secao.id}>
+            <h2 className="font-display text-xl font-bold text-ink">{secao.heading}</h2>
+            {secao.needsReview && (
+              /* Marcado seção a seção, e não só no topo da página: uma política
+                 meio pronta que parece pronta é pior que uma ausente, e quem
+                 chega direto num link de âncora não vê o aviso do topo. */
+              <p className="text-amber-700 dark:text-amber-300 mt-2 text-sm font-semibold">
+                {t('legal.sectionNeedsReview')}
+              </p>
+            )}
+            <div className="text-ink-muted mt-3 space-y-3 text-sm leading-relaxed">
+              {secao.body.map((paragrafo) => (
+                <p key={paragrafo.slice(0, 48)}>{paragrafo}</p>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
 
       <p className="text-ink-muted mt-10 text-sm">
         <Link to={outro.path} className="text-primary font-semibold underline-offset-4 hover:underline">
           {t(`legal.${outro.id}.title`)}
         </Link>
       </p>
-    </div>
+    </main>
   )
 }

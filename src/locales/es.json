@@ -674,11 +674,12 @@
   },
   "legal": {
     "versionLine": "Versión {{version}} · vigente desde {{date}}",
+    "sectionNeedsReview": "Esta sección aún necesita revisión profesional y no establece ningún compromiso definitivo.",
+    "bindingLocaleNotice": "Este documento se publica en portugués, que es el idioma en el que tiene validez. La traducción de esta interfaz no altera el texto acordado.",
     "draftNotice": {
       "title": "Este texto aún no está vigente",
       "body": "El contenido jurídico de esta página es un borrador de estructura y necesita revisión profesional antes de tener valor. El inventario de datos de abajo, en cambio, describe lo que la aplicación recoge hoy."
     },
-    "pendingSections": "Las secciones siguientes están listadas para dejar claro qué falta redactar. Ninguna tiene texto definitivo todavía.",
     "inventory": {
       "title": "Qué recoge la aplicación",
       "intro": "Extraído de los contratos de datos de esta aplicación, no redactado de memoria.",
@@ -710,29 +711,10 @@
       }
     },
     "privacy": {
-      "title": "Política de Privacidad",
-      "sectionsTitle": "Secciones por redactar",
-      "sections": [
-        "Quién controla los datos y cómo contactarlo",
-        "La base legal de cada tratamiento",
-        "Cuánto tiempo se conserva cada categoría",
-        "Con quién se comparten los datos, proveedores de infraestructura incluidos",
-        "Cómo ejercer los derechos de acceso, corrección, portabilidad y supresión",
-        "Qué puede ver un responsable invitado sobre un niño",
-        "Cómo se anuncian los cambios de esta política"
-      ]
+      "title": "Política de Privacidad"
     },
     "terms": {
-      "title": "Términos de Uso",
-      "sectionsTitle": "Secciones por redactar",
-      "sections": [
-        "Qué es el servicio y qué no es",
-        "Esta aplicación no sustituye la orientación médica",
-        "Responsabilidades de quien usa y de quien comparte un perfil",
-        "Cierre de cuenta y qué pasa con los datos",
-        "Limitación de responsabilidad",
-        "Ley aplicable y jurisdicción"
-      ]
+      "title": "Términos de Uso"
     },
     "footerPrivacy": "Privacidad",
     "footerTerms": "Términos"
