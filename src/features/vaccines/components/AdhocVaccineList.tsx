@@ -107,17 +107,29 @@ function AdhocVaccineRow({ item, baby }: AdhocVaccineRowProps) {
       </span>
 
       <AlertDialog>
+        {/* `asChild` on the <button>, not on a wrapping <span>. Radix puts
+            `aria-haspopup="dialog"` and `aria-expanded` on whatever element it
+            is given, and a bare <span> has no role that may carry either — axe
+            reports `aria-allowed-attr`, one node per row.
+
+            This is the second time the same shape has cost a fix here: PR #29
+            paid it with `aria-expanded` on a <span> used as an AlertDialogTrigger.
+            The rule that survives: **the trigger goes on the interactive
+            element**, and layout classes move onto it rather than earning a
+            wrapper.
+
+            It stayed invisible until 01/09/2026 only because the seed created
+            no ad-hoc vaccine, so this list never rendered a row and the trigger
+            never existed for axe to scan. */}
         <AlertDialogTrigger asChild>
-          <span className="relative inline-flex flex-shrink-0">
-            <button
-              type="button"
-              aria-label={t('vaccines.adhoc.delete.action', { name: item.customName })}
-              className="text-destructive relative rounded-lg p-1.5 opacity-60 transition-opacity hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:opacity-100 focus-visible:opacity-100"
-            >
-              <span className="absolute -inset-2.5" aria-hidden="true" />
-              <TrashIcon className="h-3.5 w-3.5" />
-            </button>
-          </span>
+          <button
+            type="button"
+            aria-label={t('vaccines.adhoc.delete.action', { name: item.customName })}
+            className="text-destructive relative inline-flex flex-shrink-0 rounded-lg p-1.5 opacity-60 transition-opacity hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:opacity-100 focus-visible:opacity-100"
+          >
+            <span className="absolute -inset-2.5" aria-hidden="true" />
+            <TrashIcon className="h-3.5 w-3.5" />
+          </button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
