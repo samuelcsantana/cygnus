@@ -60,6 +60,39 @@ export function AuthLayout() {
     <div className="relative flex min-h-dvh flex-col bg-surface">
       <AuthBackdrop />
 
+      {/* The hero photograph, below `lg` only. Above that the brand panel
+          carries it, and showing it in both places would be the same image
+          twice on one screen.
+
+          It exists here because the panel is `lg:flex`, so until 01/09/2026 the
+          photograph — half the identity of these screens — did not exist on a
+          phone, which is where most of this app's traffic is.
+
+          The scrim is a vertical gradient, opaque at both ends and thin in the
+          middle, and that shape is not decoration: the only text painted on
+          this background is the theme/language row at the top and the
+          copyright and legal links at the bottom. The middle is covered by the
+          card, which is opaque at every width for exactly this reason, so the
+          photograph can be read there at full strength while no glyph is ever
+          composited over it. Same technique as the panel's own bottom scrim.
+
+          The bottom stop lands at 88%, not 100%, and the 12% below it is solid
+          surface. That is where the copyright and the two legal links sit, and
+          they are 12px `ink-faint`: with the gradient still interpolating under
+          them the composite read rgb(225,227,224) and the ratio was 4.03:1,
+          under the 4.5 floor. Solid surface there restores the 4.75:1 that
+          token is measured at.
+
+          Nothing here is gate-covered: axe reads the nearest opaque ancestor
+          and sees neither the <img> nor a sibling gradient. The measured ratios
+          are in AUTH.md §3.1 and the probe that produced them is
+          `verification/auth-chrome-contrast.mjs` — re-run it if the stops, the
+          photograph or the chrome's position move. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden lg:hidden">
+        <img src={authHeroUrl} alt="" decoding="async" className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-surface via-surface/25 via-45% to-surface to-88%" />
+      </div>
+
       <div className="relative z-10 flex flex-1 flex-col px-4 pt-4 pb-6 sm:px-6 sm:pt-6 lg:px-8 lg:pt-8">
         {/* Not in the reference, which shows neither control. Kept because the
             app ships three locales and a dark theme, and this is the only
@@ -79,17 +112,25 @@ export function AuthLayout() {
               field, and the tab bar itself drops 13px on the way to /login.
 
               Three values rather than one because the height is set by how the
-              copy wraps at that column width, and it is flat inside each band:
-              swept every width from 360 to 1920, register measures 752 below
-              `sm`, 818 up to `lg` and 710 above it, with login exactly 25px
-              under each. The floors are those numbers, rounded up. If either
-              form gains or loses a row, re-measure — a floor the taller route
-              has outgrown brings the jump back silently. */}
+              copy wraps at that column width. Re-swept from 360 to 1920 on
+              01/09/2026, after the card gained padding below `sm` to sit on the
+              photograph: register measures 807 below `sm`, 818 up to `lg` and
+              710 above it, with login 46px under the first and 25px under the
+              other two. The floors are those numbers, rounded up.
+
+              The band below `sm` is flat at 786 from 380 to 620 and jumps to
+              807 at 360 alone, where a line of copy wraps — so the floor is set
+              by the narrowest phone, not by the typical one.
+
+              If either form gains or loses a row, re-measure. This exact
+              regression already happened once: the padding change took login
+              from 752 to 761 past a 752 floor, and the segmented control
+              started drifting 4px again. `layout.mjs` is what caught it. */}
           <div
             className={cn(
-              'grid w-full max-w-[26rem] grid-cols-1 overflow-hidden rounded-3xl sm:border sm:border-border/70 sm:bg-card sm:shadow-2xl sm:shadow-emerald-900/12 lg:max-w-[56rem] lg:grid-cols-[11fr_14fr] dark:sm:shadow-black/40',
+              'grid w-full max-w-[26rem] grid-cols-1 overflow-hidden rounded-3xl border border-border/70 bg-card shadow-2xl shadow-emerald-900/12 lg:max-w-[56rem] lg:grid-cols-[11fr_14fr] dark:shadow-black/40',
               // The floor belongs to the tabbed pair, not to the shell: see above.
-              showsTabs && 'min-h-[47rem] sm:min-h-[51.25rem] lg:min-h-[44.5rem]',
+              showsTabs && 'min-h-[50.5rem] sm:min-h-[51.25rem] lg:min-h-[44.5rem]',
             )}
           >
             {/* Brand panel, desktop only. The gradient is 165° — near-vertical
@@ -178,15 +219,22 @@ export function AuthLayout() {
               </p>
             </div>
 
-            {/* Form column. No card chrome below `sm`: on a phone the form sits
-                straight on the wash, which avoids a box inside a box at the one
-                width where the box has no room to breathe. */}
+            {/* Form column. The card is opaque and bordered at every width,
+                including below `sm`, where it used to be bare.
+
+                That reversed a deliberate call — the form sat straight on the
+                wash to avoid a box inside a box on a phone. The photograph
+                behind it is what changed the arithmetic: without an opaque
+                card, every label, input and tab would be composited over
+                photograph pixels, and that is the one contrast case no gate in
+                this repo can see. A box inside a box costs a little air; text
+                over a photograph costs legibility that nothing measures. */}
             {/* Top-anchored on purpose. With the column centred, the floor
                 above only moves the problem: the shorter route floats down by
                 half the difference and takes the segmented control with it.
                 Anchored, the tabs sit a fixed distance below the card's top
                 edge and the slack all falls to the bottom, where nothing is. */}
-            <div className="flex flex-col justify-start px-1 py-2 sm:p-10 lg:p-12">
+            <div className="flex flex-col justify-start p-6 sm:p-10 lg:p-12">
               <div className="animate-fade-in-up w-full">
                 <div className="mb-8 flex flex-col items-center lg:hidden">
                   <span className="mb-3 flex h-14 w-14 items-center justify-center rounded-[18px] bg-gradient-to-br from-emerald-800 to-emerald-600 text-white">
