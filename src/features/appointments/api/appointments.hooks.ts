@@ -3,7 +3,9 @@ import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/rea
 import { useBabies } from '@/features/babies/api/babies.hooks'
 import type { Baby } from '@/features/babies/api/babies.schemas'
 
-import { createAppointment, fetchAppointments, fetchMedicalSpecialties, updateAppointment } from './appointments.api'
+import { createAppointment, fetchAppointments, fetchMedicalSpecialties, updateAppointment,
+  deleteAppointment,
+} from './appointments.api'
 import type { Appointment, AppointmentFormInput, UpdateAppointmentInput } from './appointments.schemas'
 
 export function appointmentsQueryKey(babyId: string) {
@@ -110,6 +112,22 @@ export function useUpdateAppointment(babyId: string) {
     onSuccess: (updated) => {
       queryClient.setQueryData<Appointment[]>(appointmentsQueryKey(babyId), (prev) =>
         prev?.map((appointment) => (appointment.id === updated.id ? updated : appointment)),
+      )
+    },
+  })
+}
+
+export function useDeleteAppointment(babyId: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (appointmentId: string) => deleteAppointment(babyId, appointmentId),
+    // Removed from the cached list rather than refetched, matching
+    // useDeleteMilestone: the row disappears the moment the API confirms, with
+    // no window where a deleted appointment is still on screen.
+    onSuccess: (_data, deletedAppointmentId) => {
+      queryClient.setQueryData<Appointment[]>(appointmentsQueryKey(babyId), (prev) =>
+        prev?.filter((item) => item.id !== deletedAppointmentId),
       )
     },
   })

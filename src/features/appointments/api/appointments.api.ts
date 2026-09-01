@@ -46,3 +46,7 @@ export async function updateAppointment(
   const response = await httpClient.patch<unknown>(`/babies/${babyId}/appointments/${appointmentId}`, body)
   return appointmentSchema.parse(response)
 }
+
+export async function deleteAppointment(babyId: string, appointmentId: string): Promise<void> {
+  await httpClient.delete<void>(`/babies/${babyId}/appointments/${appointmentId}`)
+}
