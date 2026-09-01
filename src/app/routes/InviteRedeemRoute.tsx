@@ -7,13 +7,19 @@ import { useCurrentUser } from '@/features/auth/api/auth.hooks'
 import { useInvitePreview, useRedeemInvite } from '@/features/babies/api/invites.hooks'
 import { ApiError } from '@/lib/http-client'
 import { AlertCircleIcon } from '@/shared/icons/alert-circle-icon'
-import { LogoIcon } from '@/shared/icons/logo-icon'
 import { UsersIcon } from '@/shared/icons/users-icon'
 
 /**
  * Sits outside ProtectedLayout (see router.tsx) so it renders the invite
  * preview for logged-out visitors too — only the "accept" action itself
  * requires an authenticated session (see handleAccept).
+ *
+ * Since 01/09/2026 it renders *inside* AuthLayout, which draws the brand panel,
+ * the card, the theme and language controls and the legal footer. So this file
+ * owns only the column's content: no page wrapper, no logo, no centring. The
+ * shell was duplicated here before, and worse than the duplication was the
+ * seam — an invite sends the visitor to /login and back, and the screen used to
+ * change identity in the middle of that round trip.
  *
  * That arrangement is not self-enforcing: it also depends on the
  * `expectsAnonymous` flag below, without which this route's own 401 boots the
@@ -59,11 +65,7 @@ export function InviteRedeemRoute() {
   const invalidCodeError = preview.isError && preview.error instanceof ApiError && preview.error.status === 404
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 p-8 text-center">
-      <div className="bg-primary/10 text-primary flex h-16 w-16 items-center justify-center rounded-2xl">
-        <LogoIcon className="h-8 w-8" />
-      </div>
-
+    <div className="flex flex-col items-center gap-6 text-center">
       {preview.isPending ? (
         <div className="border-t-transparent border-primary h-8 w-8 animate-spin rounded-full border-2" />
       ) : invalidCodeError ? (
@@ -107,9 +109,9 @@ export function InviteRedeemRoute() {
               Button default. This is the only action on the screen — the whole
               page exists for this one tap — and at the raw h-8 default it was
               117x32, the smallest primary action in the app while every other
-              primary path is 44px or taller. The fill stays --primary: which
-              colour a primary action takes is still an open decision, and
-              scale is fixable without settling it. */}
+              primary path is 44px or taller. The fill is the Button default,
+              which since #57 is --primary everywhere; only the scale is
+              overridden here. */}
           <Button
             type="button"
             className="mt-6 h-12 w-full text-[15px] font-semibold"

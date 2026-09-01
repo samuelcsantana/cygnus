@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useMatches } from 'react-router-dom'
 
 import authHeroUrl from '@/assets/auth-hero.avif'
+import { cn } from '@/lib/utils'
 
 import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
@@ -23,17 +24,37 @@ const FEATURES = [
 ] as const
 
 /**
- * The shell behind /login and /register, wired in router.tsx as the parent
- * route of both rather than rendered inside each one.
+ * Set by the two routes that belong to the segmented control, and by nothing
+ * else. A route that shares this shell without being one of the pair — today
+ * `/invites/:code`, which is neither "sign in" nor "sign up" — simply omits it
+ * and opts out of both the tabs and the height floor.
+ *
+ * A route flag rather than a pathname check in the layout: the layout should
+ * not have to know which URLs exist, and a fourth public screen added later
+ * gets the right default by saying nothing.
+ */
+export interface AuthRouteHandle {
+  authTabs?: boolean
+}
+
+/**
+ * The shell behind /login, /register and /invites/:code, wired in router.tsx as
+ * the parent route of all three rather than rendered inside each one.
  *
  * That is not a tidiness preference. As siblings, each route rendered its own
  * copy, so switching tabs unmounted this entire subtree and built a new one:
  * new card, new panel, new <img> for the photograph — measured, the DOM nodes
  * came back tagged as fresh. Under one parent route React keeps the shell
  * mounted and swaps only what is inside the Outlet.
+ *
+ * The invite joined in 01/09/2026. It was the last public screen still drawing
+ * its own full-page shell, which made the one flow that crosses both — follow
+ * an invite, get sent to /login, come back — change identity halfway through.
  */
 export function AuthLayout() {
   const { t } = useTranslation()
+  const matches = useMatches()
+  const showsTabs = matches.some((match) => (match.handle as AuthRouteHandle | undefined)?.authTabs === true)
 
   return (
     <div className="relative flex min-h-dvh flex-col bg-surface">
@@ -64,7 +85,13 @@ export function AuthLayout() {
               under each. The floors are those numbers, rounded up. If either
               form gains or loses a row, re-measure — a floor the taller route
               has outgrown brings the jump back silently. */}
-          <div className="grid w-full max-w-[26rem] grid-cols-1 overflow-hidden rounded-3xl sm:border sm:border-border/70 sm:bg-card sm:shadow-2xl sm:shadow-emerald-900/12 min-h-[47rem] sm:min-h-[51.25rem] lg:max-w-[56rem] lg:min-h-[44.5rem] lg:grid-cols-[11fr_14fr] dark:sm:shadow-black/40">
+          <div
+            className={cn(
+              'grid w-full max-w-[26rem] grid-cols-1 overflow-hidden rounded-3xl sm:border sm:border-border/70 sm:bg-card sm:shadow-2xl sm:shadow-emerald-900/12 lg:max-w-[56rem] lg:grid-cols-[11fr_14fr] dark:sm:shadow-black/40',
+              // The floor belongs to the tabbed pair, not to the shell: see above.
+              showsTabs && 'min-h-[47rem] sm:min-h-[51.25rem] lg:min-h-[44.5rem]',
+            )}
+          >
             {/* Brand panel, desktop only. The gradient is 165° — near-vertical
                 with a slight rightward tilt — because that is what the
                 reference samples to: #065f46 at the top, #047354 at half
@@ -170,7 +197,7 @@ export function AuthLayout() {
                   </span>
                 </div>
 
-                <AuthTabs />
+                {showsTabs && <AuthTabs />}
                 <Outlet />
               </div>
             </div>
