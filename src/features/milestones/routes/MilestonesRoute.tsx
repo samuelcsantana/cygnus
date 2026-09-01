@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
+import { Button } from '@/components/ui/button'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { usePagedList } from '@/hooks/usePagedList'
 import { cn } from '@/lib/utils'
@@ -75,13 +76,14 @@ export function MilestonesRoute() {
             </p>
           )}
         </div>
-        <button
+        <Button
           type="button"
+          size="cta"
           onClick={() => setIsAddOpen(true)}
-          className="inline-flex items-center justify-center rounded-2xl bg-amber-700 px-6 py-3 font-bold text-white shadow-lg shadow-amber-900/10 transition-all hover:bg-amber-800 active:scale-[0.98]"
+          className="rounded-2xl shadow-lg shadow-emerald-900/20 active:scale-[0.98]"
         >
           {t('milestones.action')}
-        </button>
+        </Button>
       </div>
 
       <AddMilestoneDialog open={isAddOpen} onOpenChange={setIsAddOpen} />
@@ -97,13 +99,14 @@ export function MilestonesRoute() {
           description={t('milestones.empty.description')}
           tone="amber"
           action={
-            <button
+            <Button
               type="button"
+          size="cta"
               onClick={() => setIsAddOpen(true)}
-              className="inline-flex items-center justify-center rounded-xl bg-amber-700 px-6 py-3 font-bold text-white shadow-md shadow-amber-900/10 transition-colors hover:bg-amber-800"
+              className="rounded-xl shadow-md shadow-emerald-900/20"
             >
               {t('milestones.empty.cta')}
-            </button>
+            </Button>
           }
         />
       ) : (

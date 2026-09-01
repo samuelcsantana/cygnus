@@ -42,6 +42,17 @@ const buttonVariants = cva(
         // views, where the default `icon`/`icon-sm` sizes are visually too
         // large for the surrounding density but still need a big enough hit area.
         "icon-touch": "size-11",
+        // The screen's primary action, and the app's one CTA scale.
+        //
+        // Added in 01/09/2026 because every routed screen had already reached
+        // 48px by hand — `px-6 py-3` retyped in six files — while the dashboard
+        // hero landed on ~52px, which nobody chose: it is `py-3.5` plus the
+        // line-height of `text-base`, so it drifts on its own if the type
+        // changes. A height is a decision; a computed height is a side effect.
+        //
+        // 48 also clears the 44px floor of WCAG 2.5.5, which the rest of the
+        // app still owes in places.
+        cta: "h-12 gap-2 px-6 text-[15px] font-semibold",
       },
     },
     defaultVariants: {
