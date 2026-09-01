@@ -14,7 +14,7 @@ import { CloseIcon } from '@/shared/icons/close-icon'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 
 import { useCreateMilestone } from '../api/milestones.hooks'
-import { createMilestoneFormSchema, type MilestoneFormInput } from '../api/milestones.schemas'
+import { createMilestoneFormSchema, type MilestoneCategory, type MilestoneFormInput } from '../api/milestones.schemas'
 import { MilestoneCoreFields } from './MilestoneCoreFields'
 import { MilestoneDetailFields } from './MilestoneDetailFields'
 
@@ -23,9 +23,15 @@ type Step = 'baby' | 'core' | 'details'
 interface AddMilestoneDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  /**
+   * Opens the form already filled with an example, so a family with nothing
+   * recorded starts from a first draft instead of a blank field. Everything
+   * stays editable — it is a starting point, not a template.
+   */
+  suggestion?: { title: string; category: MilestoneCategory }
 }
 
-export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogProps) {
+export function AddMilestoneDialog({ open, onOpenChange, suggestion }: AddMilestoneDialogProps) {
   const { t } = useTranslation()
   const babies = useBabies()
   const babyList = babies.data ?? []
@@ -47,7 +53,7 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
     formState: { errors, isSubmitting },
   } = useForm<MilestoneFormInput>({
     resolver: zodResolver(schema),
-    defaultValues: { photoUrl: '' },
+    defaultValues: { photoUrl: '', ...(suggestion ?? {}) },
   })
 
   // Reset only when the dialog opens — not on every `babies.data` change —
@@ -55,7 +61,8 @@ export function AddMilestoneDialog({ open, onOpenChange }: AddMilestoneDialogPro
   // out from under the user while the dialog is already open.
   useEffect(() => {
     if (!open) return
-    reset({ photoUrl: '' })
+    // Reopening with a different suggestion must bring the new one, not the last.
+    reset({ photoUrl: '', ...(suggestion ?? {}) })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 

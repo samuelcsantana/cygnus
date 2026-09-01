@@ -230,6 +230,11 @@
       "statMilestonesSub": "marcos do desenvolvimento",
       "statLastAppointmentLabel": "Última consulta",
       "noMilestonesYet": "Nenhum marco registrado ainda",
+      "statLastAppointmentEmpty": "Nenhuma registrada ainda",
+      "statMilestonesEmpty": "Registre o primeiro",
+      "milestonesEmptyCta": "Registrar um marco →",
+      "appointmentsEmptyHint": "Você também pode registrar uma consulta que já aconteceu.",
+      "appointmentsEmptyCta": "Agendar ou registrar →",
       "viewAll": "Ver tudo →",
       "vaccinesAllUpToDate": "Todas as vacinas em dia! 🎉",
       "noAppointmentsScheduled": "Sem consultas agendadas",
@@ -544,7 +549,14 @@
       "cognitive": "Cognitivo",
       "other": "Outro"
     },
+    "suggestions": {
+      "firstSmile": "Primeiro sorriso",
+      "rolledOver": "Rolou sozinho",
+      "firstWord": "Primeira palavra",
+      "recognisedName": "Reconheceu o próprio nome"
+    },
     "empty": {
+      "suggestionsLabel": "O que outras famílias registram",
       "title": "O primeiro marco está chegando!",
       "description": "Desde o primeiro sorriso aos primeiros passos. Registre aqui esses momentos inesquecíveis.",
       "cta": "Registrar agora"

@@ -145,4 +145,35 @@ describe('AddMilestoneDialog', () => {
     await user.click(continueButton)
     expect(screen.getByLabelText('O que aconteceu?')).toBeInTheDocument()
   })
+  it('opens already filled when a suggestion is given, and keeps it editable', async () => {
+    renderWithProviders(
+      <AddMilestoneDialog open onOpenChange={vi.fn()} suggestion={{ title: 'Primeira palavra', category: 'LANGUAGE' }} />,
+    )
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('O que aconteceu?')).toHaveValue('Primeira palavra')
+    })
+
+    // The category comes selected with it: a suggestion that filled only the
+    // title would still leave the person choosing where it belongs, which is
+    // the part of the form that is not obvious.
+    const linguagem = screen.getAllByRole('radio').find((radio) => radio.getAttribute('value') === 'LANGUAGE')
+    expect(linguagem).toHaveAttribute('aria-checked', 'true')
+
+    // A starting point, not a template.
+    const user = userEvent.setup()
+    await user.clear(screen.getByLabelText('O que aconteceu?'))
+    await user.type(screen.getByLabelText('O que aconteceu?'), 'Falou mamãe')
+    expect(screen.getByLabelText('O que aconteceu?')).toHaveValue('Falou mamãe')
+  })
+
+  it('opens blank when no suggestion is given', async () => {
+    renderWithProviders(<AddMilestoneDialog open onOpenChange={vi.fn()} />)
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('O que aconteceu?')).toHaveValue('')
+    })
+    expect(screen.getAllByRole('radio').every((radio) => radio.getAttribute('aria-checked') === 'false')).toBe(true)
+  })
+
 })

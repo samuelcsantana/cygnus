@@ -7,6 +7,7 @@ import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 
 import type { Milestone } from '../api/milestones.schemas'
 import { MILESTONE_CATEGORY_META } from './category-meta'
+import { MILESTONE_SUGGESTIONS } from './milestone-suggestions'
 
 const MAX_ITEMS = 4
 
@@ -45,7 +46,30 @@ export function MilestonesOverviewCard({ babies, items, isPending, isError }: Mi
         ) : isError ? (
           <p className="py-6 text-center text-sm text-ink-muted">{t('milestones.genericError')}</p>
         ) : latest.length === 0 ? (
-          <p className="py-6 text-center text-[13px] text-ink-muted">{t('babies.dashboard.noMilestonesYet')}</p>
+          /* Antes: "Nenhum marco registrado ainda", que relata a ausência e não
+             convida a nada. Um painel recém-criado tinha seis vazios assim.
+             Agora mostra o que outras famílias registram — exemplos, nunca um
+             calendário do que a criança "deveria" fazer — e leva para a tela
+             onde eles abrem o formulário já preenchido. */
+          <div className="py-4">
+            <p className="text-ink-muted mb-3 text-center text-[13px]">{t('babies.dashboard.noMilestonesYet')}</p>
+            <ul className="mb-4 space-y-2">
+              {MILESTONE_SUGGESTIONS.slice(0, 3).map((item) => (
+                <li key={item.titleKey} className="flex items-center gap-2.5">
+                  <span aria-hidden="true" className="text-base">
+                    {MILESTONE_CATEGORY_META[item.category].emoji}
+                  </span>
+                  <span className="text-ink-muted text-[13px]">{t(item.titleKey)}</span>
+                </li>
+              ))}
+            </ul>
+            <Link
+              to="/milestones"
+              className="text-primary text-[13px] font-bold underline-offset-4 hover:underline"
+            >
+              {t('babies.dashboard.milestonesEmptyCta')}
+            </Link>
+          </div>
         ) : (
           latest.map((milestone) => {
             const baby = babyById.get(milestone.babyId)
