@@ -154,14 +154,25 @@ export function DashboardRoute() {
           icon={<SparkleIcon className="h-5 w-5" />}
           label={t('babies.dashboard.statMilestonesLabel')}
           value={`${milestones.items.length}`}
-          sub={t('babies.dashboard.statMilestonesSub')}
+          // Um "0" com a legenda "marcos do desenvolvimento" descreve o vazio e
+          // não diz o que fazer com ele. Com nada registrado, a legenda passa a
+          // apontar para a tela onde os exemplos abrem o formulário.
+          sub={
+            milestones.items.length === 0
+              ? t('babies.dashboard.statMilestonesEmpty')
+              : t('babies.dashboard.statMilestonesSub')
+          }
           iconClassName="bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300"
         />
         <StatCard
           icon={<HeartIcon className="h-5 w-5" />}
           label={t('babies.dashboard.statLastAppointmentLabel')}
           value={lastAppointment ? formatDateDisplay(lastAppointment.scheduledAt.slice(0, 10), i18n.language) : '—'}
-          sub={lastAppointment ? `${lastAppointment.doctorName} · ${lastAppointmentBaby?.name ?? ''}` : '—'}
+          sub={
+            lastAppointment
+              ? `${lastAppointment.doctorName} · ${lastAppointmentBaby?.name ?? ''}`
+              : t('babies.dashboard.statLastAppointmentEmpty')
+          }
           iconClassName="bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-300"
         />
       </div>

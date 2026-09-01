@@ -228,6 +228,11 @@
       "statMilestonesSub": "developmental milestones",
       "statLastAppointmentLabel": "Last appointment",
       "noMilestonesYet": "No milestones logged yet",
+      "statLastAppointmentEmpty": "None recorded yet",
+      "statMilestonesEmpty": "Record the first one",
+      "milestonesEmptyCta": "Record a milestone →",
+      "appointmentsEmptyHint": "You can also record an appointment that already happened.",
+      "appointmentsEmptyCta": "Book or record →",
       "viewAll": "View all →",
       "vaccinesAllUpToDate": "All vaccines up to date! 🎉",
       "noAppointmentsScheduled": "No appointments scheduled",
@@ -540,7 +545,14 @@
       "cognitive": "Cognitive",
       "other": "Other"
     },
+    "suggestions": {
+      "firstSmile": "First smile",
+      "rolledOver": "Rolled over",
+      "firstWord": "First word",
+      "recognisedName": "Recognised their own name"
+    },
     "empty": {
+      "suggestionsLabel": "What other families record",
       "title": "The first milestone is coming!",
       "description": "From the first smile to the first steps. Record these unforgettable moments here.",
       "cta": "Record now"

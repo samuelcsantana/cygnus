@@ -49,7 +49,20 @@ export function AppointmentsOverviewCard({ babies, items, isPending, isError }: 
         ) : isError ? (
           <p className="py-6 text-center text-sm text-ink-muted">{t('appointments.genericError')}</p>
         ) : upcoming.length === 0 ? (
-          <p className="py-6 text-center text-[13px] text-ink-muted">{t('babies.dashboard.noAppointmentsScheduled')}</p>
+          /* A ausência de consulta agendada não é só ausência: desde 01/09 dá
+             para registrar uma que já aconteceu, então o vazio tem dois
+             caminhos e não nenhum. Antes esta linha relatava o nada e parava
+             ali. */
+          <div className="py-4 text-center">
+            <p className="text-ink-muted text-[13px]">{t('babies.dashboard.noAppointmentsScheduled')}</p>
+            <p className="text-ink-faint mt-1 text-xs">{t('babies.dashboard.appointmentsEmptyHint')}</p>
+            <Link
+              to="/appointments"
+              className="text-primary mt-3 inline-block text-[13px] font-bold underline-offset-4 hover:underline"
+            >
+              {t('babies.dashboard.appointmentsEmptyCta')}
+            </Link>
+          </div>
         ) : (
           upcoming.map((appointment) => {
             const baby = babyById.get(appointment.babyId)

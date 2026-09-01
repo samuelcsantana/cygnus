@@ -16,6 +16,7 @@ import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 import { useAllBabiesMilestones } from '../api/milestones.hooks'
 import type { MilestoneCategory } from '../api/milestones.schemas'
 import { AddMilestoneDialog } from '../components/AddMilestoneDialog'
+import { MILESTONE_SUGGESTIONS, type MilestoneSuggestion } from '../components/milestone-suggestions'
 import { MILESTONE_CATEGORY_META } from '../components/category-meta'
 import { MilestoneTimeline } from '../components/MilestoneTimeline'
 import { MilestoneTimelineSkeleton } from '../components/MilestoneTimelineSkeleton'
@@ -28,6 +29,12 @@ export function MilestonesRoute() {
   const [activeCategory, setActiveCategory] = useState<MilestoneCategory | 'ALL'>('ALL')
   const [babyFilter, setBabyFilter] = useState<string | null>(null)
   const [isAddOpen, setIsAddOpen] = useState(false)
+  const [suggestion, setSuggestion] = useState<MilestoneSuggestion | null>(null)
+
+  const openAdd = (from: MilestoneSuggestion | null) => {
+    setSuggestion(from)
+    setIsAddOpen(true)
+  }
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebouncedValue(search)
 
@@ -86,7 +93,11 @@ export function MilestonesRoute() {
         </Button>
       </div>
 
-      <AddMilestoneDialog open={isAddOpen} onOpenChange={setIsAddOpen} />
+      <AddMilestoneDialog
+        open={isAddOpen}
+        onOpenChange={setIsAddOpen}
+        suggestion={suggestion ? { title: t(suggestion.titleKey), category: suggestion.category } : undefined}
+      />
 
       {isPending ? (
         <MilestoneTimelineSkeleton />
@@ -99,14 +110,43 @@ export function MilestonesRoute() {
           description={t('milestones.empty.description')}
           tone="amber"
           action={
-            <Button
-              type="button"
-          size="cta"
-              onClick={() => setIsAddOpen(true)}
-              className="rounded-xl shadow-md shadow-emerald-900/20"
-            >
-              {t('milestones.empty.cta')}
-            </Button>
+            <div className="flex flex-col items-center gap-6">
+              <Button
+                type="button"
+                size="cta"
+                onClick={() => openAdd(null)}
+                className="rounded-xl shadow-md shadow-emerald-900/20"
+              >
+                {t('milestones.empty.cta')}
+              </Button>
+
+              {/* Exemplos, e não um roteiro. A cópia diz "outras famílias
+                  registram", nunca "seu bebê já deveria" — sugerir um calendário
+                  de desenvolvimento seria orientação clínica com voz amigável,
+                  e é justamente o que este app declara não fazer.
+
+                  Clicáveis porque exemplo que só se lê é exemplo que se ignora:
+                  tocar num abre o formulário já preenchido, e tudo continua
+                  editável. */}
+              <div>
+                <p className="text-ink-faint mb-3 text-xs font-semibold tracking-wide uppercase">
+                  {t('milestones.empty.suggestionsLabel')}
+                </p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {MILESTONE_SUGGESTIONS.map((item) => (
+                    <button
+                      key={item.titleKey}
+                      type="button"
+                      onClick={() => openAdd(item)}
+                      className="border-border bg-card text-ink-muted hover:border-primary/40 hover:text-ink inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[13px] font-medium transition-colors"
+                    >
+                      <span aria-hidden="true">{MILESTONE_CATEGORY_META[item.category].emoji}</span>
+                      {t(item.titleKey)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           }
         />
       ) : (
