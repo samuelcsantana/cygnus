@@ -114,12 +114,7 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
             <div key="baby" className="animate-fade-in-up">
               <BabyPickerStep babies={babyList} value={selectedBabyId} onSelect={setSelectedBabyId} />
               <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
-                <Button
-                  type="button"
-                  disabled={!selectedBabyId}
-                  onClick={() => setStep('professional')}
-                  className="bg-violet-600 text-white hover:bg-violet-700"
-                >
+                <Button type="button" disabled={!selectedBabyId} onClick={() => setStep('professional')}>
                   {t('appointments.wizard.continue')}
                 </Button>
               </div>
@@ -132,11 +127,7 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
             <div key="professional" className="animate-fade-in-up">
               <AppointmentProfessionalFields register={register} control={control} errors={errors} />
               <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
-                <Button
-                  type="button"
-                  onClick={handleContinueFromProfessional}
-                  className="bg-violet-600 text-white hover:bg-violet-700"
-                >
+                <Button type="button" onClick={handleContinueFromProfessional}>
                   {t('appointments.wizard.continue')}
                 </Button>
               </div>
@@ -152,7 +143,7 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
                 >
                   {t('appointments.wizard.back')}
                 </button>
-                <Button type="submit" disabled={isSubmitting} className="bg-violet-600 text-white hover:bg-violet-700">
+                <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? t('common.saving') : t('appointments.form.submit')}
                 </Button>
               </div>

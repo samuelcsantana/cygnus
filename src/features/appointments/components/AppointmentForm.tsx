@@ -61,7 +61,7 @@ export function AppointmentForm({ defaultValues, onSubmit, submitLabel, onCancel
             {t('common.cancel')}
           </button>
         )}
-        <Button type="submit" disabled={isSubmitting} className="bg-violet-600 text-white hover:bg-violet-700">
+        <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? t('common.saving') : submitLabel}
         </Button>
       </div>
