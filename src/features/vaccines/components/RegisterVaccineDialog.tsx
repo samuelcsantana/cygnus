@@ -296,20 +296,43 @@ export function RegisterVaccineDialog({ open, onOpenChange }: RegisterVaccineDia
                       {t('vaccines.register.campaignPicker.suggestedLabel')}
                     </p>
                   </div>
-                  <div className="max-h-40 overflow-y-auto">
-                    {CAMPAIGN_VACCINE_SUGGESTIONS.map((suggestion) => (
-                      <button
-                        key={suggestion}
-                        type="button"
-                        onClick={() => setCampaignName(suggestion)}
-                        className={cn(
-                          'block w-full border-b border-border px-4 py-2.5 text-left text-sm transition-colors last:border-b-0 hover:bg-muted',
-                          campaignName === suggestion ? 'font-bold text-ink' : 'text-ink-muted',
-                        )}
-                      >
-                        {suggestion}
-                      </button>
-                    ))}
+                  {/* Chips que quebram linha, no lugar da lista rolável de
+                      `max-h-40` que estava aqui: as oito sugestões cabem todas
+                      na tela ao mesmo tempo, e antes se viam quatro por vez.
+                      Numa lista fechada e curta, rolagem esconde metade das
+                      opções atrás de um gesto — e quem não rola conclui que as
+                      quatro visíveis são tudo o que há.
+
+                      Vem da referência `LoginAndDashboardDesign`, que sugere os
+                      nomes do PNI em chips ao lado do campo. Aqui os nomes do
+                      calendário público já são um passo próprio deste diálogo
+                      (o `CATALOG`, com o calendário real da criança), então o
+                      padrão de chip entra onde ele de fato faltava: a campanha,
+                      que é texto livre com um punhado de valores prováveis.
+
+                      `aria-pressed` e não `aria-selected`: é o mesmo tipo de
+                      botão de alternância dos filtros de status da tela de
+                      vacinas, e ganha aqui o mesmo tratamento. */}
+                  <div className="flex flex-wrap gap-2 p-4">
+                    {CAMPAIGN_VACCINE_SUGGESTIONS.map((suggestion) => {
+                      const isSelected = campaignName === suggestion
+                      return (
+                        <button
+                          key={suggestion}
+                          type="button"
+                          aria-pressed={isSelected}
+                          onClick={() => setCampaignName(isSelected ? '' : suggestion)}
+                          className={cn(
+                            'rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-colors',
+                            isSelected
+                              ? 'bg-violet-600 text-white'
+                              : 'bg-muted text-ink-muted hover:bg-violet-50 hover:text-violet-700 dark:hover:bg-violet-950/40 dark:hover:text-violet-300',
+                          )}
+                        >
+                          {suggestion}
+                        </button>
+                      )
+                    })}
                   </div>
                 </div>
                 <div>
