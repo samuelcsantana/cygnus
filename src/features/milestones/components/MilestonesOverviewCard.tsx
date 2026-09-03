@@ -82,7 +82,7 @@ export function MilestonesOverviewCard({ babies, items, isPending, isError }: Mi
                   <div className="flex items-center gap-2">
                     {baby && <span className="truncate text-[11px] font-semibold text-ink-muted">{baby.name}</span>}
                     <span className="text-[11px] text-ink-faint">·</span>
-                    <span className="text-[11px] text-ink-muted">
+                    <span className="font-mono text-[11px] text-ink-muted">
                       {formatDateDisplay(milestone.achievedAt, i18n.language)}
                     </span>
                   </div>

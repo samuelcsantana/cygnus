@@ -63,7 +63,7 @@ export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails
         </div>
         <div className="flex-shrink-0 text-right">
           <AppointmentStatusBadge status={appointment.status} />
-          <p className="mt-1 text-xs text-ink-faint">
+          <p className="font-mono mt-1 text-xs text-ink-faint">
             {formatDateDisplay(date, i18n.language)} · {time}
           </p>
         </div>

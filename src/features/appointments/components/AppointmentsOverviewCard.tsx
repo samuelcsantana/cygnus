@@ -86,7 +86,14 @@ export function AppointmentsOverviewCard({ babies, items, isPending, isError }: 
                   <p className="truncate text-[13px] font-semibold text-ink">{appointment.doctorName}</p>
                   <p className="truncate text-[11px] text-ink-muted">{baby?.name}</p>
                 </div>
-                <span className="flex-shrink-0 rounded-full bg-violet-100 dark:bg-violet-900/40 px-2 py-0.5 text-[11px] font-semibold text-violet-700 dark:text-violet-300">
+                {/* O `font-semibold` que estava aqui saiu junto, e não foi
+                    trocado por outro peso: a mono tem **um** peso carregado, e
+                    declarar 500 ou 600 ou promete o que não existe (500 cai
+                    para o 400 em silêncio) ou pede negrito sintetizado (600+),
+                    que numa mono borra o desenho. Ver `--font-mono` em
+                    `index.css`. A pílula não perde destaque — ele vem do fundo
+                    tintado, não do peso. */}
+                <span className="font-mono flex-shrink-0 rounded-full bg-violet-100 dark:bg-violet-900/40 px-2 py-0.5 text-[11px] text-violet-700 dark:text-violet-300">
                   {formatDateDisplay(date, i18n.language)}
                 </span>
               </div>

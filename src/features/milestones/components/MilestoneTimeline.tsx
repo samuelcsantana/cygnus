@@ -120,7 +120,7 @@ function MilestoneCard({ milestone, baby, locale, onEdit }: MilestoneCardProps) 
             <span className={cn('rounded-full px-2.5 py-0.5 text-[11px] font-semibold', meta.badgeClass)}>
               {t(`milestones.category.${milestone.category.toLowerCase()}`)}
             </span>
-            <span className="text-xs text-ink-faint">{formatDateDisplay(milestone.achievedAt, locale)}</span>
+            <span className="font-mono text-xs text-ink-faint">{formatDateDisplay(milestone.achievedAt, locale)}</span>
             {/* Touch target: the visible icon stays small to match the tight
                 header row, but the invisible -inset-3 pseudo-element pushes
                 the tappable/clickable area to the WCAG 44x44px minimum
