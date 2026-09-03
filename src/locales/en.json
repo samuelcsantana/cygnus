@@ -338,6 +338,12 @@
     "summaryUnavailable": "Loading the schedule…",
     "genericError": "Could not load the vaccine calendar.",
     "progressLabel": "Calendar progress",
+    "progressCount": "{{applied}} of {{total}}",
+    "progressLegend": {
+      "applied": "Taken",
+      "pending": "Pending",
+      "delayed": "Overdue"
+    },
     "statusFilter": { "groupLabel": "Filter by status" },
     "filterAll": "All",
     "filterApplied": "Applied ({{count}})",

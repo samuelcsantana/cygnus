@@ -7,6 +7,7 @@ import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 
 import type { VaccineItemWithBaby } from '../api/vaccines.hooks'
+import { vaccineProgress } from './vaccine-progress'
 
 const MAX_ITEMS = 5
 
@@ -23,9 +24,7 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
   const { t } = useTranslation()
   const babyById = new Map(babies.map((baby) => [baby.id, baby]))
 
-  const routineItems = items.filter((item) => item.recommendationKind === 'ROUTINE')
-  const appliedCount = routineItems.filter((item) => item.status === 'APPLIED').length
-  const progressPct = routineItems.length > 0 ? Math.round((appliedCount / routineItems.length) * 100) : 0
+  const progress = vaccineProgress(items)
 
   const urgentItems = [...items]
     .filter((item) => item.status !== 'APPLIED' && item.status !== 'GUIDANCE')
@@ -56,12 +55,12 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
             {/* Sem classe de peso, pelo motivo em `--font-mono`: a família tem
                 um peso só, e o `font-bold` que estava aqui viraria negrito
                 sintetizado. */}
-            <span className="font-mono text-primary">{progressPct}%</span>
+            <span className="font-mono text-primary">{progress.percent}%</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div
               className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
-              style={{ width: `${progressPct}%` }}
+              style={{ width: `${progress.percent}%` }}
             />
           </div>
         </div>

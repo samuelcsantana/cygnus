@@ -19,6 +19,8 @@ import { RegisterVaccineDialog } from '../components/RegisterVaccineDialog'
 import { VaccineCalendarList } from '../components/VaccineCalendarList'
 import { VaccineCalendarSkeleton } from '../components/VaccineCalendarSkeleton'
 import { VaccineCatalogNotice } from '../components/VaccineCatalogNotice'
+import { VaccineProgressCard } from '../components/VaccineProgressCard'
+import { vaccineProgress } from '../components/vaccine-progress'
 
 type Filter = 'ALL' | VaccineStatus
 
@@ -112,6 +114,15 @@ export function VaccinesRoute() {
               <FamilyStrip items={familyStripItems} onEdit={setEditTarget} />
             </div>
           )}
+
+          {/* Só depois de `isPending`/`isError`: uma barra em 0% sobre um
+              calendário que não carregou afirma que nada foi tomado, o que é o
+              mesmo erro que o subtítulo acima já evita não imprimindo os
+              contadores no erro. Aqui isso sai de graça — o bloco inteiro está
+              dentro do ramo que já provou ter dados. */}
+          <div className="mb-6">
+            <VaccineProgressCard progress={vaccineProgress(items)} />
+          </div>
 
           <div className="mb-6 flex flex-wrap gap-2">
             {babies.map((baby) => (
