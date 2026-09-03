@@ -338,6 +338,12 @@
     "summaryUnavailable": "Cargando el calendario…",
     "genericError": "No se pudo cargar el calendario de vacunas.",
     "progressLabel": "Progreso del calendario",
+    "progressCount": "{{applied}} de {{total}}",
+    "progressLegend": {
+      "applied": "Tomadas",
+      "pending": "Pendientes",
+      "delayed": "Atrasadas"
+    },
     "statusFilter": { "groupLabel": "Filtrar por situación" },
     "filterAll": "Todas",
     "filterApplied": "Aplicadas ({{count}})",

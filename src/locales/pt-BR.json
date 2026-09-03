@@ -340,6 +340,12 @@
     "summaryUnavailable": "Carregando o calendário…",
     "genericError": "Não foi possível carregar o calendário de vacinas.",
     "progressLabel": "Progresso do calendário",
+    "progressCount": "{{applied}} de {{total}}",
+    "progressLegend": {
+      "applied": "Tomadas",
+      "pending": "Pendentes",
+      "delayed": "Atrasadas"
+    },
     "statusFilter": { "groupLabel": "Filtrar por situação" },
     "filterAll": "Todas",
     "filterApplied": "Tomadas ({{count}})",
