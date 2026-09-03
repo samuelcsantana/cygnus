@@ -122,8 +122,26 @@
 
 @theme inline {
   --font-heading: var(--font-display);
-  --font-display: 'NunitoVariable', system-ui, 'Segoe UI', Roboto, sans-serif;
-  --font-sans: 'InterVariable', system-ui, 'Segoe UI', Roboto, sans-serif;
+  /* Os nomes têm espaço, e essa é a correção: o `@fontsource` registra
+     `'Nunito Variable'` e `'Inter Variable'`, e estas duas linhas pediam
+     `'NunitoVariable'` e `'InterVariable'`. Nome de família CSS ignora
+     maiúsculas, **não ignora espaço** — então nenhuma das duas casava, as duas
+     caíam calada e ordeiramente no `system-ui` seguinte, e os dois arquivos de
+     fonte (48.256 + 39.128 bytes) nunca chegavam a ser baixados.
+
+     Falha desse tipo não tem sintoma: a página renderiza inteira, bem, numa
+     fonte parecida. Foi medida, não notada — comparando a largura de um
+     elemento real com o mesmo texto forçado a `system-ui`, no build do
+     container: `.font-display` dava 119.19 nos dois, e o corpo 157.03 nos dois.
+     A mono, declarada corretamente como `'DM Mono'`, dava 54.61 contra 47.48 e
+     era a única das três de fato aplicada.
+
+     Se mexer nestes nomes, confira contra o `font-family` que o pacote declara
+     no `index.css` dele, dentro de `node_modules`. (Sem escrever o caminho com
+     curinga aqui: a sequência que ele formaria fecha este comentário no meio e
+     derruba o build do Tailwind — já derrubou.) */
+  --font-display: 'Nunito Variable', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter Variable', system-ui, 'Segoe UI', Roboto, sans-serif;
   /* Sobrescreve o `--font-mono` que o Tailwind já define, então `font-mono`
      passa a valer isto sem utility nova.
 
