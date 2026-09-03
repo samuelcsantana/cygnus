@@ -29,6 +29,22 @@ interface FamilyStripProps {
 // Compact per-child roster replacing what used to be a full stats+lists
 // section per baby — one glance at who's who and who needs attention,
 // without repeating the same big layout once per child.
+//
+// Since 03/09/2026 this is the /vaccines roster only; the dashboard moved to
+// BabyHeroCard. The two are not a duplication to be collapsed — they answer
+// different questions on purpose:
+//
+// - The hero says *who this child is*: it is the headline of the page, and it
+//   carries the health fields (blood type, allergies) that exist nowhere else
+//   in the UI.
+// - This strip only says *which child is which*, above a long vaccine list
+//   that is the actual content of that page. Heroes there would push the list
+//   far below the fold, and they would repeat the vaccine status chip on the
+//   one screen where the status is already the subject.
+//
+// What they do share is the `vaccineStatusKnown` distinction below, which is
+// why the i18n keys are named `babies.dashboard.vaccineStatus*` and not after
+// either component.
 export function FamilyStrip({ items, onEdit }: FamilyStripProps) {
   const { t } = useTranslation()
 
@@ -78,14 +94,14 @@ export function FamilyStrip({ items, onEdit }: FamilyStripProps) {
                   informação é sempre verdadeira quando existe. */}
               {!vaccineStatusKnown ? (
                 <p className="text-[11px] font-bold text-ink-faint">
-                  {t('babies.dashboard.familyStripVaccinesUnknown')}
+                  {t('babies.dashboard.vaccineStatusUnknown')}
                 </p>
               ) : delayedVaccineCount > 0 ? (
                 <p className="text-[11px] font-bold text-rose-600 dark:text-rose-300">
-                  {t('babies.dashboard.familyStripDelayed', { count: delayedVaccineCount })}
+                  {t('babies.dashboard.vaccineStatusDelayed', { count: delayedVaccineCount })}
                 </p>
               ) : (
-                <p className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300">{t('babies.dashboard.familyStripUpToDate')}</p>
+                <p className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300">{t('babies.dashboard.vaccineStatusUpToDate')}</p>
               )}
             </div>
             {/* Touch target: the -inset-2.5 pseudo-element expands the tappable

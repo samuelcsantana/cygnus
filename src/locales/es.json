@@ -146,6 +146,12 @@
     "addChild": "Agregar Hijo",
     "monthsOld_one": "{{count}} mes",
     "monthsOld_other": "{{count}} meses",
+    "hero": {
+      "bloodType": "Tipo {{value}}",
+      "allergies_one": "Alergia: {{list}}",
+      "allergies_other": "Alergias: {{list}}",
+      "noAllergiesRecorded": "Ninguna alergia registrada"
+    },
     "picker": {
       "stepLabel": "Hijo/a",
       "subtitle": "¿Para cuál hijo es esto?"
@@ -236,10 +242,10 @@
       "viewAll": "Ver todo →",
       "vaccinesAllUpToDate": "¡Todas las vacunas al día! 🎉",
       "noAppointmentsScheduled": "Sin consultas agendadas",
-      "familyStripDelayed_one": "{{count}} vacuna atrasada",
-      "familyStripDelayed_other": "{{count}} vacunas atrasadas",
-      "familyStripUpToDate": "Vacunas al día",
-      "familyStripVaccinesUnknown": "No se pudieron verificar las vacunas"
+      "vaccineStatusDelayed_one": "{{count}} vacuna atrasada",
+      "vaccineStatusDelayed_other": "{{count}} vacunas atrasadas",
+      "vaccineStatusUpToDate": "Vacunas al día",
+      "vaccineStatusUnknown": "No se pudieron verificar las vacunas"
     },
     "form": {
       "title": "Nuevo Perfil",
