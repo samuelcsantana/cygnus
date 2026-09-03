@@ -146,6 +146,12 @@
     "addChild": "Add Child",
     "monthsOld_one": "{{count}} month old",
     "monthsOld_other": "{{count}} months old",
+    "hero": {
+      "bloodType": "Type {{value}}",
+      "allergies_one": "Allergy: {{list}}",
+      "allergies_other": "Allergies: {{list}}",
+      "noAllergiesRecorded": "No allergies recorded"
+    },
     "picker": {
       "stepLabel": "Child",
       "subtitle": "Which child is this for?"
@@ -236,10 +242,10 @@
       "viewAll": "View all →",
       "vaccinesAllUpToDate": "All vaccines up to date! 🎉",
       "noAppointmentsScheduled": "No appointments scheduled",
-      "familyStripDelayed_one": "{{count}} overdue vaccine",
-      "familyStripDelayed_other": "{{count}} overdue vaccines",
-      "familyStripUpToDate": "Vaccines up to date",
-      "familyStripVaccinesUnknown": "Could not check vaccines"
+      "vaccineStatusDelayed_one": "{{count}} overdue vaccine",
+      "vaccineStatusDelayed_other": "{{count}} overdue vaccines",
+      "vaccineStatusUpToDate": "Vaccines up to date",
+      "vaccineStatusUnknown": "Could not check vaccines"
     },
     "form": {
       "title": "New Profile",

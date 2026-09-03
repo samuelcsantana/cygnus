@@ -19,7 +19,7 @@ import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
 import { useBabies } from '../api/babies.hooks'
 import type { Baby } from '../api/babies.schemas'
 import { EditBabyDialog } from '../components/EditBabyDialog'
-import { FamilyStrip } from '../components/FamilyStrip'
+import { BabyHeroCard } from '../components/BabyHeroCard'
 import { StatCard } from '../components/StatCard'
 import { WelcomeDashboard } from '../components/WelcomeDashboard'
 
@@ -92,7 +92,7 @@ export function DashboardRoute() {
   // O estado vem de `perBaby`, não de `babyList`: cada criança tem sua própria
   // requisição de calendário, e uma pode falhar enquanto as outras respondem.
   // Derivar do agregado marcaria as seis como desconhecidas por causa de uma.
-  const familyStripItems = babyList.map((baby) => {
+  const familyItems = babyList.map((baby) => {
     const entry = vaccines.perBaby.find((candidate) => candidate.baby.id === baby.id)
     return {
       baby,
@@ -127,6 +127,21 @@ export function DashboardRoute() {
           </Link>
         </div>
       )}
+
+      {/* As crianças vêm antes dos números, e essa ordem é a mudança de fundo:
+          o painel abre com quem ele é sobre. O banner de atraso continua acima
+          de tudo porque é a única coisa aqui que pede ação hoje.
+
+          Um cartão por filho, empilhado — decisão do Samuel em 03/09/2026,
+          feita sabendo o custo: com seis filhos a fila empurra os cartões de
+          vacinas, consultas e marcos para bem abaixo da dobra. O contrapeso é
+          manter cada cartão baixo; se a altura crescer, o custo cresce
+          multiplicado por seis. */}
+      <div className="mb-6 grid gap-3 lg:grid-cols-2">
+        {familyItems.map((item) => (
+          <BabyHeroCard key={item.baby.id} {...item} onEdit={setEditTarget} />
+        ))}
+      </div>
 
       <div className="mb-6 grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         {/* Mesmo motivo do chip da família: com o calendário fora do ar,
@@ -175,10 +190,6 @@ export function DashboardRoute() {
           }
           iconClassName="bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-300"
         />
-      </div>
-
-      <div className="mb-6">
-        <FamilyStrip items={familyStripItems} onEdit={setEditTarget} />
       </div>
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">

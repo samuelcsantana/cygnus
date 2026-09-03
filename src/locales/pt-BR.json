@@ -147,6 +147,12 @@
     "monthsOld_zero": "{{count}} meses",
     "monthsOld_one": "{{count}} mês",
     "monthsOld_other": "{{count}} meses",
+    "hero": {
+      "bloodType": "Tipo {{value}}",
+      "allergies_one": "Alergia: {{list}}",
+      "allergies_other": "Alergias: {{list}}",
+      "noAllergiesRecorded": "Nenhuma alergia registrada"
+    },
     "picker": {
       "stepLabel": "Criança",
       "subtitle": "Para qual criança é isso?"
@@ -238,10 +244,10 @@
       "viewAll": "Ver tudo →",
       "vaccinesAllUpToDate": "Todas as vacinas em dia! 🎉",
       "noAppointmentsScheduled": "Sem consultas agendadas",
-      "familyStripDelayed_one": "{{count}} vacina atrasada",
-      "familyStripDelayed_other": "{{count}} vacinas atrasadas",
-      "familyStripUpToDate": "Vacinas em dia",
-      "familyStripVaccinesUnknown": "Não foi possível verificar as vacinas"
+      "vaccineStatusDelayed_one": "{{count}} vacina atrasada",
+      "vaccineStatusDelayed_other": "{{count}} vacinas atrasadas",
+      "vaccineStatusUpToDate": "Vacinas em dia",
+      "vaccineStatusUnknown": "Não foi possível verificar as vacinas"
     },
     "form": {
       "title": "Novo Perfil",
