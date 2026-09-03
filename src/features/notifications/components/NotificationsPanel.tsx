@@ -51,7 +51,7 @@ export function NotificationsPanel({ notifications, onMarkRead, compact = true }
                   <span className="text-sm font-bold text-ink">{notification.title}</span>
                 </span>
                 <span className="text-xs text-ink-muted">{notification.message}</span>
-                <span className="text-[11px] text-ink-muted">
+                <span className="font-mono text-[11px] text-ink-muted">
                   {formatDateTimeDisplay(notification.createdAt, i18n.language)}
                 </span>
               </span>

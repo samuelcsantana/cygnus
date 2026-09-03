@@ -108,9 +108,15 @@ export function VaccinationCardRoute() {
           </div>
           <div className="min-w-0">
             <h1 className="font-display text-xl font-extrabold text-ink">{t('vaccines.card.title')}</h1>
+            {/* Rótulo e valor, não frase: só a data troca de família. É a
+                linha de identificação de um documento que vai para o papel e
+                para a mão de uma recepção de clínica — a data de nascimento é
+                o dado que alguém confere ali, e merece a mesma voz da coluna
+                abaixo. */}
             {baby && (
               <p className="truncate text-sm text-ink-muted">
-                {baby.name} · {t('vaccines.card.birthDateLabel')} {formatDateDisplay(baby.birthDate, i18n.language)}
+                {baby.name} · {t('vaccines.card.birthDateLabel')}{' '}
+                <span className="font-mono">{formatDateDisplay(baby.birthDate, i18n.language)}</span>
               </p>
             )}
           </div>
@@ -134,7 +140,17 @@ export function VaccinationCardRoute() {
             </div>
             {rows.map((row) => (
               <div key={row.key} className="flex flex-wrap items-center gap-x-4 gap-y-1 py-3 text-sm">
-                <span className="text-ink-muted w-28 flex-shrink-0">
+                {/* A coluna onde a mono mais rende: são datas empilhadas numa
+                    tabela, e com largura de glifo fixa o dia, o mês e o ano
+                    alinham verticalmente sozinhos, linha após linha. O
+                    travessão de "sem data" ocupa a mesma caixa e não desloca
+                    as vizinhas.
+
+                    O badge de status logo abaixo repete a mesma data dentro de
+                    "Aplicada em 12/03/2024" e **fica de fora** de propósito:
+                    ali o número é parte de uma frase, e trocar a família no
+                    meio dela faria a linha saltar em vez de destacar o dado. */}
+                <span className="font-mono text-ink-muted w-28 flex-shrink-0">
                   {row.date ? formatDateDisplay(row.date, i18n.language) : '—'}
                 </span>
                 <span className="min-w-[10rem] flex-1 font-semibold text-ink">{row.name}</span>
