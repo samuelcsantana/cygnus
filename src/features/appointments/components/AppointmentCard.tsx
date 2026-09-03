@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import type { Baby } from '@/features/babies/api/babies.schemas'
-import { formatDateDisplay, splitScheduledAt } from '@/lib/date'
+import { formatDateDisplay, formatDayMonthParts, splitScheduledAt } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
@@ -19,6 +19,7 @@ interface AppointmentCardProps {
 export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails }: AppointmentCardProps) {
   const { t, i18n } = useTranslation()
   const { date, time } = splitScheduledAt(appointment.scheduledAt)
+  const { day, month } = formatDayMonthParts(date, i18n.language)
   const isScheduled = appointment.status === 'SCHEDULED'
   const avatarAppearance = baby ? babyAvatarAppearance(baby.id, baby.avatarColor) : null
 
@@ -31,7 +32,28 @@ export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails
     >
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-center gap-3.5">
-          {baby ? (
+          {/* Só a consulta agendada troca o avatar pelo bloco de data.
+              Numa lista misturada, a data que importa escanear é a que ainda
+              vai acontecer; numa consulta concluída ela é histórico, e um bloco
+              gritando o dia competiria com as que pedem ação.
+
+              Adaptado da referência `LoginAndDashboardDesign`, que faz o mesmo
+              corte entre "Próximas" e "Histórico" — lá em duas seções, aqui
+              dentro de uma lista só, porque esta é cronológica e mesclada entre
+              as crianças da casa.
+
+              `bg-violet-600`, e não o `violet-500` que é a cor de consultas
+              deste app: branco sobre o 500 mede **4.32:1** e reprova. O 600
+              (stock, o `@theme` não redefine essa parada) dá 5.70:1. */}
+          {isScheduled ? (
+            <span
+              className="flex h-12 w-12 flex-shrink-0 flex-col items-center justify-center rounded-2xl bg-violet-600 text-white"
+              aria-hidden
+            >
+              <span className="font-mono text-lg leading-none">{day}</span>
+              <span className="mt-0.5 text-[10px] leading-none uppercase">{month}</span>
+            </span>
+          ) : baby ? (
             <span
               className={cn(
                 'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-base font-black',
@@ -43,18 +65,25 @@ export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails
               {babyInitials(baby.name)}
             </span>
           ) : (
-            <span
-              className={cn(
-                'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl',
-                isScheduled ? 'bg-violet-50 dark:bg-violet-950/40 text-violet-500 dark:text-violet-300' : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300',
-              )}
-            >
+            <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
               <StethoscopeIcon className="h-5 w-5" />
             </span>
           )}
           <div>
             <h3 className="text-[15px] font-bold text-ink">{appointment.doctorName}</h3>
-            <p className="text-[13px] text-ink-muted">
+            <p className="flex items-center gap-1.5 text-[13px] text-ink-muted">
+              {/* Com o bloco de data ocupando o lugar do avatar, a criança
+                  perderia sua marca de cor — o que numa lista de várias
+                  crianças é o que se olha primeiro. O ponto colorido devolve
+                  isso sem roubar espaço; o nome ao lado continua sendo quem
+                  informa, então ele é `aria-hidden`. */}
+              {isScheduled && baby && (
+                <span
+                  aria-hidden
+                  className={cn('h-2 w-2 flex-shrink-0 rounded-full', avatarAppearance?.className)}
+                  style={avatarAppearance?.style}
+                />
+              )}
               {baby?.name}
               {baby && appointment.specialty && ' · '}
               {appointment.specialty}
@@ -63,6 +92,10 @@ export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails
         </div>
         <div className="flex-shrink-0 text-right">
           <AppointmentStatusBadge status={appointment.status} />
+          {/* A data completa continua escrita aqui, inclusive na agendada: o
+              bloco à esquerda é `aria-hidden`, então sem esta linha a data
+              simplesmente não existiria para leitor de tela — e o ano, que o
+              bloco não mostra, não existiria para ninguém. */}
           <p className="font-mono mt-1 text-xs text-ink-faint">
             {formatDateDisplay(date, i18n.language)} · {time}
           </p>

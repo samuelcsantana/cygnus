@@ -42,6 +42,28 @@ export function formatDateDisplay(dateStr: string, locale: string): string {
   return new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date)
 }
 
+/**
+ * O dia e o mês abreviado, separados, para o bloco de data das consultas.
+ *
+ * Separados de propósito: o dia é impresso grande e em mono e o mês pequeno
+ * embaixo, então não existe uma string única que sirva. Montar isso no
+ * componente com `slice` sobre `formatDateDisplay` funcionaria em pt-BR e
+ * quebraria em `en`, onde o mês vem antes do dia — daí o `Intl` decidir os dois
+ * pedaços, cada um no seu formato.
+ *
+ * O mês volta sem o ponto que o pt-BR acrescenta ("set." → "set"): o glifo é
+ * ruído numa caixa de 10px que já é só rótulo, e alinhá-lo sob o dia com o
+ * ponto deslocava o texto meio caractere para a esquerda.
+ */
+export function formatDayMonthParts(dateStr: string, locale: string): { day: string; month: string } {
+  const [year, month, day] = dateStr.split('-').map(Number)
+  const date = new Date(year!, (month ?? 1) - 1, day)
+  return {
+    day: new Intl.DateTimeFormat(locale, { day: '2-digit' }).format(date),
+    month: new Intl.DateTimeFormat(locale, { month: 'short' }).format(date).replace(/\.$/, ''),
+  }
+}
+
 export function formatDateTimeDisplay(isoString: string, locale: string): string {
   return new Intl.DateTimeFormat(locale, {
     day: '2-digit',
