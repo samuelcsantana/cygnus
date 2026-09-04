@@ -42,6 +42,7 @@
     "dashboard": "Início",
     "vaccines": "Vacinas",
     "appointments": "Consultas",
+    "medications": "Remédios",
     "milestones": "Marcos",
     "notifications": "Notificações",
     "logoutError": "Não foi possível sair da conta. Você continua conectado — tente novamente.",

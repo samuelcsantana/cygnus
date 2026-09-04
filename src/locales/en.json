@@ -42,6 +42,7 @@
     "dashboard": "Home",
     "vaccines": "Vaccines",
     "appointments": "Appointments",
+    "medications": "Meds",
     "milestones": "Milestones",
     "notifications": "Notifications",
     "logoutError": "Could not sign you out. You are still signed in — please try again.",
