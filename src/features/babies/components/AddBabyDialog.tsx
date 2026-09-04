@@ -70,8 +70,8 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} className="max-h-[85vh] overflow-y-auto p-0 sm:max-w-lg">
-        <div className="relative bg-gradient-to-br from-emerald-700 to-emerald-600 px-7 pt-7 pb-6">
+      <DialogContent showCloseButton={false} className="flex max-h-[85vh] flex-col overflow-hidden p-0 sm:max-w-lg">
+        <div className="relative shrink-0 bg-gradient-to-br from-emerald-700 to-emerald-600 px-7 pt-7 pb-6">
           <button
             type="button"
             onClick={() => onOpenChange(false)}
@@ -85,7 +85,7 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
           <DialogDescription className="mt-1 text-sm text-white/80">{t('babies.form.subtitle')}</DialogDescription>
         </div>
 
-        <div className="p-7">
+        <div className="overflow-y-auto p-7">
           <StepIndicator
             steps={[
               { id: 'profile', label: t('babies.wizard.stepProfile') },

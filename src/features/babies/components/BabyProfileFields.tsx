@@ -70,8 +70,7 @@ export function BabyProfileFields({ register, control, errors }: BabyProfileFiel
           colorGroupLabel={t('babies.form.avatarColorGroupLabel')}
           fallback={<UserIcon className="h-8 w-8 text-ink-faint" />}
           uploadLabel={t('babies.form.avatarUploadAria')}
-          removeLabel={t('babies.form.avatarRemoveAria')}
-          urlPlaceholder={t('babies.form.avatarUrlPlaceholder')}
+          removeLabel={t('babies.form.avatarRemove')}
           fileTooLargeError={t('babies.form.avatarFileTooLarge')}
           invalidImageError={t('babies.form.avatarInvalidImage')}
         />

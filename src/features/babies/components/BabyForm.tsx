@@ -51,13 +51,19 @@ export function BabyForm({ defaultValues, onSubmit, submitLabel, onCancel, showC
 
   return (
     <form onSubmit={handleFormSubmit} className="relative z-10" noValidate>
+      {/* Duas colunas para os **campos**, e os cartões abaixo ocupando a largura toda.
+          
+          Antes o `dangerZone` (responsáveis, profissionais, zona de perigo) ficava dentro da coluna
+          da direita, o que produzia duas coisas ruins ao mesmo tempo: um vazio enorme embaixo da
+          coluna da esquerda, que acaba no "Sexo", e cartões espremidos em meia largura, onde o
+          cabeçalho de cada um (ícone + título + descrição + botão) quebrava em quatro linhas.
+          Cartão é bloco, não campo — e bloco não divide coluna com formulário. */}
       <div className="grid grid-cols-1 gap-x-10 gap-y-6 lg:grid-cols-2">
         <BabyProfileFields register={register} control={control} errors={errors} />
-        <div className="space-y-6">
-          <BabyHealthFields register={register} control={control} />
-          {dangerZone}
-        </div>
+        <BabyHealthFields register={register} control={control} />
       </div>
+
+      {dangerZone && <div className="mt-8 space-y-5">{dangerZone}</div>}
 
       {submitError && (
         <p role="alert" className="text-destructive mt-6 text-sm">

@@ -17,6 +17,25 @@ const sampleUser: User = {
 }
 
 describe('ProfileForm', () => {
+  /**
+   * A senha atual só é exigida pelo backend quando o e-mail muda, e agora só aparece nesse caso.
+   * Pedi-la para salvar o nome era pedido sem motivo — e campo de senha sem motivo é como se
+   * aprende a digitar senha sem perguntar por quê.
+   */
+  it('só pede a senha atual depois que o e-mail muda', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<ProfileForm user={sampleUser} />)
+
+    expect(screen.queryByLabelText('Senha atual')).not.toBeInTheDocument()
+
+    await user.clear(screen.getByLabelText('E-mail'))
+    await user.type(screen.getByLabelText('E-mail'), 'outro@example.com')
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Senha atual')).toBeInTheDocument()
+    })
+  })
+
   it('saves a name-only change without sending currentPassword', async () => {
     let receivedBody: unknown = null
     server.use(

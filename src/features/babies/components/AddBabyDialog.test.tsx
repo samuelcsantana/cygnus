@@ -53,7 +53,7 @@ describe('AddBabyDialog', () => {
             name: 'Miguel',
             birthDate: '2024-03-10',
             gender: 'MALE',
-            avatarUrl: 'https://example.com/miguel.jpg',
+            avatarUrl: 'data:image/jpeg;base64,MIGUEL',
           }),
           { status: 201 },
         )
@@ -68,9 +68,28 @@ describe('AddBabyDialog', () => {
     fireEvent.change(screen.getByLabelText('Data de Nascimento'), { target: { value: '2024-03-10' } })
     await user.click(screen.getAllByRole('radio', { name: 'Menino' })[0]!)
 
-    const avatarUrl = 'https://example.com/miguel.jpg'
-    await user.type(screen.getByPlaceholderText('Cole uma URL ou envie uma foto'), avatarUrl)
-    expect(screen.getByAltText('')).toHaveAttribute('src', avatarUrl)
+    // O caminho real da foto é escolher um arquivo — o campo de colar URL não existe mais. O jsdom
+    // não implementa `createImageBitmap` nem canvas, que é o que a conversão usa, então os dois são
+    // dublados aqui: sem isso não há como cobrir este caminho, e antes ele era coberto só por
+    // procuração, digitando no campo de URL.
+    const dataUrl = 'data:image/jpeg;base64,MIGUEL'
+    vi.stubGlobal(
+      'createImageBitmap',
+      vi.fn(async () => ({ width: 200, height: 200, close: vi.fn() })),
+    )
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({
+      drawImage: vi.fn(),
+    } as unknown as CanvasRenderingContext2D)
+    vi.spyOn(HTMLCanvasElement.prototype, 'toDataURL').mockReturnValue(dataUrl)
+
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
+    fireEvent.change(fileInput, {
+      target: { files: [new File(['x'], 'miguel.jpg', { type: 'image/jpeg' })] },
+    })
+
+    await waitFor(() => {
+      expect(screen.getByAltText('')).toHaveAttribute('src', dataUrl)
+    })
 
     await user.click(screen.getByRole('button', { name: 'Cor 1' }))
     expect(screen.getByAltText('').parentElement).toHaveStyle({ borderColor: '#2A9D8F' })
@@ -85,7 +104,7 @@ describe('AddBabyDialog', () => {
     await waitFor(() => {
       expect(postCallCount).toBe(1)
     })
-    expect(receivedBody.avatarUrl).toBe(avatarUrl)
+    expect(receivedBody.avatarUrl).toBe(dataUrl)
     expect(receivedBody.avatarColor).toBe('#2A9D8F')
     expect(onOpenChange).toHaveBeenCalledWith(false)
   })

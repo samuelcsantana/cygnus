@@ -1,10 +1,8 @@
 import { useRef, useState, type ReactNode } from 'react'
 
-import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { CameraIcon } from '@/shared/icons/camera-icon'
 import { CheckIcon } from '@/shared/icons/check-icon'
-import { CloseIcon } from '@/shared/icons/close-icon'
 
 const MAX_SOURCE_FILE_BYTES = 10 * 1024 * 1024
 const MAX_DIMENSION_PX = 480
@@ -42,7 +40,6 @@ interface AvatarUploadFieldProps {
   fallback: ReactNode
   uploadLabel: string
   removeLabel: string
-  urlPlaceholder: string
   fileTooLargeError: string
   invalidImageError: string
   /** Border color applied around the preview once `value` is set — has no visible effect while there's no avatar. */
@@ -53,8 +50,17 @@ interface AvatarUploadFieldProps {
   className?: string
 }
 
-// Preview + two ways to set the same underlying value: pick a local photo (resized and
-// inlined as a data URL, so no upload endpoint is needed) or paste an image URL directly.
+/**
+ * Pré-visualização, um botão de câmera e a paleta de cor da borda.
+ *
+ * **Uma forma só de definir a foto: escolher um arquivo**, redimensionado e embutido como data URL
+ * (por isso não existe endpoint de upload para avatar). O campo de colar URL foi removido — ele
+ * pedia que a pessoa tivesse a imagem hospedada em algum lugar, o que quase ninguém tem, e ocupava
+ * a largura toda do bloco por um caminho que quase ninguém usa.
+ *
+ * Um `avatarUrl` que já esteja gravado como endereço http continua sendo exibido normalmente: o
+ * schema não mudou, só o jeito de preencher.
+ */
 export function AvatarUploadField({
   id,
   value,
@@ -62,7 +68,6 @@ export function AvatarUploadField({
   fallback,
   uploadLabel,
   removeLabel,
-  urlPlaceholder,
   fileTooLargeError,
   invalidImageError,
   color,
@@ -108,6 +113,7 @@ export function AvatarUploadField({
         </div>
         <button
           type="button"
+          id={id}
           onClick={() => fileInputRef.current?.click()}
           aria-label={uploadLabel}
           className="bg-primary absolute -right-1 -bottom-1 flex h-7 w-7 items-center justify-center rounded-full text-primary-foreground shadow-sm ring-2 ring-white transition-colors hover:brightness-95"
@@ -126,22 +132,20 @@ export function AvatarUploadField({
       </div>
 
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <Input id={id} type="text" placeholder={urlPlaceholder} value={value ?? ''} onChange={(event) => onValueChange(event.target.value)} />
-          {value && (
-            <button
-              type="button"
-              onClick={() => onValueChange('')}
-              aria-label={removeLabel}
-              className="text-ink-faint hover:text-destructive flex-shrink-0 transition-colors"
-            >
-              <CloseIcon className="h-4 w-4" />
-            </button>
-          )}
-        </div>
+        {/* Remover é um alvo de texto e não mais um "x" ao lado de um campo que deixou de existir.
+            Só aparece quando há foto: sem ela não há o que remover. */}
+        {value && (
+          <button
+            type="button"
+            onClick={() => onValueChange('')}
+            className="text-ink-muted hover:text-destructive text-sm font-bold transition-colors"
+          >
+            {removeLabel}
+          </button>
+        )}
         {error && <p className="text-destructive mt-1 text-sm">{error}</p>}
 
-        <div className="mt-2.5 flex items-center gap-2" role="group" aria-label={colorGroupLabel}>
+        <div className={cn('flex items-center gap-2', value && 'mt-2.5')} role="group" aria-label={colorGroupLabel}>
           {colorOptions.map((option) => {
             const selected = color === option.value
             return (
