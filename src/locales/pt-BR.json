@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Meu Neném",
+    "appName": "Ninho",
     "loading": "Carregando...",
     "myAccount": "Minha conta",
     "back": "Voltar",
@@ -64,7 +64,7 @@
       "featureAlertsTitle": "Alertas inteligentes",
       "featureAlertsHint": "Lembretes de consultas e vacinas",
       "trust": "Gratuito · Seguro · Sem anúncios",
-      "copyright": "© {{year}} Meu Neném App",
+      "copyright": "© {{year}} Ninho",
       "footerNote": "Feito com carinho para famílias"
     },
     "social": {
@@ -165,7 +165,7 @@
     },
     "dashboard": {
       "loadError": "Não foi possível carregar os dados da família.",
-      "welcomeHeading": "Bem-vindo(a) ao Meu Neném!",
+      "welcomeHeading": "Bem-vindo(a) ao Ninho!",
       "welcomeDescription": "Acompanhe vacinas, consultas e os marcos mais especiais do crescimento dos seus filhos — tudo organizado em um só lugar, para você nunca perder um momento importante.",
       "welcomeCta": "Cadastrar Primeiro Filho",
       "previewSectionTitle": "O que você vai poder fazer ✨",

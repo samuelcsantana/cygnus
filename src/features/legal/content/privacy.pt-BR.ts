@@ -27,7 +27,7 @@ export const privacyPtBR: LegalContent = {
       id: 'o-que-este-documento-e',
       heading: 'O que este documento é',
       body: [
-        'Esta política explica quais dados o Meu Neném coleta, por que os coleta, com quem os compartilha e o que você pode exigir a respeito deles. Ela trata de dados de saúde de uma criança, que a Lei Geral de Proteção de Dados classifica como dado pessoal sensível, e por isso descreve cada tratamento em vez de resumi-los.',
+        'Esta política explica quais dados o Ninho coleta, por que os coleta, com quem os compartilha e o que você pode exigir a respeito deles. Ela trata de dados de saúde de uma criança, que a Lei Geral de Proteção de Dados classifica como dado pessoal sensível, e por isso descreve cada tratamento em vez de resumi-los.',
         'O texto se aplica ao aplicativo web e à interface de programação que o atende. Não se aplica a serviços de terceiros que você alcance a partir dele, como o calendário oficial do Ministério da Saúde linkado na tela de vacinas.',
       ],
     },

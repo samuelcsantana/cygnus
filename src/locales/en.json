@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Meu Neném",
+    "appName": "Ninho",
     "loading": "Loading...",
     "myAccount": "My account",
     "back": "Back",
@@ -64,7 +64,7 @@
       "featureAlertsTitle": "Smart alerts",
       "featureAlertsHint": "Appointment and vaccine reminders",
       "trust": "Free · Secure · No ads",
-      "copyright": "© {{year}} Meu Neném App",
+      "copyright": "© {{year}} Ninho",
       "footerNote": "Made with care for families"
     },
     "social": {
@@ -164,7 +164,7 @@
     },
     "dashboard": {
       "loadError": "Could not load the family data.",
-      "welcomeHeading": "Welcome to Meu Neném!",
+      "welcomeHeading": "Welcome to Ninho!",
       "welcomeDescription": "Track vaccines, appointments and the most special milestones of your children's growth — all organized in one place, so you never miss an important moment.",
       "welcomeCta": "Add Your First Child",
       "previewSectionTitle": "What you'll be able to do ✨",

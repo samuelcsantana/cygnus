@@ -15,7 +15,7 @@ export const termsPtBR: LegalContent = {
       id: 'o-que-o-servico-e',
       heading: 'O que o serviço é, e o que ele não é',
       body: [
-        'O Meu Neném é uma ferramenta de acompanhamento: guarda o que você registra sobre a saúde de uma criança — vacinas aplicadas, consultas, marcos de desenvolvimento — e mostra o calendário nacional de imunização como referência.',
+        'O Ninho é uma ferramenta de acompanhamento: guarda o que você registra sobre a saúde de uma criança — vacinas aplicadas, consultas, marcos de desenvolvimento — e mostra o calendário nacional de imunização como referência.',
         'Ele não é um serviço de saúde. Não emite diagnóstico, não prescreve, não substitui a caderneta oficial de vacinação nem a avaliação de um profissional ou de uma unidade de saúde. O calendário exibido é material informativo de referência pública, e o aplicativo pode estar desatualizado em relação à fonte oficial.',
         'Decisões sobre a saúde da criança são suas e do profissional que a acompanha. Nenhum aviso, lembrete ou ausência de aviso dentro do aplicativo deve ser lido como orientação clínica.',
       ],

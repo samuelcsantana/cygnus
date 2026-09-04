@@ -49,7 +49,7 @@ export function DashboardRoute() {
   // `data ?? []` is empty for three different reasons, and only one of them is
   // "this family has no children". While the request is in flight or after it
   // failed, falling through to WelcomeDashboard shows a parent of six the
-  // onboarding screen — "Bem-vindo(a) ao Meu Neném! Acompanhe vacinas…" — and
+  // onboarding screen — "Bem-vindo(a) ao Ninho! Acompanhe vacinas…" — and
   // then swaps it for their real dashboard. Measured by delaying GET /babies by
   // 5s: the welcome copy rendered for the whole delay.
   //
