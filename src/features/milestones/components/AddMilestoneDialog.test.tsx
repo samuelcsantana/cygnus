@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
 import { server } from '@/test/msw/server'
+import { buildBaby } from '@/test/fixtures/baby'
 import { fireEvent, renderWithProviders, screen, waitFor } from '@/test/test-utils'
 
 import { AddMilestoneDialog } from './AddMilestoneDialog'
@@ -12,18 +13,7 @@ const babyId = '11111111-1111-4111-8111-111111111111'
 const birthDate = '2024-03-10'
 const otherBabyId = '33333333-3333-4333-8333-333333333333'
 
-const baby = {
-  id: babyId,
-  userId: '99999999-9999-4999-8999-999999999999',
-  name: 'Baby One',
-  birthDate,
-  gender: 'FEMALE',
-  bloodType: null,
-  allergies: [],
-  avatarUrl: null,
-  avatarColor: null,
-  createdAt: '2024-01-01T00:00:00.000Z',
-}
+const baby = buildBaby({ id: babyId, name: 'Baby One', birthDate })
 
 const otherBaby = { ...baby, id: otherBabyId, name: 'Baby Two' }
 

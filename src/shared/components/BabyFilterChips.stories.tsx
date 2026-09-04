@@ -3,22 +3,12 @@ import { useState } from 'react'
 import { expect, fn, userEvent, within } from 'storybook/test'
 
 import type { Baby } from '@/features/babies/api/babies.schemas'
+import { buildBaby } from '@/test/fixtures/baby'
 
 import { BabyFilterChips } from './BabyFilterChips'
 
 function baby(id: string, name: string, avatarColor: string | null = null): Baby {
-  return {
-    id,
-    userId: '00000000-0000-4000-8000-000000000000',
-    name,
-    birthDate: '2025-03-18',
-    gender: 'FEMALE',
-    bloodType: null,
-    allergies: [],
-    avatarUrl: null,
-    avatarColor,
-    createdAt: '2025-03-18T10:00:00.000Z',
-  }
+  return buildBaby({ id, name, avatarColor, birthDate: '2025-03-18' })
 }
 
 const HOUSEHOLD: Baby[] = [

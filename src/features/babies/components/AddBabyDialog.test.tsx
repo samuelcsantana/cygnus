@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
 import { server } from '@/test/msw/server'
+import { buildBaby } from '@/test/fixtures/baby'
 import { fireEvent, renderWithProviders, screen, waitFor } from '@/test/test-utils'
 
 import { AddBabyDialog } from './AddBabyDialog'
@@ -48,18 +49,12 @@ describe('AddBabyDialog', () => {
         postCallCount += 1
         receivedBody = (await request.json()) as Record<string, unknown>
         return HttpResponse.json(
-          {
-            id: '11111111-1111-4111-8111-111111111111',
-            userId: '22222222-2222-4222-8222-222222222222',
+          buildBaby({
             name: 'Miguel',
             birthDate: '2024-03-10',
             gender: 'MALE',
-            bloodType: null,
-            allergies: [],
             avatarUrl: 'https://example.com/miguel.jpg',
-            avatarColor: null,
-            createdAt: '2024-03-10T00:00:00.000Z',
-          },
+          }),
           { status: 201 },
         )
       }),
