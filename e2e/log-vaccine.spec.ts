@@ -37,7 +37,7 @@ test('a user can log a vaccine as applied for their baby', async ({ page }) => {
   await addBaby(page, {
     name: 'Bruno E2E',
     birthDate: nascimento.toISOString().slice(0, 10),
-    gender: 'Menino',
+    sexAtBirth: 'Masculino',
   })
 
   await page.getByRole('link', { name: 'Vacinas', exact: true }).click()

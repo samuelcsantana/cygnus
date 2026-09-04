@@ -21,7 +21,7 @@ export function buildBaby(overrides: Partial<Baby> = {}): Baby {
     userId: '99999999-9999-4999-8999-999999999999',
     name: 'Baby One',
     birthDate: '2024-01-01',
-    gender: 'FEMALE',
+    sexAtBirth: 'FEMALE',
     bloodType: null,
     allergies: [],
     healthPlanName: null,

@@ -25,12 +25,17 @@ describe('babyFormSchema', () => {
     expect(result.success).toBe(true)
   })
 
-  it('requires gender to be selected', () => {
+  /**
+   * O sexo ao nascer deixou de ser obrigatório, e este teste é o que impede a obrigatoriedade de
+   * voltar sem querer: o campo não é lido por nada no app, e exigir dado sensível de uma criança
+   * sem uso é coleta que não se justifica.
+   */
+  it('aceita um cadastro sem sexo ao nascer', () => {
     const result = babyFormSchema.safeParse({
       name: 'Miguel',
       birthDate: '2024-01-01',
     })
 
-    expect(result.success).toBe(false)
+    expect(result.success).toBe(true)
   })
 })
