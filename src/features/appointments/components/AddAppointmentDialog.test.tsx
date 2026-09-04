@@ -199,6 +199,91 @@ describe('AddAppointmentDialog', () => {
     expect(screen.getByLabelText('Peso (kg)')).toBeInTheDocument()
   })
 
+  /**
+   * O cadastro de profissional se popula como efeito colateral do trabalho real: ninguém abre o
+   * app para cadastrar o pediatra, abre para marcar consulta. Por isso o gatilho é uma caixa de
+   * marcar dentro do formulário — e por isso ela só age **junto com** o salvamento da consulta.
+   */
+  it('salva o profissional junto com a consulta quando a pessoa pede', async () => {
+    let specialistBody: Record<string, unknown> = {}
+    let appointmentBody: Record<string, unknown> = {}
+    const specialistId = '44444444-4444-4444-8444-444444444444'
+
+    server.use(
+      http.post(`${config.apiBaseUrl}/babies/:babyId/specialists`, async ({ request }) => {
+        specialistBody = (await request.json()) as Record<string, unknown>
+        return HttpResponse.json(
+          {
+            id: specialistId,
+            babyId,
+            name: 'Dra. Ana Silva',
+            specialty: 'Pediatria',
+            phone: null,
+            createdAt: '2026-01-01T00:00:00.000Z',
+          },
+          { status: 201 },
+        )
+      }),
+      http.post(`${config.apiBaseUrl}/babies/:babyId/appointments`, async ({ request }) => {
+        appointmentBody = (await request.json()) as Record<string, unknown>
+        return HttpResponse.json(buildAppointment({ babyId }), { status: 201 })
+      }),
+    )
+
+    const user = userEvent.setup()
+    renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
+
+    await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
+    await user.type(screen.getByLabelText('Especialidade (Opcional)'), 'Pediatria')
+    await user.click(screen.getByLabelText(/Salvar Dra. Ana Silva na lista/))
+    await user.click(screen.getByRole('button', { name: 'Continuar' }))
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Data')).toBeInTheDocument()
+    })
+
+    const futureDate = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString().slice(0, 10)
+    fireEvent.change(screen.getByLabelText('Data'), { target: { value: futureDate } })
+    fireEvent.change(screen.getByLabelText('Horário'), { target: { value: '10:00' } })
+    await user.click(screen.getByRole('button', { name: 'Salvar Consulta' }))
+
+    await waitFor(() => {
+      expect(appointmentBody.specialistId).toBe(specialistId)
+    })
+    expect(specialistBody).toMatchObject({ name: 'Dra. Ana Silva', specialty: 'Pediatria' })
+    // O nome continua gravado na consulta: o vínculo é adicional, nunca substituto.
+    expect(appointmentBody.doctorName).toBe('Dra. Ana Silva')
+  })
+
+  it('não oferece salvar um profissional que já está na lista', async () => {
+    server.use(
+      http.get(`${config.apiBaseUrl}/babies/:babyId/specialists`, () =>
+        HttpResponse.json([
+          {
+            id: '44444444-4444-4444-8444-444444444444',
+            babyId,
+            name: 'Dra. Ana Silva',
+            specialty: 'Pediatria',
+            phone: null,
+            createdAt: '2026-01-01T00:00:00.000Z',
+          },
+        ]),
+      ),
+    )
+
+    const user = userEvent.setup()
+    renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
+
+    await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana')
+    expect(screen.getByLabelText(/Salvar Dra. Ana na lista/)).toBeInTheDocument()
+
+    await user.type(screen.getByLabelText('Nome do Profissional'), ' Silva')
+
+    await waitFor(() => {
+      expect(screen.queryByLabelText(/Salvar Dra. Ana Silva na lista/)).not.toBeInTheDocument()
+    })
+  })
+
   // The mirror of the above, and the reason both are here: if only one passed,
   // the screen would be back to what it was — one act, one direction.
   it('still refuses a past date when the intent is to book', async () => {

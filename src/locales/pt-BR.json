@@ -482,6 +482,28 @@
       "columnStatus": "Status"
     }
   },
+  "specialists": {
+    "sectionTitle": "Profissionais",
+    "sectionDescription": "Quem cuida desta criança, com o telefone à mão.",
+    "addAction": "Adicionar",
+    "saveAction": "Salvar",
+    "empty": "Nenhum profissional salvo ainda.",
+    "loadError": "Não foi possível carregar os profissionais.",
+    "genericError": "Não foi possível salvar. Tente de novo.",
+    "nameLabel": "Nome",
+    "namePlaceholder": "Ex: Dra. Fernanda Lima",
+    "specialtyLabel": "Especialidade",
+    "specialtyPlaceholder": "Ex: Pediatria",
+    "phoneLabel": "Telefone",
+    "phonePlaceholder": "Ex: (11) 99999-0000",
+    "addSuccessToast": "Profissional salvo!",
+    "deleteAction": "Remover {{name}}",
+    "deleteConfirmTitle": "Remover profissional?",
+    "deleteConfirmDescription": "{{name}} sai desta lista. As consultas já registradas continuam inteiras — o nome do profissional segue gravado nelas.",
+    "deleteConfirmDismiss": "Manter",
+    "deleteConfirmAction": "Remover",
+    "deleteSuccessToast": "Profissional removido."
+  },
   "appointments": {
     "title": "Consultas",
     "summary": "{{completed}} realizadas · {{scheduled}} agendadas",
@@ -540,6 +562,7 @@
       "timeLabel": "Horário",
       "reasonLabel": "Motivo (Opcional)",
       "reasonPlaceholder": "Ex: Consulta de rotina",
+      "saveSpecialist": "Salvar {{name}} na lista de profissionais desta criança",
       "weightLabel": "Peso (kg)",
       "weightPlaceholder": "Ex: 15,8",
       "weightInvalid": "Informe um peso entre 0,1 e 150 kg.",
