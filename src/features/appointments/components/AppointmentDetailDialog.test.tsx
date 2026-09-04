@@ -3,26 +3,20 @@ import { HttpResponse, http } from 'msw'
 import { describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
+import { buildAppointment } from '@/test/fixtures/appointment'
 import { server } from '@/test/msw/server'
 import { renderWithProviders, screen, waitFor, within } from '@/test/test-utils'
 
-import type { Appointment } from '../api/appointments.schemas'
 import { AppointmentDetailDialog } from './AppointmentDetailDialog'
 
 const babyId = '22222222-2222-4222-8222-222222222222'
 
-const sampleAppointment: Appointment = {
-  id: '11111111-1111-4111-8111-111111111111',
+const sampleAppointment = buildAppointment({
   babyId,
-  scheduledAt: '2026-09-01T10:00:00.000Z',
-  doctorName: 'Dra. Ana Souza',
-  specialty: 'Pediatria',
   location: 'Clínica Central',
   reason: 'Checkup',
-  notes: null,
-  status: 'SCHEDULED',
   createdAt: '2026-01-10T00:00:00.000Z',
-}
+})
 
 describe('AppointmentDetailDialog', () => {
   it('does not cancel the appointment on the first click — asks for confirmation first', async () => {

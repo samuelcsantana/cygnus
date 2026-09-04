@@ -3,6 +3,7 @@ import { HttpResponse, http } from 'msw'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
+import { buildAppointment } from '@/test/fixtures/appointment'
 import { server } from '@/test/msw/server'
 import { buildBaby } from '@/test/fixtures/baby'
 import { fireEvent, renderWithProviders, screen, waitFor } from '@/test/test-utils'
@@ -78,18 +79,12 @@ describe('AddAppointmentDialog', () => {
         postCallCount += 1
         receivedBody = (await request.json()) as Record<string, unknown>
         return HttpResponse.json(
-          {
-            id: '22222222-2222-4222-8222-222222222222',
+          buildAppointment({
             babyId,
             scheduledAt: '2030-01-01T10:00:00.000Z',
             doctorName: 'Dra. Ana Silva',
             specialty: 'Pediatria',
-            location: null,
-            reason: null,
-            notes: null,
-            status: 'SCHEDULED',
-            createdAt: '2024-03-10T00:00:00.000Z',
-          },
+          }),
           { status: 201 },
         )
       }),
@@ -145,18 +140,13 @@ describe('AddAppointmentDialog', () => {
       http.post(`${config.apiBaseUrl}/babies/:babyId/appointments`, async ({ request }) => {
         receivedBody = (await request.json()) as Record<string, unknown>
         return HttpResponse.json(
-          {
-            id: '22222222-2222-4222-8222-222222222222',
+          buildAppointment({
             babyId,
             scheduledAt: '2024-03-01T10:00:00.000Z',
             doctorName: 'Dra. Ana Silva',
             specialty: null,
-            location: null,
-            reason: null,
-            notes: null,
             status: 'COMPLETED',
-            createdAt: '2024-03-10T00:00:00.000Z',
-          },
+          }),
           { status: 201 },
         )
       }),
