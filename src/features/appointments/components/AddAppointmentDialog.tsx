@@ -116,8 +116,8 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} className="max-h-[85vh] overflow-y-auto p-0 sm:max-w-lg">
-        <div className="relative bg-gradient-to-br from-violet-600 to-violet-500 px-7 pt-7 pb-6">
+      <DialogContent showCloseButton={false} className="flex max-h-[85vh] flex-col overflow-hidden p-0 sm:max-w-lg">
+        <div className="relative shrink-0 bg-gradient-to-br from-violet-600 to-violet-500 px-7 pt-7 pb-6">
           <button
             type="button"
             onClick={() => onOpenChange(false)}
@@ -131,7 +131,7 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
           <DialogDescription className="mt-1 text-sm text-white/80">{t('appointments.form.createSubtitle')}</DialogDescription>
         </div>
 
-        <div className="p-7">
+        <div className="overflow-y-auto p-7">
           <StepIndicator steps={steps} currentStepId={step} accentClassName="bg-violet-600" className="mb-6" />
 
           {step === 'baby' ? (

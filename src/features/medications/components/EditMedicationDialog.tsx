@@ -75,8 +75,8 @@ export function EditMedicationDialog({ medication, onOpenChange }: EditMedicatio
 
   return (
     <Dialog open={!!medication} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} className="max-h-[85vh] overflow-y-auto p-0 sm:max-w-2xl">
-        <div className="relative bg-gradient-to-br from-sky-800 to-sky-700 px-7 pt-7 pb-6">
+      <DialogContent showCloseButton={false} className="flex max-h-[85vh] flex-col overflow-hidden p-0 sm:max-w-2xl">
+        <div className="relative shrink-0 bg-gradient-to-br from-sky-800 to-sky-700 px-7 pt-7 pb-6">
           <button
             type="button"
             onClick={() => onOpenChange(false)}
@@ -95,7 +95,7 @@ export function EditMedicationDialog({ medication, onOpenChange }: EditMedicatio
         </div>
 
         {medication && (
-          <div className="p-7">
+          <div className="overflow-y-auto p-7">
             <form onSubmit={onSubmit} noValidate>
               <MedicationFields register={register} control={control} errors={errors} />
 

@@ -37,8 +37,8 @@ export function EditBabyDialog({ baby, onOpenChange }: EditBabyDialogProps) {
 
   return (
     <Dialog open={!!baby} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} className="max-h-[90vh] overflow-y-auto p-0 sm:max-w-lg lg:max-w-3xl">
-        <div className="relative bg-gradient-to-br from-emerald-700 to-emerald-600 px-7 pt-7 pb-6">
+      <DialogContent showCloseButton={false} className="flex max-h-[90vh] flex-col overflow-hidden p-0 sm:max-w-lg lg:max-w-3xl">
+        <div className="relative shrink-0 bg-gradient-to-br from-emerald-700 to-emerald-600 px-7 pt-7 pb-6">
           <button
             type="button"
             onClick={() => onOpenChange(false)}
@@ -53,7 +53,7 @@ export function EditBabyDialog({ baby, onOpenChange }: EditBabyDialogProps) {
         </div>
 
         {baby && (
-          <div className="p-7">
+          <div className="overflow-y-auto p-7">
             <BabyForm
               defaultValues={{
                 name: baby.name,

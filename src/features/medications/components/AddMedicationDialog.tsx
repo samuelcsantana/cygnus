@@ -71,8 +71,8 @@ export function AddMedicationDialog({ open, onOpenChange }: AddMedicationDialogP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} className="max-h-[85vh] overflow-y-auto p-0 sm:max-w-2xl">
-        <div className="relative bg-gradient-to-br from-sky-800 to-sky-700 px-7 pt-7 pb-6">
+      <DialogContent showCloseButton={false} className="flex max-h-[85vh] flex-col overflow-hidden p-0 sm:max-w-2xl">
+        <div className="relative shrink-0 bg-gradient-to-br from-sky-800 to-sky-700 px-7 pt-7 pb-6">
           <button
             type="button"
             onClick={() => onOpenChange(false)}
@@ -90,7 +90,7 @@ export function AddMedicationDialog({ open, onOpenChange }: AddMedicationDialogP
           </DialogDescription>
         </div>
 
-        <div className="p-7">
+        <div className="overflow-y-auto p-7">
           {step === 'baby' ? (
             <div key="baby" className="animate-fade-in-up">
               <BabyPickerStep babies={babyList} value={selectedBabyId} onSelect={setSelectedBabyId} />

@@ -104,8 +104,8 @@ export function AddMilestoneDialog({ open, onOpenChange, suggestion }: AddMilest
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} className="max-h-[85vh] overflow-y-auto p-0 sm:max-w-2xl">
-        <div className="relative bg-gradient-to-br from-amber-700 to-amber-600 px-7 pt-7 pb-6">
+      <DialogContent showCloseButton={false} className="flex max-h-[85vh] flex-col overflow-hidden p-0 sm:max-w-2xl">
+        <div className="relative shrink-0 bg-gradient-to-br from-amber-700 to-amber-600 px-7 pt-7 pb-6">
           <button
             type="button"
             onClick={() => onOpenChange(false)}
@@ -119,7 +119,7 @@ export function AddMilestoneDialog({ open, onOpenChange, suggestion }: AddMilest
           <DialogDescription className="mt-1 text-sm text-white/80">{t('milestones.form.createSubtitle')}</DialogDescription>
         </div>
 
-        <div className="p-7">
+        <div className="overflow-y-auto p-7">
           <StepIndicator steps={steps} currentStepId={step} accentClassName="bg-amber-700" className="mb-6" />
 
           {step === 'baby' ? (
