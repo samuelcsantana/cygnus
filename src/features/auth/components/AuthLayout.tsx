@@ -252,8 +252,26 @@ export function AuthLayout() {
           </div>
         </main>
 
+        {/* Duas linhas fixas abaixo de `sm`, uma só a partir dali — e o
+            separador acompanha.
+
+            Escrito como uma frase única, o rodapé media 16px em `en` e 32px em
+            pt-BR e es a 360px, porque só as duas versões mais longas quebravam.
+            O card é centrado verticalmente, então cada 16px de rodapé o movia
+            8px, e o `layout.mjs` reprovava por deslocamento do segmentado entre
+            idiomas. Não era o piso de altura do card: ele media 808 nos três.
+
+            Isso só apareceu quando as fontes passaram a de fato carregar. Com
+            todo o app caindo em `system-ui`, que é mais estreita aqui, a frase
+            cabia em uma linha nos três idiomas e o problema não existia — os
+            pisos e este rodapé foram calibrados, sem que ninguém soubesse,
+            contra a fonte errada. */}
         <p className="text-center text-xs text-ink-faint">
-          {t('auth.brand.copyright', { year: new Date().getFullYear() })} · {t('auth.brand.footerNote')}
+          <span className="block sm:inline">{t('auth.brand.copyright', { year: new Date().getFullYear() })}</span>
+          <span aria-hidden className="hidden sm:inline">
+            {' · '}
+          </span>
+          <span className="block sm:inline">{t('auth.brand.footerNote')}</span>
         </p>
         {/* Os dois documentos ficam alcançáveis das telas públicas, que é onde
             alguém decide se cria a conta. Links de texto inline: o critério
