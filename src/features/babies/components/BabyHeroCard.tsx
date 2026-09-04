@@ -4,6 +4,7 @@ import type { Baby } from '@/features/babies/api/babies.schemas'
 import { ageInMonths } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { AlertCircleIcon } from '@/shared/icons/alert-circle-icon'
+import { IdCardIcon } from '@/shared/icons/id-card-icon'
 import { PencilIcon } from '@/shared/icons/pencil-icon'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 
@@ -130,6 +131,36 @@ export function BabyHeroCard({ baby, delayedVaccineCount, vaccineStatusKnown, on
             </p>
           ) : (
             <p className="mt-1.5 text-[13px] text-emerald-50">{t('babies.hero.noAllergiesRecorded')}</p>
+          )}
+
+          {/* Ao contrário das alergias, esta linha **some** quando não há dado, e a diferença é
+              deliberada: silêncio sobre alergia seria lido como "não tem", que é a leitura
+              perigosa; silêncio sobre plano não afirma nada. O cartão foi mantido baixo de
+              propósito — com seis filhos ele multiplica por seis — então quem não preenche o
+              plano não paga a linha.
+
+              emerald-50: 5.21:1 sobre emerald-700, a parada mais clara do gradiente. O número vai
+              em mono porque é código a ser lido em voz alta ou digitado por um terceiro, e é
+              exatamente o caso em que 0/O e 1/l não podem se confundir. */}
+          {(baby.healthPlanName || baby.healthPlanNumber) && (
+            <p className="mt-1.5 flex items-start gap-1.5 text-[13px] text-emerald-50">
+              <IdCardIcon aria-hidden className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
+              <span className="min-w-0">
+                {baby.healthPlanName && <span>{t('babies.hero.healthPlanName', { value: baby.healthPlanName })}</span>}
+                {baby.healthPlanName && baby.healthPlanNumber && ' · '}
+                {baby.healthPlanNumber && (
+                  <>
+                    {/* Sem o nome do plano na frente, um número solto não se explica — nem para
+                        quem vê, nem para quem ouve. Com ele, o contexto visual basta e o rótulo
+                        fica só para o leitor de tela. */}
+                    <span className={baby.healthPlanName ? 'sr-only' : undefined}>
+                      {t('babies.hero.healthPlanNumberLabel')}{' '}
+                    </span>
+                    <span className="font-mono">{baby.healthPlanNumber}</span>
+                  </>
+                )}
+              </span>
+            </p>
           )}
         </div>
 

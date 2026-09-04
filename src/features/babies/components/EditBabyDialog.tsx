@@ -59,6 +59,8 @@ export function EditBabyDialog({ baby, onOpenChange }: EditBabyDialogProps) {
                 gender: baby.gender,
                 bloodType: baby.bloodType ?? undefined,
                 allergies: baby.allergies,
+                healthPlanName: baby.healthPlanName ?? '',
+                healthPlanNumber: baby.healthPlanNumber ?? '',
                 avatarUrl: baby.avatarUrl ?? '',
                 avatarColor: baby.avatarColor ?? '',
               }}

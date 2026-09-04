@@ -111,7 +111,7 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
             </div>
           ) : (
             <form key="health" onSubmit={onSubmit} noValidate className="animate-fade-in-up">
-              <BabyHealthFields control={control} />
+              <BabyHealthFields register={register} control={control} />
               <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <button
                   type="button"

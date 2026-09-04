@@ -151,7 +151,9 @@
       "bloodType": "Tipo {{value}}",
       "allergies_one": "Alergia: {{list}}",
       "allergies_other": "Alergias: {{list}}",
-      "noAllergiesRecorded": "Nenhuma alergia registrada"
+      "noAllergiesRecorded": "Nenhuma alergia registrada",
+      "healthPlanName": "Plano {{value}}",
+      "healthPlanNumberLabel": "Carteirinha"
     },
     "picker": {
       "stepLabel": "Criança",
@@ -246,7 +248,8 @@
       "noAppointmentsScheduled": "Sem consultas agendadas",
       "vaccineStatusDelayed_one": "{{count}} vacina atrasada",
       "vaccineStatusDelayed_other": "{{count}} vacinas atrasadas",
-      "vaccineStatusUpToDate": "Vacinas em dia",
+      "vaccineStatusUpToDate": "Vacinas em dia"
+,
       "vaccineStatusUnknown": "Não foi possível verificar as vacinas"
     },
     "form": {
@@ -264,6 +267,10 @@
       "allergiesLabel": "Alergias",
       "allergiesPlaceholder": "Digite e pressione Enter",
       "allergiesRemoveAria": "Remover {{value}}",
+      "healthPlanNameLabel": "Plano de Saúde",
+      "healthPlanNamePlaceholder": "Ex: Unimed",
+      "healthPlanNumberLabel": "Número da Carteirinha",
+      "healthPlanNumberPlaceholder": "Como está impresso no cartão",
       "avatarLabel": "Foto do Bebê (Opcional)",
       "avatarUrlPlaceholder": "Cole uma URL ou envie uma foto",
       "avatarUploadAria": "Enviar foto",
