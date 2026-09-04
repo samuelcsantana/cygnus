@@ -1,22 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import type { Baby } from '@/features/babies/api/babies.schemas'
+import { buildBaby } from '@/test/fixtures/baby'
 import { renderWithProviders, screen } from '@/test/test-utils'
 
 import { FamilyStrip } from './FamilyStrip'
 
-const baby: Baby = {
-  id: '00000000-0000-0000-0000-000000000001',
-  userId: '00000000-0000-0000-0000-0000000000ff',
-  name: 'Ana',
-  birthDate: '2026-06-01',
-  gender: 'FEMALE',
-  bloodType: null,
-  allergies: [],
-  avatarUrl: null,
-  avatarColor: null,
-  createdAt: '2026-06-01T00:00:00.000Z',
-}
+const baby = buildBaby({ name: 'Ana', birthDate: '2026-06-01' })
 
 const UP_TO_DATE = 'Vacinas em dia'
 

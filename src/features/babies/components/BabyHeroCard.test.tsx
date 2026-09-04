@@ -1,22 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
 import type { Baby } from '@/features/babies/api/babies.schemas'
+import { buildBaby } from '@/test/fixtures/baby'
 import { renderWithProviders, screen } from '@/test/test-utils'
 
 import { BabyHeroCard } from './BabyHeroCard'
 
-const baby: Baby = {
-  id: '00000000-0000-0000-0000-000000000001',
-  userId: '00000000-0000-0000-0000-0000000000ff',
-  name: 'Ana',
-  birthDate: '2026-06-01',
-  gender: 'FEMALE',
-  bloodType: null,
-  allergies: [],
-  avatarUrl: null,
-  avatarColor: null,
-  createdAt: '2026-06-01T00:00:00.000Z',
-}
+const baby = buildBaby({ name: 'Ana', birthDate: '2026-06-01' })
 
 const UP_TO_DATE = 'Vacinas em dia'
 
@@ -118,5 +108,37 @@ describe('BabyHeroCard: os dados de saúde que só existiam no formulário', () 
     render({ bloodType: null })
 
     expect(screen.queryByText(/^Tipo /)).not.toBeInTheDocument()
+  })
+
+  /**
+   * O plano de saúde é a exceção à regra da alergia, e de propósito: sem dado,
+   * a linha some em vez de afirmar o vazio. Silêncio sobre alergia seria lido
+   * como "não tem"; silêncio sobre plano não afirma nada, e o cartão é curto
+   * de propósito porque se repete uma vez por filho.
+   */
+  it('mostra plano e carteirinha quando existem, e some quando não', () => {
+    const { unmount } = render({ healthPlanName: 'Unimed', healthPlanNumber: '0123 4567 8901' })
+
+    expect(screen.getByText('Plano Unimed')).toBeInTheDocument()
+    expect(screen.getByText('0123 4567 8901')).toBeInTheDocument()
+    expect(screen.getByText('Carteirinha')).toHaveClass('sr-only')
+
+    unmount()
+    render({ healthPlanName: null, healthPlanNumber: null })
+
+    expect(screen.queryByText(/^Plano /)).not.toBeInTheDocument()
+    expect(screen.queryByText('Carteirinha')).not.toBeInTheDocument()
+  })
+
+  /**
+   * Só o número, sem o nome do plano: aí o rótulo precisa ficar **visível**,
+   * porque um número solto sob um ícone não se explica para quem vê. Com o nome
+   * na frente o contexto basta e o rótulo recua para o leitor de tela — este
+   * teste é o que trava a regra nos dois sentidos.
+   */
+  it('rotula a carteirinha em texto visível quando não há nome de plano', () => {
+    render({ healthPlanName: null, healthPlanNumber: '0123 4567 8901' })
+
+    expect(screen.getByText('Carteirinha')).not.toHaveClass('sr-only')
   })
 })

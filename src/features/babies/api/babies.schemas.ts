@@ -19,6 +19,8 @@ export const babySchema = z.object({
   gender: genderSchema,
   bloodType: bloodTypeSchema.nullable(),
   allergies: z.array(z.string()),
+  healthPlanName: z.string().nullable(),
+  healthPlanNumber: z.string().nullable(),
   avatarUrl: z.string().nullable(),
   avatarColor: z.string().nullable(),
   createdAt: z.string(),
@@ -38,6 +40,11 @@ export const babyFormSchema = z.object({
   gender: genderSchema,
   bloodType: bloodTypeSchema.optional(),
   allergies: z.array(z.string().min(1)).optional(),
+  // Free text, both of them: a plan's name is whatever is printed on the card, and the member
+  // number carries letters, dashes and leading zeros depending on the operator. Anything narrower
+  // would reject valid cards, which is the one thing this field cannot afford to do.
+  healthPlanName: z.string().optional(),
+  healthPlanNumber: z.string().optional(),
   // A native <input> always yields "" (never undefined) when left blank.
   avatarUrl: z.union([z.string().url(), z.literal('')]).optional(),
   avatarColor: z.union([z.string().regex(avatarColorHexRegex), z.literal('')]).optional(),

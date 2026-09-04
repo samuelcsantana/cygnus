@@ -4,23 +4,12 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
 import { server } from '@/test/msw/server'
+import { buildBaby } from '@/test/fixtures/baby'
 import { renderWithProviders, screen, waitFor, within } from '@/test/test-utils'
 
-import type { Baby } from '../api/babies.schemas'
 import { EditBabyDialog } from './EditBabyDialog'
 
-const sampleBaby: Baby = {
-  id: '11111111-1111-4111-8111-111111111111',
-  userId: '22222222-2222-4222-8222-222222222222',
-  name: 'Alice',
-  birthDate: '2024-03-10',
-  gender: 'FEMALE',
-  bloodType: null,
-  allergies: [],
-  avatarUrl: null,
-  avatarColor: null,
-  createdAt: '2024-03-10T00:00:00.000Z',
-}
+const sampleBaby = buildBaby({ name: 'Alice', birthDate: '2024-03-10' })
 
 describe('EditBabyDialog delete flow', () => {
   it('does not delete the baby on the first click — asks for confirmation first', async () => {

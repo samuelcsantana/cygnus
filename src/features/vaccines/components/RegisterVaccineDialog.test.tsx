@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
 import { server } from '@/test/msw/server'
+import { buildBaby } from '@/test/fixtures/baby'
 import { renderWithProviders, screen, waitFor } from '@/test/test-utils'
 
 import type { VaccineItem } from '../api/vaccines.schemas'
@@ -29,18 +30,7 @@ const pendingItem: VaccineItem = {
 const sampleBabyId = '22222222-2222-4222-8222-222222222222'
 const otherBabyId = '55555555-5555-4555-8555-555555555555'
 
-const baby = {
-  id: sampleBabyId,
-  userId: '99999999-9999-4999-8999-999999999999',
-  name: 'Baby One',
-  birthDate: '2024-01-01',
-  gender: 'FEMALE',
-  bloodType: null,
-  allergies: [],
-  avatarUrl: null,
-  avatarColor: null,
-  createdAt: '2024-01-01T00:00:00.000Z',
-}
+const baby = buildBaby({ id: sampleBabyId, name: 'Baby One' })
 
 const otherBaby = { ...baby, id: otherBabyId, name: 'Baby Two' }
 

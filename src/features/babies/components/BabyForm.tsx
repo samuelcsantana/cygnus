@@ -30,7 +30,14 @@ export function BabyForm({ defaultValues, onSubmit, submitLabel, onCancel, showC
     formState: { errors, isSubmitting },
   } = useForm<BabyFormInput>({
     resolver: zodResolver(babyFormSchema),
-    defaultValues: { allergies: [], avatarUrl: '', avatarColor: '', ...defaultValues },
+    defaultValues: {
+      allergies: [],
+      healthPlanName: '',
+      healthPlanNumber: '',
+      avatarUrl: '',
+      avatarColor: '',
+      ...defaultValues,
+    },
   })
 
   const handleFormSubmit = handleSubmit(async (values) => {
@@ -47,7 +54,7 @@ export function BabyForm({ defaultValues, onSubmit, submitLabel, onCancel, showC
       <div className="grid grid-cols-1 gap-x-10 gap-y-6 lg:grid-cols-2">
         <BabyProfileFields register={register} control={control} errors={errors} />
         <div className="space-y-6">
-          <BabyHealthFields control={control} />
+          <BabyHealthFields register={register} control={control} />
           {dangerZone}
         </div>
       </div>

@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
 import { server } from '@/test/msw/server'
+import { buildBaby } from '@/test/fixtures/baby'
 import { renderWithProviders, screen, waitFor } from '@/test/test-utils'
 
 import type { Milestone } from '../api/milestones.schemas'
@@ -11,18 +12,7 @@ import { EditMilestoneDialog } from './EditMilestoneDialog'
 
 const babyId = '22222222-2222-4222-8222-222222222222'
 
-const sampleBaby = {
-  id: babyId,
-  userId: '99999999-9999-4999-8999-999999999999',
-  name: 'Baby One',
-  birthDate: '2025-06-01',
-  gender: 'FEMALE' as const,
-  bloodType: null,
-  allergies: [],
-  avatarUrl: null,
-  avatarColor: null,
-  createdAt: '2025-01-01T00:00:00.000Z',
-}
+const sampleBaby = buildBaby({ id: babyId, name: 'Baby One', birthDate: '2025-06-01' })
 
 const sampleMilestone: Milestone = {
   id: '11111111-1111-4111-8111-111111111111',

@@ -17,10 +17,19 @@ export async function fetchBabies(): Promise<Baby[]> {
   return babyListSchema.parse(response)
 }
 
+// A blank text input yields `''`, and a parent who typed only spaces meant the same thing — the
+// API takes `min(1)`, so both have to become "absent" rather than reach it as a value.
+function optionalText(value: string | undefined): string | undefined {
+  const trimmed = value?.trim()
+  return trimmed ? trimmed : undefined
+}
+
 export async function createBaby(input: BabyFormInput): Promise<Baby> {
   const parsed = babyFormSchema.parse(input)
   const body = {
     ...parsed,
+    healthPlanName: optionalText(parsed.healthPlanName),
+    healthPlanNumber: optionalText(parsed.healthPlanNumber),
     allergies: parsed.allergies && parsed.allergies.length > 0 ? parsed.allergies : undefined,
     avatarUrl: parsed.avatarUrl ? parsed.avatarUrl : undefined,
     avatarColor: parsed.avatarColor ? parsed.avatarColor : undefined,
@@ -43,6 +52,8 @@ export async function updateBaby(babyId: string, input: BabyFormInput): Promise<
     gender: parsed.gender,
     bloodType: parsed.bloodType ?? null,
     allergies: parsed.allergies ?? [],
+    healthPlanName: optionalText(parsed.healthPlanName) ?? null,
+    healthPlanNumber: optionalText(parsed.healthPlanNumber) ?? null,
     avatarUrl: parsed.avatarUrl ? parsed.avatarUrl : null,
     avatarColor: parsed.avatarColor ? parsed.avatarColor : null,
   }
