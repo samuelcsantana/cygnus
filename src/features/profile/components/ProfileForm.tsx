@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -23,6 +23,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
@@ -30,6 +31,17 @@ export function ProfileForm({ user }: ProfileFormProps) {
     resolver: zodResolver(buildProfileFormSchema(user.email)),
     defaultValues: { name: user.name, email: user.email, currentPassword: '' },
   })
+
+  /**
+   * A senha atual só existe na tela quando o e-mail de fato mudou.
+   *
+   * Ela nunca foi obrigatória para salvar o nome — o backend só a exige quando o endereço muda, e o
+   * schema espelha isso. Mostrá-la sempre pedia a senha para editar o nome, o que é ao mesmo tempo
+   * um pedido desnecessário e um treino ruim: campo de senha que aparece sem motivo é como as
+   * pessoas aprendem a digitar senha sem perguntar por quê.
+   */
+  const email = useWatch({ control, name: 'email' })
+  const emailChanged = (email ?? '') !== user.email
 
   const onSubmit = handleSubmit(async (values) => {
     const emailChanged = values.email !== user.email
@@ -97,27 +109,31 @@ export function ProfileForm({ user }: ProfileFormProps) {
         )}
       </div>
 
-      <div>
-        <Label htmlFor="profile-current-password">{t('profile.form.currentPasswordLabel')}</Label>
-        <Input
-          id="profile-current-password"
-          type="password"
-          autoComplete="current-password"
-          aria-invalid={!!errors.currentPassword}
-          aria-describedby={currentPasswordErrorKey ? 'profile-current-password-error' : 'profile-current-password-hint'}
-          className="mt-2"
-          {...register('currentPassword')}
-        />
-        {currentPasswordErrorKey ? (
-          <p id="profile-current-password-error" className="text-destructive mt-1 text-sm">
-            {t(currentPasswordErrorKey)}
-          </p>
-        ) : (
-          <p id="profile-current-password-hint" className="text-ink-muted mt-1 text-sm">
-            {t('profile.form.currentPasswordHint')}
-          </p>
-        )}
-      </div>
+      {emailChanged && (
+        <div>
+          <Label htmlFor="profile-current-password">{t('profile.form.currentPasswordLabel')}</Label>
+          <Input
+            id="profile-current-password"
+            type="password"
+            autoComplete="current-password"
+            aria-invalid={!!errors.currentPassword}
+            aria-describedby={
+              currentPasswordErrorKey ? 'profile-current-password-error' : 'profile-current-password-hint'
+            }
+            className="mt-2"
+            {...register('currentPassword')}
+          />
+          {currentPasswordErrorKey ? (
+            <p id="profile-current-password-error" className="text-destructive mt-1 text-sm">
+              {t(currentPasswordErrorKey)}
+            </p>
+          ) : (
+            <p id="profile-current-password-hint" className="text-ink-muted mt-1 text-sm">
+              {t('profile.form.currentPasswordHint')}
+            </p>
+          )}
+        </div>
+      )}
 
       {submitErrorMessage && (
         <p role="alert" className="text-destructive text-sm">

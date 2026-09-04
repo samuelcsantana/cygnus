@@ -8,7 +8,23 @@ import { renderWithProviders, screen, waitFor } from '@/test/test-utils'
 
 import { ChangePasswordForm } from './ChangePasswordForm'
 
+async function open(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole('button', { name: 'Trocar senha' }))
+}
+
 describe('ChangePasswordForm', () => {
+  /**
+   * O estado padrão é o botão, não os campos. Aberta, esta página mostrava quatro campos de senha
+   * de uma vez para quem tinha entrado só para trocar o idioma.
+   */
+  it('não mostra campo de senha nenhum até alguém pedir', () => {
+    renderWithProviders(<ChangePasswordForm />)
+
+    expect(screen.getByRole('button', { name: 'Trocar senha' })).toBeInTheDocument()
+    expect(screen.queryByLabelText('Senha atual')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Nova senha')).not.toBeInTheDocument()
+  })
+
   it('rejects mismatched passwords without calling the API', async () => {
     let callCount = 0
     server.use(
@@ -20,6 +36,7 @@ describe('ChangePasswordForm', () => {
 
     const user = userEvent.setup()
     renderWithProviders(<ChangePasswordForm />)
+    await open(user)
 
     await user.type(screen.getByLabelText('Senha atual'), 'current-Password1')
     await user.type(screen.getByLabelText('Nova senha'), 'new-Password1')
@@ -37,6 +54,7 @@ describe('ChangePasswordForm', () => {
 
     const user = userEvent.setup()
     renderWithProviders(<ChangePasswordForm />)
+    await open(user)
 
     await user.type(screen.getByLabelText('Senha atual'), 'wrong-Password1')
     await user.type(screen.getByLabelText('Nova senha'), 'new-Password1')
@@ -48,7 +66,7 @@ describe('ChangePasswordForm', () => {
     })
   })
 
-  it('clears the fields after a successful password change', async () => {
+  it('fecha e limpa os campos depois de trocar a senha', async () => {
     server.use(
       http.patch(`${config.apiBaseUrl}/users/me`, () =>
         HttpResponse.json({
@@ -62,15 +80,20 @@ describe('ChangePasswordForm', () => {
 
     const user = userEvent.setup()
     renderWithProviders(<ChangePasswordForm />)
+    await open(user)
 
-    const currentPasswordInput = screen.getByLabelText('Senha atual')
-    await user.type(currentPasswordInput, 'current-Password1')
+    await user.type(screen.getByLabelText('Senha atual'), 'current-Password1')
     await user.type(screen.getByLabelText('Nova senha'), 'new-Password1')
     await user.type(screen.getByLabelText('Confirmar nova senha'), 'new-Password1')
     await user.click(screen.getByRole('button', { name: 'Atualizar Senha' }))
 
+    // Volta ao botão: a tarefa acabou, e campos abertos e vazios sugeririam que não.
     await waitFor(() => {
-      expect(currentPasswordInput).toHaveValue('')
+      expect(screen.getByRole('button', { name: 'Trocar senha' })).toBeInTheDocument()
     })
+
+    // E reabrir não traz de volta o que foi digitado.
+    await open(user)
+    expect(screen.getByLabelText('Senha atual')).toHaveValue('')
   })
 })
