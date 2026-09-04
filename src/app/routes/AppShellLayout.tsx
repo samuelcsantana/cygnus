@@ -11,6 +11,7 @@ import { DashboardIcon } from '@/shared/icons/dashboard-icon'
 import { LogoIcon } from '@/shared/icons/logo-icon'
 import { LogoutIcon } from '@/shared/icons/logout-icon'
 import { PlusIcon } from '@/shared/icons/plus-icon'
+import { HeartIcon } from '@/shared/icons/heart-icon'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
@@ -40,6 +41,7 @@ export function AppShellLayout() {
     { to: '/dashboard', label: t('nav.dashboard'), icon: <DashboardIcon className="h-5 w-5" /> },
     { to: '/vaccines', label: t('nav.vaccines'), icon: <SyringeIcon className="h-5 w-5" /> },
     { to: '/appointments', label: t('nav.appointments'), icon: <StethoscopeIcon className="h-5 w-5" /> },
+    { to: '/medications', label: t('nav.medications'), icon: <HeartIcon className="h-5 w-5" /> },
     { to: '/milestones', label: t('nav.milestones'), icon: <SparkleIcon className="h-5 w-5" /> },
     {
       to: '/notifications',

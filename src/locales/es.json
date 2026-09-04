@@ -42,6 +42,7 @@
     "dashboard": "Inicio",
     "vaccines": "Vacunas",
     "appointments": "Consultas",
+    "medications": "Medicinas",
     "milestones": "Hitos",
     "notifications": "Notificaciones",
     "logoutError": "No se pudo cerrar la sesión. Sigues conectado; inténtalo de nuevo.",
@@ -585,6 +586,69 @@
     },
     "search": {
       "label": "Buscar consulta"
+    }
+  },
+  "medications": {
+    "title": "Medicamentos",
+    "action": "Registrar Medicamento",
+    "summary_one": "{{count}} medicamento registrado",
+    "summary_other": "{{count}} medicamentos registrados",
+    "summaryUnavailable": "Cargando los registros...",
+    "genericError": "No se pudieron cargar los medicamentos.",
+    "editAction": "Editar",
+    "endAction": "Finalizar",
+    "endSuccessToast": "Medicamento finalizado hoy.",
+    "deleteAction": "Eliminar registro",
+    "deleteConfirmTitle": "¿Eliminar este registro?",
+    "deleteConfirmDescription": "El registro de {{name}} será eliminado. Esta acción es permanente.",
+    "deleteConfirmDismiss": "Mantener",
+    "deleteConfirmAction": "Eliminar",
+    "deleteSuccessToast": "Registro eliminado.",
+    "notice": {
+      "title": "Esto es un registro, no una recomendación",
+      "body": "Lo que está aquí es lo que un profesional recetó y usted anotó. La app no recomienda medicamentos, no recuerda la dosis y no sabe si el niño la tomó. Ante cualquier duda, hable con quien lo recetó."
+    },
+    "status": {
+      "open": "Sin fin registrado",
+      "ended": "Finalizado"
+    },
+    "empty": {
+      "title": "Ningún medicamento registrado",
+      "description": "Anote lo que fue recetado — nombre, dosis, período y quién lo recetó — para tenerlo a mano en la próxima consulta.",
+      "cta": "Registrar el primero"
+    },
+    "dashboard": {
+      "empty": "Nada registrado todavía.",
+      "emptyCta": "Registrar un medicamento"
+    },
+    "wizard": {
+      "continue": "Continuar",
+      "back": "Volver"
+    },
+    "form": {
+      "createTitle": "Registrar Medicamento",
+      "createSubtitle": "Anote lo que fue recetado.",
+      "editTitle": "Editar Medicamento",
+      "submit": "Guardar Registro",
+      "updateSubmit": "Guardar Cambios",
+      "successToast": "¡Medicamento registrado!",
+      "updateSuccessToast": "¡Registro actualizado!",
+      "genericError": "No se pudo guardar. Inténtalo de nuevo.",
+      "nameLabel": "Medicamento",
+      "namePlaceholder": "Ej: Vitamina D",
+      "dosageLabel": "Dosis (Opcional)",
+      "dosagePlaceholder": "Ej: 5 gotas",
+      "frequencyLabel": "Frecuencia (Opcional)",
+      "frequencyPlaceholder": "Ej: 1 vez al día",
+      "startedOnLabel": "Inicio",
+      "endedOnLabel": "Fin (Opcional)",
+      "reasonLabel": "Motivo (Opcional)",
+      "reasonPlaceholder": "Ej: Suplementación",
+      "prescriberLabel": "Quién lo recetó (Opcional)",
+      "prescriberPlaceholder": "Ej: Dra. Fernanda Lima",
+      "notesLabel": "Observaciones (Opcional)",
+      "startedOnFuture": "La fecha de inicio no puede estar en el futuro.",
+      "endedOnBeforeStart": "El fin no puede ser anterior al inicio."
     }
   },
   "milestones": {

@@ -42,6 +42,7 @@
     "dashboard": "Início",
     "vaccines": "Vacinas",
     "appointments": "Consultas",
+    "medications": "Remédios",
     "milestones": "Marcos",
     "notifications": "Notificações",
     "logoutError": "Não foi possível sair da conta. Você continua conectado — tente novamente.",
@@ -588,6 +589,69 @@
     },
     "search": {
       "label": "Buscar consulta"
+    }
+  },
+  "medications": {
+    "title": "Medicamentos",
+    "action": "Registrar Medicamento",
+    "summary_one": "{{count}} medicamento registrado",
+    "summary_other": "{{count}} medicamentos registrados",
+    "summaryUnavailable": "Carregando os registros...",
+    "genericError": "Não foi possível carregar os medicamentos.",
+    "editAction": "Editar",
+    "endAction": "Encerrar",
+    "endSuccessToast": "Medicamento encerrado hoje.",
+    "deleteAction": "Excluir registro",
+    "deleteConfirmTitle": "Excluir este registro?",
+    "deleteConfirmDescription": "O registro de {{name}} será apagado. Esta ação é permanente.",
+    "deleteConfirmDismiss": "Manter",
+    "deleteConfirmAction": "Excluir",
+    "deleteSuccessToast": "Registro excluído.",
+    "notice": {
+      "title": "Isto é um registro, não uma orientação",
+      "body": "O que está aqui é o que foi prescrito por um profissional e anotado por você. O app não recomenda medicamento, não lembra da dose e não sabe se a criança tomou. Em caso de dúvida, fale com quem prescreveu."
+    },
+    "status": {
+      "open": "Sem fim registrado",
+      "ended": "Encerrado"
+    },
+    "empty": {
+      "title": "Nenhum medicamento registrado",
+      "description": "Anote o que foi prescrito — nome, dose, período e quem receitou — para ter a informação à mão na próxima consulta.",
+      "cta": "Registrar o primeiro"
+    },
+    "dashboard": {
+      "empty": "Nada registrado ainda.",
+      "emptyCta": "Registrar um medicamento"
+    },
+    "wizard": {
+      "continue": "Continuar",
+      "back": "Voltar"
+    },
+    "form": {
+      "createTitle": "Registrar Medicamento",
+      "createSubtitle": "Anote o que foi prescrito.",
+      "editTitle": "Editar Medicamento",
+      "submit": "Salvar Registro",
+      "updateSubmit": "Salvar Alterações",
+      "successToast": "Medicamento registrado!",
+      "updateSuccessToast": "Registro atualizado!",
+      "genericError": "Não foi possível salvar. Tente de novo.",
+      "nameLabel": "Medicamento",
+      "namePlaceholder": "Ex: Vitamina D",
+      "dosageLabel": "Dose (Opcional)",
+      "dosagePlaceholder": "Ex: 5 gotas",
+      "frequencyLabel": "Frequência (Opcional)",
+      "frequencyPlaceholder": "Ex: 1x ao dia",
+      "startedOnLabel": "Início",
+      "endedOnLabel": "Fim (Opcional)",
+      "reasonLabel": "Motivo (Opcional)",
+      "reasonPlaceholder": "Ex: Suplementação",
+      "prescriberLabel": "Quem receitou (Opcional)",
+      "prescriberPlaceholder": "Ex: Dra. Fernanda Lima",
+      "notesLabel": "Observações (Opcional)",
+      "startedOnFuture": "A data de início não pode estar no futuro.",
+      "endedOnBeforeStart": "O fim não pode ser antes do início."
     }
   },
   "milestones": {

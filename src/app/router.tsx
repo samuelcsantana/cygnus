@@ -106,6 +106,16 @@ export const router = createBrowserRouter([
                   })),
               },
               {
+                // Fora da barra de navegação, alcançada pelo cartão do painel — como `/profile`,
+                // que é a mesma escolha pelo mesmo motivo: a barra tem cinco itens e acrescentar
+                // um sexto remodela a navegação, que é decisão de produto e não de implementação.
+                path: 'medications',
+                lazy: () =>
+                  import('@/features/medications/routes/MedicationsRoute').then((m) => ({
+                    Component: m.MedicationsRoute,
+                  })),
+              },
+              {
                 path: 'milestones',
                 lazy: () =>
                   import('@/features/milestones/routes/MilestonesRoute').then((m) => ({

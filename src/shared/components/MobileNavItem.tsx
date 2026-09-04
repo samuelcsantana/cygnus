@@ -12,13 +12,20 @@ interface MobileNavItemProps {
 }
 
 export function MobileNavItem({ to, icon, label, disabled, badge }: MobileNavItemProps) {
-  const baseClass = 'flex w-16 flex-col items-center justify-center rounded-2xl p-2 transition-all duration-300'
+  // `flex-1 min-w-0` com teto de 64px, e não largura fixa de 64px.
+  //
+  // Com seis itens a barra passou a estourar a 320px: os alvos somavam 342px mais o padding, e o
+  // último terminava em 350px — fora da tela, medido. Largura fixa não deixa o navegador dividir o
+  // que existe; `flex-1` divide, e `min-w-0` é o que permite o rótulo truncar em vez de impor uma
+  // largura mínima pelo texto. A 320px cada alvo fica com ~50px, bem acima do piso de 44px.
+  const baseClass =
+    'flex max-w-16 min-w-0 flex-1 flex-col items-center justify-center rounded-2xl px-1 py-2 transition-all duration-300'
 
   if (disabled) {
     return (
       <span className={cn(baseClass, 'cursor-not-allowed text-ink-faint')} aria-disabled="true">
         <span className="mb-1 h-6 w-6">{icon}</span>
-        <span className="text-[10px] font-bold">{label}</span>
+        <span className="w-full truncate text-center text-[10px] font-bold">{label}</span>
       </span>
     )
   }
@@ -38,7 +45,7 @@ export function MobileNavItem({ to, icon, label, disabled, badge }: MobileNavIte
           </span>
         )}
       </span>
-      <span className="text-[10px] font-bold">{label}</span>
+      <span className="w-full truncate text-center text-[10px] font-bold">{label}</span>
     </NavLink>
   )
 }

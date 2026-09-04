@@ -42,6 +42,7 @@
     "dashboard": "Home",
     "vaccines": "Vaccines",
     "appointments": "Appointments",
+    "medications": "Meds",
     "milestones": "Milestones",
     "notifications": "Notifications",
     "logoutError": "Could not sign you out. You are still signed in — please try again.",
@@ -585,6 +586,69 @@
     },
     "search": {
       "label": "Search appointment"
+    }
+  },
+  "medications": {
+    "title": "Medications",
+    "action": "Record Medication",
+    "summary_one": "{{count}} medication recorded",
+    "summary_other": "{{count}} medications recorded",
+    "summaryUnavailable": "Loading the records...",
+    "genericError": "Could not load the medications.",
+    "editAction": "Edit",
+    "endAction": "End",
+    "endSuccessToast": "Medication ended today.",
+    "deleteAction": "Delete record",
+    "deleteConfirmTitle": "Delete this record?",
+    "deleteConfirmDescription": "The record for {{name}} will be deleted. This action is permanent.",
+    "deleteConfirmDismiss": "Keep",
+    "deleteConfirmAction": "Delete",
+    "deleteSuccessToast": "Record deleted.",
+    "notice": {
+      "title": "This is a record, not advice",
+      "body": "What is here is what a professional prescribed and you wrote down. The app does not recommend medication, does not remind you of a dose, and does not know whether the child took it. When in doubt, talk to whoever prescribed it."
+    },
+    "status": {
+      "open": "No recorded end",
+      "ended": "Ended"
+    },
+    "empty": {
+      "title": "No medications recorded",
+      "description": "Write down what was prescribed — name, dose, period and who prescribed it — so it is at hand at the next appointment.",
+      "cta": "Record the first one"
+    },
+    "dashboard": {
+      "empty": "Nothing recorded yet.",
+      "emptyCta": "Record a medication"
+    },
+    "wizard": {
+      "continue": "Continue",
+      "back": "Back"
+    },
+    "form": {
+      "createTitle": "Record Medication",
+      "createSubtitle": "Write down what was prescribed.",
+      "editTitle": "Edit Medication",
+      "submit": "Save Record",
+      "updateSubmit": "Save Changes",
+      "successToast": "Medication recorded!",
+      "updateSuccessToast": "Record updated!",
+      "genericError": "Could not save. Please try again.",
+      "nameLabel": "Medication",
+      "namePlaceholder": "E.g. Vitamin D",
+      "dosageLabel": "Dose (Optional)",
+      "dosagePlaceholder": "E.g. 5 drops",
+      "frequencyLabel": "Frequency (Optional)",
+      "frequencyPlaceholder": "E.g. once a day",
+      "startedOnLabel": "Start",
+      "endedOnLabel": "End (Optional)",
+      "reasonLabel": "Reason (Optional)",
+      "reasonPlaceholder": "E.g. Supplementation",
+      "prescriberLabel": "Prescribed by (Optional)",
+      "prescriberPlaceholder": "E.g. Dr. Fernanda Lima",
+      "notesLabel": "Notes (Optional)",
+      "startedOnFuture": "The start date cannot be in the future.",
+      "endedOnBeforeStart": "The end cannot be before the start."
     }
   },
   "milestones": {
