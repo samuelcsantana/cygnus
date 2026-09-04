@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 import { useAllBabiesAppointments } from '@/features/appointments/api/appointments.hooks'
+import { latestMeasuredVisit } from '@/features/appointments/api/appointments.selectors'
 import { AppointmentsOverviewCard } from '@/features/appointments/components/AppointmentsOverviewCard'
 import { useAllBabiesMilestones } from '@/features/milestones/api/milestones.hooks'
 import { MilestonesOverviewCard } from '@/features/milestones/components/MilestonesOverviewCard'
@@ -94,11 +95,16 @@ export function DashboardRoute() {
   // Derivar do agregado marcaria as seis como desconhecidas por causa de uma.
   const familyItems = babyList.map((baby) => {
     const entry = vaccines.perBaby.find((candidate) => candidate.baby.id === baby.id)
+    // As consultas já estão carregadas nesta tela para os cartões abaixo, então a última medida
+    // sai daqui sem uma requisição a mais — que é o que torna barato mostrar peso e altura no
+    // perfil sem duplicar o dado que mora na consulta.
+    const appointmentEntry = appointments.perBaby.find((candidate) => candidate.baby.id === baby.id)
     return {
       baby,
       delayedVaccineCount: delayedItems.filter((item) => item.babyId === baby.id).length,
       // Sem entrada, o padrão é "não sei" — nunca "em dia".
       vaccineStatusKnown: entry ? !entry.isPending && !entry.isError : false,
+      latestMeasuredVisit: latestMeasuredVisit(appointmentEntry?.items ?? []),
     }
   })
 

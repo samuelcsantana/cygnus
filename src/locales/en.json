@@ -6,6 +6,8 @@
     "back": "Back",
     "cancel": "Cancel",
     "saving": "Saving...",
+    "weight": "Weight",
+    "height": "Height",
     "close": "Close",
     "languageSwitcherLabel": "Language",
     "datePicker": {
@@ -152,7 +154,8 @@
       "allergies_other": "Allergies: {{list}}",
       "noAllergiesRecorded": "No allergies recorded",
       "healthPlanName": "{{value}} plan",
-      "healthPlanNumberLabel": "Member number"
+      "healthPlanNumberLabel": "Member number",
+      "measuredOn": "Measured on"
     },
     "picker": {
       "stepLabel": "Child",
@@ -534,6 +537,12 @@
       "timeLabel": "Time",
       "reasonLabel": "Reason (Optional)",
       "reasonPlaceholder": "E.g. Routine check-up",
+      "weightLabel": "Weight (kg)",
+      "weightPlaceholder": "E.g. 15.8",
+      "weightInvalid": "Enter a weight between 0.1 and 150 kg.",
+      "heightLabel": "Height (cm)",
+      "heightPlaceholder": "E.g. 100",
+      "heightInvalid": "Enter a height between 10 and 250 cm.",
       "scheduledAtPast": "The date and time cannot be in the past.",
       "completedAtFuture": "An appointment that already happened cannot have a future date.",
       "intentLabel": "What would you like to do?",

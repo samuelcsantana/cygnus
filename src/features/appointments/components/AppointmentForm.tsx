@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 
 import { appointmentFormSchema, type AppointmentFormInput } from '../api/appointments.schemas'
+import { AppointmentMeasurementFields } from './AppointmentMeasurementFields'
 import { AppointmentProfessionalFields } from './AppointmentProfessionalFields'
 import { AppointmentScheduleFields } from './AppointmentScheduleFields'
 
@@ -25,6 +26,7 @@ export function AppointmentForm({ defaultValues, onSubmit, submitLabel, onCancel
     register,
     control,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<AppointmentFormInput>({
     resolver: zodResolver(appointmentFormSchema),
@@ -46,6 +48,12 @@ export function AppointmentForm({ defaultValues, onSubmit, submitLabel, onCancel
     <form onSubmit={handleFormSubmit} className="space-y-6" noValidate>
       <AppointmentProfessionalFields register={register} control={control} errors={errors} />
       <AppointmentScheduleFields register={register} control={control} errors={errors} />
+
+      {/* Só quando a visita já aconteceu. A API recusa medida em consulta
+          futura, então oferecer o campo ao agendar seria pedir um dado que o
+          servidor devolve como 400 — e a pessoa não teria o que fazer com o
+          erro. Ver `AppointmentMeasurementFields`. */}
+      {watch('status') === 'COMPLETED' && <AppointmentMeasurementFields register={register} errors={errors} />}
 
       {submitError && (
         <p role="alert" className="text-destructive text-sm">

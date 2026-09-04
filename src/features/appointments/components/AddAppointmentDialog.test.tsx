@@ -166,11 +166,37 @@ describe('AddAppointmentDialog', () => {
     const pastDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString().slice(0, 10)
     fireEvent.change(screen.getByLabelText('Data'), { target: { value: pastDate } })
     fireEvent.change(screen.getByLabelText('Horário'), { target: { value: '10:00' } })
+
+    // Os campos de medida só existem depois de a pessoa dizer que a consulta já aconteceu — a API
+    // recusa medida em visita futura, e o formulário não oferece o que o servidor recusa.
+    await user.type(screen.getByLabelText('Peso (kg)'), '15,8')
+    await user.type(screen.getByLabelText('Altura (cm)'), '100')
     await user.click(screen.getByRole('button', { name: 'Salvar Consulta' }))
 
     await waitFor(() => {
       expect(receivedBody.status).toBe('COMPLETED')
     })
+    // Vírgula digitada, gramas e milímetros enviados: a conversão acontece uma vez, na borda.
+    expect(receivedBody.weightGrams).toBe(15800)
+    expect(receivedBody.heightMillimeters).toBe(1000)
+  })
+
+  it('não oferece peso e altura enquanto a consulta é um agendamento', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
+
+    await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
+    await user.click(screen.getByRole('button', { name: 'Continuar' }))
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Data')).toBeInTheDocument()
+    })
+
+    expect(screen.queryByLabelText('Peso (kg)')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('radio', { name: /Registrar consulta que já aconteceu/ }))
+
+    expect(screen.getByLabelText('Peso (kg)')).toBeInTheDocument()
   })
 
   // The mirror of the above, and the reason both are here: if only one passed,

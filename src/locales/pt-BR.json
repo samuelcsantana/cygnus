@@ -6,6 +6,8 @@
     "back": "Voltar",
     "cancel": "Cancelar",
     "saving": "Salvando...",
+    "weight": "Peso",
+    "height": "Altura",
     "close": "Fechar",
     "languageSwitcherLabel": "Idioma",
     "datePicker": {
@@ -153,7 +155,8 @@
       "allergies_other": "Alergias: {{list}}",
       "noAllergiesRecorded": "Nenhuma alergia registrada",
       "healthPlanName": "Plano {{value}}",
-      "healthPlanNumberLabel": "Carteirinha"
+      "healthPlanNumberLabel": "Carteirinha",
+      "measuredOn": "Medido em"
     },
     "picker": {
       "stepLabel": "Criança",
@@ -537,6 +540,12 @@
       "timeLabel": "Horário",
       "reasonLabel": "Motivo (Opcional)",
       "reasonPlaceholder": "Ex: Consulta de rotina",
+      "weightLabel": "Peso (kg)",
+      "weightPlaceholder": "Ex: 15,8",
+      "weightInvalid": "Informe um peso entre 0,1 e 150 kg.",
+      "heightLabel": "Altura (cm)",
+      "heightPlaceholder": "Ex: 100",
+      "heightInvalid": "Informe uma altura entre 10 e 250 cm.",
       "scheduledAtPast": "A data e hora não podem estar no passado.",
       "completedAtFuture": "Uma consulta que já aconteceu não pode ter data futura.",
       "intentLabel": "O que você quer fazer?",

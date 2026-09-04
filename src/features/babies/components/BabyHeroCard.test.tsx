@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
 import type { Baby } from '@/features/babies/api/babies.schemas'
+import type { Appointment } from '@/features/appointments/api/appointments.schemas'
+import { buildAppointment } from '@/test/fixtures/appointment'
 import { buildBaby } from '@/test/fixtures/baby'
 import { renderWithProviders, screen } from '@/test/test-utils'
 
@@ -10,12 +12,16 @@ const baby = buildBaby({ name: 'Ana', birthDate: '2026-06-01' })
 
 const UP_TO_DATE = 'Vacinas em dia'
 
-function render(overrides: Partial<Baby> = {}, state: { delayed?: number; known?: boolean } = {}) {
+function render(
+  overrides: Partial<Baby> = {},
+  state: { delayed?: number; known?: boolean; measured?: Appointment | null } = {},
+) {
   return renderWithProviders(
     <BabyHeroCard
       baby={{ ...baby, ...overrides }}
       delayedVaccineCount={state.delayed ?? 0}
       vaccineStatusKnown={state.known ?? true}
+      latestMeasuredVisit={state.measured ?? null}
       onEdit={() => {}}
     />,
   )
@@ -128,6 +134,38 @@ describe('BabyHeroCard: os dados de saúde que só existiam no formulário', () 
 
     expect(screen.queryByText(/^Plano /)).not.toBeInTheDocument()
     expect(screen.queryByText('Carteirinha')).not.toBeInTheDocument()
+  })
+
+  /**
+   * Peso e altura moram na consulta, e o cartão os traz de volta **com a data**.
+   *
+   * A data é o ponto: foi por não haver data que guardar a medida no perfil foi
+   * descartado. Um peso de março exibido sem quando é lido como o de hoje, que
+   * é exatamente o dado que envelhece calado.
+   */
+  it('mostra a última medida com a data em que foi tomada', () => {
+    render(
+      {},
+      {
+        measured: buildAppointment({
+          status: 'COMPLETED',
+          scheduledAt: '2026-03-12T10:00:00.000Z',
+          weightGrams: 15800,
+          heightMillimeters: 1000,
+        }),
+      },
+    )
+
+    expect(screen.getByText('15,8 kg')).toBeInTheDocument()
+    expect(screen.getByText('100 cm')).toBeInTheDocument()
+    expect(screen.getByText('12/03/2026')).toBeInTheDocument()
+  })
+
+  it('não mostra linha de medida quando nenhuma consulta mediu nada', () => {
+    render({}, { measured: null })
+
+    expect(screen.queryByText(/kg$/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/cm$/)).not.toBeInTheDocument()
   })
 
   /**

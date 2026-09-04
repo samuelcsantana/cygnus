@@ -1,12 +1,14 @@
 import { useTranslation } from 'react-i18next'
 
+import type { Appointment } from '@/features/appointments/api/appointments.schemas'
 import type { Baby } from '@/features/babies/api/babies.schemas'
-import { ageInMonths } from '@/lib/date'
+import { ageInMonths, formatDateDisplay, splitScheduledAt } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { AlertCircleIcon } from '@/shared/icons/alert-circle-icon'
 import { IdCardIcon } from '@/shared/icons/id-card-icon'
 import { PencilIcon } from '@/shared/icons/pencil-icon'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
+import { formatCentimeters, formatKilograms } from '@/shared/utils/measurements'
 
 export interface BabyHeroCardProps {
   baby: Baby
@@ -22,6 +24,15 @@ export interface BabyHeroCardProps {
    * a fazer.
    */
   vaccineStatusKnown: boolean
+  /**
+   * A consulta mais recente que mediu alguma coisa, ou `null`.
+   *
+   * O peso e a altura moram na consulta, não no perfil, e é isto que os traz de volta para cá sem
+   * duplicar o dado: o painel já carrega as consultas de cada criança, então derivar aqui não custa
+   * nem uma requisição. Vem com a data de propósito — número de crescimento sem data é o defeito
+   * que guardar a medida no perfil teria criado: um peso de oito meses atrás lido como o de hoje.
+   */
+  latestMeasuredVisit: Appointment | null
   onEdit: (baby: Baby) => void
 }
 
@@ -51,8 +62,14 @@ export interface BabyHeroCardProps {
  * Pelo mesmo motivo o gradiente para em emerald-700 e não em emerald-600: com
  * a parada clara em 600, **nem branco puro passa** (3.77:1).
  */
-export function BabyHeroCard({ baby, delayedVaccineCount, vaccineStatusKnown, onEdit }: BabyHeroCardProps) {
-  const { t } = useTranslation()
+export function BabyHeroCard({
+  baby,
+  delayedVaccineCount,
+  vaccineStatusKnown,
+  latestMeasuredVisit,
+  onEdit,
+}: BabyHeroCardProps) {
+  const { t, i18n } = useTranslation()
   const avatarAppearance = babyAvatarAppearance(baby.id, baby.avatarColor)
 
   return (
@@ -142,6 +159,42 @@ export function BabyHeroCard({ baby, delayedVaccineCount, vaccineStatusKnown, on
               emerald-50: 5.21:1 sobre emerald-700, a parada mais clara do gradiente. O número vai
               em mono porque é código a ser lido em voz alta ou digitado por um terceiro, e é
               exatamente o caso em que 0/O e 1/l não podem se confundir. */}
+          {/* Mesma regra do plano: sem dado, a linha some. A diferença é a data — ela não é
+              enfeite, é o que impede "15,8 kg" de ser lido como o peso de hoje quando foi o de
+              março. emerald-50: 5.21:1 sobre a parada mais clara do gradiente. */}
+          {latestMeasuredVisit && (
+            <p className="mt-1.5 flex flex-wrap items-center gap-x-2 text-[13px] text-emerald-50">
+              {latestMeasuredVisit.weightGrams !== null && (
+                <span>
+                  <span aria-hidden>⚖️ </span>
+                  <span className="sr-only">{t('common.weight')} </span>
+                  <span className="font-mono">
+                    {formatKilograms(latestMeasuredVisit.weightGrams, i18n.language)}
+                  </span>
+                </span>
+              )}
+              {latestMeasuredVisit.heightMillimeters !== null && (
+                <span>
+                  <span aria-hidden>📏 </span>
+                  <span className="sr-only">{t('common.height')} </span>
+                  <span className="font-mono">
+                    {formatCentimeters(latestMeasuredVisit.heightMillimeters, i18n.language)}
+                  </span>
+                </span>
+              )}
+              <span className="text-[11px]">
+                {/* O ponto separa a data do "100 cm" que vem antes dela — sem ele os dois números
+                    encostam e a data lê como parte da medida. `aria-hidden` porque para quem ouve
+                    o rótulo abaixo já faz a separação. */}
+                <span aria-hidden>· </span>
+                <span className="sr-only">{t('babies.hero.measuredOn')} </span>
+                <span className="font-mono">
+                  {formatDateDisplay(splitScheduledAt(latestMeasuredVisit.scheduledAt).date, i18n.language)}
+                </span>
+              </span>
+            </p>
+          )}
+
           {(baby.healthPlanName || baby.healthPlanNumber) && (
             <p className="mt-1.5 flex items-start gap-1.5 text-[13px] text-emerald-50">
               <IdCardIcon aria-hidden className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />

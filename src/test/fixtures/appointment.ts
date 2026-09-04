@@ -24,6 +24,8 @@ export function buildAppointment(overrides: Partial<Appointment> = {}): Appointm
     reason: null,
     notes: null,
     status: 'SCHEDULED',
+    weightGrams: null,
+    heightMillimeters: null,
     createdAt: '2026-08-01T10:00:00.000Z',
     ...overrides,
   }
