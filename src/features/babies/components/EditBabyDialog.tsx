@@ -58,7 +58,7 @@ export function EditBabyDialog({ baby, onOpenChange }: EditBabyDialogProps) {
               defaultValues={{
                 name: baby.name,
                 birthDate: baby.birthDate,
-                gender: baby.gender,
+                sexAtBirth: baby.sexAtBirth ?? undefined,
                 bloodType: baby.bloodType ?? undefined,
                 allergies: baby.allergies,
                 healthPlanName: baby.healthPlanName ?? '',

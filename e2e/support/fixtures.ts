@@ -43,7 +43,7 @@ export async function registerAndLogin(page: Page, user: TestUser): Promise<void
 export interface TestBaby {
   name: string
   birthDate: string
-  gender: 'Menino' | 'Menina'
+  sexAtBirth: 'Masculino' | 'Feminino'
 }
 
 /**
@@ -70,7 +70,12 @@ export async function openAddBabyDialog(page: Page): Promise<void> {
 export async function addBaby(page: Page, baby: TestBaby): Promise<void> {
   await page.getByLabel('Nome da Criança').fill(baby.name)
   await page.getByLabel('Data de Nascimento').fill(baby.birthDate)
-  await page.getByRole('radio', { name: baby.gender }).click()
+  // Digitar a data abre o calendário, e ele fica sobre os campos de baixo — o clique seguinte era
+  // interceptado pelo popover, não pelo alvo. Passou despercebido enquanto o campo de sexo tinha
+  // duas opções e o alvo caía fora da sobreposição; com três, cai debaixo dela. Fechar o calendário
+  // é o que o usuário faz sem pensar e o que o teste precisava fazer explicitamente.
+  await page.keyboard.press('Escape')
+  await page.getByRole('radio', { name: baby.sexAtBirth }).click()
   await page.getByRole('button', { name: 'Continuar' }).click()
 
   await page.getByRole('button', { name: 'Criar Perfil' }).click()

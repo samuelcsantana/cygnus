@@ -52,7 +52,7 @@ describe('AddBabyDialog', () => {
           buildBaby({
             name: 'Miguel',
             birthDate: '2024-03-10',
-            gender: 'MALE',
+            sexAtBirth: 'MALE',
             avatarUrl: 'data:image/jpeg;base64,MIGUEL',
           }),
           { status: 201 },
@@ -66,7 +66,7 @@ describe('AddBabyDialog', () => {
 
     await user.type(screen.getByLabelText('Nome da Criança'), 'Miguel')
     fireEvent.change(screen.getByLabelText('Data de Nascimento'), { target: { value: '2024-03-10' } })
-    await user.click(screen.getAllByRole('radio', { name: 'Menino' })[0]!)
+    await user.click(screen.getAllByRole('radio', { name: 'Masculino' })[0]!)
 
     // O caminho real da foto é escolher um arquivo — o campo de colar URL não existe mais. O jsdom
     // não implementa `createImageBitmap` nem canvas, que é o que a conversão usa, então os dois são
@@ -126,7 +126,7 @@ describe('AddBabyDialog', () => {
     const tomorrow = new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString().slice(0, 10)
     fireEvent.change(screen.getByLabelText('Data de Nascimento'), { target: { value: tomorrow } })
 
-    await user.click(screen.getAllByRole('radio', { name: 'Menino' })[0]!)
+    await user.click(screen.getAllByRole('radio', { name: 'Masculino' })[0]!)
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
 
     await waitFor(() => {

@@ -29,6 +29,7 @@ export async function createBaby(input: BabyFormInput): Promise<Baby> {
   const body = {
     ...parsed,
     healthPlanName: optionalText(parsed.healthPlanName),
+    sexAtBirth: parsed.sexAtBirth,
     healthPlanNumber: optionalText(parsed.healthPlanNumber),
     allergies: parsed.allergies && parsed.allergies.length > 0 ? parsed.allergies : undefined,
     avatarUrl: parsed.avatarUrl ? parsed.avatarUrl : undefined,
@@ -49,7 +50,9 @@ export async function updateBaby(babyId: string, input: BabyFormInput): Promise<
   const body = {
     name: parsed.name,
     birthDate: parsed.birthDate,
-    gender: parsed.gender,
+    // `null` e não omissão: o formulário sempre mostra a escolha atual, então "prefiro não
+    // informar" é uma resposta explícita, e omitir a chave significaria "não mexi".
+    sexAtBirth: parsed.sexAtBirth ?? null,
     bloodType: parsed.bloodType ?? null,
     allergies: parsed.allergies ?? [],
     healthPlanName: optionalText(parsed.healthPlanName) ?? null,
