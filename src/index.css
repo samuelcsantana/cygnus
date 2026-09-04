@@ -2,7 +2,7 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import '@fontsource-variable/inter';
-@import '@fontsource-variable/nunito';
+@import '@fontsource-variable/fraunces';
 /* Terceira voz tipográfica, e só para dado factual — data, hora, contagem,
    percentual. Ver `--font-mono` no `@theme inline` abaixo para o que isso
    quer dizer e onde vale aplicar.
@@ -12,7 +12,7 @@
    contra 40.404 do `@fontsource-variable/jetbrains-mono` — 2,7×, medido em
    03/09/2026. Uma família variável paga por um eixo de peso que dado factual
    não usa: aqui não há hierarquia de ênfase, há um registro. Comparação de
-   escala: Inter latin custa 48.256 e Nunito 39.128.
+   escala: Inter latin custa 48.256 e Fraunces 36.620.
 
    O `latin-ext` declarado ao lado do `latin` praticamente nunca baixa em
    pt-BR — `ã`, `ç` e `é` estão todos abaixo de U+00FF. */
@@ -122,25 +122,43 @@
 
 @theme inline {
   --font-heading: var(--font-display);
-  /* Os nomes têm espaço, e essa é a correção: o `@fontsource` registra
-     `'Nunito Variable'` e `'Inter Variable'`, e estas duas linhas pediam
-     `'NunitoVariable'` e `'InterVariable'`. Nome de família CSS ignora
+  /* **Os nomes têm espaço, e isso já foi um bug.** O `@fontsource` registra
+     `'Inter Variable'` (e registrava `'Nunito Variable'`); estas linhas pediam
+     `'InterVariable'` e `'NunitoVariable'`. Nome de família CSS ignora
      maiúsculas, **não ignora espaço** — então nenhuma das duas casava, as duas
      caíam calada e ordeiramente no `system-ui` seguinte, e os dois arquivos de
-     fonte (48.256 + 39.128 bytes) nunca chegavam a ser baixados.
+     fonte nunca chegavam a ser baixados. O app inteiro renderizou em system-ui
+     até 03/09/2026.
 
      Falha desse tipo não tem sintoma: a página renderiza inteira, bem, numa
      fonte parecida. Foi medida, não notada — comparando a largura de um
      elemento real com o mesmo texto forçado a `system-ui`, no build do
      container: `.font-display` dava 119.19 nos dois, e o corpo 157.03 nos dois.
-     A mono, declarada corretamente como `'DM Mono'`, dava 54.61 contra 47.48 e
-     era a única das três de fato aplicada.
 
      Se mexer nestes nomes, confira contra o `font-family` que o pacote declara
      no `index.css` dele, dentro de `node_modules`. (Sem escrever o caminho com
      curinga aqui: a sequência que ele formaria fecha este comentário no meio e
      derruba o build do Tailwind — já derrubou.) */
-  --font-display: 'Nunito Variable', system-ui, 'Segoe UI', Roboto, sans-serif;
+  /* Serifa no display, sans no corpo, mono no dado: três vozes com papéis
+     separados. A Fraunces entrou no lugar da Nunito vinda da referência
+     `LoginAndDashboardDesign`, e é o que dá o tom de caderno de família em vez
+     de painel de SaaS.
+
+     **Custou -2.508 bytes**, não custou nada: o `index.css` do pacote serve o
+     subset de um eixo só (peso), 36.620 bytes de woff2 latin, contra os 39.128
+     da Nunito que ela substituiu. Os outros cortes da Fraunces são bem mais
+     caros — 67.304 com o eixo óptico, 121.016 com todos — e nenhum deles é
+     importado aqui.
+
+     **Sem itálico**, e é uma ausência deliberada: a referência escreve metade
+     das manchetes em itálico, e o corte itálico custaria outros 45.656 bytes,
+     mais que dobrando a família. Nenhuma tela deste app usa `italic` hoje. Se
+     alguma passar a usar, o navegador vai inclinar o desenho por conta própria
+     — falso itálico, que numa serifa fica pior que numa sans, porque a serifa
+     de verdade tem outro desenho e não é a mesma letra tombada. Nesse caso,
+     importar `@fontsource-variable/fraunces/wght-italic.css` e escrever o custo
+     aqui antes. */
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
   --font-sans: 'Inter Variable', system-ui, 'Segoe UI', Roboto, sans-serif;
   /* Sobrescreve o `--font-mono` que o Tailwind já define, então `font-mono`
      passa a valer isto sem utility nova.

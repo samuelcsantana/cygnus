@@ -8,9 +8,9 @@ Every value below is wired into the `@theme` block in `src/index.css`, which is 
 `bg-teal-500`, `text-ink-muted` and `rounded-2xl` resolve. This page renders the committed values
 so they can be seen rather than read as hex codes.
 
-The brand language is "soft-modern": teal primary, warm neutral surfaces, generous radii, Nunito for
-headings. It deliberately avoids the cold clinical look of most health apps — a parent opens this at
-3am, not a clinician at a workstation.
+The brand language is "soft-modern": teal primary, warm neutral surfaces, generous radii, and a serif
+for headings. It deliberately avoids the cold clinical look of most health apps — a parent opens this
+at 3am, not a clinician at a workstation.
 
 ## Brand palette
 
@@ -151,17 +151,25 @@ not pinned in `@theme`, so it resolves to stock Tailwind. Its 700/800/900 steps 
 
 ## Typography
 
-Two self-hosted variable fonts, loaded through `@fontsource-variable` rather than a CDN — no
-third-party request on first paint, and no layout shift when it fails.
+Three self-hosted faces, loaded through `@fontsource` rather than a CDN — no third-party request on
+first paint, and no layout shift when it fails. Each one has a job: a serif for headings, a sans for
+prose, a monospace for factual data.
+
+> **Check the family name against the package before changing it.** Until 03/09/2026 the tokens asked
+> for `'NunitoVariable'` and `'InterVariable'` while `@fontsource` registers `'Nunito Variable'` and
+> `'Inter Variable'`. A CSS family name ignores case but not whitespace, so both fell through to
+> `system-ui` and the font files were never downloaded — for months, with no visible symptom.
 
 <Typeset
-  fontFamily="'Nunito Variable', sans-serif"
+  fontFamily="'Fraunces Variable', Georgia, serif"
   fontSizes={[32, 24, 20, 18]}
   fontWeight={800}
   sampleText="Primeiros passos da Helena"
 />
 
-**Headings** — Nunito Variable, weights 700–900, exposed as `font-display` / `--font-heading`.
+**Headings** — Fraunces Variable, weights 700–900, exposed as `font-display` / `--font-heading`. The
+weight axis only: the optical-size and italic cuts are not imported, so avoid `italic` on a heading —
+the browser would slant the roman instead, and a slanted serif is not the same letter.
 
 <Typeset
   fontFamily="'Inter Variable', sans-serif"
@@ -170,6 +178,17 @@ third-party request on first paint, and no layout shift when it fails.
 />
 
 **Body** — Inter Variable, exposed as `font-sans` and applied to `<body>`.
+
+<Typeset
+  fontFamily="'DM Mono', ui-monospace, monospace"
+  fontSizes={[18, 16, 13, 11]}
+  sampleText="12/03/2024 · 17:33 · 40 de 92"
+/>
+
+**Factual data** — DM Mono, weight 400 only, exposed as `font-mono`. Dates, times, counts,
+percentages: anything that is a record rather than prose. It stops at the sentence boundary — a
+number inside a phrase keeps the body face. Since only one weight ships, never pair it with a weight
+class: 700 gets a synthesised bold that smears, and 500 silently resolves back to 400.
 
 ## Radius
 
