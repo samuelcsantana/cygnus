@@ -26,13 +26,16 @@ export function AppointmentForm({ defaultValues, onSubmit, submitLabel, onCancel
     register,
     control,
     handleSubmit,
+    setValue,
     watch,
     formState: { errors, isSubmitting },
   } = useForm<AppointmentFormInput>({
     resolver: zodResolver(appointmentFormSchema),
     // Booking is the default act; recording the past is the deliberate one. A
     // caller can still override it — the reschedule flow passes its own values.
-    defaultValues: { status: 'SCHEDULED', ...defaultValues },
+    // `doctorName: ''` pelo mesmo motivo do assistente: campo controlado, estado vazio é string
+    // vazia, e `undefined` faria o Zod reprovar por tipo em vez de por tamanho.
+    defaultValues: { status: 'SCHEDULED', doctorName: '', ...defaultValues },
   })
 
   const handleFormSubmit = handleSubmit(async (values) => {
@@ -46,7 +49,7 @@ export function AppointmentForm({ defaultValues, onSubmit, submitLabel, onCancel
 
   return (
     <form onSubmit={handleFormSubmit} className="space-y-6" noValidate>
-      <AppointmentProfessionalFields register={register} control={control} errors={errors} />
+      <AppointmentProfessionalFields register={register} control={control} setValue={setValue} errors={errors} />
       <AppointmentScheduleFields register={register} control={control} errors={errors} />
 
       {/* Só quando a visita já aconteceu. A API recusa medida em consulta

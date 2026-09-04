@@ -89,7 +89,8 @@ export function useCreateAppointment(babyId: string | null) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (input: AppointmentFormInput) => createAppointment(babyId!, input),
+    mutationFn: ({ input, specialistId }: { input: AppointmentFormInput; specialistId?: string }) =>
+      createAppointment(babyId!, input, specialistId),
     onSuccess: (appointment) => {
       queryClient.setQueryData<Appointment[]>(appointmentsQueryKey(babyId ?? ''), (prev) =>
         prev ? [...prev, appointment] : [appointment],

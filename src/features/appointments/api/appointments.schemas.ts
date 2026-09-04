@@ -95,6 +95,12 @@ export const appointmentFormSchema = z
     // their entry vanish on blur with no error to explain why.
     weightKg: z.string().optional(),
     heightCm: z.string().optional(),
+    // Set when the person picks somebody already saved. `doctorName` is still what gets written on
+    // the visit — this only records who, of the saved list, it was.
+    specialistId: z.string().uuid().optional(),
+    // "Save this professional too", applied when the appointment is saved and not before: if the
+    // dialog is abandoned, nothing was created.
+    saveSpecialist: z.boolean().optional(),
   })
   .superRefine((values, ctx) => {
     assertMeasurementInRange(values.weightKg, WEIGHT_KG_MIN, WEIGHT_KG_MAX, 'weightKg', 'appointments.form.weightInvalid', ctx)

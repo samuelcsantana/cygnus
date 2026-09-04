@@ -479,6 +479,28 @@
       "columnStatus": "Status"
     }
   },
+  "specialists": {
+    "sectionTitle": "Professionals",
+    "sectionDescription": "Who looks after this child, with the phone number at hand.",
+    "addAction": "Add",
+    "saveAction": "Save",
+    "empty": "No professionals saved yet.",
+    "loadError": "Could not load the professionals.",
+    "genericError": "Could not save. Please try again.",
+    "nameLabel": "Name",
+    "namePlaceholder": "E.g. Dr. Fernanda Lima",
+    "specialtyLabel": "Specialty",
+    "specialtyPlaceholder": "E.g. Pediatrics",
+    "phoneLabel": "Phone",
+    "phonePlaceholder": "E.g. +55 11 99999-0000",
+    "addSuccessToast": "Professional saved!",
+    "deleteAction": "Remove {{name}}",
+    "deleteConfirmTitle": "Remove professional?",
+    "deleteConfirmDescription": "{{name}} leaves this list. Recorded appointments stay intact — the name of the professional remains written on them.",
+    "deleteConfirmDismiss": "Keep",
+    "deleteConfirmAction": "Remove",
+    "deleteSuccessToast": "Professional removed."
+  },
   "appointments": {
     "title": "Appointments",
     "summary": "{{completed}} completed · {{scheduled}} scheduled",
@@ -537,6 +559,7 @@
       "timeLabel": "Time",
       "reasonLabel": "Reason (Optional)",
       "reasonPlaceholder": "E.g. Routine check-up",
+      "saveSpecialist": "Save {{name}} to this child’s list of professionals",
       "weightLabel": "Weight (kg)",
       "weightPlaceholder": "E.g. 15.8",
       "weightInvalid": "Enter a weight between 0.1 and 150 kg.",

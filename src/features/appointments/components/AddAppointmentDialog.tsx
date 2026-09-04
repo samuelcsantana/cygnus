@@ -12,6 +12,8 @@ import { StepIndicator, type Step as StepIndicatorStep } from '@/shared/componen
 import { CloseIcon } from '@/shared/icons/close-icon'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 
+import { useCreateSpecialist } from '@/features/specialists/api/specialists.hooks'
+
 import { useCreateAppointment } from '../api/appointments.hooks'
 import { appointmentFormSchema, type AppointmentFormInput } from '../api/appointments.schemas'
 import { AppointmentMeasurementFields } from './AppointmentMeasurementFields'
@@ -34,6 +36,7 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
   const [step, setStep] = useState<Step>('professional')
   const [selectedBabyId, setSelectedBabyId] = useState<string | null>(null)
   const createAppointment = useCreateAppointment(selectedBabyId)
+  const createSpecialist = useCreateSpecialist(selectedBabyId)
 
   const {
     register,
@@ -41,13 +44,17 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
     handleSubmit,
     trigger,
     reset,
+    setValue,
     watch,
     formState: { errors, isSubmitting },
   } = useForm<AppointmentFormInput>({
     resolver: zodResolver(appointmentFormSchema),
     // Booking is where the wizard starts; recording the past is the deliberate
     // choice made on the schedule step.
-    defaultValues: { status: 'SCHEDULED' },
+    // `doctorName: ''` e não ausente: o campo é um input controlado, então seu estado vazio é a
+    // string vazia. Sem isto o valor inicial é `undefined`, e o Zod reprova por tipo em vez de por
+    // tamanho — a pessoa recebe a mensagem errada por um detalhe de inicialização.
+    defaultValues: { status: 'SCHEDULED', doctorName: '' },
   })
 
   // Reset only when the dialog opens — not on every `babies.data` change —
@@ -58,7 +65,7 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
     // Back to booking, not to an empty intent — reset() with no argument would
     // clear the field the schema requires, and the second open would submit
     // without one.
-    reset({ status: 'SCHEDULED' })
+    reset({ status: 'SCHEDULED', doctorName: '' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
@@ -84,7 +91,16 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
       // e se a falha tiver sido parcial isso duplica o registro. Os formulários
       // compartilhados (BabyForm, MilestoneForm, AppointmentForm) já faziam
       // isto; os assistentes que têm formulário próprio ficaram de fora.
-      await createAppointment.mutateAsync(values)
+      // O profissional é salvo **antes** da consulta e só quando a pessoa pediu. Antes porque a
+      // consulta precisa do id para guardar o vínculo; e se esta chamada falhar, o `catch` abaixo
+      // impede que a consulta seja criada apontando para um especialista que não existe. O
+      // contrário — consulta primeiro — deixaria a consulta gravada e o cadastro silenciosamente
+      // não feito, que é a falha que ninguém percebe.
+      const saved = values.saveSpecialist
+        ? await createSpecialist.mutateAsync({ name: values.doctorName, specialty: values.specialty })
+        : undefined
+
+      await createAppointment.mutateAsync({ input: values, specialistId: saved?.id })
     } catch {
       return // a mensagem aparece abaixo, a partir de createAppointment.error
     }
@@ -133,7 +149,13 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
             // can trigger a native submit on that very click if it's a form
             // descendant, even though the click handler itself never calls submit.
             <div key="professional" className="animate-fade-in-up">
-              <AppointmentProfessionalFields register={register} control={control} errors={errors} />
+              <AppointmentProfessionalFields
+                register={register}
+                control={control}
+                setValue={setValue}
+                errors={errors}
+                babyId={selectedBabyId}
+              />
               <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <Button type="button" onClick={handleContinueFromProfessional}>
                   {t('appointments.wizard.continue')}
