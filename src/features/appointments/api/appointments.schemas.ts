@@ -1,6 +1,13 @@
 import { z } from 'zod'
 
 import { nowLocalDateTimeString } from '@/lib/date'
+import {
+  HEIGHT_CM_MAX,
+  HEIGHT_CM_MIN,
+  WEIGHT_KG_MAX,
+  WEIGHT_KG_MIN,
+  parseDecimalInput,
+} from '@/shared/utils/measurements'
 
 export const appointmentStatusSchema = z.enum(['SCHEDULED', 'COMPLETED', 'CANCELLED'])
 export type AppointmentStatus = z.infer<typeof appointmentStatusSchema>
@@ -15,6 +22,10 @@ export const appointmentSchema = z.object({
   reason: z.string().nullable(),
   notes: z.string().nullable(),
   status: appointmentStatusSchema,
+  // Whole grams and whole millimetres, as the API stores them. Nothing in the UI shows these units
+  // — `shared/utils/measurements` is the single place that converts, in both directions.
+  weightGrams: z.number().nullable(),
+  heightMillimeters: z.number().nullable(),
   createdAt: z.string(),
 })
 export type Appointment = z.infer<typeof appointmentSchema>
@@ -40,6 +51,30 @@ export const appointmentListSchema = z.array(appointmentSchema)
 export const appointmentIntentSchema = z.enum(['SCHEDULED', 'COMPLETED'])
 export type AppointmentIntent = z.infer<typeof appointmentIntentSchema>
 
+/**
+ * Blank is a valid answer — most visits have no measurement — so only a value that is present and
+ * out of range is an error. The message is an i18n key, which is what `zod-error.ts` expects from
+ * a custom issue.
+ */
+function assertMeasurementInRange(
+  value: string | undefined,
+  min: number,
+  max: number,
+  path: 'weightKg' | 'heightCm',
+  message: string,
+  ctx: z.RefinementCtx,
+): void {
+  const parsed = parseDecimalInput(value)
+
+  if (parsed === null) {
+    return
+  }
+
+  if (!Number.isFinite(parsed) || parsed < min || parsed > max) {
+    ctx.addIssue({ code: 'custom', message, path: [path] })
+  }
+}
+
 export const appointmentFormSchema = z
   .object({
     date: z.string().min(1).regex(/^\d{4}-\d{2}-\d{2}$/),
@@ -55,8 +90,16 @@ export const appointmentFormSchema = z
     // default belongs: in `defaultValues`, which is also the only place that
     // knows the field starts on "book it".
     status: appointmentIntentSchema,
+    // Text, not `type="number"`, and validated by hand for it: a Brazilian numeric keypad offers a
+    // comma, and a number input discards the whole value when it sees one — the person watches
+    // their entry vanish on blur with no error to explain why.
+    weightKg: z.string().optional(),
+    heightCm: z.string().optional(),
   })
   .superRefine((values, ctx) => {
+    assertMeasurementInRange(values.weightKg, WEIGHT_KG_MIN, WEIGHT_KG_MAX, 'weightKg', 'appointments.form.weightInvalid', ctx)
+    assertMeasurementInRange(values.heightCm, HEIGHT_CM_MIN, HEIGHT_CM_MAX, 'heightCm', 'appointments.form.heightInvalid', ctx)
+
     const quando = `${values.date}T${values.time}`
     const agora = nowLocalDateTimeString()
 
@@ -79,6 +122,8 @@ export type AppointmentFormInput = z.infer<typeof appointmentFormSchema>
 export const medicalSpecialtyListSchema = z.array(z.string())
 
 export const updateAppointmentSchema = z.object({
+  weightGrams: z.number().int().nullable().optional(),
+  heightMillimeters: z.number().int().nullable().optional(),
   scheduledAt: z.string().optional(),
   doctorName: z.string().min(1).optional(),
   specialty: z.string().nullable().optional(),

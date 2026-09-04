@@ -14,6 +14,7 @@ import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 
 import { useCreateAppointment } from '../api/appointments.hooks'
 import { appointmentFormSchema, type AppointmentFormInput } from '../api/appointments.schemas'
+import { AppointmentMeasurementFields } from './AppointmentMeasurementFields'
 import { AppointmentProfessionalFields } from './AppointmentProfessionalFields'
 import { AppointmentScheduleFields } from './AppointmentScheduleFields'
 
@@ -40,6 +41,7 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
     handleSubmit,
     trigger,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<AppointmentFormInput>({
     resolver: zodResolver(appointmentFormSchema),
@@ -141,6 +143,16 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
           ) : (
             <form key="schedule" onSubmit={onSubmit} noValidate className="animate-fade-in-up">
               <AppointmentScheduleFields register={register} control={control} errors={errors} />
+
+              {/* Só depois de a pessoa dizer que a consulta já aconteceu. A API recusa medida em
+                  visita futura, então oferecer o campo ao agendar seria pedir um dado que volta
+                  como 400 — e não há o que a pessoa faça com esse erro. */}
+              {watch('status') === 'COMPLETED' && (
+                <div className="mt-6">
+                  <AppointmentMeasurementFields register={register} errors={errors} />
+                </div>
+              )}
+
               <div className="mt-6 flex items-center justify-end gap-4 border-t border-border pt-6">
                 <button
                   type="button"

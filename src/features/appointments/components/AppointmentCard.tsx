@@ -5,6 +5,7 @@ import { formatDateDisplay, formatDayMonthParts, splitScheduledAt } from '@/lib/
 import { cn } from '@/lib/utils'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
+import { formatCentimeters, formatKilograms } from '@/shared/utils/measurements'
 
 import type { Appointment } from '../api/appointments.schemas'
 import { AppointmentStatusBadge } from './AppointmentStatusBadge'
@@ -101,6 +102,33 @@ export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails
           </p>
         </div>
       </div>
+
+      {/* O que a visita mediu, em etiquetas — o desenho que a referência usa no
+          histórico, e o mais barato: cabe na linha que já existe e não abre
+          seção nova.
+
+          Só aparecem quando há medida, e medida só existe em consulta que
+          aconteceu (a API recusa nas demais). Os números vão em mono porque são
+          dado factual, e o rótulo fica em `sr-only`: para quem vê, o ícone e a
+          unidade já dizem o que é; para quem ouve, "15,8 kg" sozinho não diz. */}
+      {(appointment.weightGrams !== null || appointment.heightMillimeters !== null) && (
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          {appointment.weightGrams !== null && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-surface px-2.5 py-1 text-xs text-ink-muted">
+              <span aria-hidden>⚖️</span>
+              <span className="sr-only">{t('common.weight')} </span>
+              <span className="font-mono">{formatKilograms(appointment.weightGrams, i18n.language)}</span>
+            </span>
+          )}
+          {appointment.heightMillimeters !== null && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-surface px-2.5 py-1 text-xs text-ink-muted">
+              <span aria-hidden>📏</span>
+              <span className="sr-only">{t('common.height')} </span>
+              <span className="font-mono">{formatCentimeters(appointment.heightMillimeters, i18n.language)}</span>
+            </span>
+          )}
+        </div>
+      )}
 
       {appointment.reason && <p className="mb-1 text-[13px] text-ink-muted">{appointment.reason}</p>}
       {appointment.location && <p className="mb-1 text-[13px] text-ink-muted">{appointment.location}</p>}

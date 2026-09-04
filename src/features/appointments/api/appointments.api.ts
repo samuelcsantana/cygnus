@@ -1,4 +1,5 @@
 import { httpClient } from '@/lib/http-client'
+import { centimetersInputToMillimeters, kilogramsInputToGrams } from '@/shared/utils/measurements'
 
 import {
   appointmentListSchema,
@@ -32,6 +33,11 @@ export async function createAppointment(babyId: string, input: AppointmentFormIn
     // contract is additive, so omitting it keeps the request byte-identical to
     // what this app sent before COMPLETED existed.
     status: input.status === 'COMPLETED' ? 'COMPLETED' : undefined,
+    // Same reason, and one the API enforces: a measurement belongs to a visit that happened, so a
+    // booking never carries one. Sending it would be a 400 the person could do nothing about.
+    weightGrams: input.status === 'COMPLETED' ? (kilogramsInputToGrams(input.weightKg) ?? undefined) : undefined,
+    heightMillimeters:
+      input.status === 'COMPLETED' ? (centimetersInputToMillimeters(input.heightCm) ?? undefined) : undefined,
   }
   const response = await httpClient.post<unknown>(`/babies/${babyId}/appointments`, body)
   return appointmentSchema.parse(response)
