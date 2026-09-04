@@ -15,6 +15,7 @@ export const handlers = [
   // The saved professionals of a given baby — not the same thing as `/specialties`, which is the
   // static reference list of what a professional does.
   http.get(api('/babies/:babyId/specialists'), () => HttpResponse.json([])),
+  http.get(api('/babies/:babyId/medications'), () => HttpResponse.json([])),
   http.get(api('/auth/me'), () =>
     HttpResponse.json({
       id: '00000000-0000-0000-0000-000000000000',

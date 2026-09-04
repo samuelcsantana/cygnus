@@ -6,6 +6,8 @@ import { useAllBabiesAppointments } from '@/features/appointments/api/appointmen
 import { latestMeasuredVisit } from '@/features/appointments/api/appointments.selectors'
 import { AppointmentsOverviewCard } from '@/features/appointments/components/AppointmentsOverviewCard'
 import { useAllBabiesMilestones } from '@/features/milestones/api/milestones.hooks'
+import { useAllBabiesMedications } from '@/features/medications/api/medications.hooks'
+import { MedicationsOverviewCard } from '@/features/medications/components/MedicationsOverviewCard'
 import { MilestonesOverviewCard } from '@/features/milestones/components/MilestonesOverviewCard'
 import { useAllBabiesVaccineCalendars } from '@/features/vaccines/api/vaccines.hooks'
 import { VaccinesOverviewCard } from '@/features/vaccines/components/VaccinesOverviewCard'
@@ -40,6 +42,7 @@ export function DashboardRoute() {
   const vaccines = useAllBabiesVaccineCalendars()
   const appointments = useAllBabiesAppointments()
   const milestones = useAllBabiesMilestones()
+  const medications = useAllBabiesMedications()
 
   const babyList = babies.data ?? []
 
@@ -216,6 +219,15 @@ export function DashboardRoute() {
           items={milestones.items}
           isPending={milestones.isPending}
           isError={milestones.isError}
+        />
+        {/* Quarto cartão numa grade de três: ele desce para a linha de baixo e ocupa a largura
+            toda em `lg`. É também o único caminho até `/medications`, que fica fora da barra de
+            navegação — ver o comentário na rota. */}
+        <MedicationsOverviewCard
+          babies={babyList}
+          items={medications.items}
+          isPending={medications.isPending}
+          isError={medications.isError}
         />
       </div>
 
