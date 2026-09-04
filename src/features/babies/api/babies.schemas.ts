@@ -2,8 +2,16 @@ import { z } from 'zod'
 
 import { todayDateString } from '@/lib/date'
 
-export const genderSchema = z.enum(['MALE', 'FEMALE'])
-export type Gender = z.infer<typeof genderSchema>
+/**
+ * Sexo ao nascer — variável clínica, não identidade de gênero, e por isso este nome.
+ *
+ * Ausente significa "não informado", e é resposta legítima: o campo não é lido por nada no app e
+ * exigir dado sensível de uma criança sem uso é coleta que não se justifica. Não existe um terceiro
+ * valor de enum para isso — ausência já é a forma de dizer, e duas formas de dizer a mesma coisa no
+ * mesmo campo é o começo de uma consulta errada.
+ */
+export const sexAtBirthSchema = z.enum(['MALE', 'FEMALE'])
+export type SexAtBirth = z.infer<typeof sexAtBirthSchema>
 
 export const bloodTypeSchema = z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
 export type BloodType = z.infer<typeof bloodTypeSchema>
@@ -16,7 +24,7 @@ export const babySchema = z.object({
   userId: z.string().uuid(),
   name: z.string(),
   birthDate: z.string(),
-  gender: genderSchema,
+  sexAtBirth: sexAtBirthSchema.nullable(),
   bloodType: bloodTypeSchema.nullable(),
   allergies: z.array(z.string()),
   healthPlanName: z.string().nullable(),
@@ -37,7 +45,7 @@ export const babyFormSchema = z.object({
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/)
     .refine((value) => value <= todayDateString(), { message: 'babies.form.birthDateFuture' }),
-  gender: genderSchema,
+  sexAtBirth: sexAtBirthSchema.optional(),
   bloodType: bloodTypeSchema.optional(),
   allergies: z.array(z.string().min(1)).optional(),
   // Free text, both of them: a plan's name is whatever is printed on the card, and the member

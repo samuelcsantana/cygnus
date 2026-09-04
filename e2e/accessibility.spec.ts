@@ -40,7 +40,7 @@ test.describe('accessibility (WCAG 2 A/AA)', () => {
     await openAddBabyDialog(page)
     await expectNoViolations(page) // o diálogo de novo perfil
 
-    await addBaby(page, { name: 'Sofia E2E', birthDate: '2025-04-20', gender: 'Menina' })
+    await addBaby(page, { name: 'Sofia E2E', birthDate: '2025-04-20', sexAtBirth: 'Feminino' })
     await expectNoViolations(page) // populated dashboard
 
     await page.getByRole('link', { name: 'Vacinas', exact: true }).click()

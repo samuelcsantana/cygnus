@@ -40,11 +40,14 @@ interface BabyProfileFieldsProps {
  */
 const AVATAR_BORDER_COLORS = ['#2A9D8F', '#E8853A', '#D95560', '#6C63FF']
 
+/** O cartão de "não informar" precisa de um valor para o grupo de rádio; ele nunca é enviado. */
+const NOT_INFORMED = 'none'
+
 export function BabyProfileFields({ register, control, errors }: BabyProfileFieldsProps) {
   const { t } = useTranslation()
   const nameErrorKey = fieldErrorKey(errors.name)
   const birthDateErrorKey = fieldErrorKey(errors.birthDate)
-  const genderErrorKey = fieldErrorKey(errors.gender)
+  const sexAtBirthErrorKey = fieldErrorKey(errors.sexAtBirth)
   const avatarUrlErrorKey = fieldErrorKey(errors.avatarUrl)
 
   const avatarUrlField = useController({ control, name: 'avatarUrl' })
@@ -117,25 +120,36 @@ export function BabyProfileFields({ register, control, errors }: BabyProfileFiel
         )}
       </div>
 
+      {/* Sexo ao nascer, e não "Sexo" nem "gênero": é a variável clínica que a Caderneta da Criança
+          imprime. O terceiro cartão grava **ausência de valor**, não um terceiro valor de enum —
+          "prefiro não informar" é resposta legítima porque este campo não é lido por nada, e pedir
+          dado sensível de uma criança sem uso não se justifica. */}
       <div>
-        <Label id="gender-label">{t('babies.form.genderLabel')}</Label>
+        <Label id="sex-at-birth-label">{t('babies.form.sexAtBirthLabel')}</Label>
         <Controller
           control={control}
-          name="gender"
+          name="sexAtBirth"
           render={({ field }) => (
-            <div className="mt-2" role="group" aria-labelledby="gender-label">
+            <div className="mt-2" role="group" aria-labelledby="sex-at-birth-label">
+              {/* Empilhado, e não lado a lado. Medido dentro deste diálogo: com três cartões na
+                  coluna da esquerda cada um fica com 104px, e "Masculino" precisa de 71px de texto
+                  num espaço de 48 — transborda por cima do cartão vizinho. Dois cabiam; três não.
+                  Vertical também é o que dá espaço ao rótulo mais longo sem quebrá-lo em três
+                  linhas no celular. */}
               <SelectorCardGroup
-                value={field.value}
-                onValueChange={field.onChange}
+                layout="vertical"
+                value={field.value ?? NOT_INFORMED}
+                onValueChange={(value) => field.onChange(value === NOT_INFORMED ? undefined : value)}
                 options={[
-                  { value: 'MALE', label: t('babies.form.genderMale') },
-                  { value: 'FEMALE', label: t('babies.form.genderFemale') },
+                  { value: 'MALE', label: t('babies.form.sexAtBirthMale') },
+                  { value: 'FEMALE', label: t('babies.form.sexAtBirthFemale') },
+                  { value: NOT_INFORMED, label: t('babies.form.sexAtBirthNotInformed') },
                 ]}
               />
             </div>
           )}
         />
-        {genderErrorKey && <p className="text-destructive mt-1 text-sm">{t(genderErrorKey)}</p>}
+        {sexAtBirthErrorKey && <p className="text-destructive mt-1 text-sm">{t(sexAtBirthErrorKey)}</p>}
       </div>
     </div>
   )

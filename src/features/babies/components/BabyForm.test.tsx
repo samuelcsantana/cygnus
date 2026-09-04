@@ -17,7 +17,7 @@ describe('BabyForm', () => {
     const tomorrow = new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString().slice(0, 10)
     fireEvent.change(screen.getByLabelText('Data de Nascimento'), { target: { value: tomorrow } })
 
-    await user.click(screen.getAllByRole('radio', { name: 'Menino' })[0]!)
+    await user.click(screen.getAllByRole('radio', { name: 'Masculino' })[0]!)
     await user.click(screen.getByRole('button', { name: 'Criar Perfil' }))
 
     await waitFor(() => {

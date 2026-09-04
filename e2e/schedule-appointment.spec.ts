@@ -7,7 +7,7 @@ test('a user can schedule an appointment for their baby', async ({ page }) => {
   await registerAndLogin(page, user)
 
   await openAddBabyDialog(page)
-  await addBaby(page, { name: 'Clara E2E', birthDate: '2025-06-15', gender: 'Menina' })
+  await addBaby(page, { name: 'Clara E2E', birthDate: '2025-06-15', sexAtBirth: 'Feminino' })
 
   await page.getByRole('link', { name: 'Consultas', exact: true }).click()
   await expect(page).toHaveURL(/\/appointments$/)

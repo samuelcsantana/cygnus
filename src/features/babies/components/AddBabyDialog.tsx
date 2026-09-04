@@ -47,7 +47,9 @@ export function AddBabyDialog({ open, onOpenChange }: AddBabyDialogProps) {
   }, [open, reset])
 
   const handleContinue = async () => {
-    const isValid = await trigger(['name', 'birthDate', 'gender'])
+    // `sexAtBirth` saiu da validação do passo: ele é opcional, e exigi-lo aqui recriaria
+    // pela porta dos fundos a obrigatoriedade que esta mudança removeu.
+    const isValid = await trigger(['name', 'birthDate'])
     if (isValid) {
       setStep('health')
     }

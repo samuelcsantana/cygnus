@@ -8,7 +8,7 @@ test('a logged-in user with no children can add their first baby', async ({ page
 
   await openAddBabyDialog(page)
 
-  await addBaby(page, { name: 'Alice E2E', birthDate: '2024-03-10', gender: 'Menina' })
+  await addBaby(page, { name: 'Alice E2E', birthDate: '2024-03-10', sexAtBirth: 'Feminino' })
 
   // O dashboard não tem mais um heading "Painel da Família" — depois da
   // reconstrução de navegação ele abre com a saudação, e a criança recém-criada
