@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useSpecialists } from '@/features/specialists/api/specialists.hooks'
+import { useSpecialistsForBaby } from '@/features/specialists/api/specialists.hooks'
 import { AutocompleteInput } from '@/shared/components/AutocompleteInput'
 import { fieldErrorKey } from '@/shared/utils/zod-error'
 
@@ -41,7 +41,7 @@ export function AppointmentProfessionalFields({
 }: AppointmentProfessionalFieldsProps) {
   const { t } = useTranslation()
   const { data: specialtySuggestions = [] } = useMedicalSpecialties()
-  const { data: specialists = [] } = useSpecialists(babyId ?? null)
+  const { data: specialists = [] } = useSpecialistsForBaby(babyId ?? null)
   const doctorNameErrorKey = fieldErrorKey(errors.doctorName)
 
   const doctorName = useWatch({ control, name: 'doctorName' }) ?? ''

@@ -210,15 +210,17 @@ describe('AddAppointmentDialog', () => {
     const specialistId = '44444444-4444-4444-8444-444444444444'
 
     server.use(
-      http.post(`${config.apiBaseUrl}/babies/:babyId/specialists`, async ({ request }) => {
+      http.post(`${config.apiBaseUrl}/specialists`, async ({ request }) => {
         specialistBody = (await request.json()) as Record<string, unknown>
         return HttpResponse.json(
           {
             id: specialistId,
-            babyId,
+            userId: '00000000-0000-0000-0000-000000000000',
             name: 'Dra. Ana Silva',
             specialty: 'Pediatria',
             phone: null,
+            babyIds: [babyId],
+            sharedWithUserIds: [],
             createdAt: '2026-01-01T00:00:00.000Z',
           },
           { status: 201 },
@@ -250,21 +252,24 @@ describe('AddAppointmentDialog', () => {
     await waitFor(() => {
       expect(appointmentBody.specialistId).toBe(specialistId)
     })
-    expect(specialistBody).toMatchObject({ name: 'Dra. Ana Silva', specialty: 'Pediatria' })
+    // Já nasce ligado à criança da consulta, que é o contexto em que a pessoa está.
+    expect(specialistBody).toMatchObject({ name: 'Dra. Ana Silva', specialty: 'Pediatria', babyIds: [babyId] })
     // O nome continua gravado na consulta: o vínculo é adicional, nunca substituto.
     expect(appointmentBody.doctorName).toBe('Dra. Ana Silva')
   })
 
   it('não oferece salvar um profissional que já está na lista', async () => {
     server.use(
-      http.get(`${config.apiBaseUrl}/babies/:babyId/specialists`, () =>
+      http.get(`${config.apiBaseUrl}/specialists`, () =>
         HttpResponse.json([
           {
             id: '44444444-4444-4444-8444-444444444444',
-            babyId,
+            userId: '00000000-0000-0000-0000-000000000000',
             name: 'Dra. Ana Silva',
             specialty: 'Pediatria',
             phone: null,
+            babyIds: [babyId],
+            sharedWithUserIds: [],
             createdAt: '2026-01-01T00:00:00.000Z',
           },
         ]),

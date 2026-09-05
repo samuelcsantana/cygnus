@@ -481,11 +481,15 @@
     }
   },
   "specialists": {
-    "sectionTitle": "Professionals",
-    "sectionDescription": "Who looks after this child, with the phone number at hand.",
-    "addAction": "Add",
+    "title": "Professionals",
+    "summary_one": "{{count}} professional saved",
+    "summary_other": "{{count}} professionals saved",
+    "summaryUnavailable": "Loading the list...",
+    "addAction": "Add Professional",
+    "addTitle": "Add Professional",
+    "editTitle": "Edit Professional",
+    "dialogSubtitle": "Who looks after your children, with the phone number at hand.",
     "saveAction": "Save",
-    "empty": "No professionals saved yet.",
     "loadError": "Could not load the professionals.",
     "genericError": "Could not save. Please try again.",
     "nameLabel": "Name",
@@ -494,14 +498,29 @@
     "specialtyPlaceholder": "E.g. Pediatrics",
     "phoneLabel": "Phone",
     "phonePlaceholder": "E.g. +55 11 99999-0000",
+    "babiesLabel": "Which children do they see?",
+    "babiesHint": "None is fine. With no child ticked, the entry stays in your list only.",
+    "shareLabel": "Share with",
+    "shareHint": "The guardians you tick will also see this professional.",
+    "attends": "Sees {{list}}",
+    "privateEntry": "In your list only",
+    "sharedOnly": "Shared, with no child linked",
     "addSuccessToast": "Professional saved!",
+    "updateSuccessToast": "Professional updated!",
+    "editAction": "Edit {{name}}",
     "deleteAction": "Remove {{name}}",
     "deleteConfirmTitle": "Remove professional?",
     "deleteConfirmDescription": "{{name}} leaves this list. Recorded appointments stay intact — the name of the professional remains written on them.",
     "deleteConfirmDismiss": "Keep",
     "deleteConfirmAction": "Remove",
-    "deleteSuccessToast": "Professional removed."
+    "deleteSuccessToast": "Professional removed.",
+    "empty": {
+      "title": "No professionals saved",
+      "description": "Keep the paediatrician, the speech therapist, whoever else looks after your children — with the phone number, which is what gets looked up in a hurry.",
+      "cta": "Add the first one"
+    }
   },
+
   "appointments": {
     "title": "Appointments",
     "summary": "{{completed}} completed · {{scheduled}} scheduled",
@@ -651,6 +670,17 @@
       "endedOnBeforeStart": "The end cannot be before the start."
     }
   },
+  "healthPlan": {
+    "title": "Health Plan",
+    "subtitle": "Each child's plan and member number.",
+    "saveAction": "Save",
+    "savedToast": "Plan updated!",
+    "genericError": "Could not save. Please try again.",
+    "empty": {
+      "title": "No plan on file",
+      "description": "What a clinic desk asks for is the member number. Fill it in below to have it at hand."
+    }
+  },
   "milestones": {
     "title": "Developmental Milestones",
     "summaryUnavailable": "Loading milestones…",
@@ -739,6 +769,11 @@
     }
   },
   "profile": {
+    "manage": {
+      "sectionTitle": "Account records",
+      "specialistsHint": "Who looks after your children",
+      "healthPlanHint": "Plan and member number"
+    },
     "nav": {
       "viewProfile": "View my profile"
     },

@@ -60,7 +60,7 @@ export function BabyForm({ defaultValues, onSubmit, submitLabel, onCancel, showC
           Cartão é bloco, não campo — e bloco não divide coluna com formulário. */}
       <div className="grid grid-cols-1 gap-x-10 gap-y-6 lg:grid-cols-2">
         <BabyProfileFields register={register} control={control} errors={errors} />
-        <BabyHealthFields register={register} control={control} />
+        <BabyHealthFields control={control} />
       </div>
 
       {dangerZone && <div className="mt-8 space-y-5">{dangerZone}</div>}
