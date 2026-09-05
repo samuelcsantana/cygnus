@@ -36,7 +36,7 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
   const [step, setStep] = useState<Step>('professional')
   const [selectedBabyId, setSelectedBabyId] = useState<string | null>(null)
   const createAppointment = useCreateAppointment(selectedBabyId)
-  const createSpecialist = useCreateSpecialist(selectedBabyId)
+  const createSpecialist = useCreateSpecialist()
 
   const {
     register,
@@ -97,7 +97,15 @@ export function AddAppointmentDialog({ open, onOpenChange }: AddAppointmentDialo
       // contrário — consulta primeiro — deixaria a consulta gravada e o cadastro silenciosamente
       // não feito, que é a falha que ninguém percebe.
       const saved = values.saveSpecialist
-        ? await createSpecialist.mutateAsync({ name: values.doctorName, specialty: values.specialty })
+        ? await createSpecialist.mutateAsync({
+            name: values.doctorName,
+            specialty: values.specialty,
+            // Já nasce ligado à criança da consulta, que é o contexto em que a pessoa está. As
+            // outras crianças e o compartilhamento ficam para a tela de Profissionais: o gatilho é
+            // inline e ignorável, e pedir três decisões aqui deixaria de ser.
+            babyIds: selectedBabyId ? [selectedBabyId] : [],
+            sharedWithUserIds: [],
+          })
         : undefined
 
       await createAppointment.mutateAsync({ input: values, specialistId: saved?.id })

@@ -484,11 +484,15 @@
     }
   },
   "specialists": {
-    "sectionTitle": "Profissionais",
-    "sectionDescription": "Quem cuida desta criança, com o telefone à mão.",
-    "addAction": "Adicionar",
+    "title": "Profissionais",
+    "summary_one": "{{count}} profissional salvo",
+    "summary_other": "{{count}} profissionais salvos",
+    "summaryUnavailable": "Carregando a lista...",
+    "addAction": "Adicionar Profissional",
+    "addTitle": "Adicionar Profissional",
+    "editTitle": "Editar Profissional",
+    "dialogSubtitle": "Quem cuida das suas crianças, com o telefone à mão.",
     "saveAction": "Salvar",
-    "empty": "Nenhum profissional salvo ainda.",
     "loadError": "Não foi possível carregar os profissionais.",
     "genericError": "Não foi possível salvar. Tente de novo.",
     "nameLabel": "Nome",
@@ -497,14 +501,29 @@
     "specialtyPlaceholder": "Ex: Pediatria",
     "phoneLabel": "Telefone",
     "phonePlaceholder": "Ex: (11) 99999-0000",
+    "babiesLabel": "Atende quais crianças?",
+    "babiesHint": "Pode ser nenhuma. Sem criança marcada, a entrada fica só na sua lista.",
+    "shareLabel": "Compartilhar com",
+    "shareHint": "Os responsáveis marcados também verão este profissional.",
+    "attends": "Atende {{list}}",
+    "privateEntry": "Só na sua lista",
+    "sharedOnly": "Compartilhado, sem criança vinculada",
     "addSuccessToast": "Profissional salvo!",
+    "updateSuccessToast": "Profissional atualizado!",
+    "editAction": "Editar {{name}}",
     "deleteAction": "Remover {{name}}",
     "deleteConfirmTitle": "Remover profissional?",
     "deleteConfirmDescription": "{{name}} sai desta lista. As consultas já registradas continuam inteiras — o nome do profissional segue gravado nelas.",
     "deleteConfirmDismiss": "Manter",
     "deleteConfirmAction": "Remover",
-    "deleteSuccessToast": "Profissional removido."
+    "deleteSuccessToast": "Profissional removido.",
+    "empty": {
+      "title": "Nenhum profissional salvo",
+      "description": "Guarde o pediatra, a fono, quem mais cuidar das suas crianças — com o telefone, que é o que se procura com pressa.",
+      "cta": "Adicionar o primeiro"
+    }
   },
+
   "appointments": {
     "title": "Consultas",
     "summary": "{{completed}} realizadas · {{scheduled}} agendadas",
@@ -654,6 +673,17 @@
       "endedOnBeforeStart": "O fim não pode ser antes do início."
     }
   },
+  "healthPlan": {
+    "title": "Plano de Saúde",
+    "subtitle": "O plano e a carteirinha de cada criança.",
+    "saveAction": "Salvar",
+    "savedToast": "Plano atualizado!",
+    "genericError": "Não foi possível salvar. Tente de novo.",
+    "empty": {
+      "title": "Nenhum plano informado",
+      "description": "O que a recepção da clínica pede é o número da carteirinha. Preencha abaixo para tê-lo à mão."
+    }
+  },
   "milestones": {
     "title": "Marcos de Desenvolvimento",
     "summaryUnavailable": "Carregando os marcos…",
@@ -744,6 +774,11 @@
     }
   },
   "profile": {
+    "manage": {
+      "sectionTitle": "Cadastros da conta",
+      "specialistsHint": "Quem cuida das suas crianças",
+      "healthPlanHint": "Plano e carteirinha"
+    },
     "nav": {
       "viewProfile": "Ver meu perfil"
     },

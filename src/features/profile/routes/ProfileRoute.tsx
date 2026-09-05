@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { useCurrentUser } from '@/features/auth/api/auth.hooks'
 import { useBabies } from '@/features/babies/api/babies.hooks'
@@ -10,8 +10,10 @@ import { ageInMonths } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
+import { IdCardIcon } from '@/shared/icons/id-card-icon'
 import { PencilIcon } from '@/shared/icons/pencil-icon'
 import { PlusIcon } from '@/shared/icons/plus-icon'
+import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { useAddBabyDialogStore } from '@/shared/stores/addBabyDialog.store'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 
@@ -75,6 +77,39 @@ export function ProfileRoute() {
         <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
           <h3 className="font-display mb-5 text-base font-extrabold text-ink">{t('profile.password.sectionTitle')}</h3>
           <ChangePasswordForm />
+        </section>
+
+        {/* As duas telas de cadastro da conta. Ficam aqui porque é onde já moram as configurações
+            e a lista de filhos — e porque a barra inferior não comporta um sétimo e um oitavo item:
+            medido, a 320px cada alvo cairia para ~38px, abaixo do piso de 44. */}
+        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+          <h3 className="font-display mb-4 text-base font-extrabold text-ink">{t('profile.manage.sectionTitle')}</h3>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link
+              to="/profissionais"
+              className="flex flex-1 items-center gap-3 rounded-xl border border-border p-4 transition-colors hover:bg-muted"
+            >
+              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+                <StethoscopeIcon className="h-[18px] w-[18px]" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-bold text-ink">{t('specialists.title')}</span>
+                <span className="block text-xs text-ink-muted">{t('profile.manage.specialistsHint')}</span>
+              </span>
+            </Link>
+            <Link
+              to="/plano-de-saude"
+              className="flex flex-1 items-center gap-3 rounded-xl border border-border p-4 transition-colors hover:bg-muted"
+            >
+              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300">
+                <IdCardIcon className="h-[18px] w-[18px]" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-bold text-ink">{t('healthPlan.title')}</span>
+                <span className="block text-xs text-ink-muted">{t('profile.manage.healthPlanHint')}</span>
+              </span>
+            </Link>
+          </div>
         </section>
 
         <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">

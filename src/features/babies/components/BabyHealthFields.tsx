@@ -1,7 +1,6 @@
-import { Controller, type Control, type UseFormRegister } from 'react-hook-form'
+import { Controller, type Control } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AllergiesTagInput } from '@/shared/components/AllergiesTagInput'
@@ -12,11 +11,10 @@ const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as const
 const NOT_INFORMED = 'none'
 
 interface BabyHealthFieldsProps {
-  register: UseFormRegister<BabyFormInput>
   control: Control<BabyFormInput>
 }
 
-export function BabyHealthFields({ register, control }: BabyHealthFieldsProps) {
+export function BabyHealthFields({ control }: BabyHealthFieldsProps) {
   const { t } = useTranslation()
 
   return (
@@ -64,29 +62,6 @@ export function BabyHealthFields({ register, control }: BabyHealthFieldsProps) {
         />
       </div>
 
-      {/* Plan and member number are two fields and not one string because they are read at
-          different moments: the name identifies which network to look for, the number is what the
-          desk types in. Neither has a client-side format — operators print letters, dashes and
-          leading zeros — so validating either would only reject real cards. */}
-      <div>
-        <Label htmlFor="healthPlanName">{t('babies.form.healthPlanNameLabel')}</Label>
-        <Input
-          id="healthPlanName"
-          placeholder={t('babies.form.healthPlanNamePlaceholder')}
-          className="mt-2"
-          {...register('healthPlanName')}
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="healthPlanNumber">{t('babies.form.healthPlanNumberLabel')}</Label>
-        <Input
-          id="healthPlanNumber"
-          placeholder={t('babies.form.healthPlanNumberPlaceholder')}
-          className="mt-2 font-mono"
-          {...register('healthPlanNumber')}
-        />
-      </div>
     </div>
   )
 }

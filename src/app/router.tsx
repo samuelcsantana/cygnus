@@ -106,6 +106,23 @@ export const router = createBrowserRouter([
                   })),
               },
               {
+                // Duas telas de cadastro da conta, fora da barra pelo mesmo motivo de `/profile`:
+                // a barra tem seis itens e, medido, oito não cabem — a 320px cada alvo cairia para
+                // ~38px, abaixo do piso de 44. Chega-se a elas pela tela de perfil.
+                path: 'profissionais',
+                lazy: () =>
+                  import('@/features/specialists/routes/SpecialistsRoute').then((m) => ({
+                    Component: m.SpecialistsRoute,
+                  })),
+              },
+              {
+                path: 'plano-de-saude',
+                lazy: () =>
+                  import('@/features/babies/routes/HealthPlanRoute').then((m) => ({
+                    Component: m.HealthPlanRoute,
+                  })),
+              },
+              {
                 // Fora da barra de navegação, alcançada pelo cartão do painel — como `/profile`,
                 // que é a mesma escolha pelo mesmo motivo: a barra tem cinco itens e acrescentar
                 // um sexto remodela a navegação, que é decisão de produto e não de implementação.

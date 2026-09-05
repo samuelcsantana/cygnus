@@ -12,9 +12,9 @@ export const handlers = [
   http.get(api('/babies'), () => HttpResponse.json([])),
   http.get(api('/notifications'), () => HttpResponse.json([])),
   http.get(api('/specialties'), () => HttpResponse.json(['Pediatria', 'Cardiologia Pediátrica', 'Odontopediatria'])),
-  // The saved professionals of a given baby — not the same thing as `/specialties`, which is the
-  // static reference list of what a professional does.
-  http.get(api('/babies/:babyId/specialists'), () => HttpResponse.json([])),
+  // The account's saved professionals — not the same thing as `/specialties`, which is the static
+  // reference list of what a professional does.
+  http.get(api('/specialists'), () => HttpResponse.json([])),
   http.get(api('/babies/:babyId/medications'), () => HttpResponse.json([])),
   http.get(api('/auth/me'), () =>
     HttpResponse.json({

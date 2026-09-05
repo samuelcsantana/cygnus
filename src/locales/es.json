@@ -481,11 +481,15 @@
     }
   },
   "specialists": {
-    "sectionTitle": "Profesionales",
-    "sectionDescription": "Quién cuida de este niño, con el teléfono a mano.",
-    "addAction": "Añadir",
+    "title": "Profesionales",
+    "summary_one": "{{count}} profesional guardado",
+    "summary_other": "{{count}} profesionales guardados",
+    "summaryUnavailable": "Cargando la lista...",
+    "addAction": "Añadir Profesional",
+    "addTitle": "Añadir Profesional",
+    "editTitle": "Editar Profesional",
+    "dialogSubtitle": "Quién cuida de sus niños, con el teléfono a mano.",
     "saveAction": "Guardar",
-    "empty": "Todavía no hay profesionales guardados.",
     "loadError": "No se pudieron cargar los profesionales.",
     "genericError": "No se pudo guardar. Inténtalo de nuevo.",
     "nameLabel": "Nombre",
@@ -494,14 +498,29 @@
     "specialtyPlaceholder": "Ej: Pediatría",
     "phoneLabel": "Teléfono",
     "phonePlaceholder": "Ej: +55 11 99999-0000",
+    "babiesLabel": "¿A qué niños atiende?",
+    "babiesHint": "Puede ser ninguno. Sin niño marcado, la entrada queda solo en su lista.",
+    "shareLabel": "Compartir con",
+    "shareHint": "Los responsables marcados también verán a este profesional.",
+    "attends": "Atiende a {{list}}",
+    "privateEntry": "Solo en su lista",
+    "sharedOnly": "Compartido, sin niño vinculado",
     "addSuccessToast": "¡Profesional guardado!",
+    "updateSuccessToast": "¡Profesional actualizado!",
+    "editAction": "Editar {{name}}",
     "deleteAction": "Eliminar {{name}}",
     "deleteConfirmTitle": "¿Eliminar profesional?",
     "deleteConfirmDescription": "{{name}} sale de esta lista. Las consultas registradas siguen intactas: el nombre del profesional permanece escrito en ellas.",
     "deleteConfirmDismiss": "Mantener",
     "deleteConfirmAction": "Eliminar",
-    "deleteSuccessToast": "Profesional eliminado."
+    "deleteSuccessToast": "Profesional eliminado.",
+    "empty": {
+      "title": "Ningún profesional guardado",
+      "description": "Guarde al pediatra, a la fonoaudióloga, a quien más cuide de sus niños — con el teléfono, que es lo que se busca con prisa.",
+      "cta": "Añadir el primero"
+    }
   },
+
   "appointments": {
     "title": "Consultas",
     "summary": "{{completed}} realizadas · {{scheduled}} agendadas",
@@ -651,6 +670,17 @@
       "endedOnBeforeStart": "El fin no puede ser anterior al inicio."
     }
   },
+  "healthPlan": {
+    "title": "Plan de Salud",
+    "subtitle": "El plan y el número de socio de cada niño.",
+    "saveAction": "Guardar",
+    "savedToast": "¡Plan actualizado!",
+    "genericError": "No se pudo guardar. Inténtalo de nuevo.",
+    "empty": {
+      "title": "Ningún plan informado",
+      "description": "Lo que pide la recepción de la clínica es el número de socio. Complételo abajo para tenerlo a mano."
+    }
+  },
   "milestones": {
     "title": "Hitos de Desarrollo",
     "summaryUnavailable": "Cargando los hitos…",
@@ -739,6 +769,11 @@
     }
   },
   "profile": {
+    "manage": {
+      "sectionTitle": "Registros de la cuenta",
+      "specialistsHint": "Quién cuida de sus niños",
+      "healthPlanHint": "Plan y número de socio"
+    },
     "nav": {
       "viewProfile": "Ver mi perfil"
     },

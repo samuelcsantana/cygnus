@@ -18,8 +18,6 @@ import { CloseIcon } from '@/shared/icons/close-icon'
 import { PencilIcon } from '@/shared/icons/pencil-icon'
 import { TrashIcon } from '@/shared/icons/trash-icon'
 
-import { SpecialistsSection } from '@/features/specialists/components/SpecialistsSection'
-
 import { useDeleteBaby, useUpdateBaby } from '../api/babies.hooks'
 import type { Baby } from '../api/babies.schemas'
 import { BabyForm } from './BabyForm'
@@ -76,11 +74,10 @@ export function EditBabyDialog({ baby, onOpenChange }: EditBabyDialogProps) {
               }}
               dangerZone={
                 <>
+                  {/* Os profissionais saíram daqui: eles passaram a pertencer à **conta**, não à
+                      criança, e um cadastro de conta dentro do perfil de um filho é o lugar errado
+                      para editá-lo. Agora vivem em `/profissionais`. */}
                   <GuardiansSection babyId={baby.id} babyName={baby.name} />
-
-                  {/* Ao lado dos guardiões porque responde à mesma pergunta — quem está em volta
-                      desta criança — e porque as duas listas são por criança, não por conta. */}
-                  <SpecialistsSection babyId={baby.id} />
 
                   <div className="rounded-2xl border border-rose-100 bg-rose-50/50 dark:bg-rose-950/40 p-5">
                     <h3 className="font-display mb-1 text-sm font-extrabold text-ink">
