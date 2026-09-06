@@ -43,8 +43,9 @@
     "vaccines": "Vacinas",
     "appointments": "Consultas",
     "medications": "Remédios",
+    "specialists": "Equipe",
     "milestones": "Marcos",
-    "notifications": "Notificações",
+    "notifications": "Avisos",
     "logoutError": "Não foi possível sair da conta. Você continua conectado — tente novamente.",
     "logout": "Sair da conta"
   },
