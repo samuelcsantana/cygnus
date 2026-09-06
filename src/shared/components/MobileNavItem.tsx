@@ -12,14 +12,22 @@ interface MobileNavItemProps {
 }
 
 export function MobileNavItem({ to, icon, label, disabled, badge }: MobileNavItemProps) {
-  // `flex-1 min-w-0` com teto de 64px, e não largura fixa de 64px.
+  // `flex-1 min-w-0` with a 64px ceiling, not a fixed 64px width.
   //
-  // Com seis itens a barra passou a estourar a 320px: os alvos somavam 342px mais o padding, e o
-  // último terminava em 350px — fora da tela, medido. Largura fixa não deixa o navegador dividir o
-  // que existe; `flex-1` divide, e `min-w-0` é o que permite o rótulo truncar em vez de impor uma
-  // largura mínima pelo texto. A 320px cada alvo fica com ~50px, bem acima do piso de 44px.
+  // At six items the bar ran off the screen at 320px: the targets summed to 342px plus the
+  // padding and the last one ended at 350px — off screen, measured. A fixed width gives the
+  // browser nothing to divide; `flex-1` divides, and `min-w-0` is what lets the label truncate
+  // instead of the text imposing a minimum width. At seven items and 320px each target is
+  // ~45px, which is the whole margin over the 44px floor — the bar's own padding was halved to
+  // buy it (see MobileNavBar).
+  //
+  // No horizontal padding here, and it is not the same lever as the bar's. The targets are
+  // `flex-1`, so this padding cannot change how wide they are — it only decides how much of
+  // each one the label may use. Giving it all to the label is what keeps every label whole at
+  // 360px and 390px with seven items; at `px-1` "Consultas" and "Remédios" truncate at every
+  // width. The icon and the label are centred, so nothing else moves.
   const baseClass =
-    'flex max-w-16 min-w-0 flex-1 flex-col items-center justify-center rounded-2xl px-1 py-2 transition-all duration-300'
+    'flex max-w-16 min-w-0 flex-1 flex-col items-center justify-center rounded-2xl py-2 transition-all duration-300'
 
   if (disabled) {
     return (

@@ -7,14 +7,16 @@ import { HeartIcon } from '@/shared/icons/heart-icon'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
+import { UsersIcon } from '@/shared/icons/users-icon'
 
 import { MobileNavBar } from './MobileNavBar'
 
-/** The six of the real bar, in the real order — the count is what is being tested. */
+/** The seven of the real bar, in the real order — the count is what is being tested. */
 const items = [
   { to: '/dashboard', label: 'Início', icon: <DashboardIcon className="h-5 w-5" /> },
   { to: '/vaccines', label: 'Vacinas', icon: <SyringeIcon className="h-5 w-5" /> },
   { to: '/appointments', label: 'Consultas', icon: <StethoscopeIcon className="h-5 w-5" /> },
+  { to: '/profissionais', label: 'Equipe', icon: <UsersIcon className="h-5 w-5" /> },
   { to: '/medications', label: 'Remédios', icon: <HeartIcon className="h-5 w-5" /> },
   { to: '/milestones', label: 'Marcos', icon: <SparkleIcon className="h-5 w-5" /> },
   { to: '/notifications', label: 'Avisos', icon: <BellIcon className="h-5 w-5" />, badge: 3 },

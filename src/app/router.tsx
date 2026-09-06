@@ -106,9 +106,13 @@ export const router = createBrowserRouter([
                   })),
               },
               {
-                // Duas telas de cadastro da conta, fora da barra pelo mesmo motivo de `/profile`:
-                // a barra tem seis itens e, medido, oito não cabem — a 320px cada alvo cairia para
-                // ~38px, abaixo do piso de 44. Chega-se a elas pela tela de perfil.
+                // In the bar as the seventh item; `/plano-de-saude` below is not, and the
+                // asymmetry is measured rather than arbitrary. Targets divide the bar's width:
+                // seven clear the 44px floor at 320px only because the bar gave back half its
+                // horizontal padding (see AppShellLayout), and an eighth lands at ~39px even
+                // with none. A professional is looked up as often as an appointment is; a card
+                // number is looked up at a clinic desk, from the profile page, and does not
+                // spend a permanent tab.
                 path: 'profissionais',
                 lazy: () =>
                   import('@/features/specialists/routes/SpecialistsRoute').then((m) => ({
