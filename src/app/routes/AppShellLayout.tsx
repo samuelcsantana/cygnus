@@ -16,7 +16,7 @@ import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { UserIcon } from '@/shared/icons/user-icon'
-import { MobileNavItem } from '@/shared/components/MobileNavItem'
+import { MobileNavBar } from '@/shared/components/MobileNavBar'
 import { OfflineBanner } from '@/shared/components/OfflineBanner'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
 import { TopNavItem } from '@/shared/components/TopNavItem'
@@ -193,11 +193,11 @@ export function AppShellLayout() {
         <Outlet />
       </main>
 
-      <nav className="pb-safe print:hidden fixed right-0 bottom-0 left-0 z-30 flex justify-around border-t border-border bg-card/90 p-2 shadow-[0_-4px_24px_rgba(0,0,0,0.02)] backdrop-blur-md md:hidden">
-        {navItems.map((item) => (
-          <MobileNavItem key={item.to} {...item} disabled={!hasBabies && item.to !== '/notifications'} />
-        ))}
-      </nav>
+      <div className="md:hidden">
+        <MobileNavBar
+          items={navItems.map((item) => ({ ...item, disabled: !hasBabies && item.to !== '/notifications' }))}
+        />
+      </div>
 
       <AddBabyDialog open={isAddBabyDialogOpen} onOpenChange={(open) => !open && closeAddBabyDialog()} />
     </div>
