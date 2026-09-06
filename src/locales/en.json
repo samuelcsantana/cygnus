@@ -43,8 +43,9 @@
     "vaccines": "Vaccines",
     "appointments": "Appointments",
     "medications": "Meds",
+    "specialists": "Team",
     "milestones": "Milestones",
-    "notifications": "Notifications",
+    "notifications": "Alerts",
     "logoutError": "Could not sign you out. You are still signed in — please try again.",
     "logout": "Log out"
   },

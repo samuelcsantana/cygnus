@@ -51,11 +51,16 @@ test.describe('accessibility (WCAG 2 A/AA)', () => {
     await expect(page).toHaveURL(/\/appointments$/)
     await expectNoViolations(page)
 
+    // The care team page joined the bar in #84, so the sweep follows it there.
+    await page.getByRole('link', { name: 'Equipe', exact: true }).click()
+    await expect(page).toHaveURL(/\/profissionais$/)
+    await expectNoViolations(page)
+
     await page.getByRole('link', { name: 'Marcos', exact: true }).click()
     await expect(page).toHaveURL(/\/milestones$/)
     await expectNoViolations(page)
 
-    await page.getByRole('link', { name: 'Notificações', exact: true }).click()
+    await page.getByRole('link', { name: 'Avisos', exact: true }).click()
     await expect(page).toHaveURL(/\/notifications$/)
     await expectNoViolations(page)
   })

@@ -16,7 +16,8 @@ import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { UserIcon } from '@/shared/icons/user-icon'
-import { MobileNavItem } from '@/shared/components/MobileNavItem'
+import { UsersIcon } from '@/shared/icons/users-icon'
+import { MobileNavBar } from '@/shared/components/MobileNavBar'
 import { OfflineBanner } from '@/shared/components/OfflineBanner'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
 import { TopNavItem } from '@/shared/components/TopNavItem'
@@ -41,6 +42,11 @@ export function AppShellLayout() {
     { to: '/dashboard', label: t('nav.dashboard'), icon: <DashboardIcon className="h-5 w-5" /> },
     { to: '/vaccines', label: t('nav.vaccines'), icon: <SyringeIcon className="h-5 w-5" /> },
     { to: '/appointments', label: t('nav.appointments'), icon: <StethoscopeIcon className="h-5 w-5" /> },
+    // Beside appointments, not at the end: a professional is who the appointment is with, and the
+    // page is reached from the same intent. UsersIcon rather than the stethoscope the specialists
+    // page itself uses — the bar would show the same glyph twice, side by side, and in this bar
+    // the icon is what still means something after the label truncates.
+    { to: '/profissionais', label: t('nav.specialists'), icon: <UsersIcon className="h-5 w-5" /> },
     { to: '/medications', label: t('nav.medications'), icon: <HeartIcon className="h-5 w-5" /> },
     { to: '/milestones', label: t('nav.milestones'), icon: <SparkleIcon className="h-5 w-5" /> },
     {
@@ -193,11 +199,11 @@ export function AppShellLayout() {
         <Outlet />
       </main>
 
-      <nav className="pb-safe print:hidden fixed right-0 bottom-0 left-0 z-30 flex justify-around border-t border-border bg-card/90 p-2 shadow-[0_-4px_24px_rgba(0,0,0,0.02)] backdrop-blur-md md:hidden">
-        {navItems.map((item) => (
-          <MobileNavItem key={item.to} {...item} disabled={!hasBabies && item.to !== '/notifications'} />
-        ))}
-      </nav>
+      <div className="md:hidden">
+        <MobileNavBar
+          items={navItems.map((item) => ({ ...item, disabled: !hasBabies && item.to !== '/notifications' }))}
+        />
+      </div>
 
       <AddBabyDialog open={isAddBabyDialogOpen} onOpenChange={(open) => !open && closeAddBabyDialog()} />
     </div>

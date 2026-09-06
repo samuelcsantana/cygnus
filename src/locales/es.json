@@ -43,8 +43,9 @@
     "vaccines": "Vacunas",
     "appointments": "Consultas",
     "medications": "Medicinas",
+    "specialists": "Equipo",
     "milestones": "Hitos",
-    "notifications": "Notificaciones",
+    "notifications": "Avisos",
     "logoutError": "No se pudo cerrar la sesión. Sigues conectado; inténtalo de nuevo.",
     "logout": "Cerrar sesión"
   },
