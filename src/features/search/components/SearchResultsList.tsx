@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
@@ -93,20 +92,23 @@ export function SearchResultsList({ query, onNavigate }: SearchResultsListProps)
     milestones.isError ||
     specialists.isError
 
-  const groups = useMemo(
-    () =>
-      groupByDomain(
-        search({
-          query,
-          babies: babies.data ?? [],
-          vaccines: vaccines.perBaby.map((entry) => ({ baby: entry.baby, items: entry.items })),
-          appointments: appointments.perBaby.map((entry) => ({ baby: entry.baby, items: entry.items })),
-          medications: medications.perBaby.map((entry) => ({ baby: entry.baby, items: entry.items })),
-          milestones: milestones.perBaby.map((entry) => ({ baby: entry.baby, items: entry.items })),
-          specialists: specialists.data ?? [],
-        }),
-      ),
-    [query, babies.data, vaccines.perBaby, appointments.perBaby, medications.perBaby, milestones.perBaby, specialists.data],
+  // Not memoised, and that is the honest version: every one of these inputs is a
+  // fresh array on every render — the aggregate hooks build `perBaby` with
+  // `babyList.map(...)` each time they run — so a `useMemo` over them recomputes
+  // on every render anyway. It would read like a performance guarantee and be
+  // decoration. The work it saves is a substring scan over a few hundred rows,
+  // which is microseconds; the memo would cost a reader the assumption that
+  // something here is expensive.
+  const groups = groupByDomain(
+    search({
+      query,
+      babies: babies.data ?? [],
+      vaccines: vaccines.perBaby.map((entry) => ({ baby: entry.baby, items: entry.items })),
+      appointments: appointments.perBaby.map((entry) => ({ baby: entry.baby, items: entry.items })),
+      medications: medications.perBaby.map((entry) => ({ baby: entry.baby, items: entry.items })),
+      milestones: milestones.perBaby.map((entry) => ({ baby: entry.baby, items: entry.items })),
+      specialists: specialists.data ?? [],
+    }),
   )
 
   if (normalise(query).length < MIN_QUERY_LENGTH) {
