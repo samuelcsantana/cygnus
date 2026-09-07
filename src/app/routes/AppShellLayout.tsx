@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
@@ -13,6 +13,7 @@ import { DashboardIcon } from '@/shared/icons/dashboard-icon'
 import { GrowthIcon } from '@/shared/icons/growth-icon'
 import { LogoIcon } from '@/shared/icons/logo-icon'
 import { MenuIcon } from '@/shared/icons/menu-icon'
+import { SearchIcon } from '@/shared/icons/search-icon'
 import { HeartIcon } from '@/shared/icons/heart-icon'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
@@ -23,6 +24,18 @@ import { OfflineBanner } from '@/shared/components/OfflineBanner'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
 import { useAddBabyDialogStore } from '@/shared/stores/addBabyDialog.store'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
+
+/**
+ * Lazy, and mounted only after the first click, for the same reason every route
+ * is: the dialog reaches into six features' hooks, and importing it eagerly
+ * dragged their api modules and schemas into the entry chunk — 1.8 kB gzip that
+ * every visitor paid on first paint for a panel most sessions never open.
+ * Mounted-once rather than mounted-while-open so closing does not cut the
+ * animation, and the chunk is fetched once.
+ */
+const SearchDialog = lazy(() =>
+  import('@/features/search/components/SearchDialog').then((module) => ({ default: module.SearchDialog })),
+)
 
 export function AppShellLayout() {
   const { t } = useTranslation()
@@ -36,6 +49,13 @@ export function AppShellLayout() {
   const openAddBabyDialog = useAddBabyDialogStore((state) => state.open)
   const closeAddBabyDialog = useAddBabyDialogStore((state) => state.close)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [wasSearchOpened, setWasSearchOpened] = useState(false)
+
+  const openSearch = () => {
+    setWasSearchOpened(true)
+    setIsSearchOpen(true)
+  }
 
   const hasBabies = (babies.data?.length ?? 0) > 0
   const unreadCount = notifications.data?.filter((n) => !n.readAt).length ?? 0
@@ -175,7 +195,28 @@ export function AppShellLayout() {
               beside them was 36x36. Nothing moves visually — the fills are
               transparent and the icons stay centred at their own size — so the
               growth is hit area only. */}
+          {/* Wide screens get the field the reference has; a phone's top bar
+              has no room for one, so the same dialog opens from an icon. Two
+              triggers, one search — an inline dropdown beside a sheet is how the
+              two versions drift apart. */}
+          <button
+            type="button"
+            onClick={openSearch}
+            className="mr-2 hidden h-9 min-w-0 max-w-64 flex-1 items-center gap-2 rounded-full border border-border bg-surface px-3 text-left text-[13px] text-ink-faint transition-colors hover:bg-muted lg:flex"
+          >
+            <SearchIcon className="h-4 w-4 flex-shrink-0" />
+            <span className="truncate">{t('search.placeholder')}</span>
+          </button>
+
           <div className="flex flex-shrink-0 items-center gap-1">
+            <button
+              type="button"
+              onClick={openSearch}
+              aria-label={t('search.open')}
+              className="flex h-11 w-11 items-center justify-center rounded-lg text-ink-muted lg:hidden"
+            >
+              <SearchIcon className="h-5 w-5" />
+            </button>
             <ThemeToggle className="h-11 w-11" />
             <Link
               to="/notifications"
@@ -246,6 +287,12 @@ export function AppShellLayout() {
           {sidebar(() => setIsMenuOpen(false))}
         </DialogContent>
       </Dialog>
+
+      {wasSearchOpened && (
+        <Suspense fallback={null}>
+          <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
+        </Suspense>
+      )}
 
       <AddBabyDialog open={isAddBabyDialogOpen} onOpenChange={(open) => !open && closeAddBabyDialog()} />
     </div>

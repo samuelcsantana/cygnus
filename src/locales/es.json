@@ -53,6 +53,18 @@
     "logoutError": "No se pudo cerrar la sesión. Sigues conectado; inténtalo de nuevo.",
     "logout": "Cerrar sesión"
   },
+  "search": {
+    "title": "Buscar",
+    "placeholder": "Buscar vacunas, consultas, medicinas…",
+    "hint": "Escribe al menos dos letras.",
+    "loading": "Buscando…",
+    "noResults": "No se encontró nada para “{{query}}”.",
+    "more_one": "y {{count}} más en {{section}}",
+    "more_other": "y {{count}} más en {{section}}",
+    "error": "No se pudo buscar ahora — alguna lista no cargó.",
+    "partialError": "Parte de la búsqueda no se pudo leer: alguna lista no cargó.",
+    "open": "Abrir la búsqueda"
+  },
   "auth": {
     "tabs": {
       "label": "Inicia sesión o crea una cuenta",
