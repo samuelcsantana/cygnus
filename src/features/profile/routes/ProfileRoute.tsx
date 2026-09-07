@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import { useAgeLabel } from '@/hooks/useAgeLabel'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { useCurrentUser } from '@/features/auth/api/auth.hooks'
 import { useBabies } from '@/features/babies/api/babies.hooks'
 import type { Baby } from '@/features/babies/api/babies.schemas'
 import { EditBabyDialog } from '@/features/babies/components/EditBabyDialog'
-import { ageInMonths } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
@@ -23,6 +24,7 @@ import { ProfileForm } from '../components/ProfileForm'
 
 export function ProfileRoute() {
   const { t } = useTranslation()
+  const ageLabel = useAgeLabel()
   const navigate = useNavigate()
   const currentUser = useCurrentUser()
   const babies = useBabies()
@@ -161,7 +163,7 @@ export function ProfileRoute() {
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-[13px] font-bold text-ink">{baby.name}</p>
                       <p className="text-[11px] text-ink-muted">
-                        {t('babies.monthsOld', { count: ageInMonths(baby.birthDate) })}
+                        {ageLabel(baby.birthDate)}
                       </p>
                     </div>
                     <button

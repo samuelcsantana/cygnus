@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next'
 
+import { useAgeLabel } from '@/hooks/useAgeLabel'
+
 import type { Appointment } from '@/features/appointments/api/appointments.schemas'
 import type { Baby } from '@/features/babies/api/babies.schemas'
-import { ageInMonths, formatDateDisplay, splitScheduledAt } from '@/lib/date'
+import { formatDateDisplay, splitScheduledAt } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { AlertCircleIcon } from '@/shared/icons/alert-circle-icon'
 import { IdCardIcon } from '@/shared/icons/id-card-icon'
@@ -70,6 +72,7 @@ export function BabyHeroCard({
   onEdit,
 }: BabyHeroCardProps) {
   const { t, i18n } = useTranslation()
+  const ageLabel = useAgeLabel()
   const avatarAppearance = babyAvatarAppearance(baby.id, baby.avatarColor)
 
   return (
@@ -123,7 +126,7 @@ export function BabyHeroCard({
               porque é código, não prosa — mesma regra de `--font-mono`. A idade
               fica proporcional: "2 meses" é frase. */}
           <p className="mt-0.5 text-[13px] text-emerald-50">
-            {t('babies.monthsOld', { count: ageInMonths(baby.birthDate) })}
+            {ageLabel(baby.birthDate)}
             {baby.bloodType && (
               <>
                 {' · '}

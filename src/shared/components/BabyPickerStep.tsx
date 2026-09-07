@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
 
+import { useAgeLabel } from '@/hooks/useAgeLabel'
+
 import type { Baby } from '@/features/babies/api/babies.schemas'
-import { ageInMonths } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 
@@ -17,6 +18,7 @@ interface BabyPickerStepProps {
 // household has more than one baby — skipped entirely (see soleBaby()) otherwise.
 export function BabyPickerStep({ babies, value, onSelect }: BabyPickerStepProps) {
   const { t } = useTranslation()
+  const ageLabel = useAgeLabel()
 
   return (
     <div className="animate-fade-in-up space-y-4">
@@ -30,7 +32,7 @@ export function BabyPickerStep({ babies, value, onSelect }: BabyPickerStepProps)
           return {
             value: baby.id,
             label: baby.name,
-            description: t('babies.monthsOld', { count: ageInMonths(baby.birthDate) }),
+            description: ageLabel(baby.birthDate),
             media: (
               <span
                 className={cn(

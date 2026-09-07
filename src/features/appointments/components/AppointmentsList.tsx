@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import type { Baby } from '@/features/babies/api/babies.schemas'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { usePagedList } from '@/hooks/usePagedList'
-import { BabyFilterChips } from '@/shared/components/BabyFilterChips'
 import { LoadMoreButton } from '@/shared/components/LoadMoreButton'
+import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 import { NoSearchResults } from '@/shared/components/NoSearchResults'
 import { SearchInput } from '@/shared/components/SearchInput'
 
@@ -26,7 +26,9 @@ export function AppointmentsList({ items, babies }: AppointmentsListProps) {
   const { t } = useTranslation()
   const [rescheduleTarget, setRescheduleTarget] = useState<Appointment | null>(null)
   const [detailTarget, setDetailTarget] = useState<Appointment | null>(null)
-  const [babyFilter, setBabyFilter] = useState<string | null>(null)
+  // The child filter is the menu's, not this page's: the choice outlives the page
+  // it was made on. See selectedBaby.store.ts.
+  const babyFilter = useSelectedBabyStore((state) => state.selectedBabyId)
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebouncedValue(search)
   const babyById = new Map(babies.map((baby) => [baby.id, baby]))
@@ -46,7 +48,6 @@ export function AppointmentsList({ items, babies }: AppointmentsListProps) {
   return (
     <div>
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <BabyFilterChips babies={babies} value={babyFilter} onChange={setBabyFilter} />
         <SearchInput
           id="appointment-search"
           label={t('appointments.search.label')}

@@ -42,7 +42,7 @@
     "sections": "Seções",
     "openMenu": "Abrir menu",
     "closeMenu": "Fechar menu",
-    "dashboard": "Início",
+    "dashboard": "Visão geral",
     "vaccines": "Vacinas",
     "appointments": "Consultas",
     "medications": "Medicamentos",
@@ -164,6 +164,18 @@
   },
   "babies": {
     "addChild": "Adicionar Filho",
+    "switcher": {
+      "heading": "Crianças",
+      "all": "Todas as crianças"
+    },
+    "age": {
+      "months_zero": "{{count}} meses",
+      "months_one": "{{count}} mês",
+      "months_other": "{{count}} meses",
+      "years_one": "{{count}} ano",
+      "years_other": "{{count}} anos",
+      "and": "e"
+    },
     "monthsOld_zero": "{{count}} meses",
     "monthsOld_one": "{{count}} mês",
     "monthsOld_other": "{{count}} meses",

@@ -2,10 +2,13 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
+import type { Baby } from '@/features/babies/api/babies.schemas'
+
 import { cn } from '@/lib/utils'
 import { LogoIcon } from '@/shared/icons/logo-icon'
 import { LogoutIcon } from '@/shared/icons/logout-icon'
 import { PlusIcon } from '@/shared/icons/plus-icon'
+import { BabySwitcher } from './BabySwitcher'
 import { SidebarNavItem } from './SidebarNavItem'
 
 export interface SidebarNavEntry {
@@ -17,6 +20,10 @@ export interface SidebarNavEntry {
 
 interface AppSidebarProps {
   items: SidebarNavEntry[]
+  babies: readonly Baby[]
+  /** The child the whole app is narrowed to; `null` is all of them. */
+  selectedBabyId: string | null
+  onSelectBaby: (babyId: string | null) => void
   accountName: string
   accountEmail: string
   onAddBaby: () => void
@@ -43,6 +50,9 @@ interface AppSidebarProps {
  */
 export function AppSidebar({
   items,
+  babies,
+  selectedBabyId,
+  onSelectBaby,
   accountName,
   accountEmail,
   onAddBaby,
@@ -61,6 +71,16 @@ export function AppSidebar({
         </span>
         <span className="font-display text-xl font-extrabold tracking-tight text-ink">{t('common.appName')}</span>
       </Link>
+
+      {/* The children first, then the sections: the menu reads "who am I
+          looking at" before "at what". Only when there is more than one — a
+          single-child household has nothing to switch between, and a radio group
+          of one is furniture. */}
+      {babies.length > 1 && (
+        <div className="flex-shrink-0 px-3 pb-3">
+          <BabySwitcher babies={babies} value={selectedBabyId} onChange={onSelectBaby} />
+        </div>
+      )}
 
       <div className="flex-shrink-0 px-3 pb-3">
         <button

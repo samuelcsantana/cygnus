@@ -6,8 +6,8 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import type { Baby } from '@/features/babies/api/babies.schemas'
 import { todayDateString } from '@/lib/date'
-import { BabyFilterChips } from '@/shared/components/BabyFilterChips'
 import { EmptyState } from '@/shared/components/EmptyState'
+import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 import { HeartIcon } from '@/shared/icons/heart-icon'
 
 import { useAllBabiesMedications, useEndMedication } from '../api/medications.hooks'
@@ -20,7 +20,9 @@ import { MedicationRecordNotice } from '../components/MedicationRecordNotice'
 export function MedicationsRoute() {
   const { t } = useTranslation()
   const { isPending, isError, isEmpty, babies, items } = useAllBabiesMedications()
-  const [babyFilter, setBabyFilter] = useState<string | null>(null)
+  // The child filter is the menu's, not this page's: the choice outlives the page
+  // it was made on. See selectedBaby.store.ts.
+  const babyFilter = useSelectedBabyStore((state) => state.selectedBabyId)
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [editTarget, setEditTarget] = useState<Medication | null>(null)
 
@@ -62,10 +64,6 @@ export function MedicationsRoute() {
 
       <AddMedicationDialog open={isAddOpen} onOpenChange={setIsAddOpen} />
       <EditMedicationDialog medication={editTarget} onOpenChange={() => setEditTarget(null)} />
-
-      {babies.length > 1 && (
-        <BabyFilterChips babies={babies} value={babyFilter} onChange={setBabyFilter} className="mb-6" />
-      )}
 
       {isPending ? (
         <div className="grid gap-4 lg:grid-cols-2">

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
@@ -23,6 +23,7 @@ import { AppSidebar } from '@/shared/components/AppSidebar'
 import { OfflineBanner } from '@/shared/components/OfflineBanner'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
 import { useAddBabyDialogStore } from '@/shared/stores/addBabyDialog.store'
+import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
 
 /**
@@ -57,7 +58,22 @@ export function AppShellLayout() {
     setIsSearchOpen(true)
   }
 
-  const hasBabies = (babies.data?.length ?? 0) > 0
+  const babyList = babies.data ?? []
+  const hasBabies = babyList.length > 0
+  const selectedBabyId = useSelectedBabyStore((state) => state.selectedBabyId)
+  const selectBaby = useSelectedBabyStore((state) => state.select)
+  const reconcileSelectedBaby = useSelectedBabyStore((state) => state.reconcile)
+
+  // The menu is the one place that holds the real list, so it is where a
+  // selection pointing at a child who no longer exists gets dropped — otherwise
+  // every list filters to nobody and the app looks empty for no visible reason.
+  // Depends on `babies.data`, which TanStack keeps stable between renders, and
+  // not on `babyList` — that one is a fresh array every render, so the effect
+  // would run on every render for a check that only matters when the list itself
+  // changes.
+  useEffect(() => {
+    if (babies.data) reconcileSelectedBaby(babies.data.map((baby) => baby.id))
+  }, [babies.data, reconcileSelectedBaby])
   const unreadCount = notifications.data?.filter((n) => !n.readAt).length ?? 0
 
   // Notifications is not among them: it lives in the top bar as the bell, where
@@ -117,6 +133,12 @@ export function AppShellLayout() {
   const sidebar = (onNavigate?: () => void) => (
     <AppSidebar
       items={navItems}
+      babies={babyList}
+      selectedBabyId={selectedBabyId}
+      onSelectBaby={(babyId) => {
+        selectBaby(babyId)
+        onNavigate?.()
+      }}
       accountName={accountLabel}
       accountEmail={identity?.email ?? ''}
       onAddBaby={() => {
