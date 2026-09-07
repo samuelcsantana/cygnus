@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom'
 
 import { useSyncAuthIdentity } from '@/features/auth/api/auth.hooks'
+import { NameGate } from '@/features/auth/components/NameGate'
 import { LegalAcceptanceGate } from '@/features/legal/components/LegalAcceptanceGate'
 import { ApiError } from '@/lib/http-client'
 
@@ -37,8 +38,13 @@ export function ProtectedLayout() {
   // known person, and it has to be asked before any screen that shows a child's
   // data. Inert while both documents are drafts — see LegalAcceptanceGate.
   return (
+    // Consent outermost: whether we may process this person's data is settled
+    // before we ask them anything else. The name gate is inert for every account
+    // that has one, which today is all of them — see NameGate.
     <LegalAcceptanceGate>
-      <Outlet />
+      <NameGate>
+        <Outlet />
+      </NameGate>
     </LegalAcceptanceGate>
   )
 }

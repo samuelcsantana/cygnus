@@ -99,7 +99,12 @@ export function AuthAssistedFlow({ mode, initialEmail, onExit }: AuthAssistedFlo
     try {
       await requestFor(values.email)
       setStep('code')
-      toast.info(t('auth.assisted.requestSent'))
+      // Sem senha, o código sai para qualquer endereço — e usá-lo cria a conta
+      // (`cygnus-api` #35), então prometer sem ressalva é o que passou a ser
+      // verdade. A redefinição de senha mantém o condicional: lá um endereço sem
+      // conta não recebe nada, e a ressalva é o que impede a frase de responder
+      // "esse e-mail tem conta aqui?".
+      toast.info(t(mode === 'reset' ? 'auth.assisted.requestSent' : 'auth.assisted.requestSentPasswordless'))
     } catch {
       // surfaced below via requestCode.error
     }
