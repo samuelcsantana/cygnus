@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -11,7 +11,7 @@ import { ApiError } from '@/lib/http-client'
 import { TrashIcon } from '@/shared/icons/trash-icon'
 import { fieldErrorKey } from '@/shared/utils/zod-error'
 
-import { useDeleteAccount } from '../api/profile.hooks'
+import { useDeleteAccount, useRequestDeletionCode } from '../api/profile.hooks'
 import { deleteAccountFormSchema, type DeleteAccountFormInput } from '../api/profile.schemas'
 
 interface DeleteAccountDialogProps {
@@ -21,7 +21,15 @@ interface DeleteAccountDialogProps {
 export function DeleteAccountDialog({ onDeleted }: DeleteAccountDialogProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
+  /**
+   * `'password'` até alguém dizer que não tem uma. Não dá para descobrir sozinho:
+   * a conta criada por código guarda um hash aleatório, indistinguível de um
+   * hash de verdade, então o app não sabe quem tem senha — quem sabe é a pessoa.
+   */
+  const [proof, setProof] = useState<'password' | 'code'>('password')
+  const [code, setCode] = useState('')
   const deleteAccount = useDeleteAccount()
+  const requestCode = useRequestDeletionCode()
 
   const {
     register,
@@ -33,15 +41,34 @@ export function DeleteAccountDialog({ onDeleted }: DeleteAccountDialogProps) {
     defaultValues: { currentPassword: '' },
   })
 
-  const onSubmit = handleSubmit(async (values) => {
+  const confirm = async (payload: Parameters<typeof deleteAccount.mutateAsync>[0]) => {
     try {
-      await deleteAccount.mutateAsync(values.currentPassword)
+      await deleteAccount.mutateAsync(payload)
       setOpen(false)
       onDeleted?.()
     } catch {
       // surfaced below via deleteAccount.error, dialog stays open
     }
-  })
+  }
+
+  const onSubmitPassword = handleSubmit((values) => confirm({ currentPassword: values.currentPassword }))
+
+  // Não passa pelo `handleSubmit`: o resolver do formulário exige a senha, e no
+  // modo código não há senha para exigir — validá-la aqui faria o envio nunca
+  // chegar ao handler, em silêncio.
+  const onSubmitCode = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    void confirm({ code })
+  }
+
+  const askForCode = async () => {
+    setProof('code')
+    await requestCode.mutateAsync().catch(() => {
+      // O endpoint responde 200 até quando limita, então falha aqui é rede. O
+      // campo continua na tela: quem já tem um código válido de um pedido
+      // anterior ainda consegue usá-lo, e esconder o campo tiraria essa saída.
+    })
+  }
 
   const currentPasswordErrorKey = fieldErrorKey(errors.currentPassword)
 
@@ -76,7 +103,24 @@ export function DeleteAccountDialog({ onDeleted }: DeleteAccountDialogProps) {
 
         <p className="text-ink-muted text-sm">{t('profile.delete.confirmDescription')}</p>
 
-        <form onSubmit={onSubmit} className="space-y-4" noValidate>
+        <form onSubmit={proof === 'code' ? onSubmitCode : onSubmitPassword} className="space-y-4" noValidate>
+          {proof === 'code' ? (
+            <div>
+              <Label htmlFor="delete-account-code">{t('profile.delete.codeLabel')}</Label>
+              <Input
+                id="delete-account-code"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={6}
+                value={code}
+                onChange={(event) => setCode(event.target.value.replace(/\D/g, ''))}
+                className="mt-2"
+              />
+              <p className="mt-1.5 text-sm text-ink-muted">
+                {requestCode.isPending ? t('profile.delete.codeSending') : t('profile.delete.codeSent')}
+              </p>
+            </div>
+          ) : (
           <div>
             <Label htmlFor="delete-account-password">{t('profile.delete.currentPasswordLabel')}</Label>
             <Input
@@ -93,7 +137,18 @@ export function DeleteAccountDialog({ onDeleted }: DeleteAccountDialogProps) {
                 {t(currentPasswordErrorKey)}
               </p>
             )}
+            {/* Quem entrou sem senha nunca definiu uma, e o app não tem como
+                saber disso — o hash aleatório é indistinguível de um de verdade.
+                Então quem diz é a pessoa. */}
+            <button
+              type="button"
+              onClick={askForCode}
+              className="mt-2 text-sm font-semibold text-primary underline underline-offset-2"
+            >
+              {t('profile.delete.useCode')}
+            </button>
           </div>
+          )}
 
           {submitErrorMessage && (
             <p role="alert" className="text-destructive text-sm">
@@ -111,7 +166,11 @@ export function DeleteAccountDialog({ onDeleted }: DeleteAccountDialogProps) {
             <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isSubmitting}>
               {t('common.cancel')}
             </Button>
-            <Button type="submit" variant="destructive" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              variant="destructive"
+              disabled={isSubmitting || (proof === 'code' && code.length !== 6)}
+            >
               {isSubmitting ? t('common.saving') : t('profile.delete.confirmAction')}
             </Button>
           </div>

@@ -67,4 +67,59 @@ describe('DeleteAccountDialog', () => {
     expect(onDeleted).not.toHaveBeenCalled()
     expect(screen.getByText('Excluir conta?')).toBeInTheDocument()
   })
+
+  /**
+   * O caso que a rota do código existe para resolver: conta criada por "entrar
+   * sem senha" tem hash aleatório, então **nenhuma senha é a certa** e o campo
+   * de senha trancava a pessoa para fora da própria exclusão. O app não
+   * consegue descobrir sozinho quem tem senha — o hash aleatório é
+   * indistinguível de um de verdade —, então quem diz é a pessoa.
+   */
+  it('exclui a conta com um código, para quem não tem senha', async () => {
+    let deletedWith: unknown = null
+    let codeRequested = false
+    server.use(
+      http.post(`${config.apiBaseUrl}/users/me/deletion-code`, () => {
+        codeRequested = true
+        return HttpResponse.json({ status: 'ok', message: 'A code is on its way' })
+      }),
+      http.delete(`${config.apiBaseUrl}/users/me`, async ({ request }) => {
+        deletedWith = await request.json()
+        return new HttpResponse(null, { status: 204 })
+      }),
+    )
+
+    const onDeleted = vi.fn()
+    const user = userEvent.setup()
+    renderWithProviders(<DeleteAccountDialog onDeleted={onDeleted} />)
+
+    await user.click(screen.getByRole('button', { name: 'Excluir minha conta' }))
+    await user.click(screen.getByRole('button', { name: /Não tenho senha/ }))
+
+    await waitFor(() => expect(codeRequested).toBe(true))
+
+    await user.type(screen.getByLabelText('Código de 6 dígitos'), '123456')
+    await user.click(screen.getByRole('button', { name: 'Excluir conta permanentemente' }))
+
+    await waitFor(() => expect(onDeleted).toHaveBeenCalled())
+    // Só o código sobe: mandar os dois é recusado pelo schema da API.
+    expect(deletedWith).toEqual({ code: '123456' })
+  })
+
+  it('só deixa confirmar com o código inteiro', async () => {
+    server.use(
+      http.post(`${config.apiBaseUrl}/users/me/deletion-code`, () =>
+        HttpResponse.json({ status: 'ok', message: 'A code is on its way' }),
+      ),
+    )
+
+    const user = userEvent.setup()
+    renderWithProviders(<DeleteAccountDialog />)
+
+    await user.click(screen.getByRole('button', { name: 'Excluir minha conta' }))
+    await user.click(screen.getByRole('button', { name: /Não tenho senha/ }))
+    await user.type(screen.getByLabelText('Código de 6 dígitos'), '123')
+
+    expect(screen.getByRole('button', { name: 'Excluir conta permanentemente' })).toBeDisabled()
+  })
 })
