@@ -1,15 +1,16 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 // Hoisted so the factory below can close over them.
-const { initSpy, tracingSpy } = vi.hoisted(() => ({
+const { initSpy, tracingSpy, captureSpy } = vi.hoisted(() => ({
   initSpy: vi.fn(),
   tracingSpy: vi.fn(() => ({ name: 'BrowserTracing' })),
+  captureSpy: vi.fn(),
 }))
 
 vi.mock('@sentry/react', () => ({
   init: initSpy,
   browserTracingIntegration: tracingSpy,
-  captureException: vi.fn(),
+  captureException: captureSpy,
 }))
 
 const DSN = 'https://public@o0.ingest.us.sentry.io/1'
@@ -28,6 +29,41 @@ afterEach(() => {
   vi.unstubAllEnvs()
   initSpy.mockClear()
   tracingSpy.mockClear()
+  captureSpy.mockClear()
+})
+
+describe('reportRequestError privacy', () => {
+  it('reports HTTP status without the API body or original message', async () => {
+    const { reportRequestError } = await loadWithDsn(DSN)
+    const { ApiError } = await import('./http-client')
+    reportRequestError(new ApiError(500, { status: 'error', message: 'private child details' }, 'private child details'), 'mutation')
+    const [error, options] = captureSpy.mock.calls[0]!
+    expect(error.message).toBe('API request failed (HTTP 500)')
+    expect(options.extra).toEqual({ operation: 'mutation', status: 500 })
+    expect(JSON.stringify([error, options])).not.toContain('private child details')
+  })
+
+  it('reports schema paths and codes without Zod received values or messages', async () => {
+    const { reportRequestError } = await loadWithDsn(DSN)
+    const { z } = await import('zod')
+    const result = z.object({ status: z.enum(['ok']) }).safeParse({ status: 'private child details' })
+    if (result.success) throw new Error('Expected invalid fixture')
+    reportRequestError(result.error, 'query')
+    const [error, options] = captureSpy.mock.calls[0]!
+    expect(error.message).toBe('API schema validation failed')
+    expect(options.extra).toEqual({
+      operation: 'query', issues: [{ code: 'invalid_enum_value', path: ['status'] }],
+    })
+    expect(JSON.stringify([error, options])).not.toContain('private child details')
+  })
+
+  it('does not forward arbitrary exception messages', async () => {
+    const { reportRequestError } = await loadWithDsn(DSN)
+    reportRequestError(new TypeError('Failed to fetch /babies/private-id'), 'query')
+    const [error, options] = captureSpy.mock.calls[0]!
+    expect(error.message).toBe('Request failed with TypeError')
+    expect(options.extra).toEqual({ operation: 'query' })
+  })
 })
 
 describe('initErrorReporting', () => {

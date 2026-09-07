@@ -3,7 +3,8 @@ import { useEffect, type ReactNode } from 'react'
 
 import { Toaster } from '@/components/ui/sonner'
 import '@/lib/i18n'
-import { queryClient, setUnauthorizedHandler } from '@/lib/query-client'
+import { reportRequestError } from '@/lib/error-reporting'
+import { queryClient, setRequestErrorHandler, setUnauthorizedHandler } from '@/lib/query-client'
 
 import { ThemeProvider } from './ThemeProvider'
 
@@ -13,11 +14,13 @@ interface AppProvidersProps {
 
 export function AppProviders({ children }: AppProvidersProps) {
   useEffect(() => {
+    setRequestErrorHandler(reportRequestError)
     setUnauthorizedHandler(() => {
       if (window.location.pathname !== '/login') {
         window.location.assign('/login')
       }
     })
+    return () => setRequestErrorHandler(null)
   }, [])
 
   return (

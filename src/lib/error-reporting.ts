@@ -1,4 +1,7 @@
 import * as Sentry from '@sentry/react'
+import { ZodError } from 'zod'
+
+import { ApiError } from './http-client'
 
 const dsn = import.meta.env.VITE_SENTRY_DSN
 
@@ -45,4 +48,21 @@ export function reportError(error: unknown, context?: Record<string, unknown>): 
   if (import.meta.env.DEV) {
     console.error('[error-reporting]', error, context)
   }
+}
+
+/** Report technical failures without API bodies, submitted values or child IDs. */
+export function reportRequestError(error: unknown, operation: 'query' | 'mutation'): void {
+  const context: Record<string, unknown> = { operation }
+  let message = 'Unexpected request failure'
+  if (error instanceof ZodError) {
+    message = 'API schema validation failed'
+    // Zod messages and enum "received" values can include submitted personal data.
+    context.issues = error.issues.map(({ code, path }) => ({ code, path }))
+  } else if (error instanceof ApiError) {
+    message = `API request failed (HTTP ${error.status})`
+    context.status = error.status
+  } else if (error instanceof TypeError) {
+    message = 'Request failed with TypeError'
+  }
+  reportError(new Error(message), context)
 }
