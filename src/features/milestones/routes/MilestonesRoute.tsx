@@ -6,9 +6,9 @@ import { Button } from '@/components/ui/button'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { usePagedList } from '@/hooks/usePagedList'
 import { cn } from '@/lib/utils'
-import { BabyFilterChips } from '@/shared/components/BabyFilterChips'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { LoadMoreButton } from '@/shared/components/LoadMoreButton'
+import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 import { NoSearchResults } from '@/shared/components/NoSearchResults'
 import { SearchInput } from '@/shared/components/SearchInput'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
@@ -27,7 +27,9 @@ export function MilestonesRoute() {
   const { t } = useTranslation()
   const { isPending, isError, isEmpty, babies, items } = useAllBabiesMilestones()
   const [activeCategory, setActiveCategory] = useState<MilestoneCategory | 'ALL'>('ALL')
-  const [babyFilter, setBabyFilter] = useState<string | null>(null)
+  // The child filter is the menu's, not this page's: the choice outlives the page
+  // it was made on. See selectedBaby.store.ts.
+  const babyFilter = useSelectedBabyStore((state) => state.selectedBabyId)
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [suggestion, setSuggestion] = useState<MilestoneSuggestion | null>(null)
 
@@ -152,7 +154,6 @@ export function MilestonesRoute() {
       ) : (
         <>
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <BabyFilterChips babies={babies} value={babyFilter} onChange={setBabyFilter} />
             <SearchInput
               id="milestone-search"
               label={t('milestones.search.label')}

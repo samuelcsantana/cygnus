@@ -18,6 +18,7 @@ import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
+import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 
 import { useBabies } from '../api/babies.hooks'
 import type { Baby } from '../api/babies.schemas'
@@ -37,6 +38,7 @@ export function DashboardRoute() {
   const { t, i18n } = useTranslation()
   const babies = useBabies()
   const identity = useAuthIdentityStore((state) => state.identity)
+  const selectedBabyId = useSelectedBabyStore((state) => state.selectedBabyId)
   const [editTarget, setEditTarget] = useState<Baby | null>(null)
 
   const vaccines = useAllBabiesVaccineCalendars()
@@ -83,11 +85,27 @@ export function DashboardRoute() {
 
   const parentName = identity?.name ?? identity?.email ?? ''
 
-  const delayedItems = vaccines.items.filter((item) => item.status === 'DELAYED')
-  const appliedCount = vaccines.items.filter((item) => item.status === 'APPLIED').length
-  const pendingCount = vaccines.items.length - appliedCount
+  // Narrowed to the child chosen in the menu, or the whole family when none is.
+  // Applied once, here, so every number and every card below answers for the
+  // same set — a page where the hero card is one child and the counters are six
+  // is worse than either view on its own.
+  //
+  // The empty-state check above stays on the full list on purpose: a household
+  // with children never sees the welcome screen because of a filter.
+  const visibleBabies = selectedBabyId ? babyList.filter((baby) => baby.id === selectedBabyId) : babyList
+  const forSelection = <T extends { babyId: string }>(items: T[]): T[] =>
+    selectedBabyId ? items.filter((item) => item.babyId === selectedBabyId) : items
 
-  const sortedAppointments = [...appointments.items].sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt))
+  const visibleVaccineItems = forSelection(vaccines.items)
+  const visibleAppointments = forSelection(appointments.items)
+  const visibleMilestones = forSelection(milestones.items)
+  const visibleMedications = forSelection(medications.items)
+
+  const delayedItems = visibleVaccineItems.filter((item) => item.status === 'DELAYED')
+  const appliedCount = visibleVaccineItems.filter((item) => item.status === 'APPLIED').length
+  const pendingCount = visibleVaccineItems.length - appliedCount
+
+  const sortedAppointments = [...visibleAppointments].sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt))
   const nextAppointment = sortedAppointments.find((appointment) => appointment.status === 'SCHEDULED')
   const lastAppointment = [...sortedAppointments].reverse().find((appointment) => appointment.status === 'COMPLETED')
   const nextAppointmentBaby = babyList.find((baby) => baby.id === nextAppointment?.babyId)
@@ -96,7 +114,7 @@ export function DashboardRoute() {
   // O estado vem de `perBaby`, não de `babyList`: cada criança tem sua própria
   // requisição de calendário, e uma pode falhar enquanto as outras respondem.
   // Derivar do agregado marcaria as seis como desconhecidas por causa de uma.
-  const familyItems = babyList.map((baby) => {
+  const familyItems = visibleBabies.map((baby) => {
     const entry = vaccines.perBaby.find((candidate) => candidate.baby.id === baby.id)
     // As consultas já estão carregadas nesta tela para os cartões abaixo, então a última medida
     // sai daqui sem uma requisição a mais — que é o que torna barato mostrar peso e altura no
@@ -119,7 +137,7 @@ export function DashboardRoute() {
         <h1 className="font-display text-2xl font-black text-ink">
           {t('babies.dashboard.greetingLine', { greeting: t(getGreetingKey()), name: parentName })}
         </h1>
-        <p className="text-sm text-ink-muted">{t('babies.dashboard.childCount', { count: babyList.length })}</p>
+        <p className="text-sm text-ink-muted">{t('babies.dashboard.childCount', { count: visibleBabies.length })}</p>
       </div>
 
       {delayedItems.length > 0 && (
@@ -177,12 +195,12 @@ export function DashboardRoute() {
         <StatCard
           icon={<SparkleIcon className="h-5 w-5" />}
           label={t('babies.dashboard.statMilestonesLabel')}
-          value={`${milestones.items.length}`}
+          value={`${visibleMilestones.length}`}
           // Um "0" com a legenda "marcos do desenvolvimento" descreve o vazio e
           // não diz o que fazer com ele. Com nada registrado, a legenda passa a
           // apontar para a tela onde os exemplos abrem o formulário.
           sub={
-            milestones.items.length === 0
+            visibleMilestones.length === 0
               ? t('babies.dashboard.statMilestonesEmpty')
               : t('babies.dashboard.statMilestonesSub')
           }
@@ -203,20 +221,20 @@ export function DashboardRoute() {
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <VaccinesOverviewCard
-          babies={babyList}
-          items={vaccines.items}
+          babies={visibleBabies}
+          items={visibleVaccineItems}
           isPending={vaccines.isPending}
           isError={vaccines.isError}
         />
         <AppointmentsOverviewCard
-          babies={babyList}
-          items={appointments.items}
+          babies={visibleBabies}
+          items={visibleAppointments}
           isPending={appointments.isPending}
           isError={appointments.isError}
         />
         <MilestonesOverviewCard
-          babies={babyList}
-          items={milestones.items}
+          babies={visibleBabies}
+          items={visibleMilestones}
           isPending={milestones.isPending}
           isError={milestones.isError}
         />
@@ -224,8 +242,8 @@ export function DashboardRoute() {
             toda em `lg`. É também o único caminho até `/medications`, que fica fora da barra de
             navegação — ver o comentário na rota. */}
         <MedicationsOverviewCard
-          babies={babyList}
-          items={medications.items}
+          babies={visibleBabies}
+          items={visibleMedications}
           isPending={medications.isPending}
           isError={medications.isError}
         />

@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Navigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAllBabiesAppointments } from '@/features/appointments/api/appointments.hooks'
-import { BabyFilterChips } from '@/shared/components/BabyFilterChips'
 import { EmptyState } from '@/shared/components/EmptyState'
+import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 import { GrowthIcon } from '@/shared/icons/growth-icon'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 import { formatCentimeters, formatKilograms } from '@/shared/utils/measurements'
@@ -32,8 +31,9 @@ import { GrowthMeasurementsTable } from '../components/GrowthMeasurementsTable'
  */
 export function GrowthRoute() {
   const { t, i18n } = useTranslation()
-  const { isPending, isError, isEmpty, babies, perBaby } = useAllBabiesAppointments()
-  const [selectedBabyId, setSelectedBabyId] = useState<string | null>(null)
+  const { isPending, isError, isEmpty, perBaby } = useAllBabiesAppointments()
+  // The child filter is the menu's, not this page's. See selectedBaby.store.ts.
+  const selectedBabyId = useSelectedBabyStore((state) => state.selectedBabyId)
 
   if (isEmpty) {
     return <Navigate to="/dashboard" replace />
@@ -59,8 +59,6 @@ export function GrowthRoute() {
           </p>
         )}
       </div>
-
-      <BabyFilterChips babies={babies} value={selectedBabyId} onChange={setSelectedBabyId} className="mb-6" />
 
       {isPending ? (
         <GrowthSkeleton />

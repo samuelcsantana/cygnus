@@ -9,7 +9,15 @@ import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { UsersIcon } from '@/shared/icons/users-icon'
 
+import { buildBaby } from '@/test/fixtures/baby'
+
 import { AppSidebar } from './AppSidebar'
+
+/** Two children, because the switcher only exists when there is something to switch. */
+const babies = [
+  buildBaby({ id: '11111111-1111-4111-8111-111111111111', name: 'Ana', birthDate: '2026-01-10' }),
+  buildBaby({ id: '22222222-2222-4222-8222-222222222222', name: 'Maria Fernanda', birthDate: '2021-03-02' }),
+]
 
 /**
  * The real sections, in the real order. Seven, and notifications is not among
@@ -18,7 +26,7 @@ import { AppSidebar } from './AppSidebar'
  * could not show at any width.
  */
 const items = [
-  { to: '/dashboard', label: 'Início', icon: <DashboardIcon className="h-5 w-5" /> },
+  { to: '/dashboard', label: 'Visão geral', icon: <DashboardIcon className="h-5 w-5" /> },
   { to: '/vaccines', label: 'Vacinas', icon: <SyringeIcon className="h-5 w-5" /> },
   { to: '/appointments', label: 'Consultas', icon: <StethoscopeIcon className="h-5 w-5" /> },
   { to: '/profissionais', label: 'Profissionais', icon: <UsersIcon className="h-5 w-5" /> },
@@ -50,6 +58,9 @@ const meta = {
   },
   args: {
     items,
+    babies,
+    selectedBabyId: babies[1]!.id,
+    onSelectBaby: () => {},
     accountName: 'Ana Andrade',
     accountEmail: 'ana@email.com',
     onAddBaby: () => {},

@@ -5,8 +5,8 @@ import type { Baby } from '@/features/babies/api/babies.schemas'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { usePagedList } from '@/hooks/usePagedList'
 import { cn } from '@/lib/utils'
-import { BabyFilterChips } from '@/shared/components/BabyFilterChips'
 import { LoadMoreButton } from '@/shared/components/LoadMoreButton'
+import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 import { NoSearchResults } from '@/shared/components/NoSearchResults'
 import { SearchInput } from '@/shared/components/SearchInput'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
@@ -42,7 +42,9 @@ const STATUS_ICON_GLYPH: Record<VaccineItemWithBaby['status'], string> = {
 export function VaccineCalendarList({ items, babies }: VaccineCalendarListProps) {
   const { t } = useTranslation()
   const [applyTarget, setApplyTarget] = useState<VaccineItemWithBaby | null>(null)
-  const [babyFilter, setBabyFilter] = useState<string | null>(null)
+  // The child filter is the menu's, not this page's: the choice outlives the page
+  // it was made on. See selectedBaby.store.ts.
+  const babyFilter = useSelectedBabyStore((state) => state.selectedBabyId)
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebouncedValue(search)
   const babyById = new Map(babies.map((baby) => [baby.id, baby]))
@@ -62,7 +64,6 @@ export function VaccineCalendarList({ items, babies }: VaccineCalendarListProps)
   return (
     <div>
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <BabyFilterChips babies={babies} value={babyFilter} onChange={setBabyFilter} />
         <SearchInput
           id="vaccine-search"
           label={t('vaccines.search.label')}

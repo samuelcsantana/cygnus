@@ -42,7 +42,7 @@
     "sections": "Sections",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "dashboard": "Home",
+    "dashboard": "Overview",
     "vaccines": "Vaccines",
     "appointments": "Appointments",
     "medications": "Medications",
@@ -164,6 +164,10 @@
   },
   "babies": {
     "addChild": "Add Child",
+    "switcher": {
+      "heading": "Children",
+      "all": "All children"
+    },
     "age": {
       "months_zero": "{{count}} months",
       "months_one": "{{count}} month",
