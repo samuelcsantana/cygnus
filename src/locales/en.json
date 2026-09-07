@@ -47,6 +47,7 @@
     "appointments": "Appointments",
     "medications": "Medications",
     "specialists": "Specialists",
+    "growth": "Growth",
     "milestones": "Milestones",
     "notifications": "Notifications",
     "logoutError": "Could not sign you out. You are still signed in — please try again.",
@@ -683,6 +684,37 @@
     "empty": {
       "title": "No plan on file",
       "description": "What a clinic desk asks for is the member number. Fill it in below to have it at hand."
+    }
+  },
+  "growth": {
+    "title": "Growth",
+    "summary_zero": "{{count}} measurements recorded",
+    "summary_one": "{{count}} measurement recorded",
+    "summary_other": "{{count}} measurements recorded",
+    "summaryUnavailable": "Loading the measurements…",
+    "genericError": "Could not load the measurements.",
+    "weight": "Weight",
+    "height": "Height",
+    "chart": {
+      "ageAxis": "age in months",
+      "weightLabel": "{{name}}'s weight over time, {{count}} measurements",
+      "heightLabel": "{{name}}'s height over time, {{count}} measurements"
+    },
+    "singlePoint": "One measurement is not a curve yet — the next visit draws the line.",
+    "noWeight": "No weight recorded yet.",
+    "noHeight": "No height recorded yet.",
+    "empty": {
+      "title": "No measurements recorded",
+      "description": "Weight and height are written down at the visit that took them. Record a visit as completed with the numbers, and the curve starts here.",
+      "cta": "Go to appointments"
+    },
+    "table": {
+      "title": "Recorded measurements",
+      "date": "Date",
+      "age": "Age",
+      "weight": "Weight",
+      "height": "Height",
+      "missing": "—"
     }
   },
   "milestones": {

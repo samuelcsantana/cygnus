@@ -47,6 +47,7 @@
     "appointments": "Consultas",
     "medications": "Medicamentos",
     "specialists": "Profesionales",
+    "growth": "Crecimiento",
     "milestones": "Hitos",
     "notifications": "Notificaciones",
     "logoutError": "No se pudo cerrar la sesión. Sigues conectado; inténtalo de nuevo.",
@@ -683,6 +684,37 @@
     "empty": {
       "title": "Ningún plan informado",
       "description": "Lo que pide la recepción de la clínica es el número de socio. Complételo abajo para tenerlo a mano."
+    }
+  },
+  "growth": {
+    "title": "Crecimiento",
+    "summary_zero": "{{count}} medidas registradas",
+    "summary_one": "{{count}} medida registrada",
+    "summary_other": "{{count}} medidas registradas",
+    "summaryUnavailable": "Cargando las medidas…",
+    "genericError": "No se pudieron cargar las medidas.",
+    "weight": "Peso",
+    "height": "Altura",
+    "chart": {
+      "ageAxis": "edad en meses",
+      "weightLabel": "Curva de peso de {{name}}, {{count}} medidas a lo largo del tiempo",
+      "heightLabel": "Curva de altura de {{name}}, {{count}} medidas a lo largo del tiempo"
+    },
+    "singlePoint": "Una sola medida todavía no dibuja una curva — la próxima consulta traza la línea.",
+    "noWeight": "Todavía no hay ningún peso registrado.",
+    "noHeight": "Todavía no hay ninguna altura registrada.",
+    "empty": {
+      "title": "Ninguna medida registrada",
+      "description": "El peso y la altura se anotan en la consulta que los midió. Registra una consulta como realizada con los números y la curva empieza aquí.",
+      "cta": "Ir a las consultas"
+    },
+    "table": {
+      "title": "Medidas registradas",
+      "date": "Fecha",
+      "age": "Edad",
+      "weight": "Peso",
+      "height": "Altura",
+      "missing": "—"
     }
   },
   "milestones": {
