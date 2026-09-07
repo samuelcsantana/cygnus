@@ -36,6 +36,15 @@ const CACHE_ASSETS = `cygnus-assets-${VERSAO}`
  */
 const NUNCA = ['/embed/', '/mf/', '/api/', '/uploads/']
 
+async function cacheResponse(cacheName, key, response) {
+  try {
+    const cache = await caches.open(cacheName)
+    await cache.put(key, response)
+  } catch {
+    // Storage may be blocked or full. A successful network response still works.
+  }
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_CASCA).then((cache) => cache.addAll(['/', '/manifest.webmanifest'])).then(() => self.skipWaiting()),
@@ -62,9 +71,11 @@ self.addEventListener('fetch', (event) => {
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
-        .then((resposta) => {
-          const copia = resposta.clone()
-          caches.open(CACHE_CASCA).then((cache) => cache.put('/', copia))
+        .then(async (resposta) => {
+          // A failed deployment must not replace the last usable offline shell.
+          if (resposta.ok && resposta.headers.get('content-type')?.includes('text/html')) {
+            await cacheResponse(CACHE_CASCA, '/', resposta.clone())
+          }
           return resposta
         })
         .catch(() => caches.match('/').then((cacheada) => cacheada ?? Response.error())),
@@ -77,10 +88,9 @@ self.addEventListener('fetch', (event) => {
       caches.match(request).then(
         (cacheada) =>
           cacheada ??
-          fetch(request).then((resposta) => {
+          fetch(request).then(async (resposta) => {
             if (resposta.ok) {
-              const copia = resposta.clone()
-              caches.open(CACHE_ASSETS).then((cache) => cache.put(request, copia))
+              await cacheResponse(CACHE_ASSETS, request, resposta.clone())
             }
             return resposta
           }),

@@ -34,6 +34,7 @@ dist-ssr
 
 # Agent instructions and planning docs — kept on disk, out of the public repo.
 # CLAUDE.md documents how docs/ is laid out; see its "Planning docs" section.
+/AGENTS.md
 /CLAUDE.md
 /docs/
 

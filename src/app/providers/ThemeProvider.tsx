@@ -10,8 +10,13 @@ function getSystemPreference(): ResolvedTheme {
 }
 
 function readStoredTheme(): ThemeMode {
-  const stored = window.localStorage.getItem(STORAGE_KEY)
-  return stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system'
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY)
+    return stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system'
+  } catch {
+    // Blocking site storage must not prevent the application from mounting.
+    return 'system'
+  }
 }
 
 function resolveTheme(theme: ThemeMode): ResolvedTheme {
@@ -53,7 +58,11 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   const setTheme = (next: ThemeMode) => {
     setThemeState(next)
-    window.localStorage.setItem(STORAGE_KEY, next)
+    try {
+      window.localStorage.setItem(STORAGE_KEY, next)
+    } catch {
+      // The preference still works for this session when persistence is unavailable.
+    }
   }
 
   return <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme }}>{children}</ThemeContext.Provider>

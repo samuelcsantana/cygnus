@@ -10,7 +10,8 @@ import type { EmbedMessage } from './protocol';
  * and it is why the `resize` message exists at all.
  */
 const params = new URLSearchParams(window.location.search);
-const apiOrigin = params.get('apiOrigin') ?? '/api';
+// Vercel uses /api; Docker may call the backend directly without a same-origin proxy.
+const apiOrigin = params.get('apiOrigin') ?? import.meta.env.VITE_API_BASE_URL ?? '/api';
 const limit = Number.parseInt(params.get('limit') ?? '', 10);
 
 const mount = document.getElementById('root');

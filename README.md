@@ -81,6 +81,18 @@ docker compose up -d --build
 
 Sobe o build de produção servido por Nginx em `http://localhost:4205`. O compose não define um serviço para o backend — aponte `VITE_API_BASE_URL` (build arg) para onde o `cygnus-api` estiver rodando.
 
+After changing production headers or caching, verify the running Docker build:
+
+```bash
+node scripts/check-static-serving.mjs
+# Also load the iframe from another origin against the real API (requires Chromium):
+node scripts/check-static-serving.mjs --browser
+```
+
+Set `STATIC_BASE_URL` to check a different deployment. The checks cover app frame
+protection, embed frame permissions, Module Federation CORS, cache policies and
+missing assets. Stable entry files use a short cache; hashed assets are immutable.
+
 ## Estrutura
 
 ```

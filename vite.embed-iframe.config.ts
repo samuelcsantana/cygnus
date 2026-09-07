@@ -10,6 +10,7 @@ import { defineConfig } from 'vite'
  */
 export default defineConfig({
   root: fileURLToPath(new URL('./embed', import.meta.url)),
+  envDir: fileURLToPath(new URL('.', import.meta.url)),
   base: '/embed/',
   build: {
     outDir: fileURLToPath(new URL('./dist/embed', import.meta.url)),
