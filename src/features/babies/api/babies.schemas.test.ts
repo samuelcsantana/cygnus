@@ -9,7 +9,6 @@ describe('babyFormSchema', () => {
     const result = babyFormSchema.safeParse({
       name: 'Miguel',
       birthDate: tomorrow,
-      gender: 'MALE',
     })
 
     expect(result.success).toBe(false)
@@ -19,7 +18,6 @@ describe('babyFormSchema', () => {
     const result = babyFormSchema.safeParse({
       name: 'Miguel',
       birthDate: '2024-01-01',
-      gender: 'MALE',
     })
 
     expect(result.success).toBe(true)

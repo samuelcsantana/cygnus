@@ -1,6 +1,6 @@
 # Ninho
 
-Frontend React (Vite + TypeScript) do "Ninho" — app mobile-first que ajuda pais a acompanhar a saúde e o desenvolvimento dos filhos (vacinas, consultas e marcos de desenvolvimento).
+Frontend React (Vite + TypeScript) do "Ninho" — app mobile-first que ajuda pais a acompanhar a saúde e o desenvolvimento dos filhos: calendário de vacinas do PNI, consultas, marcos de desenvolvimento, medicamentos registrados, a agenda de profissionais, o plano de saúde e a curva de crescimento com a faixa de referência da OMS.
 
 Consome a API `cygnus-api` (backend separado).
 
@@ -30,7 +30,7 @@ Abre em `http://localhost:4205`.
 | Comando | O que faz |
 |---|---|
 | `npm run dev` | Servidor de desenvolvimento (porta 4205) |
-| `npm run build` | Typecheck + build de produção (`dist/`) |
+| `npm run build` | Typecheck + app + widget de embed + remote de Module Federation, nessa ordem |
 | `npm run preview` | Serve o build de produção localmente |
 | `npm run lint` | Lint (oxlint) |
 | `npm run test` | Testes (Vitest) |
@@ -38,6 +38,9 @@ Abre em `http://localhost:4205`.
 | `npm run storybook` | Storybook em modo dev (porta 6006) |
 | `npm run build-storybook` | Build estático do Storybook (`storybook-static/`) |
 | `npm run test:storybook` | Roda cada story como teste (interação + acessibilidade) |
+| `npm run test:e2e` | Playwright, contra o stack de pé (este repo + `cygnus-api`) |
+| `npm run contract:check` | Compara o que o front espera com o `openapi.json` publicado da API |
+| `npm run build:embed` / `build:mf` | Os dois artefatos extras, também parte do `build` |
 
 ## Design System (Storybook)
 
@@ -85,7 +88,8 @@ src/
 ├── app/            # Router, providers raiz, layouts (shell autenticado, rota protegida)
 ├── components/ui/  # Componentes shadcn/ui (gerados via CLI, sem lógica de negócio)
 ├── shared/         # Componentes/hooks/utils reutilizáveis entre features
-├── features/       # auth, babies, vaccines, appointments, milestones, notifications
+├── features/       # auth, babies, vaccines, appointments, specialists, medications,
+│                   #   growth, milestones, search, notifications, legal, profile
 │   └── <feature>/
 │       ├── api/        # fetch + hooks TanStack Query + schemas Zod
 │       ├── components/ # componentes de apresentação
