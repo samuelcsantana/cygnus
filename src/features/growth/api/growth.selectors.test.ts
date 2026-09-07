@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { buildAppointment } from '@/test/fixtures/appointment'
 
-import { growthSeries, indicatorPoints } from './growth.selectors'
+import { clipBand, growthSeries, indicatorPoints, outgrewReference, referenceBand } from './growth.selectors'
 
 const BIRTH = '2026-01-15'
 
@@ -98,5 +98,99 @@ describe('indicatorPoints', () => {
 
     expect(indicatorPoints(series, 'weight')[0]!.y).toBe(15800)
     expect(indicatorPoints(series, 'height')[0]!.y).toBe(1020)
+  })
+})
+
+describe('referenceBand', () => {
+  /**
+   * A OMS publica uma curva para meninos e outra para meninas, e não existe uma
+   * neutra. Escolher qualquer uma para quem não informou o sexo ao nascer —
+   * opcional desde a #82 — seria inventar a comparação.
+   */
+  it('não devolve faixa quando o sexo ao nascer não foi informado', () => {
+    expect(referenceBand('weight', null)).toBeNull()
+  })
+
+  it('devolve a tabela inteira, para o gráfico cortar', () => {
+    const band = referenceBand('weight', 'MALE')!
+
+    expect(band.at(-1)![0]).toBeGreaterThan(59)
+  })
+
+  it('devolve valores nas unidades da API, crescendo com a idade', () => {
+    const band = referenceBand('weight', 'MALE')!
+    const [ageAtBirth, p3, p15, p50, p85, p97] = band[0]!
+
+    expect(ageAtBirth).toBe(0)
+    // Peso ao nascer de menino na mediana da OMS: 3.346 g.
+    expect(p50).toBe(3346)
+    expect(p3).toBeLessThan(p15)
+    expect(p15).toBeLessThan(p50)
+    expect(p50).toBeLessThan(p85)
+    expect(p85).toBeLessThan(p97)
+    expect(band.at(-1)![3]).toBeGreaterThan(p50)
+  })
+})
+
+describe('clipBand', () => {
+  it('corta na idade que o eixo desenha, e termina exatamente nela', () => {
+    const band = clipBand(referenceBand('weight', 'MALE'), 14)!
+
+    expect(band.length).toBeGreaterThan(2)
+    // Termina em cima da borda: sem isso a faixa para antes do fim do eixo.
+    expect(band.at(-1)![0]).toBe(14)
+    expect(band.at(-2)![0]).toBeLessThan(14)
+  })
+
+  it('não corta nada para quem já passou do fim da tabela', () => {
+    const band = clipBand(referenceBand('height', 'FEMALE'), 90)!
+
+    expect(band.at(-1)![0]).toBeGreaterThan(59)
+    expect(band.at(-1)![0]).toBeLessThan(62)
+  })
+
+  it('devolve null, e não lista vazia, quando não há faixa', () => {
+    // A diferença importa: `[]` faria o gráfico pintar um path vazio e a legenda
+    // continuar dizendo que existe referência. Uma linha sozinha não desenha
+    // área nenhuma, então conta como não haver.
+    expect(clipBand(null, 24)).toBeNull()
+    expect(clipBand([[0, 1, 2, 3, 4, 5]], 24)).toBeNull()
+  })
+
+  /**
+   * A versão óbvia — guardar a primeira linha além da borda e deixar o gráfico
+   * grampear — grampeia só o x: os percentis daquela linha são de uma criança
+   * mais velha, e a faixa dá um degrau para cima exatamente na borda. Parecia
+   * defeito de renderização na captura.
+   */
+  it('interpola a última linha em cima da borda, sem degrau', () => {
+    const band = clipBand(referenceBand('height', 'MALE'), 6)!
+    const [last, penultimate] = [band.at(-1)!, band.at(-2)!]
+
+    expect(last[0]).toBe(6)
+    expect(penultimate[0]).toBeLessThan(6)
+
+    // Entre os dois vizinhos da tabela, não além deles.
+    const rows = referenceBand('height', 'MALE')!
+    const before = rows.findLast((row) => row[0] <= 6)!
+    const after = rows.find((row) => row[0] > 6)!
+    expect(last[3]).toBeGreaterThanOrEqual(before[3])
+    expect(last[3]).toBeLessThanOrEqual(after[3])
+  })
+})
+
+describe('outgrewReference', () => {
+  it('reconhece a criança que passou do fim da tabela', () => {
+    const antes = growthSeries(
+      [buildAppointment({ status: 'COMPLETED', scheduledAt: '2028-01-15T10:00:00.000Z', weightGrams: 15000 })],
+      BIRTH,
+    )
+    const depois = growthSeries(
+      [buildAppointment({ status: 'COMPLETED', scheduledAt: '2031-06-15T10:00:00.000Z', weightGrams: 22000 })],
+      BIRTH,
+    )
+
+    expect(outgrewReference(antes)).toBe(false)
+    expect(outgrewReference(depois)).toBe(true)
   })
 })

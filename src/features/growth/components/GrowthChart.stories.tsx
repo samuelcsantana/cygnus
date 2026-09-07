@@ -3,7 +3,7 @@ import { expect, within } from 'storybook/test'
 
 import { formatCentimeters, formatKilograms } from '@/shared/utils/measurements'
 
-import type { GrowthPlotPoint } from '../api/growth.selectors'
+import { referenceBand, type GrowthPlotPoint } from '../api/growth.selectors'
 import { GrowthChart } from './GrowthChart'
 
 /** A first year with the visits a PNI schedule actually produces: dense early, then spaced out. */
@@ -151,6 +151,71 @@ export const SingleMeasurement: Story = {
         .filter((text): text is string => !!text && text.includes('kg'))
 
       expect(new Set(labels).size).toBe(labels.length)
+    })
+  },
+}
+
+/**
+ * The alpha of a computed colour, whatever notation the browser chose.
+ *
+ * Tailwind v4 emits `oklab(... / 0.08)` and older stacks emit `rgba(r, g, b, a)`;
+ * a colour with **no** alpha component — the plain `rgb(0, 0, 0)` an SVG falls
+ * back to when the class never made it into the CSS — returns undefined, which
+ * is exactly the case worth failing on.
+ */
+const alphaOf = (colour: string) =>
+  /\/\s*([\d.]+)\s*\)/.exec(colour)?.[1] ?? /rgba\([^)]*?,\s*([\d.]+)\)/.exec(colour)?.[1]
+
+/**
+ * With the WHO band behind it. The band is the reason the page exists for most
+ * readers — "is that normal?" is the question a curve is looked at to answer.
+ */
+export const WithReference: Story = {
+  args: { band: referenceBand('weight', 'MALE') },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const svg = canvas.getByRole('img').querySelector('svg')!
+    const areas = [...svg.querySelectorAll('path')]
+
+    await step('the band is painted, not just present', async () => {
+      // Same trap as the curve's stroke, and worse here: an area with no fill is
+      // invisible, and the legend under the chart goes on claiming there is a
+      // reference band. `fill-ink/8` has to survive whatever Tailwind generates.
+      expect(areas.length).toBeGreaterThanOrEqual(2)
+
+      for (const area of areas.slice(0, 2)) {
+        const fill = getComputedStyle(area).fill
+        // Read as "has an alpha channel", which is what `fill-ink/8` computes
+        // to. A missing class leaves the SVG default — an opaque `rgb(0, 0, 0)`
+        // with no alpha at all — so this fails on exactly the case it exists
+        // for, and would also fail if the opacity were dialled to zero.
+        const alpha = alphaOf(fill)
+        expect(fill, 'a faixa não recebeu cor nenhuma').not.toBe('none')
+        expect(alpha, `fill sem canal alfa: ${fill}`).toBeDefined()
+        expect(Number(alpha)).toBeGreaterThan(0)
+      }
+    })
+
+    await step('the band stops where the axis does', async () => {
+      // The table runs to five years and this child is not five. A band drawn
+      // whole would push the age axis out and squash the child's own curve into
+      // the left tenth of the plot — the failure this clipping exists to avoid.
+      const plot = svg.parentElement!.getBoundingClientRect()
+      const drawn = areas[0]!.getBoundingClientRect()
+
+      expect(drawn.right).toBeLessThanOrEqual(plot.right + 1)
+      expect(drawn.width).toBeGreaterThan(plot.width * 0.8)
+    })
+
+    await step("the child's line is still the loudest thing", async () => {
+      // A reference that competes with the measurement defeats itself. Asserted
+      // as opacity rather than by eye: the areas are ink at 8%, the line is a
+      // solid colour.
+      const line = svg.querySelector('polyline')!
+      const alpha = Number(alphaOf(getComputedStyle(areas[0]!).fill))
+
+      expect(getComputedStyle(line).strokeOpacity).toBe('1')
+      expect(alpha).toBeLessThan(0.2)
     })
   },
 }
