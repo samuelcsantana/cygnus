@@ -140,6 +140,35 @@ describe('GrowthRoute', () => {
     expect(screen.getByText('2 meses')).toBeInTheDocument()
   })
 
+  /**
+   * A faixa da OMS é uma para meninos e outra para meninas — não existe neutra.
+   * Para quem deixou o sexo ao nascer em branco (opcional desde a #82), desenhar
+   * qualquer uma das duas seria inventar a comparação; a tela diz por que não
+   * tem faixa e leva a onde se preenche.
+   */
+  it('explica a ausência da faixa quando o sexo ao nascer está em branco', async () => {
+    withData(
+      [buildAppointment({ id: FIRST_VISIT, babyId, status: 'COMPLETED', weightGrams: 5400 })],
+      buildBaby({ id: babyId, name: 'Elis', sexAtBirth: null }),
+    )
+
+    renderRoute()
+
+    expect(await screen.findByText(/não dá para escolher a curva de referência/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Completar o perfil' })).toHaveAttribute('href', '/profile')
+  })
+
+  it('mostra a legenda da faixa quando há sexo ao nascer', async () => {
+    withData(
+      [buildAppointment({ id: FIRST_VISIT, babyId, status: 'COMPLETED', weightGrams: 5400 })],
+      buildBaby({ id: babyId, name: 'Elis', sexAtBirth: 'MALE' }),
+    )
+
+    renderRoute()
+
+    expect(await screen.findByText(/Faixa da OMS/i)).toBeInTheDocument()
+  })
+
   it('não conta a consulta cancelada que ficou com medida gravada', async () => {
     withData([
       buildAppointment({ id: FIRST_VISIT, babyId, status: 'CANCELLED', weightGrams: 5400 }),

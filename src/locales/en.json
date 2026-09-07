@@ -695,6 +695,13 @@
     "genericError": "Could not load the measurements.",
     "weight": "Weight",
     "height": "Height",
+    "reference": {
+      "legend": "WHO reference: P3 to P97, darker between P15 and P85, with the line at the median.",
+      "noSex": "Without sex at birth on the profile there is no way to pick the reference curve — WHO publishes one for boys and one for girls.",
+      "noSexAction": "Complete the profile",
+      "outgrew": "The WHO table stops at 5 years; past that the curve continues without a reference band.",
+      "chartLabelSuffix": ", with the WHO reference band"
+    },
     "chart": {
       "ageAxis": "age in months",
       "weightLabel": "{{name}}'s weight over time, {{count}} measurements",

@@ -1,5 +1,8 @@
 import type { Appointment } from '@/features/appointments/api/appointments.schemas'
+import type { SexAtBirth } from '@/features/babies/api/babies.schemas'
 import { ageInMonthsAt, ageInMonthsExactAt } from '@/lib/date'
+
+import { WHO_REFERENCE, WHO_REFERENCE_MAX_MONTHS, type WhoReferenceRow } from './who-reference'
 
 /**
  * One visit that measured something, placed on an age axis.
@@ -85,4 +88,53 @@ export function indicatorPoints(points: GrowthPoint[], indicator: GrowthIndicato
           }
     })
     .filter((point): point is GrowthPlotPoint => point !== null)
+}
+
+/**
+ * The WHO reference table for this indicator and sex, whole.
+ *
+ * `null` — never an empty array — when there is none to draw. The WHO curves are
+ * one for boys and one for girls; there is no neutral table, and picking either
+ * one for a child whose sex at birth was not recorded would be inventing the
+ * comparison. `sexAtBirth` is optional since #82 and left blank on purpose by
+ * people who have their reasons, so the page says why the band is missing rather
+ * than guessing.
+ */
+export function referenceBand(
+  indicator: GrowthIndicator,
+  sexAtBirth: SexAtBirth | null,
+): readonly WhoReferenceRow[] | null {
+  return sexAtBirth ? WHO_REFERENCE[indicator][sexAtBirth] : null
+}
+
+/**
+ * The rows a chart whose age axis ends at `maxAgeMonths` should draw.
+ *
+ * Clipping matters more than it sounds: the tables run to five years, and a
+ * fourteen-month-old's curve on a five-year axis is a squiggle in the left tenth.
+ * The axis belongs to the child; the reference covers the part of it that exists.
+ *
+ * **The chart clips, not the caller** — it is the only thing that knows where its
+ * axis ends, and that end is not simply the oldest measurement (a newborn's axis
+ * has a one-month floor). A band cut to the child's age instead of to the axis
+ * stops mid-plot, with a visible step.
+ *
+ * One row past the edge is kept for the same reason: without it the fill ends
+ * just short of the border.
+ */
+export function clipBand(
+  rows: readonly WhoReferenceRow[] | null | undefined,
+  maxAgeMonths: number,
+): readonly WhoReferenceRow[] | null {
+  if (!rows) return null
+
+  const cut = rows.findIndex((row) => row[0] > maxAgeMonths)
+  const visible = cut < 0 ? rows : rows.slice(0, cut + 1)
+
+  return visible.length > 1 ? visible : null
+}
+
+/** Whether the child's series runs past the last age WHO publishes as a table. */
+export function outgrewReference(points: GrowthPoint[]): boolean {
+  return points.some((point) => point.ageMonths > WHO_REFERENCE_MAX_MONTHS)
 }

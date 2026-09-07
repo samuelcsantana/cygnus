@@ -11,7 +11,7 @@ import { GrowthIcon } from '@/shared/icons/growth-icon'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 import { formatCentimeters, formatKilograms } from '@/shared/utils/measurements'
 
-import { growthSeries, indicatorPoints } from '../api/growth.selectors'
+import { growthSeries, indicatorPoints, outgrewReference, referenceBand } from '../api/growth.selectors'
 import { GrowthChart } from '../components/GrowthChart'
 import { GrowthMeasurementsTable } from '../components/GrowthMeasurementsTable'
 
@@ -84,6 +84,11 @@ export function GrowthRoute() {
             const appearance = babyAvatarAppearance(baby.id, baby.avatarColor)
             const weight = indicatorPoints(series, 'weight')
             const height = indicatorPoints(series, 'height')
+            // Whole tables: each chart clips to its own axis, which is the only
+            // place that knows where the axis ends.
+            const weightBand = referenceBand('weight', baby.sexAtBirth)
+            const heightBand = referenceBand('height', baby.sexAtBirth)
+            const hasBand = Boolean(weightBand ?? heightBand)
 
             return (
               <section
@@ -122,8 +127,12 @@ export function GrowthRoute() {
                           <GrowthChart
                             points={weight}
                             indicator="weight"
+                            band={weightBand}
                             formatValue={(value) => formatKilograms(value, i18n.language)}
-                            label={t('growth.chart.weightLabel', { name: baby.name, count: weight.length })}
+                            label={
+                              t('growth.chart.weightLabel', { name: baby.name, count: weight.length }) +
+                              (weightBand ? t('growth.reference.chartLabelSuffix') : '')
+                            }
                           />
                         )}
                       </div>
@@ -135,12 +144,38 @@ export function GrowthRoute() {
                           <GrowthChart
                             points={height}
                             indicator="height"
+                            band={heightBand}
                             formatValue={(value) => formatCentimeters(value, i18n.language)}
-                            label={t('growth.chart.heightLabel', { name: baby.name, count: height.length })}
+                            label={
+                              t('growth.chart.heightLabel', { name: baby.name, count: height.length }) +
+                              (heightBand ? t('growth.reference.chartLabelSuffix') : '')
+                            }
                           />
                         )}
                       </div>
                     </div>
+
+                    {/* Said once per child, under both charts: the band is the
+                        same reference in both, and repeating the sentence beside
+                        each one would read as two different notes.
+
+                        The two silences are not the same and are not written the
+                        same way. No band because the sex at birth is blank is
+                        something the reader can fix, and the line says how; no
+                        band past five years is where WHO's table ends, and
+                        nothing they do changes it. */}
+                    <p className="mt-4 text-xs text-ink-faint">
+                      {hasBand ? t('growth.reference.legend') : t('growth.reference.noSex')}
+                      {!hasBand && (
+                        <>
+                          {' '}
+                          <Link to="/profile" className="font-semibold text-primary underline underline-offset-2">
+                            {t('growth.reference.noSexAction')}
+                          </Link>
+                        </>
+                      )}
+                      {hasBand && outgrewReference(series) && ` ${t('growth.reference.outgrew')}`}
+                    </p>
 
                     <div className="mt-8">
                       <h4 className="mb-2 text-xs font-bold text-ink-faint uppercase">{t('growth.table.title')}</h4>

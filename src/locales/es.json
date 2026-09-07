@@ -695,6 +695,13 @@
     "genericError": "No se pudieron cargar las medidas.",
     "weight": "Peso",
     "height": "Altura",
+    "reference": {
+      "legend": "Referencia de la OMS: P3 a P97, más oscura entre P15 y P85, con la línea en la mediana.",
+      "noSex": "Sin el sexo al nacer en el perfil no se puede elegir la curva de referencia — la OMS publica una para niños y otra para niñas.",
+      "noSexAction": "Completar el perfil",
+      "outgrew": "La tabla de la OMS llega hasta los 5 años; después la curva sigue sin franja de referencia.",
+      "chartLabelSuffix": ", con la franja de referencia de la OMS"
+    },
     "chart": {
       "ageAxis": "edad en meses",
       "weightLabel": "Curva de peso de {{name}}, {{count}} medidas a lo largo del tiempo",

@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { formatDateDisplay, splitScheduledAt } from '@/lib/date'
 
-import type { GrowthIndicator, GrowthPlotPoint } from '../api/growth.selectors'
+import { clipBand, type GrowthIndicator, type GrowthPlotPoint } from '../api/growth.selectors'
+import type { WhoReferenceRow } from '../api/who-reference'
 import { niceScale, positionIn } from './growth-scale'
 
 /** Tall enough for a curve to have a shape, short enough that two fit on one phone screen. */
@@ -17,6 +18,12 @@ interface GrowthChartProps {
   /** The accessible name of the whole figure — the table below carries the numbers. */
   label: string
   indicator: GrowthIndicator
+  /**
+   * The WHO reference table, whole — this component clips it to its own axis,
+   * because it is the only thing that knows where that axis ends. Absent when
+   * there is no honest band to show; see `referenceBand`.
+   */
+  band?: readonly WhoReferenceRow[] | null
   className?: string
 }
 
@@ -44,7 +51,7 @@ interface GrowthChartProps {
  * already sitting in the table below would be worse than useless for someone on
  * a keyboard.
  */
-export function GrowthChart({ points, formatValue, label, indicator, className }: GrowthChartProps) {
+export function GrowthChart({ points, formatValue, label, indicator, band: table, className }: GrowthChartProps) {
   const { t, i18n } = useTranslation()
   const [hovered, setHovered] = useState<number | null>(null)
 
@@ -53,10 +60,6 @@ export function GrowthChart({ points, formatValue, label, indicator, className }
       ? { stroke: 'stroke-emerald-700 dark:stroke-emerald-600', dot: 'bg-emerald-700 dark:bg-emerald-600' }
       : { stroke: 'stroke-violet-500 dark:stroke-violet-400', dot: 'bg-violet-500 dark:bg-violet-400' }
 
-  const valueScale = niceScale(
-    Math.min(...points.map((point) => point.y)),
-    Math.max(...points.map((point) => point.y)),
-  )
   // The age axis starts at birth, not at the first visit: a curve that opens at
   // "14 months" hides that nothing was recorded before it, and the gap is a fact
   // about the record worth seeing.
@@ -66,6 +69,18 @@ export function GrowthChart({ points, formatValue, label, indicator, className }
   // it printed -1 month, which is not a thing that happened to anybody. Whole
   // months, for the same reason: "0,25 meses" is a week, said the wrong way.
   const ageScale = niceScale(0, Math.max(...points.map((point) => point.x), 1), 4, { minStep: 1 })
+  const band = clipBand(table, ageScale.max)
+
+  // The value scale covers the band as well as the child, and that is the whole
+  // point of drawing one: a curve that sits above P97 has to *look* like it sits
+  // above P97, which it cannot do on an axis that stops at the child's own
+  // maximum. The cost is a flatter-looking curve, which is honest — the shape was
+  // never the message here, the position is.
+  const bandValues = (band ?? []).flatMap((row) => [row[1], row[5]])
+  const valueScale = niceScale(
+    Math.min(...points.map((point) => point.y), ...bandValues),
+    Math.max(...points.map((point) => point.y), ...bandValues),
+  )
 
   const placed = points.map((point, index) => ({
     ...point,
@@ -75,6 +90,16 @@ export function GrowthChart({ points, formatValue, label, indicator, className }
   }))
 
   const polyline = placed.map((point) => `${point.left},${point.top}`).join(' ')
+
+  /** An area between two percentile columns, as an SVG path in the 0–100 box. */
+  const area = (lower: number, upper: number) => {
+    if (!band) return ''
+    const x = (row: WhoReferenceRow) => positionIn(ageScale, row[0]) * 100
+    const y = (row: WhoReferenceRow, column: number) => (1 - positionIn(valueScale, row[column]!)) * 100
+    const top = band.map((row) => `${x(row)},${y(row, upper)}`).join(' L ')
+    const bottom = [...band].reverse().map((row) => `${x(row)},${y(row, lower)}`).join(' L ')
+    return `M ${top} L ${bottom} Z`
+  }
   const active = hovered === null ? null : placed[hovered]
 
   return (
@@ -122,6 +147,26 @@ export function GrowthChart({ points, formatValue, label, indicator, className }
                 />
               )
             })}
+            {/* The reference goes under everything: it is context, not a
+                series. Two layers of `--color-ink` at 8%: the inner one sits on
+                the outer, so P15–P85 lands at about 15% and reads as the darker
+                middle without a second colour to keep in contrast. `--color-ink`
+                flips with the theme on its own, and the indicator's own colour
+                is deliberately not used — a green band under a green line reads
+                as a second measurement of the same thing. */}
+            {band && (
+              <>
+                <path d={area(1, 5)} className="fill-ink/8" />
+                <path d={area(2, 4)} className="fill-ink/8" />
+                <path
+                  d={`M ${band.map((row) => `${positionIn(ageScale, row[0]) * 100},${(1 - positionIn(valueScale, row[3]!)) * 100}`).join(' L ')}`}
+                  fill="none"
+                  strokeWidth={1}
+                  vectorEffect="non-scaling-stroke"
+                  className="stroke-ink/25"
+                />
+              </>
+            )}
             {placed.length > 1 && (
               <polyline
                 points={polyline}
