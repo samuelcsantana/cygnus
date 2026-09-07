@@ -51,8 +51,8 @@ test.describe('accessibility (WCAG 2 A/AA)', () => {
     await expect(page).toHaveURL(/\/appointments$/)
     await expectNoViolations(page)
 
-    // The care team page joined the bar in #84, so the sweep follows it there.
-    await page.getByRole('link', { name: 'Equipe', exact: true }).click()
+    // The professionals page joined the menu in #84, so the sweep follows it there.
+    await page.getByRole('link', { name: 'Profissionais', exact: true }).click()
     await expect(page).toHaveURL(/\/profissionais$/)
     await expectNoViolations(page)
 
@@ -60,8 +60,36 @@ test.describe('accessibility (WCAG 2 A/AA)', () => {
     await expect(page).toHaveURL(/\/milestones$/)
     await expectNoViolations(page)
 
-    await page.getByRole('link', { name: 'Avisos', exact: true }).click()
+    // Not `exact`: notifications is the bell in the top bar, and its accessible
+    // name carries the unread count when there is one ("Notificações, 2 não lidas").
+    await page.getByRole('link', { name: /^Notificações/ }).click()
     await expect(page).toHaveURL(/\/notifications$/)
+    await expectNoViolations(page)
+  })
+
+  /**
+   * The only pass over the drawer. Every other spec runs at Playwright's
+   * desktop width, where the menu is the fixed column and the drawer never
+   * mounts — so nothing above this line has ever opened it, and on a phone it
+   * is the *whole* navigation.
+   */
+  test('the menu drawer on a phone has no violations', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    const user = uniqueTestUser('a11y-drawer')
+    await registerAndLogin(page, user)
+    await openAddBabyDialog(page)
+    await addBaby(page, { name: 'Bento E2E', birthDate: '2025-01-15', sexAtBirth: 'Masculino' })
+
+    await page.getByRole('button', { name: 'Abrir menu' }).click()
+    const drawer = page.getByRole('dialog')
+    await expect(drawer).toBeVisible()
+    await expectNoViolations(page)
+
+    // Navigating from inside it must also shut it: a menu that covers the page
+    // and stays open after a tap leaves the destination unreachable.
+    await drawer.getByRole('link', { name: 'Medicamentos', exact: true }).click()
+    await expect(page).toHaveURL(/\/medications$/)
+    await expect(drawer).toBeHidden()
     await expectNoViolations(page)
   })
 })
