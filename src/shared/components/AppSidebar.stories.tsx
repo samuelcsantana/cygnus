@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, within } from 'storybook/test'
 
-import { BellIcon } from '@/shared/icons/bell-icon'
 import { DashboardIcon } from '@/shared/icons/dashboard-icon'
 import { HeartIcon } from '@/shared/icons/heart-icon'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
@@ -11,7 +10,11 @@ import { UsersIcon } from '@/shared/icons/users-icon'
 
 import { AppSidebar } from './AppSidebar'
 
-/** The real sections, in the real order, with the longest labels the app ships. */
+/**
+ * The real sections, in the real order. Six, not seven: notifications is the
+ * bell in the top bar, not a row here — see the shell. "Profissionais" is the
+ * longest label the app ships and the one the bottom bar could not show.
+ */
 const items = [
   { to: '/dashboard', label: 'Início', icon: <DashboardIcon className="h-5 w-5" /> },
   { to: '/vaccines', label: 'Vacinas', icon: <SyringeIcon className="h-5 w-5" /> },
@@ -19,7 +22,6 @@ const items = [
   { to: '/profissionais', label: 'Profissionais', icon: <UsersIcon className="h-5 w-5" /> },
   { to: '/medications', label: 'Remédios', icon: <HeartIcon className="h-5 w-5" /> },
   { to: '/milestones', label: 'Marcos', icon: <SparkleIcon className="h-5 w-5" /> },
-  { to: '/notifications', label: 'Notificações', icon: <BellIcon className="h-5 w-5" /> },
 ]
 
 /**
