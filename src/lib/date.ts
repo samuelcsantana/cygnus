@@ -94,13 +94,55 @@ export function splitScheduledAt(scheduledAt: string): { date: string; time: str
   return { date: `${year}-${month}-${day}`, time: `${hours}:${minutes}` }
 }
 
-export function ageInMonths(birthDate: string): number {
-  const birth = new Date(birthDate)
-  const today = new Date()
-  let months = (today.getFullYear() - birth.getFullYear()) * 12
-  months += today.getMonth() - birth.getMonth()
-  if (today.getDate() < birth.getDate()) {
+/**
+ * A `yyyy-MM-dd` from the API read as the calendar date it is, at local midnight.
+ *
+ * `new Date('2024-01-01')` is parsed as **UTC** midnight, and every reader here
+ * asks for local components: in any negative offset — all of Brazil — that Date
+ * answers `getDate() === 31` for the 1st. Ages were coming out a day early every
+ * month because of it, and the error is invisible except on the day it flips.
+ *
+ * Falls back to the plain parse so a full ISO instant (which this app does not
+ * store as a birth date, but might be handed one day) still returns something.
+ */
+function calendarDate(value: string): Date {
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value)
+  if (!match) return new Date(value)
+  return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+}
+
+/**
+ * Completed months between a birth date and a moment — the way a parent counts:
+ * a child is "2 months" from the day after the second monthiversary until the
+ * third, and never "2.7 months".
+ */
+export function ageInMonthsAt(birthDate: string, at: Date): number {
+  const birth = calendarDate(birthDate)
+  let months = (at.getFullYear() - birth.getFullYear()) * 12
+  months += at.getMonth() - birth.getMonth()
+  if (at.getDate() < birth.getDate()) {
     months -= 1
   }
   return Math.max(months, 0)
+}
+
+export function ageInMonths(birthDate: string): number {
+  return ageInMonthsAt(birthDate, new Date())
+}
+
+/**
+ * Age in months as a real number, for plotting a point on an axis.
+ *
+ * Whole months are right for reading ("2 meses") and wrong for placing: two
+ * visits three weeks apart in a newborn's first month both land on 0 and the
+ * curve draws a vertical line, which is the age when a growth curve is steepest
+ * and most worth looking at. Days over 30.4375 (365.25 / 12) keeps them apart.
+ *
+ * The two functions disagree by design, and by less than a month: this one is
+ * the x coordinate, `ageInMonthsAt` is the label.
+ */
+export function ageInMonthsExactAt(birthDate: string, at: Date): number {
+  const birth = calendarDate(birthDate)
+  const days = (at.getTime() - birth.getTime()) / 86_400_000
+  return Math.max(days / 30.4375, 0)
 }

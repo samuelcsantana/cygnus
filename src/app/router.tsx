@@ -106,13 +106,11 @@ export const router = createBrowserRouter([
                   })),
               },
               {
-                // In the bar as the seventh item; `/plano-de-saude` below is not, and the
-                // asymmetry is measured rather than arbitrary. Targets divide the bar's width:
-                // seven clear the 44px floor at 320px only because the bar gave back half its
-                // horizontal padding (see AppShellLayout), and an eighth lands at ~39px even
-                // with none. A professional is looked up as often as an appointment is; a card
-                // number is looked up at a clinic desk, from the profile page, and does not
-                // spend a permanent tab.
+                // In the menu; `/plano-de-saude` below is not, and the asymmetry survived the
+                // bottom bar it was first argued from. It used to be arithmetic — seven targets
+                // dividing 320px — and now it is only what a section is *for*: a professional is
+                // looked up as often as an appointment is, while a card number is looked up at a
+                // clinic desk, from the child's profile, and does not earn a permanent row.
                 path: 'profissionais',
                 lazy: () =>
                   import('@/features/specialists/routes/SpecialistsRoute').then((m) => ({
@@ -127,14 +125,18 @@ export const router = createBrowserRouter([
                   })),
               },
               {
-                // Fora da barra de navegação, alcançada pelo cartão do painel — como `/profile`,
-                // que é a mesma escolha pelo mesmo motivo: a barra tem cinco itens e acrescentar
-                // um sexto remodela a navegação, que é decisão de produto e não de implementação.
                 path: 'medications',
                 lazy: () =>
                   import('@/features/medications/routes/MedicationsRoute').then((m) => ({
                     Component: m.MedicationsRoute,
                   })),
+              },
+              {
+                // Reads the appointments and owns no endpoint of its own: weight and height are
+                // recorded on the visit that took them (see growth.selectors.ts).
+                path: 'crescimento',
+                lazy: () =>
+                  import('@/features/growth/routes/GrowthRoute').then((m) => ({ Component: m.GrowthRoute })),
               },
               {
                 path: 'milestones',
