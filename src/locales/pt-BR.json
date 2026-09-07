@@ -39,6 +39,9 @@
   },
   "nav": {
     "skipToContent": "Pular para o conteúdo",
+    "sections": "Seções",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
     "dashboard": "Início",
     "vaccines": "Vacinas",
     "appointments": "Consultas",
