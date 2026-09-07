@@ -20,7 +20,7 @@ const items = [
   { to: '/vaccines', label: 'Vacinas', icon: <SyringeIcon className="h-5 w-5" /> },
   { to: '/appointments', label: 'Consultas', icon: <StethoscopeIcon className="h-5 w-5" /> },
   { to: '/profissionais', label: 'Profissionais', icon: <UsersIcon className="h-5 w-5" /> },
-  { to: '/medications', label: 'Remédios', icon: <HeartIcon className="h-5 w-5" /> },
+  { to: '/medications', label: 'Medicamentos', icon: <HeartIcon className="h-5 w-5" /> },
   { to: '/milestones', label: 'Marcos', icon: <SparkleIcon className="h-5 w-5" /> },
 ]
 

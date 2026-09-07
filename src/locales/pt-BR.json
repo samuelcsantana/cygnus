@@ -45,10 +45,10 @@
     "dashboard": "Início",
     "vaccines": "Vacinas",
     "appointments": "Consultas",
-    "medications": "Remédios",
-    "specialists": "Equipe",
+    "medications": "Medicamentos",
+    "specialists": "Profissionais",
     "milestones": "Marcos",
-    "notifications": "Avisos",
+    "notifications": "Notificações",
     "logoutError": "Não foi possível sair da conta. Você continua conectado — tente novamente.",
     "logout": "Sair da conta"
   },
