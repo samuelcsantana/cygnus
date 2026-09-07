@@ -53,6 +53,18 @@
     "logoutError": "Não foi possível sair da conta. Você continua conectado — tente novamente.",
     "logout": "Sair da conta"
   },
+  "search": {
+    "title": "Buscar",
+    "placeholder": "Buscar vacinas, consultas, remédios…",
+    "hint": "Digite ao menos duas letras.",
+    "loading": "Procurando…",
+    "noResults": "Nada encontrado para “{{query}}”.",
+    "more_one": "e mais {{count}} em {{section}}",
+    "more_other": "e mais {{count}} em {{section}}",
+    "error": "Não foi possível buscar agora — alguma lista não carregou.",
+    "partialError": "Parte da busca não pôde ser lida: alguma lista não carregou.",
+    "open": "Abrir a busca"
+  },
   "auth": {
     "tabs": {
       "label": "Entrar ou criar conta",

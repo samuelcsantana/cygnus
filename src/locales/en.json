@@ -53,6 +53,18 @@
     "logoutError": "Could not sign you out. You are still signed in — please try again.",
     "logout": "Log out"
   },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search vaccines, appointments, medications…",
+    "hint": "Type at least two letters.",
+    "loading": "Searching…",
+    "noResults": "Nothing found for “{{query}}”.",
+    "more_one": "and {{count}} more in {{section}}",
+    "more_other": "and {{count}} more in {{section}}",
+    "error": "Could not search right now — one of the lists did not load.",
+    "partialError": "Part of the search could not be read: one of the lists did not load.",
+    "open": "Open search"
+  },
   "auth": {
     "tabs": {
       "label": "Sign in or create an account",

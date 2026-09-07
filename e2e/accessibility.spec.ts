@@ -56,6 +56,16 @@ test.describe('accessibility (WCAG 2 A/AA)', () => {
     await expect(page).toHaveURL(/\/profissionais$/)
     await expectNoViolations(page)
 
+    // The search dialog: opened from the top bar, it is the one piece of the
+    // shell that is not a page, and it reads six domains at once.
+    await page.getByRole('button', { name: 'Buscar vacinas, consultas, remédios…' }).click()
+    await expect(page.getByRole('searchbox')).toBeVisible()
+    await expectNoViolations(page)
+    await page.getByRole('searchbox').fill('sofia')
+    await expect(page.getByRole('link', { name: /Sofia/ }).first()).toBeVisible()
+    await expectNoViolations(page)
+    await page.keyboard.press('Escape')
+
     // Growth reads the appointments and has an empty state of its own, which is
     // what this account is in — the state most pages are never scanned in.
     await page.getByRole('link', { name: 'Crescimento', exact: true }).click()
