@@ -119,8 +119,11 @@ export function referenceBand(
  * has a one-month floor). A band cut to the child's age instead of to the axis
  * stops mid-plot, with a visible step.
  *
- * One row past the edge is kept for the same reason: without it the fill ends
- * just short of the border.
+ * The last row is **interpolated onto the edge**, not the first row past it. The
+ * obvious version — keep one extra row and let the chart clamp it — clamps only
+ * the x: the extra row's percentiles belong to an older child, so the band jumps
+ * upward in a visible step right at the border. It looked like a rendering
+ * glitch in the capture, which is how it was found.
  */
 export function clipBand(
   rows: readonly WhoReferenceRow[] | null | undefined,
@@ -129,7 +132,21 @@ export function clipBand(
   if (!rows) return null
 
   const cut = rows.findIndex((row) => row[0] > maxAgeMonths)
-  const visible = cut < 0 ? rows : rows.slice(0, cut + 1)
+  if (cut < 0) return rows.length > 1 ? rows : null
+
+  const visible = rows.slice(0, cut)
+  const before = visible.at(-1)
+  const after = rows[cut]!
+
+  if (before) {
+    const ratio = (maxAgeMonths - before[0]) / (after[0] - before[0])
+    visible.push([
+      maxAgeMonths,
+      ...([1, 2, 3, 4, 5] as const).map((column) =>
+        Math.round(before[column] + (after[column] - before[column]) * ratio),
+      ),
+    ] as unknown as WhoReferenceRow)
+  }
 
   return visible.length > 1 ? visible : null
 }

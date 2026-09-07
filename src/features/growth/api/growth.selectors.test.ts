@@ -133,14 +133,13 @@ describe('referenceBand', () => {
 })
 
 describe('clipBand', () => {
-  it('corta na idade que o eixo desenha', () => {
+  it('corta na idade que o eixo desenha, e termina exatamente nela', () => {
     const band = clipBand(referenceBand('weight', 'MALE'), 14)!
 
     expect(band.length).toBeGreaterThan(2)
-    // Uma linha além da borda, de propósito: sem ela a faixa para antes do fim
-    // do eixo e aparece um degrau.
-    expect(band.at(-1)![0]).toBeGreaterThan(14)
-    expect(band.at(-2)![0]).toBeLessThanOrEqual(14)
+    // Termina em cima da borda: sem isso a faixa para antes do fim do eixo.
+    expect(band.at(-1)![0]).toBe(14)
+    expect(band.at(-2)![0]).toBeLessThan(14)
   })
 
   it('não corta nada para quem já passou do fim da tabela', () => {
@@ -158,11 +157,25 @@ describe('clipBand', () => {
     expect(clipBand([[0, 1, 2, 3, 4, 5]], 24)).toBeNull()
   })
 
-  it('mantém uma linha além da borda, para a faixa alcançar o fim do eixo', () => {
+  /**
+   * A versão óbvia — guardar a primeira linha além da borda e deixar o gráfico
+   * grampear — grampeia só o x: os percentis daquela linha são de uma criança
+   * mais velha, e a faixa dá um degrau para cima exatamente na borda. Parecia
+   * defeito de renderização na captura.
+   */
+  it('interpola a última linha em cima da borda, sem degrau', () => {
     const band = clipBand(referenceBand('height', 'MALE'), 6)!
+    const [last, penultimate] = [band.at(-1)!, band.at(-2)!]
 
-    expect(band.at(-1)![0]).toBeGreaterThan(6)
-    expect(band.at(-2)![0]).toBeLessThanOrEqual(6)
+    expect(last[0]).toBe(6)
+    expect(penultimate[0]).toBeLessThan(6)
+
+    // Entre os dois vizinhos da tabela, não além deles.
+    const rows = referenceBand('height', 'MALE')!
+    const before = rows.findLast((row) => row[0] <= 6)!
+    const after = rows.find((row) => row[0] > 6)!
+    expect(last[3]).toBeGreaterThanOrEqual(before[3])
+    expect(last[3]).toBeLessThanOrEqual(after[3])
   })
 })
 
