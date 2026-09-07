@@ -10,7 +10,7 @@
       "destination": "https://cygnus-api.onrender.com/uploads/:path*"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!assets/|embed/|mf/).*)",
       "destination": "/index.html"
     }
   ],
