@@ -89,6 +89,16 @@
       "google": "Continuar com Google",
       "googleUnavailable": "Entrar com Google ainda não está disponível."
     },
+    "nameGate": {
+      "title": "Como podemos te chamar?",
+      "description": "Sua conta está criada. Falta só o nome que vamos usar para falar com você.",
+      "label": "Seu nome",
+      "placeholder": "Maria Silva",
+      "required": "Escreva como quer ser chamado.",
+      "submit": "Continuar",
+      "saving": "Salvando...",
+      "error": "Não foi possível salvar agora. Tente de novo."
+    },
     "assisted": {
       "back": "Voltar",
       "passwordlessTitle": "Entrar sem senha",
@@ -100,6 +110,7 @@
       "sendCode": "Enviar código",
       "sending": "Enviando...",
       "requestSent": "Se existe uma conta com esse e-mail, enviamos um código.",
+    "requestSentPasswordless": "Enviamos um código para o seu e-mail.",
       "codeLabel": "Código de 6 dígitos",
       "codePlaceholder": "000000",
       "codeFormat": "Digite os 6 dígitos do código.",

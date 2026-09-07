@@ -89,6 +89,16 @@
       "google": "Continue with Google",
       "googleUnavailable": "Google sign-in is not available yet."
     },
+    "nameGate": {
+      "title": "What should we call you?",
+      "description": "Your account is ready. We just need the name we will use to talk to you.",
+      "label": "Your name",
+      "placeholder": "Maria Silva",
+      "required": "Tell us what to call you.",
+      "submit": "Continue",
+      "saving": "Saving...",
+      "error": "Could not save right now. Please try again."
+    },
     "assisted": {
       "back": "Back",
       "passwordlessTitle": "Sign in without a password",
@@ -100,6 +110,7 @@
       "sendCode": "Send code",
       "sending": "Sending...",
       "requestSent": "If an account exists for that e-mail, we sent a code.",
+    "requestSentPasswordless": "We sent a code to your e-mail.",
       "codeLabel": "6-digit code",
       "codePlaceholder": "000000",
       "codeFormat": "Enter the 6 digits of the code.",
