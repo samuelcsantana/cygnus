@@ -4,7 +4,13 @@ import { currentUserQueryKey } from '@/features/auth/api/auth.hooks'
 import type { User } from '@/features/auth/api/auth.schemas'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
 
-import { deleteAccount, updateProfile, type UpdateProfilePayload } from './profile.api'
+import {
+  deleteAccount,
+  requestDeletionCode,
+  updateProfile,
+  type DeleteAccountProof,
+  type UpdateProfilePayload,
+} from './profile.api'
 
 export function useUpdateProfile() {
   const queryClient = useQueryClient()
@@ -23,9 +29,14 @@ export function useDeleteAccount() {
   const clearIdentity = useAuthIdentityStore((state) => state.clearIdentity)
 
   return useMutation({
-    mutationFn: (currentPassword: string) => deleteAccount(currentPassword),
+    mutationFn: (proof: DeleteAccountProof) => deleteAccount(proof),
     onSuccess: () => {
       clearIdentity()
     },
   })
+}
+
+/** Asks for the code that confirms deletion. Answers 200 even when throttled, so there is no error path worth branching on. */
+export function useRequestDeletionCode() {
+  return useMutation({ mutationFn: requestDeletionCode })
 }
