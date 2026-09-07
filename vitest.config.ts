@@ -8,6 +8,14 @@ export default mergeConfig(
     test: {
       environment: 'jsdom',
       setupFiles: ['./src/test/setup.ts'],
+      // Pinned, and it is not cosmetic: this suite runs in the developer's zone
+      // locally (UTC-3) and in **UTC** on the runner, so a date test can pass in
+      // one and be inert in the other. Two bugs found on 06/09/2026 were exactly
+      // that shape — `new Date('2026-01-15')` is a UTC instant read with local
+      // getters, and a visit's UTC date is a different day from its local one —
+      // and **neither is reproducible at offset zero**. Every user of this app
+      // is in a negative offset; the tests should be too.
+      env: { TZ: 'America/Sao_Paulo' },
       css: true,
       // e2e/ holds Playwright specs (a different test runner, real browser,
       // no jsdom) — Vitest's default glob would otherwise also pick them up.

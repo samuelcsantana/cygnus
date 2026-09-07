@@ -69,3 +69,34 @@ describe('positionIn', () => {
     expect(positionIn(scale, 40)).toBe(1)
   })
 })
+
+/**
+ * O eixo de idade conta meses. Duas coisas quebravam nele, e as duas só
+ * apareceram olhando uma captura da tela com um recém-nascido de uma medida só.
+ */
+describe('niceScale com minStep (o eixo de idade)', () => {
+  it('não desce abaixo de zero ao abrir faixa em torno de um ponto só', () => {
+    // Com o padding nos dois sentidos, o eixo imprimia "-1" mês.
+    const scale = niceScale(0, 0, 4, { minStep: 1 })
+
+    expect(scale.min).toBe(0)
+    expect(scale.max).toBeGreaterThan(0)
+  })
+
+  it('usa passo inteiro, nunca fração de mês', () => {
+    // "0,25 meses" é uma semana, dita do jeito errado.
+    for (const max of [1, 2, 3, 7, 14, 30, 228]) {
+      const scale = niceScale(0, max, 4, { minStep: 1 })
+      for (const tick of scale.ticks) {
+        expect(Number.isInteger(tick)).toBe(true)
+      }
+    }
+  })
+
+  it('continua aceitando decimal onde decimal é a unidade', () => {
+    // Peso e altura não passam mínimo nenhum: 0,5 kg é uma marca legítima.
+    const scale = niceScale(3.2, 3.4)
+
+    expect(scale.ticks.some((tick) => !Number.isInteger(tick))).toBe(true)
+  })
+})

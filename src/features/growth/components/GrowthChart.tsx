@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/lib/utils'
-import { formatDateDisplay } from '@/lib/date'
+import { formatDateDisplay, splitScheduledAt } from '@/lib/date'
 
 import type { GrowthIndicator, GrowthPlotPoint } from '../api/growth.selectors'
 import { niceScale, positionIn } from './growth-scale'
@@ -60,7 +60,12 @@ export function GrowthChart({ points, formatValue, label, indicator, className }
   // The age axis starts at birth, not at the first visit: a curve that opens at
   // "14 months" hides that nothing was recorded before it, and the gap is a fact
   // about the record worth seeing.
-  const ageScale = niceScale(0, Math.max(...points.map((point) => point.x)))
+  //
+  // A floor of one month on the span, because a newborn's only measurement is at
+  // age ~0 and an axis with nothing to divide padded itself in both directions —
+  // it printed -1 month, which is not a thing that happened to anybody. Whole
+  // months, for the same reason: "0,25 meses" is a week, said the wrong way.
+  const ageScale = niceScale(0, Math.max(...points.map((point) => point.x), 1), 4, { minStep: 1 })
 
   const placed = points.map((point, index) => ({
     ...point,
@@ -162,7 +167,11 @@ export function GrowthChart({ points, formatValue, label, indicator, className }
             >
               <span className="font-mono">{formatValue(active.y)}</span>
               <span className="mx-1 opacity-50">·</span>
-              {formatDateDisplay(active.scheduledAt.slice(0, 10), i18n.language)}
+              {/* The local calendar date, like every other visit in the app —
+                  `slice(0, 10)` is the UTC one, and for a visit late in the day
+                  it names a different day than the age beside it was counted
+                  from. */}
+              {formatDateDisplay(splitScheduledAt(active.scheduledAt).date, i18n.language)}
             </div>
           )}
         </div>

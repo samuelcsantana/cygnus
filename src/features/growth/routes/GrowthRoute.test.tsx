@@ -108,6 +108,38 @@ describe('GrowthRoute', () => {
     expect(screen.getByRole('link', { name: 'Ir para as consultas' })).toHaveAttribute('href', '/appointments')
   })
 
+  /**
+   * A data da linha vem do calendário **local**, como no cartão da consulta.
+   * `scheduledAt.slice(0, 10)` é a data UTC: para uma consulta de fim de dia as
+   * duas são dias diferentes, e a linha imprimia uma data que não batia com a
+   * idade ao lado — "07/09/2025" contra "1 mês", dois meses depois do
+   * nascimento. O fuso do vitest está fixado em `America/Sao_Paulo` justamente
+   * para este teste não virar decoração no runner, que roda em UTC.
+   */
+  it('mostra a data local da consulta, coerente com a idade ao lado', async () => {
+    const birthDate = '2025-07-07'
+    // 22h locais: em UTC-3 isto é o dia seguinte em UTC.
+    const visit = new Date(2025, 8, 7, 22, 0, 0)
+
+    withData(
+      [
+        buildAppointment({
+          id: FIRST_VISIT,
+          babyId,
+          status: 'COMPLETED',
+          scheduledAt: visit.toISOString(),
+          weightGrams: 5400,
+        }),
+      ],
+      buildBaby({ id: babyId, name: 'Elis', birthDate }),
+    )
+
+    renderRoute()
+
+    expect(await screen.findByText('07/09/2025')).toBeInTheDocument()
+    expect(screen.getByText('2 meses')).toBeInTheDocument()
+  })
+
   it('não conta a consulta cancelada que ficou com medida gravada', async () => {
     withData([
       buildAppointment({ id: FIRST_VISIT, babyId, status: 'CANCELLED', weightGrams: 5400 }),

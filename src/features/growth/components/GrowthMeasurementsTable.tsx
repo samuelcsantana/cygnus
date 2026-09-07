@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { formatDateDisplay } from '@/lib/date'
+import { formatDateDisplay, splitScheduledAt } from '@/lib/date'
 import { formatCentimeters, formatKilograms } from '@/shared/utils/measurements'
 
 import type { GrowthPoint } from '../api/growth.selectors'
@@ -16,6 +16,13 @@ interface GrowthMeasurementsTableProps {
  * all to someone who cannot see it, and why the charts can be a single
  * `role="img"` with no focusable dots. It is also the only place the numbers are
  * exact: a curve says "it went up", a table says 7,9 kg on 28/07.
+ *
+ * The date is the visit's **local** calendar date, the same one the appointment
+ * card shows. `scheduledAt.slice(0, 10)` is the UTC date, and for a visit late
+ * in the day the two are different days — the row then printed a date one day
+ * ahead of the age beside it, which is derived from the local one. Caught by
+ * reading a seeded table: "07/09/2025" against "1 mês", for a visit two months
+ * after birth.
  *
  * Oldest first, matching the charts. The appointment list runs the other way,
  * which is right there and would be confusing here — a reader glancing between
@@ -50,7 +57,7 @@ export function GrowthMeasurementsTable({ points }: GrowthMeasurementsTableProps
           {points.map((point) => (
             <tr key={point.appointmentId} className="border-b border-border/60 last:border-0">
               <td className="py-2 pr-3 font-mono text-[13px] text-ink">
-                {formatDateDisplay(point.scheduledAt.slice(0, 10), i18n.language)}
+                {formatDateDisplay(splitScheduledAt(point.scheduledAt).date, i18n.language)}
               </td>
               <td className="py-2 pr-3 text-[13px] text-ink-muted">
                 {t('babies.monthsOld', { count: point.ageMonthsWhole })}

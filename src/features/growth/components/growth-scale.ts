@@ -19,16 +19,20 @@ export interface Scale {
  * which a growth curve can afford — it is a shape, not a measurement to be read
  * off the grid.
  */
-export function niceScale(min: number, max: number, tickCount = 4): Scale {
+export function niceScale(min: number, max: number, tickCount = 4, options: { minStep?: number } = {}): Scale {
   // A flat series — one point, or several identical ones — has no range to
   // divide. Without this the step is 0 and every tick prints the same number.
   if (!Number.isFinite(min) || !Number.isFinite(max) || max - min < Number.EPSILON) {
     const centre = Number.isFinite(min) ? min : 0
-    const pad = Math.max(Math.abs(centre) * 0.1, 1)
-    return niceScale(centre - pad, centre + pad, tickCount)
+    const pad = Math.max(Math.abs(centre) * 0.1, options.minStep ?? 1)
+    // A range opened around a single value must not cross a bound the data
+    // cannot cross: an age axis padded downwards prints -1 month, which is not
+    // a thing that happened to anybody.
+    const low = min === 0 ? 0 : centre - pad
+    return niceScale(low, centre + pad, tickCount, options)
   }
 
-  const step = niceStep((max - min) / Math.max(tickCount, 1))
+  const step = withMinimum(niceStep((max - min) / Math.max(tickCount, 1)), options.minStep)
   const niceMin = Math.floor(min / step) * step
   const niceMax = Math.ceil(max / step) * step
 
@@ -41,6 +45,18 @@ export function niceScale(min: number, max: number, tickCount = 4): Scale {
   }
 
   return { min: round(niceMin), max: round(niceMax), ticks }
+}
+
+/**
+ * Rounds a step up to a whole number of `minStep`s.
+ *
+ * The age axis is counted in months, and a tick every 0.25 months is not a unit
+ * anybody reads — "0,25 meses" is a week, said the wrong way. Weight and height
+ * pass no minimum and keep their decimals.
+ */
+function withMinimum(step: number, minStep: number | undefined): number {
+  if (!minStep) return step
+  return Math.max(Math.ceil(step / minStep) * minStep, minStep)
 }
 
 function niceStep(rough: number): number {
