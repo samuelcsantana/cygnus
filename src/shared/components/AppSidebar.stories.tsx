@@ -3,6 +3,7 @@ import { expect, within } from 'storybook/test'
 
 import { DashboardIcon } from '@/shared/icons/dashboard-icon'
 import { HeartIcon } from '@/shared/icons/heart-icon'
+import { GrowthIcon } from '@/shared/icons/growth-icon'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
@@ -11,9 +12,10 @@ import { UsersIcon } from '@/shared/icons/users-icon'
 import { AppSidebar } from './AppSidebar'
 
 /**
- * The real sections, in the real order. Six, not seven: notifications is the
- * bell in the top bar, not a row here — see the shell. "Profissionais" is the
- * longest label the app ships and the one the bottom bar could not show.
+ * The real sections, in the real order. Seven, and notifications is not among
+ * them: it is the bell in the top bar, not a row here — see the shell.
+ * "Profissionais" is the longest label the app ships and the one the bottom bar
+ * could not show at any width.
  */
 const items = [
   { to: '/dashboard', label: 'Início', icon: <DashboardIcon className="h-5 w-5" /> },
@@ -21,6 +23,7 @@ const items = [
   { to: '/appointments', label: 'Consultas', icon: <StethoscopeIcon className="h-5 w-5" /> },
   { to: '/profissionais', label: 'Profissionais', icon: <UsersIcon className="h-5 w-5" /> },
   { to: '/medications', label: 'Medicamentos', icon: <HeartIcon className="h-5 w-5" /> },
+  { to: '/crescimento', label: 'Crescimento', icon: <GrowthIcon className="h-5 w-5" /> },
   { to: '/milestones', label: 'Marcos', icon: <SparkleIcon className="h-5 w-5" /> },
 ]
 

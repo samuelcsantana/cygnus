@@ -10,6 +10,7 @@ import { AddBabyDialog } from '@/features/babies/components/AddBabyDialog'
 import { useNotifications } from '@/features/notifications/api/notifications.hooks'
 import { BellIcon } from '@/shared/icons/bell-icon'
 import { DashboardIcon } from '@/shared/icons/dashboard-icon'
+import { GrowthIcon } from '@/shared/icons/growth-icon'
 import { LogoIcon } from '@/shared/icons/logo-icon'
 import { MenuIcon } from '@/shared/icons/menu-icon'
 import { HeartIcon } from '@/shared/icons/heart-icon'
@@ -51,6 +52,7 @@ export function AppShellLayout() {
     // page is reached from the same intent.
     { to: '/profissionais', label: t('nav.specialists'), icon: <UsersIcon className="h-5 w-5" /> },
     { to: '/medications', label: t('nav.medications'), icon: <HeartIcon className="h-5 w-5" /> },
+    { to: '/crescimento', label: t('nav.growth'), icon: <GrowthIcon className="h-5 w-5" /> },
     { to: '/milestones', label: t('nav.milestones'), icon: <SparkleIcon className="h-5 w-5" /> },
   ]
 

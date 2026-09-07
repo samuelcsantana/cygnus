@@ -56,6 +56,12 @@ test.describe('accessibility (WCAG 2 A/AA)', () => {
     await expect(page).toHaveURL(/\/profissionais$/)
     await expectNoViolations(page)
 
+    // Growth reads the appointments and has an empty state of its own, which is
+    // what this account is in — the state most pages are never scanned in.
+    await page.getByRole('link', { name: 'Crescimento', exact: true }).click()
+    await expect(page).toHaveURL(/\/crescimento$/)
+    await expectNoViolations(page)
+
     await page.getByRole('link', { name: 'Marcos', exact: true }).click()
     await expect(page).toHaveURL(/\/milestones$/)
     await expectNoViolations(page)
