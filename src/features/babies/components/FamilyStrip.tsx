@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
 
+import { useAgeLabel } from '@/hooks/useAgeLabel'
+
 import type { Baby } from '@/features/babies/api/babies.schemas'
-import { ageInMonths } from '@/lib/date'
 import { cn } from '@/lib/utils'
 import { PencilIcon } from '@/shared/icons/pencil-icon'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
@@ -47,6 +48,7 @@ interface FamilyStripProps {
 // either component.
 export function FamilyStrip({ items, onEdit }: FamilyStripProps) {
   const { t } = useTranslation()
+  const ageLabel = useAgeLabel()
 
   // Rola no celular e quebra linha no desktop.
   //
@@ -88,7 +90,7 @@ export function FamilyStrip({ items, onEdit }: FamilyStripProps) {
             )}
             <div className="min-w-0 pr-1">
               <p className="truncate text-[13px] font-bold text-ink">{baby.name}</p>
-              <p className="text-[11px] text-ink-muted">{t('babies.monthsOld', { count: ageInMonths(baby.birthDate) })}</p>
+              <p className="text-[11px] text-ink-muted">{ageLabel(baby.birthDate)}</p>
               {/* A ordem importa: o caso "não sei" vem antes de qualquer
                   afirmação. Um atraso conhecido ainda é reportado, porque essa
                   informação é sempre verdadeira quando existe. */}
