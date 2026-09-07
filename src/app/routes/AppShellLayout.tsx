@@ -157,9 +157,16 @@ export function AppShellLayout() {
             </span>
             <span className="truncate font-display text-lg font-extrabold text-ink">{t('common.appName')}</span>
           </Link>
-          <h1 className="hidden min-w-0 flex-1 truncate font-display text-xl font-extrabold text-ink lg:block">
+          {/* A `p`, deliberately, and not a heading. Every route already opens
+              with its own `h1`; a second one in the shell would make two on
+              every page, and the outer one -- a bare section name, repeated
+              from the menu row that is highlighted two centimetres to the left
+              -- is the less informative of the two. Caught by the E2E, where
+              `getByRole('heading', { level: 1 })` stopped resolving to one
+              element. */}
+          <p className="hidden min-w-0 flex-1 truncate font-display text-xl font-extrabold text-ink lg:block">
             {sectionTitle}
-          </h1>
+          </p>
 
           {/* All three controls are 44x44, which is the AAA target size and also
               the only way this row is internally consistent: the two icon
