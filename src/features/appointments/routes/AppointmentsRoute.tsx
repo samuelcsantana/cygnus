@@ -41,7 +41,9 @@ export function AppointmentsRoute() {
       .filter((entry) => entry.isError)
       .forEach(
         (entry) =>
-          void client.invalidateQueries({ queryKey: ['babies', entry.baby.id, 'appointments'] }),
+          void client.invalidateQueries({
+            queryKey: ['babies', entry.baby.id, 'appointments'],
+          }),
       )
   }
   const [isAddOpen, setIsAddOpen] = useState(false)
@@ -103,8 +105,13 @@ export function AppointmentsRoute() {
           </button>
         </div>
       )}
+      {destination?.source === 'notification' && !isPending && !isError && items.length === 0 && (
+        <p role="status" className="rounded-2xl border border-border bg-card p-5 text-ink-muted">
+          {t('notifications.recordUnavailable')}
+        </p>
+      )}
       {isPending && <AppointmentsSkeleton />}
-      {!isPending && !isError && items.length === 0 && (
+      {destination?.source !== 'notification' && !isPending && !isError && items.length === 0 && (
         <EmptyState
           icon={<CalendarIcon className="h-10 w-10" />}
           title={t('appointments.empty.title')}

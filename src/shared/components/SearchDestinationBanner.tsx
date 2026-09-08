@@ -10,7 +10,10 @@ export function SearchDestinationBanner() {
       className="mb-5 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-primary/25 bg-card px-5 py-3"
     >
       <p className="break-words text-sm text-ink">
-        {t('search.ui.destination', { query: target.query })}
+        {t(
+          target.source === 'notification' ? 'notifications.destination' : 'search.ui.destination',
+          { query: target.query },
+        )}
       </p>
       <button
         type="button"

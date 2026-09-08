@@ -39,6 +39,7 @@ export function VaccinesRoute() {
     .filter(
       (item) =>
         !destination ||
+        destination.keys.includes(`vaccine:${item.babyId}:${item.vaccineId}`) ||
         destination.keys.includes(`vaccine:${item.babyId}:${item.vaccineId}:${item.doseNumber}`),
     )
   const isPending = !calendar.babies.length
@@ -53,7 +54,9 @@ export function VaccinesRoute() {
       .filter((entry) => entry.isError)
       .forEach(
         (entry) =>
-          void client.invalidateQueries({ queryKey: ['babies', entry.baby.id, 'vaccines'] }),
+          void client.invalidateQueries({
+            queryKey: ['babies', entry.baby.id, 'vaccines'],
+          }),
       )
   }
   const [filter, setFilter] = useState<Filter>('ALL')
@@ -115,6 +118,11 @@ export function VaccinesRoute() {
             {t('nav.shell.retry')}
           </button>
         </div>
+      )}
+      {destination?.source === 'notification' && !isPending && !isError && items.length === 0 && (
+        <p role="status" className="rounded-2xl border border-border bg-card p-5 text-ink-muted">
+          {t('notifications.recordUnavailable')}
+        </p>
       )}
       {isPending && <VaccineCalendarSkeleton />}
       {!destination && !isPending && !isError && items.length === 0 && (
