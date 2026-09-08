@@ -107,6 +107,8 @@
       "register": "Crear cuenta"
     },
     "brand": {
+      "headlineLead": "Cada momento",
+      "headlineEmphasis": "importa.",
       "headline": "Cada momento importa.",
       "tagline": "El panel completo para la salud y los recuerdos de tu familia.",
       "featureVaccinesTitle": "Calendario de vacunas completo",
@@ -123,6 +125,7 @@
       "or": "o",
       "google": "Continuar con Google",
       "googleUnavailable": "El acceso con Google no está disponible. Usa otra forma de entrar.",
+      "googleChecking": "Cargando acceso con Google…",
       "googleRedirecting": "Abriendo Google…",
       "googleRetry": "Intentar de nuevo",
       "googleError": "No se pudo entrar con Google. Inténtalo de nuevo o usa tu correo.",
@@ -1394,15 +1397,16 @@
     }
   },
   "legal": {
+    "draftVersionLine": "Versión {{version}} · vigencia aún no definida",
     "versionLine": "Versión {{version}} · vigente desde {{date}}",
     "sectionNeedsReview": "Esta sección aún necesita revisión profesional y no establece ningún compromiso definitivo.",
     "bindingLocaleNotice": "Este documento se publica en portugués, que es el idioma en el que tiene validez. La traducción de esta interfaz no altera el texto acordado.",
     "gate": {
       "title": "Antes de continuar",
-      "description": "Actualizamos los documentos que rigen el uso de la aplicación. Léelos y acéptalos para continuar — la aplicación maneja datos de salud de un niño, y el consentimiento debe ser tuyo y quedar registrado.",
+      "description": "Lee los documentos actualizados. Al continuar, aceptas los Términos de Uso y declaras conocer la Política de Privacidad. Esto no sustituye los consentimientos específicos cuando sean necesarios.",
       "versionLabel": "Versión {{version}}",
       "readFirst": "Se abre en otra pantalla. Léelo antes de aceptar.",
-      "acceptAction": "He leído y acepto",
+      "acceptAction": "Aceptar términos y confirmar lectura",
       "genericError": "No fue posible registrar la aceptación. Inténtalo de nuevo.",
       "noWayAround": "Sin la aceptación no es posible continuar. Puedes cerrar sesión en cualquier momento."
     },

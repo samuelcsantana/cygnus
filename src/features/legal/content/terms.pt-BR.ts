@@ -1,91 +1,112 @@
 import type { LegalContent } from './types'
 
-/**
- * Terms of use — DRAFT, pt-BR.
- *
- * **To publish the reviewed version:** replace `sections` below, then in
- * `src/shared/legal.ts` bump `terms.version`, set `effectiveFrom`, and change
- * `status` to `'in-force'`. See `privacy.pt-BR.ts` for the same note and for
- * why the factual and the legal halves are marked apart.
- */
+/** Web legal text approved by the service owner on 2026-09-08. */
 export const termsPtBR: LegalContent = {
-  locale: 'pt-BR',
-  sections: [
+  "locale": "pt-BR",
+  "sections": [
     {
-      id: 'o-que-o-servico-e',
-      heading: 'O que o serviço é, e o que ele não é',
-      body: [
-        'O Ninho é uma ferramenta de acompanhamento: guarda o que você registra sobre a saúde de uma criança — vacinas aplicadas, consultas, marcos de desenvolvimento — e mostra o calendário nacional de imunização como referência.',
-        'Ele não é um serviço de saúde. Não emite diagnóstico, não prescreve, não substitui a caderneta oficial de vacinação nem a avaliação de um profissional ou de uma unidade de saúde. O calendário exibido é material informativo de referência pública, e o aplicativo pode estar desatualizado em relação à fonte oficial.',
-        'Decisões sobre a saúde da criança são suas e do profissional que a acompanha. Nenhum aviso, lembrete ou ausência de aviso dentro do aplicativo deve ser lido como orientação clínica.',
-      ],
+      "id": "responsavel",
+      "heading": "Serviço e responsável",
+      "body": [
+        "O Ninho Web é disponibilizado por Samuel Santana, responsável pelo serviço, acessível em https://cygnus.samuelsantana.dev. O contato para suporte, dúvidas sobre estes termos e privacidade é samuel.ssa89@gmail.com.",
+        "Estes termos tratam exclusivamente da versão web e dos serviços que a atendem. Não abrangem um futuro aplicativo Android, compra na Play Store ou plano pago de nuvem, que terão condições próprias quando oferecidos."
+      ]
     },
     {
-      id: 'quem-pode-usar',
-      heading: 'Quem pode usar',
-      body: [
-        'O cadastro é para adultos que sejam pais ou responsáveis legais pela criança cujos dados serão registrados, ou para quem eles convidarem expressamente como responsável.',
-        'Ao registrar dados de uma criança, você declara ter autoridade para fazê-lo. Ao convidar outra pessoa como responsável, você está dando a ela acesso de leitura e edição a todo o histórico daquela criança — inclusive ao que foi registrado antes do convite.',
-      ],
-      needsReview: true,
+      "id": "o-que-o-servico-e",
+      "heading": "Finalidade do Ninho",
+      "body": [
+        "O Ninho organiza informações registradas pelos responsáveis sobre crianças: perfil, vacinas e comprovantes, consultas, medidas de crescimento, medicamentos, marcos de desenvolvimento, profissionais e dados do plano de saúde. Também oferece referências informativas, compartilhamento autorizado e notificações.",
+        "O Ninho não presta consulta médica, não diagnostica, não prescreve medicamentos e não calcula tratamentos. O calendário vacinal e as curvas de crescimento são referências informativas, sujeitas a limites de aplicação e atualização. Não substituem a caderneta oficial, documentos emitidos por serviços de saúde ou avaliação profissional.",
+        "Lembretes podem atrasar ou não chegar. O responsável deve acompanhar datas e orientações do profissional de saúde independentemente das notificações. Ausência de alerta não significa ausência de cuidado necessário. O serviço não é destinado a emergências."
+      ]
     },
     {
-      id: 'sua-conta',
-      heading: 'Sua conta',
-      body: [
-        'Você é responsável por manter a confidencialidade das suas credenciais e por tudo que for feito a partir da sua conta. Se suspeitar de acesso indevido, troque a senha e remova os responsáveis que não reconhecer.',
-        'Você pode excluir a conta a qualquer momento pela tela de perfil. A exclusão remove, em cascata, os perfis de criança e o histórico associado a eles.',
-      ],
+      "id": "quem-pode-usar",
+      "heading": "Quem pode utilizar",
+      "body": [
+        "O serviço é destinado a pessoas adultas que sejam pais, responsáveis legais ou pessoas por eles autorizadas a acompanhar a criança. Quem cadastra informações deve ter legitimidade para fazê-lo e respeitar os direitos e o melhor interesse da criança.",
+        "O convite para colaborar no Ninho concede acesso ao sistema; não constitui guarda, representação legal ou decisão sobre direitos familiares. Em caso de disputa sobre acesso, entre em contato. A situação deverá ser examinada considerando a segurança dos dados, os direitos envolvidos e eventuais determinações competentes."
+      ]
     },
     {
-      id: 'seu-conteudo',
-      heading: 'O conteúdo que você registra',
-      body: [
-        'O que você escreve e envia continua sendo seu. O serviço recebe apenas a autorização necessária para armazenar, exibir e transmitir esse conteúdo a você e às pessoas que você convidar — nada além disso, e nenhuma finalidade publicitária.',
-        'Você se compromete a não usar o serviço para registrar dados de terceiros sem autoridade para tanto, nem para conteúdo ilícito.',
-      ],
-      needsReview: true,
+      "id": "sua-conta",
+      "heading": "Conta e acesso",
+      "body": [
+        "Informe dados de conta corretos e utilize um endereço de e-mail ao qual tenha acesso. O Ninho oferece acesso por senha, código enviado por e-mail e Google, conforme a disponibilidade de cada modalidade.",
+        "Proteja sua senha, seus códigos e o acesso ao e-mail. Não forneça essas credenciais a terceiros; utilize os convites de compartilhamento quando apropriado. O suporte não precisa de sua senha ou de um código de acesso para receber uma solicitação.",
+        "Ao suspeitar de acesso indevido, proteja o e-mail e a conta Google, quando utilizados, altere a senha quando aplicável e informe o contato de suporte. A apuração de acesso não autorizado não implica atribuição automática de responsabilidade ao usuário."
+      ]
     },
     {
-      id: 'disponibilidade',
-      heading: 'Disponibilidade e mudanças no serviço',
-      body: [
-        'O serviço é oferecido no estado em que se encontra, sem garantia de disponibilidade ininterrupta. A infraestrutura pode ficar indisponível por manutenção, falha de provedor ou limite de plano.',
-        'Funcionalidades podem mudar ou ser descontinuadas. Mudanças que afetem dados já registrados serão comunicadas antes de valer.',
-        'A extensão da limitação de responsabilidade aplicável, e a forma de comunicação prévia, precisam de revisão jurídica — inclusive porque o Código de Defesa do Consumidor limita o que pode ser afastado.',
-      ],
-      needsReview: true,
+      "id": "compartilhamento",
+      "heading": "Registros, fotos e compartilhamento",
+      "body": [
+        "Registre informações corretas e revise datas, doses, medidas, nomes e documentos antes de utilizá-los em uma consulta. Você poderá corrigir ou remover registros pelas funções disponíveis.",
+        "Ao convidar uma pessoa, confira o destinatário e o perfil de criança envolvido. Os responsáveis autorizados podem acessar e alterar registros dentro das permissões do serviço, inclusive informações anteriores ao convite. Revogar acesso não recolhe cópias que alguém já tenha exportado ou recebido.",
+        "Limitação atual dos arquivos: as imagens enviadas ao serviço são disponibilizadas por endereços que podem ser abertos por quem obtiver o link. Elas não contam atualmente com a mesma restrição de acesso dos registros autenticados. Não compartilhe esses links. O envio não será tratado como autorização genérica para divulgar imagens ou informações pessoais. A Política de Privacidade explica essa limitação e o canal para pedidos de remoção.",
+        "Mantenha os documentos originais necessários ao acompanhamento da criança. A orientação de guardar uma cópia não afasta os deveres legais do responsável pelo serviço."
+      ]
     },
     {
-      id: 'gratuidade',
-      heading: 'Preço',
-      body: [
-        'O serviço é gratuito hoje e não há cobrança, assinatura ou compra dentro do aplicativo. Se isso mudar, os termos serão atualizados e o aceite pedido de novo antes de qualquer cobrança.',
-      ],
-      needsReview: true,
+      "id": "seu-conteudo",
+      "heading": "Uso permitido e conteúdo",
+      "body": [
+        "Não utilize o Ninho para registrar dados de terceiros sem autorização, publicar conteúdo ilícito, violar direitos de imagem, tentar acessar dados de outras famílias, comprometer a segurança ou prejudicar a disponibilidade do sistema.",
+        "O envio de conteúdo não transfere ao Ninho sua titularidade nem concede autorização publicitária. O serviço utiliza o conteúdo para as funcionalidades solicitadas, incluindo armazenamento, apresentação aos usuários autorizados e comunicações relacionadas ao acompanhamento, conforme a Política de Privacidade. Essa cláusula não substitui a definição da base legal para dados pessoais.",
+        "A identidade visual, o software e materiais próprios do serviço continuam sujeitos aos direitos aplicáveis. Referências e materiais de terceiros permanecem sujeitos aos direitos de seus titulares."
+      ]
     },
     {
-      id: 'encerramento',
-      heading: 'Encerramento',
-      body: [
-        'Você pode encerrar o uso a qualquer momento excluindo a conta. As hipóteses em que o serviço pode encerrar uma conta, e o aviso devido nesse caso, precisam ser definidas na versão revisada.',
-      ],
-      needsReview: true,
+      "id": "gratuidade",
+      "heading": "Gratuidade da versão web",
+      "body": [
+        "A versão web atualmente é gratuita e não possui assinatura ou compra interna. Estes termos não autorizam cobranças futuras automáticas.",
+        "Se houver oferta paga no futuro, seu preço, conteúdo e condições serão apresentados separadamente antes da contratação. O planejamento de um aplicativo pago não transforma a conta web em uma contratação paga."
+      ]
     },
     {
-      id: 'lei-e-foro',
-      heading: 'Lei aplicável e foro',
-      needsReview: true,
-      body: [
-        'A lei aplicável e o foro competente precisam ser declarados por quem responde pelo serviço, e dependem da identificação do controlador na política de privacidade.',
-      ],
+      "id": "disponibilidade",
+      "heading": "Disponibilidade e evolução",
+      "body": [
+        "O funcionamento depende de internet, navegador, equipamentos e provedores externos. Podem ocorrer manutenção, falhas ou interrupções. Não há compromisso contratual de disponibilidade contínua ou entrega de lembretes em horário exato nesta versão.",
+        "A implementação atual não oferece backup completo restaurável pelo usuário. A infraestrutura de arquivos apresenta limitações de durabilidade descritas na Política de Privacidade. O Ninho não deve ser usado como única cópia de documentos essenciais.",
+        "Funcionalidades podem evoluir. Mudanças relevantes nas condições de uso ou eventual encerramento deverão ser comunicados de forma adequada, com orientação sobre acesso aos registros e exercício de direitos. Medidas urgentes de segurança ou exigidas por autoridade podem demandar atuação imediata."
+      ]
     },
     {
-      id: 'mudancas-nos-termos',
-      heading: 'Mudanças nestes termos',
-      body: [
-        'Cada versão tem número e data de vigência, mostrados no topo desta página. Quando o texto mudar de forma relevante, a nova versão é publicada com nova numeração e o aceite é pedido novamente — e o aceite anterior permanece registrado, com a versão e a data em que foi dado.',
-      ],
+      "id": "encerramento",
+      "heading": "Suspensão e encerramento",
+      "body": [
+        "Você pode deixar de usar o serviço e solicitar a exclusão da conta pelo perfil ou pelo contato informado. A simples interrupção do uso não equivale à exclusão.",
+        "A exclusão da conta que criou uma criança remove também os registros dessa criança associados à conta, inclusive quando há outros responsáveis com acesso. Não há transferência automática para outro responsável. Revise esse efeito antes de confirmar a exclusão.",
+        "Uma conta poderá ter o acesso restringido quando necessário para apurar uso ilícito, proteger usuários e o serviço ou cumprir obrigação legal. A medida deverá ser proporcional ao motivo, com possibilidade de contato para esclarecimentos, ressalvadas restrições legais ou riscos que impeçam a comunicação imediata.",
+        "A exclusão de registros não significa remoção instantânea de arquivos, logs, cópias exportadas ou dados sob guarda de terceiros. A Política de Privacidade detalha o estado atual e as pendências de retenção."
+      ]
     },
-  ],
+    {
+      "id": "responsabilidades",
+      "heading": "Responsabilidades e direitos preservados",
+      "body": [
+        "O usuário responde por suas próprias condutas nos limites da legislação. Samuel Santana responde pela prestação do serviço e pelo tratamento de dados conforme as obrigações que lhe forem aplicáveis.",
+        "As limitações funcionais descritas neste documento não excluem responsabilidade legal, não legitimam exposição indevida de dados e não implicam renúncia a direitos. Permanecem preservadas as normas obrigatórias de proteção de dados e de defesa do consumidor, quando aplicáveis."
+      ]
+    },
+    {
+      "id": "mudancas-nos-termos",
+      "heading": "Privacidade e mudanças dos documentos",
+      "body": [
+        "A Política de Privacidade explica os dados utilizados e seus direitos. Conhecer essa política não equivale a consentir indistintamente com qualquer tratamento. Quando uma finalidade exigir consentimento, a manifestação deverá ser específica e apresentada de forma adequada.",
+        "A versão vigente e sua data estão identificadas nesta página. Alterações relevantes serão apresentadas ao usuário, com nova manifestação quando necessária. Estes termos não tornam válida uma coleta anterior sem base adequada."
+      ]
+    },
+    {
+      "id": "lei-e-foro",
+      "heading": "Lei aplicável e contato",
+      "body": [
+        "Aplicam-se as leis brasileiras, respeitadas as normas obrigatórias pertinentes ao usuário. Eventuais controvérsias serão submetidas ao juízo competente segundo a legislação, preservado o foro do consumidor quando aplicável, sem impor nestes termos uma cidade exclusiva.",
+        "Dúvidas e solicitações: Samuel Santana — samuel.ssa89@gmail.com."
+      ]
+    }
+  ]
 }

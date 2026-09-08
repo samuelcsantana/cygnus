@@ -7,15 +7,7 @@ import { server } from '@/test/msw/server'
 import { renderWithProviders, screen, waitFor } from '@/test/test-utils'
 
 
-/**
- * The gate has two states and both need proving, because the one that ships
- * today is "does nothing" — and a component that does nothing is
- * indistinguishable from a component that is broken.
- *
- * `LEGAL_DOCUMENTS` is mocked per test rather than read from disk: the real
- * module has both documents as drafts, so without mocking there would be no way
- * to exercise the half that matters on the day a text is published.
- */
+/** Versioned document acceptance, separate from consent for specific data processing. */
 const asDrafts = {
   privacy: { id: 'privacy', version: '0.1.0-draft', effectiveFrom: '2026-08-26', status: 'draft', path: '/privacidade' },
   terms: { id: 'terms', version: '0.1.0-draft', effectiveFrom: '2026-08-26', status: 'draft', path: '/termos' },

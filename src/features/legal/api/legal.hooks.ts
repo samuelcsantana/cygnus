@@ -44,7 +44,7 @@ export function useLegalAcceptances() {
     queryKey: legalAcceptancesQueryKey,
     queryFn: fetchLegalAcceptances,
     // No document in force means there is nothing this answer could change, so
-    // the request is not made at all. Today that is every case.
+    // the request is not made at all.
     enabled: documentsInForce().length > 0,
   })
 }

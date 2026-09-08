@@ -7,27 +7,7 @@ import { LogoIcon } from '@/shared/icons/logo-icon'
 
 import { documentsAwaitingAcceptance, useLegalAcceptances, useRecordLegalAcceptance } from '../api/legal.hooks'
 
-/**
- * Stands between a signed-in person and the app until they have accepted every
- * document that is in force.
- *
- * **It is inert today, and that is the design, not an unfinished state.** Both
- * documents are drafts (`shared/legal.ts`), so `documentsInForce()` is empty,
- * the query never fires and this renders its children untouched. The day a
- * reviewed text lands and its `status` flips to `'in-force'`, the gate starts
- * asking on its own — no other file has to change. That is what "ready to be
- * swapped" has to mean to be worth anything.
- *
- * Why a gate rather than a checkbox at sign-up: a version bump has to re-ask,
- * and it has to re-ask people who already have accounts. A checkbox on the
- * registration form only ever catches new users, and would leave every existing
- * account agreeing to a text they never saw.
- *
- * It deliberately does **not** offer a way past. There is no "later": the app
- * handles a child's health data, and continuing without consent would be
- * processing it without a basis. The way out is the browser's back button or
- * signing out, which the copy says.
- */
+/** Versioned document acceptance, separate from consent for specific data processing. */
 export function LegalAcceptanceGate({ children }: { children: ReactNode }) {
   const { t } = useTranslation()
   const acceptances = useLegalAcceptances()

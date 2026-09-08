@@ -47,13 +47,13 @@ describe('legal documents', () => {
     }
   })
 
-  it('still has sections awaiting review, which is why both are drafts', () => {
-    // Not a tautology: if someone replaces the text and forgets to flip the
-    // status, this turns red and says so, rather than leaving a finished policy
-    // silently labelled a draft.
-    expect(sectionsAwaitingReview('privacy').length).toBeGreaterThan(0)
-    expect(sectionsAwaitingReview('terms').length).toBeGreaterThan(0)
-    expect(LEGAL_DOCUMENTS.privacy.status).toBe('draft')
-    expect(LEGAL_DOCUMENTS.terms.status).toBe('draft')
+  it.each(IDS)('%s is active with the approved version and no editorial placeholders', (id) => {
+    expect(LEGAL_DOCUMENTS[id].status).toBe('in-force')
+    expect(LEGAL_DOCUMENTS[id].version).toBe('1.0.0')
+    expect(sectionsAwaitingReview(id)).toEqual([])
+    const body = JSON.stringify(legalContent(id))
+    expect(body).not.toMatch(/\bminuta\b|\bpendente\b|versão revisada/i)
+    expect(body).toContain('Samuel Santana')
+    expect(body).toContain('samuel.ssa89@gmail.com')
   })
 })
