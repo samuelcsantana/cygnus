@@ -37,7 +37,7 @@ test('dated profile measurements survive reload and appear in growth', async ({ 
   await page.getByRole('button', { name: 'Criar Perfil' }).click()
   await expect(dialog).toBeHidden()
   await page.reload()
-  await expect(page.getByText('3,5 kg', { exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Alice Medidas', exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Editar perfil de Alice Medidas' }).click()
   await page.getByRole('button', { name: /02.*Saúde/ }).click()
   await expect(dialog.getByText('3,5 kg · 50,5 cm')).toBeVisible()
