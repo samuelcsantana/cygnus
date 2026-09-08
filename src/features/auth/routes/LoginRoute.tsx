@@ -41,8 +41,8 @@ export function LoginRoute() {
       {/* The screen title is the document's <h1> at every breakpoint — the
           brand headline in the desktop panel is decorative copy, and making it
           the h1 left mobile with no first-level heading at all. */}
-      <div className="mt-7 mb-6">
-        <h1 className="font-display text-2xl font-extrabold tracking-tight text-balance text-ink">
+      <div className="mb-6">
+        <h1 className="font-display text-[28px] font-medium leading-tight tracking-tight text-balance text-ink">
           {t('auth.login.title')}
         </h1>
         <p className="mt-1.5 text-[13.5px] text-ink-muted">{t('auth.login.subtitle')}</p>
@@ -60,7 +60,7 @@ export function LoginRoute() {
         {t('auth.login.noAccount')}{' '}
         <Link
           to="/register"
-          className="rounded-sm font-semibold text-emerald-700 underline-offset-4 hover:underline focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none dark:text-emerald-400"
+          className="rounded-sm font-semibold text-auth-action underline-offset-4 hover:underline focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none"
         >
           {t('auth.login.registerLink')}
         </Link>

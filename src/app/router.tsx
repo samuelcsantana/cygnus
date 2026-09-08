@@ -1,6 +1,5 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 
-import type { AuthRouteHandle } from '@/features/auth/components/AuthLayout'
 
 import { AppShellLayout } from './routes/AppShellLayout'
 import { NotFoundRoute } from './routes/NotFoundRoute'
@@ -21,15 +20,8 @@ export const router = createBrowserRouter([
     errorElement: <RouteErrorRoute />,
     children: [
       {
-        // One parent for every public screen, so the segmented control
-        // switching between login and register swaps only the form. Rendered as
-        // siblings — each route wrapping its own <AuthLayout> — React saw a
-        // different subtree at that position and rebuilt the whole card, brand
-        // panel and hero <img> included. Lazy on the layout too: the shell is
-        // shared but must not ride along in the entry chunk for signed-in users.
-        //
-        // Which children get the tabs is decided by the `authTabs` handle, not
-        // by being here.
+        // Keep the shared shell mounted when switching between public routes.
+        // Lazy loading keeps the photograph and auth UI out of the app entry.
         lazy: () => import('@/features/auth/components/AuthLayout').then((m) => ({ Component: m.AuthLayout })),
         children: [
           {
@@ -38,19 +30,14 @@ export const router = createBrowserRouter([
           },
           {
             path: '/login',
-            // `authTabs` is what puts the segmented control and the card's
-            // height floor on screen — see AuthRouteHandle in AuthLayout.tsx.
-            handle: { authTabs: true } satisfies AuthRouteHandle,
             lazy: () => import('@/features/auth/routes/LoginRoute').then((m) => ({ Component: m.LoginRoute })),
           },
           {
             path: '/register',
-            handle: { authTabs: true } satisfies AuthRouteHandle,
             lazy: () => import('@/features/auth/routes/RegisterRoute').then((m) => ({ Component: m.RegisterRoute })),
           },
           {
-            // Shares the auth shell but not the segmented control: an invite is
-            // neither of the two tabs. Still deliberately outside
+            // The invite preview shares the shell and stays outside
             // ProtectedLayout — the preview has to render for a logged-out
             // visitor, which is the whole audience of an invite link (see
             // InviteRedeemRoute.tsx).

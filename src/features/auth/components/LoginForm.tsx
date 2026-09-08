@@ -89,7 +89,7 @@ export function LoginForm({ defaultEmail, onStartAssisted }: LoginFormProps) {
             <button
               type="button"
               onClick={() => onStartAssisted('reset', getValues('email'))}
-              className="rounded-sm text-[12.5px] font-medium text-emerald-700 underline-offset-4 hover:underline focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none dark:text-emerald-400"
+              className="rounded-sm text-[12.5px] font-medium text-auth-action underline-offset-4 hover:underline focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none"
             >
               {t('auth.login.forgotPassword')}
             </button>

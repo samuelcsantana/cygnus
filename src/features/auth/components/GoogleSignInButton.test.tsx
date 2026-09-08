@@ -10,6 +10,8 @@ import { GoogleSignInButton } from './GoogleSignInButton'
 describe('GoogleSignInButton', () => {
   it('disables Google when the server has not configured it', async () => {
     renderWithProviders(<GoogleSignInButton />)
+    expect(screen.getByRole('status')).toHaveTextContent('Carregando login com Google')
+    expect(screen.getByRole('button', { name: /Google/ })).toHaveAttribute('aria-busy', 'true')
     expect(await screen.findByText(/Login com Google indisponível/)).toBeVisible()
     expect(screen.getByRole('button', { name: /Google/ })).toBeDisabled()
   })
