@@ -122,7 +122,13 @@
     "social": {
       "or": "ou",
       "google": "Continuar com Google",
-      "googleUnavailable": "Entrar com Google ainda não está disponível."
+      "googleUnavailable": "Login com Google indisponível no momento. Use outra forma de entrar.",
+      "googleRedirecting": "Abrindo Google…",
+      "googleRetry": "Tentar novamente",
+      "googleError": "Não foi possível entrar com o Google. Tente novamente ou use seu e-mail.",
+      "googleVerifyEmail": "Para acessar esta conta, entre com seu e-mail e senha ou solicite um código por e-mail.",
+      "googleCompleting": "Confirmando sua conta…",
+      "googleBack": "Voltar para entrar"
     },
     "nameGate": {
       "title": "Como podemos te chamar?",

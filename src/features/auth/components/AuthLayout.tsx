@@ -97,10 +97,10 @@ export function AuthLayout() {
         {/* Not in the reference, which shows neither control. Kept because the
             app ships three locales and a dark theme, and this is the only
             screen an unauthenticated user can reach to choose either. */}
-        <div className="flex items-center justify-end gap-1.5">
+        <header className="flex items-center justify-end gap-1.5">
           <ThemeToggle />
           <LanguageSwitcher />
-        </div>
+        </header>
 
         <main className="flex flex-1 items-center justify-center py-6 sm:py-8">
           {/* 896px wide, split 44/56 — measured off the reference, where the
@@ -266,26 +266,28 @@ export function AuthLayout() {
             cabia em uma linha nos três idiomas e o problema não existia — os
             pisos e este rodapé foram calibrados, sem que ninguém soubesse,
             contra a fonte errada. */}
-        <p className="text-center text-xs text-ink-faint">
-          <span className="block sm:inline">{t('auth.brand.copyright', { year: new Date().getFullYear() })}</span>
-          <span aria-hidden className="hidden sm:inline">
+        <footer>
+          <p className="text-center text-xs text-ink-faint">
+            <span className="block sm:inline">{t('auth.brand.copyright', { year: new Date().getFullYear() })}</span>
+            <span aria-hidden className="hidden sm:inline">
+              {' · '}
+            </span>
+            <span className="block sm:inline">{t('auth.brand.footerNote')}</span>
+          </p>
+          {/* Os dois documentos ficam alcançáveis das telas públicas, que é onde
+              alguém decide se cria a conta. Links de texto inline: o critério
+              2.5.8 tem exceção para eles, e crescê-los mudaria a tipografia do
+              rodapé sem melhorar a ergonomia. */}
+          <p className="text-center text-xs text-ink-faint">
+            <Link to="/privacidade" className="underline-offset-4 hover:underline">
+              {t('legal.footerPrivacy')}
+            </Link>
             {' · '}
-          </span>
-          <span className="block sm:inline">{t('auth.brand.footerNote')}</span>
-        </p>
-        {/* Os dois documentos ficam alcançáveis das telas públicas, que é onde
-            alguém decide se cria a conta. Links de texto inline: o critério
-            2.5.8 tem exceção para eles, e crescê-los mudaria a tipografia do
-            rodapé sem melhorar a ergonomia. */}
-        <p className="text-center text-xs text-ink-faint">
-          <Link to="/privacidade" className="underline-offset-4 hover:underline">
-            {t('legal.footerPrivacy')}
-          </Link>
-          {' · '}
-          <Link to="/termos" className="underline-offset-4 hover:underline">
-            {t('legal.footerTerms')}
-          </Link>
-        </p>
+            <Link to="/termos" className="underline-offset-4 hover:underline">
+              {t('legal.footerTerms')}
+            </Link>
+          </p>
+        </footer>
       </div>
     </div>
   )
