@@ -1,3 +1,4 @@
+import { useSearchDestinationStore } from '@/shared/stores/searchDestination.store'
 import { afterEach, expect, it, vi } from 'vitest'
 import { MemoryRouter } from 'react-router-dom'
 import { renderWithProviders, screen } from '@/test/test-utils'
@@ -53,7 +54,7 @@ function setup(failed = false) {
     </MemoryRouter>,
   )
 }
-afterEach(() => useSelectedBabyStore.getState().select(null))
+afterEach(() => { useSelectedBabyStore.getState().select(null); useSearchDestinationStore.getState().set(null) })
 it('scopes counters, progress, cards and doses to the selected child', () => {
   useSelectedBabyStore.getState().select(ana.id)
   setup()
@@ -75,4 +76,16 @@ it('does not report an unrelated child failure in an individual view', () => {
   setup(true)
   expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   expect(screen.getByText('0%')).toBeVisible()
+})
+
+it('resolves a notification reference without requiring a dose number', () => {
+  useSearchDestinationStore.getState().set({ source: 'notification', path: '/vaccines', babyId: ana.id, query: 'Dose Ana', keys: [`vaccine:${ana.id}:${ana.id}`] })
+  setup()
+  expect(screen.getByText('Dose Ana')).toBeVisible()
+  expect(screen.queryByText('Dose Bruno')).not.toBeInTheDocument()
+})
+it('explains when a notification references a removed vaccine', () => {
+  useSearchDestinationStore.getState().set({ source: 'notification', path: '/vaccines', babyId: ana.id, query: 'Removed', keys: ['vaccine:removed'] })
+  setup()
+  expect(screen.getByRole('status')).toHaveTextContent('Este registro não está mais disponível.')
 })

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 
 export interface SearchDestination {
+  source?: 'notification'
   path: string
   keys: string[]
   query: string
