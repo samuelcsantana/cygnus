@@ -11,6 +11,7 @@
     "contract:check": "node --import ./scripts/register-alias.mjs scripts/contract-drift.mjs",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage && node scripts/coverage-summary.mjs",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "storybook": "storybook dev -p 6006",
