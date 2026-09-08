@@ -13,6 +13,7 @@ export const appointmentStatusSchema = z.enum(['SCHEDULED', 'COMPLETED', 'CANCEL
 export type AppointmentStatus = z.infer<typeof appointmentStatusSchema>
 
 export const appointmentSchema = z.object({
+  specialistId: z.string().uuid().nullable().optional(),
   id: z.string().uuid(),
   babyId: z.string().uuid(),
   scheduledAt: z.string(),
@@ -77,9 +78,9 @@ function assertMeasurementInRange(
 
 export const appointmentFormSchema = z
   .object({
-    date: z.string().min(1).regex(/^\d{4}-\d{2}-\d{2}$/),
-    time: z.string().min(1).regex(/^\d{2}:\d{2}$/),
-    doctorName: z.string().min(1),
+    date: z.string().min(1).date(),
+    time: z.string().min(1).regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+    doctorName: z.string().trim().min(1),
     specialty: z.string().optional(),
     location: z.string().optional(),
     reason: z.string().optional(),
@@ -103,8 +104,10 @@ export const appointmentFormSchema = z
     saveSpecialist: z.boolean().optional(),
   })
   .superRefine((values, ctx) => {
-    assertMeasurementInRange(values.weightKg, WEIGHT_KG_MIN, WEIGHT_KG_MAX, 'weightKg', 'appointments.form.weightInvalid', ctx)
-    assertMeasurementInRange(values.heightCm, HEIGHT_CM_MIN, HEIGHT_CM_MAX, 'heightCm', 'appointments.form.heightInvalid', ctx)
+    if (values.status === 'COMPLETED') {
+      assertMeasurementInRange(values.weightKg, WEIGHT_KG_MIN, WEIGHT_KG_MAX, 'weightKg', 'appointments.form.weightInvalid', ctx)
+      assertMeasurementInRange(values.heightCm, HEIGHT_CM_MIN, HEIGHT_CM_MAX, 'heightCm', 'appointments.form.heightInvalid', ctx)
+    }
 
     const quando = `${values.date}T${values.time}`
     const agora = nowLocalDateTimeString()
@@ -128,6 +131,7 @@ export type AppointmentFormInput = z.infer<typeof appointmentFormSchema>
 export const medicalSpecialtyListSchema = z.array(z.string())
 
 export const updateAppointmentSchema = z.object({
+  specialistId: z.string().uuid().nullable().optional(),
   weightGrams: z.number().int().nullable().optional(),
   heightMillimeters: z.number().int().nullable().optional(),
   scheduledAt: z.string().optional(),

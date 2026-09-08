@@ -37,13 +37,20 @@ describe('EditMilestoneDialog', () => {
     const onOpenChange = vi.fn()
 
     renderWithProviders(
-      <EditMilestoneDialog babies={[sampleBaby]} milestone={sampleMilestone} onOpenChange={onOpenChange} />,
+      <EditMilestoneDialog
+        babies={[sampleBaby]}
+        milestone={sampleMilestone}
+        onOpenChange={onOpenChange}
+      />,
     )
 
+    await user.click(screen.getByRole('button', { name: 'Continuar' }))
     await user.click(screen.getByRole('button', { name: 'Salvar Alterações' }))
 
     await waitFor(() => {
-      expect(screen.getByRole('alert')).toHaveTextContent('Não foi possível salvar o marco. Tente novamente.')
+      expect(screen.getByRole('alert')).toHaveTextContent(
+        'Não foi possível salvar o marco. Tente novamente.',
+      )
     })
 
     expect(onOpenChange).not.toHaveBeenCalledWith(false)
@@ -60,9 +67,14 @@ describe('EditMilestoneDialog', () => {
     const onOpenChange = vi.fn()
 
     renderWithProviders(
-      <EditMilestoneDialog babies={[sampleBaby]} milestone={sampleMilestone} onOpenChange={onOpenChange} />,
+      <EditMilestoneDialog
+        babies={[sampleBaby]}
+        milestone={sampleMilestone}
+        onOpenChange={onOpenChange}
+      />,
     )
 
+    await user.click(screen.getByRole('button', { name: 'Continuar' }))
     await user.click(screen.getByRole('button', { name: 'Salvar Alterações' }))
 
     await waitFor(() => {
@@ -72,7 +84,11 @@ describe('EditMilestoneDialog', () => {
 
   it('pre-fills the form with the milestone being edited', () => {
     renderWithProviders(
-      <EditMilestoneDialog babies={[sampleBaby]} milestone={sampleMilestone} onOpenChange={vi.fn()} />,
+      <EditMilestoneDialog
+        babies={[sampleBaby]}
+        milestone={sampleMilestone}
+        onOpenChange={vi.fn()}
+      />,
     )
 
     expect(screen.getByLabelText('O que aconteceu?')).toHaveValue('Primeiro sorriso')

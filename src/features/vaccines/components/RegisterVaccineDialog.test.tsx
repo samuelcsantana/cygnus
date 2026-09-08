@@ -1,11 +1,12 @@
 import userEvent from '@testing-library/user-event'
+import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { HttpResponse, http } from 'msw'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
 import { server } from '@/test/msw/server'
 import { buildBaby } from '@/test/fixtures/baby'
-import { renderWithProviders, screen, waitFor } from '@/test/test-utils'
+import { act, renderWithProviders, screen, waitFor } from '@/test/test-utils'
 
 import type { VaccineItem } from '../api/vaccines.schemas'
 import { RegisterVaccineDialog } from './RegisterVaccineDialog'
@@ -61,6 +62,48 @@ function renderDialog(onOpenChange = vi.fn()) {
 }
 
 describe('RegisterVaccineDialog', () => {
+  it('preserves the child and draft after the babies cache refreshes', async () => {
+    let client!: QueryClient
+    function CaptureClient() { client = useQueryClient(); return null }
+    const user = userEvent.setup()
+    renderWithProviders(<><CaptureClient /><RegisterVaccineDialog open onOpenChange={vi.fn()} /></>)
+    await user.click(await screen.findByText('Outra vacina'))
+    await user.type(screen.getByLabelText('Nome da vacina'), 'Vacina de teste')
+    await user.click(screen.getByRole('button', { name: 'Continuar' }))
+    await user.type(screen.getByLabelText('Lote / nº do frasco (Opcional)'), 'ABC123')
+    act(() => client.setQueryData(['babies'], [{ ...baby, name: 'Updated name' }]))
+    expect(await screen.findByText('Updated name')).toBeInTheDocument()
+    expect(screen.getByLabelText('Lote / nº do frasco (Opcional)')).toHaveValue('ABC123')
+  })
+
+  it('distinguishes a failed calendar from an empty one and allows retry', async () => {
+    server.use(http.get(`${config.apiBaseUrl}/babies/:babyId/vaccines`, () => HttpResponse.json({}, { status: 500 })))
+    const user = userEvent.setup()
+    renderDialog()
+    await user.click(await screen.findByText('Calendário obrigatório'))
+    expect(await screen.findByRole('alert')).toHaveTextContent('Não foi possível carregar os dados.')
+    expect(screen.getByRole('button', { name: 'Continuar' })).toBeDisabled()
+    server.use(http.get(`${config.apiBaseUrl}/babies/:babyId/vaccines`, () => HttpResponse.json({ metadata: catalogMetadata, groups: [{ ageInMonths: 0, items: [pendingItem] }] })))
+    await user.click(screen.getByRole('button', { name: 'Tentar novamente' }))
+    expect(await screen.findByText('Hepatite B')).toBeInTheDocument()
+    await user.type(screen.getByLabelText('Buscar vacina pelo nome'), 'Inexistente')
+    expect(screen.getByRole('status')).toHaveTextContent('Nenhuma vacina encontrada')
+    await user.clear(screen.getByLabelText('Buscar vacina pelo nome'))
+    expect(screen.getByText('Hepatite B')).toBeInTheDocument()
+  })
+
+  it('requires confirmation before discarding a draft', async () => {
+    const user = userEvent.setup()
+    const close = vi.fn()
+    renderDialog(close)
+    await user.click(await screen.findByText('Outra vacina'))
+    await user.type(screen.getByLabelText('Nome da vacina'), 'Vacina de teste')
+    await user.click(screen.getByRole('button', { name: 'Fechar' }))
+    expect(close).not.toHaveBeenCalled()
+    await user.click(screen.getByRole('button', { name: 'Continuar preenchendo' }))
+    expect(screen.getByLabelText('Nome da vacina')).toHaveValue('Vacina de teste')
+  })
+
   it('advances to the selection step as soon as a type is chosen', async () => {
     const user = userEvent.setup()
     renderDialog()
@@ -69,7 +112,7 @@ describe('RegisterVaccineDialog', () => {
       expect(screen.queryByRole('button', { name: 'Continuar' })).not.toBeInTheDocument()
     })
 
-    await user.click(screen.getByText('Calendário obrigatório'))
+    await user.click(await screen.findByText('Calendário obrigatório'))
 
     await waitFor(() => {
       expect(screen.getByText('Hepatite B')).toBeInTheDocument()
@@ -81,7 +124,7 @@ describe('RegisterVaccineDialog', () => {
     const user = userEvent.setup()
     renderDialog()
 
-    await user.click(screen.getByText('Calendário obrigatório'))
+    await user.click(await screen.findByText('Calendário obrigatório'))
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Continuar' })).toBeDisabled()
     })
@@ -94,7 +137,7 @@ describe('RegisterVaccineDialog', () => {
     const user = userEvent.setup()
     renderDialog()
 
-    await user.click(screen.getByText('Calendário obrigatório'))
+    await user.click(await screen.findByText('Calendário obrigatório'))
     await waitFor(() => {
       expect(screen.getByText('Hepatite B')).toBeInTheDocument()
     })
@@ -118,7 +161,7 @@ describe('RegisterVaccineDialog', () => {
     const onOpenChange = vi.fn()
     renderDialog(onOpenChange)
 
-    await user.click(screen.getByText('Calendário obrigatório'))
+    await user.click(await screen.findByText('Calendário obrigatório'))
     await waitFor(() => {
       expect(screen.getByText('Hepatite B')).toBeInTheDocument()
     })
@@ -168,7 +211,7 @@ describe('RegisterVaccineDialog', () => {
     const onOpenChange = vi.fn()
     renderDialog(onOpenChange)
 
-    await user.click(screen.getByText('Campanha de vacinação'))
+    await user.click(await screen.findByText('Campanha de vacinação'))
     await user.click(screen.getByText('Influenza (gripe) — Campanha anual'))
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
     await user.click(screen.getByRole('button', { name: 'Salvar vacina' }))
@@ -210,7 +253,7 @@ describe('RegisterVaccineDialog', () => {
     const onOpenChange = vi.fn()
     renderDialog(onOpenChange)
 
-    await user.click(screen.getByText('Campanha de vacinação'))
+    await user.click(await screen.findByText('Campanha de vacinação'))
     await user.click(screen.getByText('Influenza (gripe) — Campanha anual'))
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
     await user.click(screen.getByRole('button', { name: 'Salvar vacina' }))
@@ -255,7 +298,7 @@ describe('RegisterVaccineDialog', () => {
     const onOpenChange = vi.fn()
     renderDialog(onOpenChange)
 
-    await user.click(screen.getByText('Outra vacina'))
+    await user.click(await screen.findByText('Outra vacina'))
     await user.type(screen.getByLabelText('Nome da vacina'), 'Varicela combinada (MMRV)')
     await user.type(screen.getByLabelText('Dose (Opcional)'), '1ª dose')
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
@@ -282,7 +325,7 @@ describe('RegisterVaccineDialog', () => {
     const onOpenChange = vi.fn()
     renderDialog(onOpenChange)
 
-    await user.click(screen.getByText('Outra vacina'))
+    await user.click(await screen.findByText('Outra vacina'))
     await user.type(screen.getByLabelText('Nome da vacina'), 'Varicela')
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
     await user.click(screen.getByRole('button', { name: 'Salvar vacina' }))

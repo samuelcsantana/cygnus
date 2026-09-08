@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 import { useAllBabiesAppointments } from '@/features/appointments/api/appointments.hooks'
-import { latestMeasuredVisit } from '@/features/appointments/api/appointments.selectors'
+import { growthSeries } from '@/features/growth/api/growth.selectors'
 import { AppointmentsOverviewCard } from '@/features/appointments/components/AppointmentsOverviewCard'
 import { useAllBabiesMilestones } from '@/features/milestones/api/milestones.hooks'
 import { useAllBabiesMedications } from '@/features/medications/api/medications.hooks'
@@ -11,12 +11,8 @@ import { MedicationsOverviewCard } from '@/features/medications/components/Medic
 import { MilestonesOverviewCard } from '@/features/milestones/components/MilestonesOverviewCard'
 import { useAllBabiesVaccineCalendars } from '@/features/vaccines/api/vaccines.hooks'
 import { VaccinesOverviewCard } from '@/features/vaccines/components/VaccinesOverviewCard'
-import { formatDateDisplay } from '@/lib/date'
-import { AlertCircleIcon } from '@/shared/icons/alert-circle-icon'
-import { HeartIcon } from '@/shared/icons/heart-icon'
-import { SparkleIcon } from '@/shared/icons/sparkle-icon'
-import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
-import { SyringeIcon } from '@/shared/icons/syringe-icon'
+import { formatDateDisplay, splitScheduledAt } from '@/lib/date'
+import { formatCentimeters, formatKilograms } from '@/shared/utils/measurements'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
 import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 
@@ -24,10 +20,12 @@ import { useBabies } from '../api/babies.hooks'
 import type { Baby } from '../api/babies.schemas'
 import { EditBabyDialog } from '../components/EditBabyDialog'
 import { BabyHeroCard } from '../components/BabyHeroCard'
-import { StatCard } from '../components/StatCard'
 import { WelcomeDashboard } from '../components/WelcomeDashboard'
 
-function getGreetingKey(): 'babies.dashboard.greetingMorning' | 'babies.dashboard.greetingAfternoon' | 'babies.dashboard.greetingEvening' {
+function getGreetingKey():
+  | 'babies.dashboard.greetingMorning'
+  | 'babies.dashboard.greetingAfternoon'
+  | 'babies.dashboard.greetingEvening' {
   const hour = new Date().getHours()
   if (hour < 12) return 'babies.dashboard.greetingMorning'
   if (hour < 18) return 'babies.dashboard.greetingAfternoon'
@@ -72,7 +70,18 @@ export function DashboardRoute() {
   }
 
   if (babies.isError) {
-    return <p className="py-16 text-center text-ink-muted">{t('babies.dashboard.loadError')}</p>
+    return (
+      <div role="alert" className="rounded-2xl bg-card p-8 text-center">
+        <p>{t('babies.dashboard.loadError')}</p>
+        <button
+          type="button"
+          onClick={() => void babies.refetch()}
+          className="mt-4 min-h-11 rounded-xl bg-primary px-5 text-primary-foreground"
+        >
+          {t('nav.shell.retry')}
+        </button>
+      </div>
+    )
   }
 
   if (babyList.length === 0) {
@@ -92,7 +101,9 @@ export function DashboardRoute() {
   //
   // The empty-state check above stays on the full list on purpose: a household
   // with children never sees the welcome screen because of a filter.
-  const visibleBabies = selectedBabyId ? babyList.filter((baby) => baby.id === selectedBabyId) : babyList
+  const visibleBabies = selectedBabyId
+    ? babyList.filter((baby) => baby.id === selectedBabyId)
+    : babyList
   const forSelection = <T extends { babyId: string }>(items: T[]): T[] =>
     selectedBabyId ? items.filter((item) => item.babyId === selectedBabyId) : items
 
@@ -102,15 +113,6 @@ export function DashboardRoute() {
   const visibleMedications = forSelection(medications.items)
 
   const delayedItems = visibleVaccineItems.filter((item) => item.status === 'DELAYED')
-  const appliedCount = visibleVaccineItems.filter((item) => item.status === 'APPLIED').length
-  const pendingCount = visibleVaccineItems.length - appliedCount
-
-  const sortedAppointments = [...visibleAppointments].sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt))
-  const nextAppointment = sortedAppointments.find((appointment) => appointment.status === 'SCHEDULED')
-  const lastAppointment = [...sortedAppointments].reverse().find((appointment) => appointment.status === 'COMPLETED')
-  const nextAppointmentBaby = babyList.find((baby) => baby.id === nextAppointment?.babyId)
-  const lastAppointmentBaby = babyList.find((baby) => baby.id === lastAppointment?.babyId)
-
   // O estado vem de `perBaby`, não de `babyList`: cada criança tem sua própria
   // requisição de calendário, e uma pode falhar enquanto as outras respondem.
   // Derivar do agregado marcaria as seis como desconhecidas por causa de uma.
@@ -125,128 +127,141 @@ export function DashboardRoute() {
       delayedVaccineCount: delayedItems.filter((item) => item.babyId === baby.id).length,
       // Sem entrada, o padrão é "não sei" — nunca "em dia".
       vaccineStatusKnown: entry ? !entry.isPending && !entry.isError : false,
-      latestMeasuredVisit: latestMeasuredVisit(appointmentEntry?.items ?? []),
+      latestMeasuredVisit:
+        growthSeries(appointmentEntry?.items ?? [], baby.birthDate, baby.measurements).at(-1) ??
+        null,
     }
   })
 
-  const affectedChildrenCount = new Set(delayedItems.map((item) => item.babyId)).size
-
+  const stateFor = (entries: { baby: Baby; isPending: boolean; isError: boolean }[]) => {
+    const selected = entries.filter((entry) =>
+      visibleBabies.some((baby) => baby.id === entry.baby.id),
+    )
+    return {
+      isPending: selected.some((entry) => entry.isPending),
+      isError: selected.some((entry) => entry.isError),
+    }
+  }
+  const vaccineState = stateFor(vaccines.perBaby)
+  const appointmentState = stateFor(appointments.perBaby)
+  const milestoneState = stateFor(milestones.perBaby)
+  const medicationState = stateFor(medications.perBaby)
+  const ready = [vaccineState, appointmentState, milestoneState, medicationState].every(
+    (state) => !state.isPending && !state.isError,
+  )
+  const firstRecords =
+    ready &&
+    !visibleAppointments.length &&
+    !visibleMilestones.length &&
+    !visibleMedications.length &&
+    !visibleVaccineItems.some((item) => item.status === 'APPLIED')
   return (
     <div className="animate-fade-in-up">
       <div className="mb-6">
         <h1 className="font-display text-2xl font-black text-ink">
           {t('babies.dashboard.greetingLine', { greeting: t(getGreetingKey()), name: parentName })}
         </h1>
-        <p className="text-sm text-ink-muted">{t('babies.dashboard.childCount', { count: visibleBabies.length })}</p>
+        <p className="text-sm text-ink-muted">
+          {t('babies.dashboard.childCount', { count: visibleBabies.length })}
+        </p>
       </div>
 
-      {delayedItems.length > 0 && (
-        <div className="mb-6 flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 dark:bg-rose-950/40 px-4 py-3">
-          <span className="flex-shrink-0 text-rose-500 dark:text-rose-300">
-            <AlertCircleIcon className="h-4 w-4" />
-          </span>
-          <p className="text-[13px] font-medium text-rose-700 dark:text-rose-300">
-            <strong>{t('babies.dashboard.overdueBanner', { count: delayedItems.length })}</strong>{' '}
-            {t('babies.dashboard.overdueBannerHousehold', { count: affectedChildrenCount })}
-          </p>
-          <Link to="/vaccines" className="ml-auto flex-shrink-0 text-xs font-bold whitespace-nowrap text-rose-700 dark:text-rose-300">
-            {t('babies.dashboard.viewVaccines')}
-          </Link>
-        </div>
-      )}
-
-      {/* As crianças vêm antes dos números, e essa ordem é a mudança de fundo:
-          o painel abre com quem ele é sobre. O banner de atraso continua acima
-          de tudo porque é a única coisa aqui que pede ação hoje.
-
-          Um cartão por filho, empilhado — decisão do Samuel em 03/09/2026,
-          feita sabendo o custo: com seis filhos a fila empurra os cartões de
-          vacinas, consultas e marcos para bem abaixo da dobra. O contrapeso é
-          manter cada cartão baixo; se a altura crescer, o custo cresce
-          multiplicado por seis. */}
       <div className="mb-6 grid gap-3 lg:grid-cols-2">
         {familyItems.map((item) => (
-          <BabyHeroCard key={item.baby.id} {...item} onEdit={setEditTarget} />
+          <BabyHeroCard key={item.baby.id} {...item} compact onEdit={setEditTarget} />
         ))}
       </div>
-
-      <div className="mb-6 grid grid-cols-2 gap-3.5 lg:grid-cols-4">
-        {/* Mesmo motivo do chip da família: com o calendário fora do ar,
-            `items` é uma lista vazia e a conta dá zero — um número que se lê
-            como fato. O travessão diz "não sei", que é o que de fato se sabe. */}
-        <StatCard
-          icon={<SyringeIcon className="h-5 w-5" />}
-          label={t('babies.dashboard.statVaccinesAppliedLabel')}
-          value={vaccines.isError || vaccines.isPending ? '—' : `${appliedCount}`}
-          sub={
-            vaccines.isError || vaccines.isPending
-              ? t('babies.dashboard.statVaccinesUnavailableSub')
-              : t('babies.dashboard.statVaccinesAppliedSub', { count: pendingCount })
-          }
-          iconClassName="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300"
-        />
-        <StatCard
-          icon={<StethoscopeIcon className="h-5 w-5" />}
-          label={t('babies.dashboard.statNextAppointmentLabel')}
-          value={nextAppointment ? formatDateDisplay(nextAppointment.scheduledAt.slice(0, 10), i18n.language) : '—'}
-          sub={nextAppointment ? `${nextAppointment.doctorName} · ${nextAppointmentBaby?.name ?? ''}` : t('babies.dashboard.statNextAppointmentEmpty')}
-          iconClassName="bg-violet-50 dark:bg-violet-950/40 text-violet-500 dark:text-violet-300"
-        />
-        <StatCard
-          icon={<SparkleIcon className="h-5 w-5" />}
-          label={t('babies.dashboard.statMilestonesLabel')}
-          value={`${visibleMilestones.length}`}
-          // Um "0" com a legenda "marcos do desenvolvimento" descreve o vazio e
-          // não diz o que fazer com ele. Com nada registrado, a legenda passa a
-          // apontar para a tela onde os exemplos abrem o formulário.
-          sub={
-            visibleMilestones.length === 0
-              ? t('babies.dashboard.statMilestonesEmpty')
-              : t('babies.dashboard.statMilestonesSub')
-          }
-          iconClassName="bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300"
-        />
-        <StatCard
-          icon={<HeartIcon className="h-5 w-5" />}
-          label={t('babies.dashboard.statLastAppointmentLabel')}
-          value={lastAppointment ? formatDateDisplay(lastAppointment.scheduledAt.slice(0, 10), i18n.language) : '—'}
-          sub={
-            lastAppointment
-              ? `${lastAppointment.doctorName} · ${lastAppointmentBaby?.name ?? ''}`
-              : t('babies.dashboard.statLastAppointmentEmpty')
-          }
-          iconClassName="bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-300"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-        <VaccinesOverviewCard
-          babies={visibleBabies}
-          items={visibleVaccineItems}
-          isPending={vaccines.isPending}
-          isError={vaccines.isError}
-        />
-        <AppointmentsOverviewCard
-          babies={visibleBabies}
-          items={visibleAppointments}
-          isPending={appointments.isPending}
-          isError={appointments.isError}
-        />
-        <MilestonesOverviewCard
-          babies={visibleBabies}
-          items={visibleMilestones}
-          isPending={milestones.isPending}
-          isError={milestones.isError}
-        />
-        {/* Quarto cartão numa grade de três: ele desce para a linha de baixo e ocupa a largura
-            toda em `lg`. É também o único caminho até `/medications`, que fica fora da barra de
-            navegação — ver o comentário na rota. */}
-        <MedicationsOverviewCard
-          babies={visibleBabies}
-          items={visibleMedications}
-          isPending={medications.isPending}
-          isError={medications.isError}
-        />
+      {firstRecords && (
+        <section className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-5 sm:p-6">
+          <h2 className="font-display text-xl font-bold text-ink">{t('babies.home.start')}</h2>
+          <p className="mt-1 text-sm text-ink-muted">{t('babies.home.startBody')}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {[
+              ['/vaccines', 'recordVaccines'],
+              ['/appointments', 'schedule'],
+              ['/milestones', 'memory'],
+            ].map(([to, key]) => (
+              <Link
+                key={to}
+                to={to!}
+                className="inline-flex min-h-11 items-center rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold text-primary"
+              >
+                {t(`babies.home.${key}`)}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+        <div className="min-w-0 space-y-5">
+          <h2 className="font-display text-xl font-bold text-ink">{t('babies.home.care')}</h2>
+          <AppointmentsOverviewCard
+            babies={visibleBabies}
+            items={visibleAppointments}
+            {...appointmentState}
+          />
+          <VaccinesOverviewCard
+            babies={visibleBabies}
+            items={visibleVaccineItems}
+            {...vaccineState}
+          />
+          <MedicationsOverviewCard
+            babies={visibleBabies}
+            items={visibleMedications}
+            {...medicationState}
+          />
+        </div>
+        <div className="min-w-0 space-y-5">
+          <h2 className="font-display text-xl font-bold text-ink">{t('babies.home.growing')}</h2>
+          <section className="rounded-2xl border border-border bg-card p-5">
+            <h3 className="mb-4 font-display font-bold text-ink">{t('nav.growth')}</h3>
+            <div className="space-y-4">
+              {familyItems.map(({ baby, latestMeasuredVisit: measurement }) => (
+                <div key={baby.id}>
+                  <p className="text-sm font-semibold text-ink">{baby.name}</p>
+                  {appointmentState.isError || appointmentState.isPending ? (
+                    <p className="text-sm text-ink-muted">{t('babies.home.measureUnavailable')}</p>
+                  ) : measurement ? (
+                    <>
+                      <p className="mt-1 font-mono text-sm text-ink">
+                        {[
+                          measurement.weightGrams !== null
+                            ? formatKilograms(measurement.weightGrams, i18n.language)
+                            : null,
+                          measurement.heightMillimeters !== null
+                            ? formatCentimeters(measurement.heightMillimeters, i18n.language)
+                            : null,
+                        ]
+                          .filter(Boolean)
+                          .join(' / ')}
+                      </p>
+                      <p className="mt-1 text-xs text-ink-muted">
+                        {t('babies.hero.measuredOn')}{' '}
+                        {formatDateDisplay(
+                          splitScheduledAt(measurement.scheduledAt).date,
+                          i18n.language,
+                        )}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-sm text-ink-muted">{t('babies.home.noMeasurement')}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+            <Link
+              to="/growth"
+              className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-primary"
+            >
+              {t('babies.home.growthLink')}
+            </Link>
+          </section>
+          <MilestonesOverviewCard
+            babies={visibleBabies}
+            items={visibleMilestones}
+            {...milestoneState}
+          />
+        </div>
       </div>
 
       <EditBabyDialog baby={editTarget} onOpenChange={(open) => !open && setEditTarget(null)} />

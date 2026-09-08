@@ -1,0 +1,37 @@
+@media print {
+  @page vaccination-card {
+    size: A4;
+    margin: 14mm;
+  }
+  body:has(.vaccination-card-page) {
+    background: white !important;
+  }
+  .vaccination-card-page {
+    max-width: none;
+    page: vaccination-card;
+  }
+  .vaccination-document,
+  .vaccination-document * {
+    color: #111 !important;
+    background-color: white !important;
+    box-shadow: none !important;
+  }
+  .vaccination-document {
+    font-size: 10pt;
+  }
+  .vaccination-document table {
+    table-layout: fixed;
+  }
+  .vaccination-document th:first-child {
+    width: 36%;
+  }
+  .vaccination-document thead {
+    display: table-header-group;
+  }
+  .vaccination-document tbody {
+    break-inside: avoid;
+  }
+  body:has(.vaccination-card-page) [data-sonner-toaster] {
+    display: none !important;
+  }
+}

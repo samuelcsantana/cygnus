@@ -4,7 +4,13 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ApiError } from '@/lib/http-client'
@@ -41,7 +47,20 @@ export function DeleteAccountDialog({ onDeleted }: DeleteAccountDialogProps) {
     defaultValues: { currentPassword: '' },
   })
 
+  const busy = isSubmitting || deleteAccount.isPending || requestCode.isPending
+  const changeOpen = (nextOpen: boolean) => {
+    if (busy) return
+    setOpen(nextOpen)
+    if (!nextOpen) {
+      reset()
+      setCode('')
+      setProof('password')
+      deleteAccount.reset()
+      requestCode.reset()
+    }
+  }
   const confirm = async (payload: Parameters<typeof deleteAccount.mutateAsync>[0]) => {
+    if (busy) return
     try {
       await deleteAccount.mutateAsync(payload)
       setOpen(false)
@@ -51,17 +70,20 @@ export function DeleteAccountDialog({ onDeleted }: DeleteAccountDialogProps) {
     }
   }
 
-  const onSubmitPassword = handleSubmit((values) => confirm({ currentPassword: values.currentPassword }))
+  const onSubmitPassword = handleSubmit((values) =>
+    confirm({ currentPassword: values.currentPassword }),
+  )
 
   // Não passa pelo `handleSubmit`: o resolver do formulário exige a senha, e no
   // modo código não há senha para exigir — validá-la aqui faria o envio nunca
   // chegar ao handler, em silêncio.
   const onSubmitCode = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    void confirm({ code })
+    if (!busy && /^\d{6}$/.test(code)) void confirm({ code })
   }
 
   const askForCode = async () => {
+    if (busy) return
     setProof('code')
     await requestCode.mutateAsync().catch(() => {
       // O endpoint responde 200 até quando limita, então falha aqui é rede. O
@@ -80,35 +102,34 @@ export function DeleteAccountDialog({ onDeleted }: DeleteAccountDialogProps) {
         : null
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(nextOpen) => {
-        setOpen(nextOpen)
-        if (!nextOpen) reset()
-      }}
-    >
+    <Dialog open={open} onOpenChange={changeOpen}>
       <DialogTrigger asChild>
         <button
           type="button"
-          className="text-destructive hover:text-destructive/80 flex items-center gap-2 text-sm font-bold transition-colors"
+          className="min-h-11 shrink-0 text-destructive hover:text-destructive/80 flex items-center gap-2 text-sm font-bold transition-colors"
         >
           <TrashIcon className="h-4 w-4" />
           {t('profile.delete.action')}
         </button>
       </DialogTrigger>
-      <DialogContent className="max-h-[85vh] overflow-y-auto">
+      <DialogContent showCloseButton={!busy} className="max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('profile.delete.confirmTitle')}</DialogTitle>
         </DialogHeader>
 
         <p className="text-ink-muted text-sm">{t('profile.delete.confirmDescription')}</p>
 
-        <form onSubmit={proof === 'code' ? onSubmitCode : onSubmitPassword} className="space-y-4" noValidate>
+        <form
+          onSubmit={proof === 'code' ? onSubmitCode : onSubmitPassword}
+          className="space-y-4"
+          noValidate
+        >
           {proof === 'code' ? (
             <div>
               <Label htmlFor="delete-account-code">{t('profile.delete.codeLabel')}</Label>
               <Input
                 id="delete-account-code"
+                disabled={busy}
                 inputMode="numeric"
                 autoComplete="one-time-code"
                 maxLength={6}
@@ -117,37 +138,47 @@ export function DeleteAccountDialog({ onDeleted }: DeleteAccountDialogProps) {
                 className="mt-2"
               />
               <p className="mt-1.5 text-sm text-ink-muted">
-                {requestCode.isPending ? t('profile.delete.codeSending') : t('profile.delete.codeSent')}
+                {requestCode.isPending
+                  ? t('profile.delete.codeSending')
+                  : requestCode.isError
+                    ? t('profile.delete.codeError')
+                    : t('profile.delete.codeSent')}
               </p>
             </div>
           ) : (
-          <div>
-            <Label htmlFor="delete-account-password">{t('profile.delete.currentPasswordLabel')}</Label>
-            <Input
-              id="delete-account-password"
-              type="password"
-              autoComplete="current-password"
-              aria-invalid={!!errors.currentPassword}
-              aria-describedby={currentPasswordErrorKey ? 'delete-account-password-error' : undefined}
-              className="mt-2"
-              {...register('currentPassword')}
-            />
-            {currentPasswordErrorKey && (
-              <p id="delete-account-password-error" className="text-destructive mt-1 text-sm">
-                {t(currentPasswordErrorKey)}
-              </p>
-            )}
-            {/* Quem entrou sem senha nunca definiu uma, e o app não tem como
+            <div>
+              <Label htmlFor="delete-account-password">
+                {t('profile.delete.currentPasswordLabel')}
+              </Label>
+              <Input
+                id="delete-account-password"
+                disabled={busy}
+                type="password"
+                autoComplete="current-password"
+                aria-invalid={!!errors.currentPassword}
+                aria-describedby={
+                  currentPasswordErrorKey ? 'delete-account-password-error' : undefined
+                }
+                className="mt-2"
+                {...register('currentPassword')}
+              />
+              {currentPasswordErrorKey && (
+                <p id="delete-account-password-error" className="text-destructive mt-1 text-sm">
+                  {t(currentPasswordErrorKey)}
+                </p>
+              )}
+              {/* Quem entrou sem senha nunca definiu uma, e o app não tem como
                 saber disso — o hash aleatório é indistinguível de um de verdade.
                 Então quem diz é a pessoa. */}
-            <button
-              type="button"
-              onClick={askForCode}
-              className="mt-2 text-sm font-semibold text-primary underline underline-offset-2"
-            >
-              {t('profile.delete.useCode')}
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={askForCode}
+                disabled={busy}
+                className="mt-2 text-sm font-semibold text-primary underline underline-offset-2"
+              >
+                {t('profile.delete.useCode')}
+              </button>
+            </div>
           )}
 
           {submitErrorMessage && (
@@ -163,15 +194,20 @@ export function DeleteAccountDialog({ onDeleted }: DeleteAccountDialogProps) {
               oferecia era justamente o irreversível, onde a escolha segura
               deveria ser pelo menos tão fácil de alcançar quanto a destrutiva. */}
           <div className="flex justify-end gap-3">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isSubmitting}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => changeOpen(false)}
+              disabled={busy}
+            >
               {t('common.cancel')}
             </Button>
             <Button
               type="submit"
               variant="destructive"
-              disabled={isSubmitting || (proof === 'code' && code.length !== 6)}
+              disabled={busy || (proof === 'code' && code.length !== 6)}
             >
-              {isSubmitting ? t('common.saving') : t('profile.delete.confirmAction')}
+              {busy ? t('common.saving') : t('profile.delete.confirmAction')}
             </Button>
           </div>
         </form>

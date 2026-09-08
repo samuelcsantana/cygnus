@@ -20,12 +20,24 @@ interface AppointmentsOverviewCardProps {
 
 // Household-wide appointments widget for the dashboard: the next scheduled
 // visits across every child, merged into a single chronological list.
-export function AppointmentsOverviewCard({ babies, items, isPending, isError }: AppointmentsOverviewCardProps) {
+export function AppointmentsOverviewCard({
+  babies,
+  items,
+  isPending,
+  isError,
+}: AppointmentsOverviewCardProps) {
   const { t, i18n } = useTranslation()
   const babyById = new Map(babies.map((baby) => [baby.id, baby]))
 
+  const pastScheduled = items.filter(
+    (item) => item.status === 'SCHEDULED' && new Date(item.scheduledAt).getTime() < Date.now(),
+  ).length
   const upcoming = items
-    .filter((appointment) => appointment.status === 'SCHEDULED')
+    .filter(
+      (appointment) =>
+        appointment.status === 'SCHEDULED' &&
+        new Date(appointment.scheduledAt).getTime() >= Date.now(),
+    )
     .sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt))
     .slice(0, MAX_ITEMS)
 
@@ -36,26 +48,45 @@ export function AppointmentsOverviewCard({ babies, items, isPending, isError }: 
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300">
             <StethoscopeIcon className="h-[18px] w-[18px]" />
           </span>
-          <h3 className="font-display text-base font-extrabold text-ink">{t('nav.appointments')}</h3>
+          <h3 className="font-display text-base font-extrabold text-ink">
+            {t('nav.appointments')}
+          </h3>
         </div>
-        <Link to="/appointments" className="text-xs font-bold text-emerald-700 dark:text-emerald-300">
+        <Link
+          to="/appointments"
+          className="text-xs font-bold text-emerald-700 dark:text-emerald-300"
+        >
           {t('babies.dashboard.viewAll')}
         </Link>
       </div>
 
+      {!isPending && !isError && pastScheduled > 0 && (
+        <Link
+          to="/appointments"
+          className="mb-3 block rounded-xl bg-muted p-3 text-sm text-ink-muted"
+        >
+          {t('babies.home.pastAppointments', { count: pastScheduled })}
+        </Link>
+      )}
       <div className="flex flex-1 flex-col gap-2">
         {isPending ? (
           <p className="py-6 text-center text-sm text-ink-muted">{t('common.loading')}</p>
         ) : isError ? (
-          <p className="py-6 text-center text-sm text-ink-muted">{t('appointments.genericError')}</p>
+          <p className="py-6 text-center text-sm text-ink-muted">
+            {t('appointments.genericError')}
+          </p>
         ) : upcoming.length === 0 ? (
           /* A ausência de consulta agendada não é só ausência: desde 01/09 dá
              para registrar uma que já aconteceu, então o vazio tem dois
              caminhos e não nenhum. Antes esta linha relatava o nada e parava
              ali. */
           <div className="py-4 text-center">
-            <p className="text-ink-muted text-[13px]">{t('babies.dashboard.noAppointmentsScheduled')}</p>
-            <p className="text-ink-faint mt-1 text-xs">{t('babies.dashboard.appointmentsEmptyHint')}</p>
+            <p className="text-ink-muted text-[13px]">
+              {t('babies.dashboard.noAppointmentsScheduled')}
+            </p>
+            <p className="text-ink-faint mt-1 text-xs">
+              {t('babies.dashboard.appointmentsEmptyHint')}
+            </p>
             <Link
               to="/appointments"
               className="text-primary mt-3 inline-block text-[13px] font-bold underline-offset-4 hover:underline"
@@ -67,9 +98,12 @@ export function AppointmentsOverviewCard({ babies, items, isPending, isError }: 
           upcoming.map((appointment) => {
             const baby = babyById.get(appointment.babyId)
             const avatarAppearance = baby ? babyAvatarAppearance(baby.id, baby.avatarColor) : null
-            const { date } = splitScheduledAt(appointment.scheduledAt)
+            const { date, time } = splitScheduledAt(appointment.scheduledAt)
             return (
-              <div key={appointment.id} className="flex items-center gap-2.5 rounded-lg bg-surface px-3 py-2.5">
+              <div
+                key={appointment.id}
+                className="flex items-center gap-2.5 rounded-lg bg-surface px-3 py-2.5"
+              >
                 {baby && (
                   <span
                     title={baby.name}
@@ -83,7 +117,9 @@ export function AppointmentsOverviewCard({ babies, items, isPending, isError }: 
                   </span>
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13px] font-semibold text-ink">{appointment.doctorName}</p>
+                  <p className="truncate text-[13px] font-semibold text-ink">
+                    {appointment.doctorName}
+                  </p>
                   <p className="truncate text-[11px] text-ink-muted">{baby?.name}</p>
                 </div>
                 {/* O `font-semibold` que estava aqui saiu junto, e não foi
@@ -94,7 +130,7 @@ export function AppointmentsOverviewCard({ babies, items, isPending, isError }: 
                     `index.css`. A pílula não perde destaque — ele vem do fundo
                     tintado, não do peso. */}
                 <span className="font-mono flex-shrink-0 rounded-full bg-violet-100 dark:bg-violet-900/40 px-2 py-0.5 text-[11px] text-violet-700 dark:text-violet-300">
-                  {formatDateDisplay(date, i18n.language)}
+                  {formatDateDisplay(date, i18n.language)} {time}
                 </span>
               </div>
             )

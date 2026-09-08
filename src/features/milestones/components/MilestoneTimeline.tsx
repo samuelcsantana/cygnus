@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-
+import { Button } from '@/components/ui/button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,49 +11,72 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import type { Baby } from '@/features/babies/api/babies.schemas'
 import { formatDateDisplay } from '@/lib/date'
+import { config } from '@/lib/config'
 import { cn } from '@/lib/utils'
-import { PencilIcon } from '@/shared/icons/pencil-icon'
 import { TrashIcon } from '@/shared/icons/trash-icon'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
-
 import { useDeleteMilestone } from '../api/milestones.hooks'
 import type { Milestone } from '../api/milestones.schemas'
 import { MILESTONE_CATEGORY_META } from './category-meta'
 import { EditMilestoneDialog } from './EditMilestoneDialog'
 
-interface MilestoneTimelineProps {
-  items: Milestone[]
-  babies: Baby[]
-}
-
-// A single, merged, household-wide timeline — each entry tagged with which
-// baby it belongs to, so a family with several children sees one chronological
-// story instead of one full timeline repeated per child.
-export function MilestoneTimeline({ items, babies }: MilestoneTimelineProps) {
+export function MilestoneTimeline({ items, babies }: { items: Milestone[]; babies: Baby[] }) {
   const { i18n } = useTranslation()
   const [editTarget, setEditTarget] = useState<Milestone | null>(null)
-  const babyById = new Map(babies.map((baby) => [baby.id, baby]))
-
+  const groups = new Map<string, Milestone[]>()
+  for (const item of items) {
+    const month = item.achievedAt.slice(0, 7)
+    const group = groups.get(month)
+    if (group) group.push(item)
+    else groups.set(month, [item])
+  }
   return (
-    <div className="relative ml-5 max-w-3xl sm:ml-8">
-      <div className="absolute top-5 bottom-5 left-5 w-0.5 bg-muted" />
-
-      <div className="space-y-4">
-        {items.map((milestone) => (
-          <MilestoneCard
-            key={milestone.id}
-            milestone={milestone}
-            baby={babyById.get(milestone.babyId)}
-            locale={i18n.language}
-            onEdit={() => setEditTarget(milestone)}
-          />
-        ))}
-      </div>
-
+    <div className="space-y-8">
+      {[...groups].map(([month, memories]) => {
+        const [year, monthNumber] = month.split('-').map(Number)
+        const label = new Intl.DateTimeFormat(i18n.language, {
+          month: 'long',
+          year: 'numeric',
+        }).format(new Date(year!, monthNumber! - 1, 1))
+        return (
+          <section
+            key={month}
+            aria-label={label}
+            className="grid gap-3 lg:grid-cols-[140px_minmax(0,1fr)] lg:gap-6"
+          >
+            <h2 className="pt-2 font-display text-lg font-bold capitalize text-ink">{label}</h2>
+            <ol className="space-y-4 border-l border-amber-600/25 pl-3 sm:pl-5">
+              {memories.map((milestone) => (
+                <li key={milestone.id} className="relative min-w-0">
+                  <span
+                    aria-hidden="true"
+                    className="absolute -left-[17px] top-7 h-2 w-2 rounded-full bg-amber-700 sm:-left-[25px]"
+                  />
+                  <MilestoneCard
+                    milestone={milestone}
+                    baby={
+                      babies.length > 1
+                        ? babies.find((baby) => baby.id === milestone.babyId)
+                        : undefined
+                    }
+                    onEdit={() => setEditTarget(milestone)}
+                  />
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      })}
       <EditMilestoneDialog
         babies={babies}
         milestone={editTarget}
@@ -63,137 +86,169 @@ export function MilestoneTimeline({ items, babies }: MilestoneTimelineProps) {
   )
 }
 
-interface MilestoneCardProps {
+export function MilestoneCard({
+  milestone,
+  baby,
+  onEdit,
+}: {
   milestone: Milestone
-  baby: Baby | undefined
-  locale: string
+  baby?: Baby
   onEdit: () => void
-}
-
-function MilestoneCard({ milestone, baby, locale, onEdit }: MilestoneCardProps) {
-  const { t } = useTranslation()
-  const deleteMilestone = useDeleteMilestone(milestone.babyId)
+}) {
+  const { t, i18n } = useTranslation()
+  const deletion = useDeleteMilestone(milestone.babyId)
+  const [confirm, setConfirm] = useState(false)
+  const [photoOpen, setPhotoOpen] = useState(false)
+  const [failedPhoto, setFailedPhoto] = useState<string | null>(null)
   const meta = MILESTONE_CATEGORY_META[milestone.category]
-  const avatarAppearance = baby ? babyAvatarAppearance(baby.id, baby.avatarColor) : null
-
-  // Radix's AlertDialogAction always closes the alert dialog immediately on
-  // click, before this async handler settles — so a failure can't be shown
-  // inline inside the (already-unmounted) AlertDialogContent; a toast is the
-  // only reliable way to surface it.
-  const handleDelete = async () => {
-    try {
-      await deleteMilestone.mutateAsync(milestone.id)
-      toast.success(t('milestones.delete.successToast'))
-    } catch {
-      toast.error(t('milestones.delete.genericError'))
-    }
-  }
+  const avatar = baby ? babyAvatarAppearance(baby.id, baby.avatarColor) : null
+  const hasPhoto = !!milestone.photoUrl && failedPhoto !== milestone.photoUrl
+  // API assets use CORS; other externally hosted photos may not support it.
+  const photoCrossOrigin =
+    milestone.photoUrl &&
+    /^https?:/.test(config.apiBaseUrl) &&
+    milestone.photoUrl.startsWith(new URL(config.apiBaseUrl).origin + '/')
+      ? ('anonymous' as const)
+      : undefined
 
   return (
-    <div className="group relative flex items-start gap-5">
-      <div
-        className={cn(
-          'relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-[3px] bg-card text-base',
-          meta.nodeClass,
-        )}
+    <>
+      <article
+        className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+        aria-label={milestone.title}
       >
-        {meta.emoji}
-      </div>
-
-      {/* `min-w-0` não é decoração: `flex-1` sozinho é `flex: 1 1 0%`, mas um
-          item flex não encolhe abaixo do mínimo intrínseco do próprio conteúdo
-          enquanto `min-width` for `auto`. O cabeçalho deste cartão (título +
-          categoria + data + dois botões) tem mínimo maior do que a coluna
-          disponível a 390px, então o cartão ficava 26px mais largo que a linha
-          e a página inteira ganhava scroll horizontal. A linha-pai já tinha
-          `min-w-0`; faltava aqui. */}
-      <div className="relative min-w-0 flex-1 rounded-2xl bg-card p-4 shadow-[0_2px_10px_rgba(0,0,0,0.04)] sm:p-5">
-        {/* `flex-wrap`: o grupo da direita (categoria + data + editar +
-            excluir) é `flex-shrink-0` e mede ~193px. A 390px o cabeçalho tem
-            238px, então título e grupo juntos não cabem e o grupo transbordava
-            o cartão em 26px, levando a página inteira a rolar na horizontal.
-            Truncar o título perderia o nome do marco, que é o conteúdo; deixar
-            o grupo cair para a linha de baixo não perde nada. */}
-        <div className="mb-1.5 flex flex-wrap items-start justify-between gap-2">
-          <h3 className="font-display text-[15px] font-extrabold text-ink">{milestone.title}</h3>
-          <div className="flex flex-shrink-0 items-center gap-1">
-            <span className={cn('rounded-full px-2.5 py-0.5 text-[11px] font-semibold', meta.badgeClass)}>
-              {t(`milestones.category.${milestone.category.toLowerCase()}`)}
-            </span>
-            <span className="font-mono text-xs text-ink-faint">{formatDateDisplay(milestone.achievedAt, locale)}</span>
-            {/* Touch target: the visible icon stays small to match the tight
-                header row, but the invisible -inset-3 pseudo-element pushes
-                the tappable/clickable area to the WCAG 44x44px minimum
-                without disturbing surrounding layout. Opacity is never fully
-                0 by default (only dimmed) so the action stays discoverable
-                on touch devices, which have no :hover state; keyboard focus
-                and hover both bring it to full opacity. */}
-            <span className="relative inline-flex">
-              <button
-                type="button"
+        <div className={cn('grid', hasPhoto && 'md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]')}>
+          {hasPhoto && (
+            <button
+              type="button"
+              onClick={() => setPhotoOpen(true)}
+              aria-label={t('milestones.page.enlarge', { title: milestone.title })}
+              className="group relative min-w-0 bg-muted focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-primary"
+            >
+              <img
+                crossOrigin={photoCrossOrigin}
+                src={milestone.photoUrl!}
+                alt={milestone.title}
+                loading="lazy"
+                onError={() => setFailedPhoto(milestone.photoUrl)}
+                className="h-56 w-full object-cover md:h-full md:max-h-96 md:min-h-64"
+              />
+              <span className="absolute right-3 bottom-3 rounded-lg bg-card px-3 py-2 text-xs font-semibold text-ink shadow-sm">
+                {t('milestones.page.viewPhoto')}
+              </span>
+            </button>
+          )}
+          <div className="flex min-w-0 flex-col p-5 sm:p-6">
+            <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
+              <time dateTime={milestone.achievedAt} className="font-medium text-ink-muted">
+                {formatDateDisplay(milestone.achievedAt, i18n.language)}
+              </time>
+              <span className={cn('rounded-full px-2.5 py-1 font-semibold', meta.badgeClass)}>
+                <span aria-hidden="true">{meta.emoji} </span>
+                {t(`milestones.category.${milestone.category.toLowerCase()}`)}
+              </span>
+            </div>
+            <h3 className="break-words font-display text-xl font-extrabold text-ink">
+              {milestone.title}
+            </h3>
+            {baby && (
+              <div className="mt-2 flex items-center gap-2 text-xs font-semibold text-ink-muted">
+                <span
+                  style={avatar?.style}
+                  className={cn(
+                    'flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px]',
+                    avatar?.className,
+                  )}
+                >
+                  {babyInitials(baby.name)}
+                </span>
+                {baby.name}
+              </div>
+            )}
+            {milestone.description && (
+              <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-relaxed text-ink-muted">
+                {milestone.description}
+              </p>
+            )}
+            {milestone.photoUrl && !hasPhoto && (
+              <p role="status" className="mt-3 text-sm text-ink-muted">
+                {t('milestones.page.photoUnavailable')}
+              </p>
+            )}
+            <div className="mt-auto flex items-center justify-between gap-3 pt-5">
+              <Button
+                variant="ghost"
+                disabled={deletion.isPending}
                 onClick={onEdit}
                 aria-label={t('milestones.edit.action', { title: milestone.title })}
-                className="relative text-ink-faint hover:text-ink rounded-lg p-1 opacity-60 transition-opacity hover:bg-muted hover:opacity-100 focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100"
+                className="min-h-11 text-amber-800 dark:text-amber-300"
               >
-                <span className="absolute -inset-3" aria-hidden="true" />
-                <PencilIcon className="h-3.5 w-3.5" />
-              </button>
-            </span>
-            <AlertDialog>
-              {/* asChild has to land on the button itself — same note as in
-                  GuardiansSection. A <span> here put aria-expanded on a role
-                  that cannot carry it, once per row: twelve nodes on a timeline
-                  of twelve milestones, and every one of them invisible to the
-                  a11y sweep while it ran against an account with no children. */}
-              <AlertDialogTrigger asChild>
-                <button
-                  type="button"
-                  aria-label={t('milestones.delete.action', { title: milestone.title })}
-                  className="text-destructive relative inline-flex rounded-lg p-1 opacity-60 transition-opacity hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:opacity-100 focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100"
-                >
-                  <span className="absolute -inset-3" aria-hidden="true" />
-                  <TrashIcon className="h-3.5 w-3.5" />
-                </button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>{t('milestones.delete.confirmTitle')}</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {t('milestones.delete.confirmDescription', { title: milestone.title })}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>{t('milestones.delete.confirmDismiss')}</AlertDialogCancel>
-                  <AlertDialogAction
-                    variant="destructive"
-                    onClick={handleDelete}
-                    disabled={deleteMilestone.isPending}
-                  >
-                    {t('milestones.delete.confirmAction')}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+                {t('milestones.page.edit')}
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                disabled={deletion.isPending}
+                onClick={() => setConfirm(true)}
+                aria-label={t('milestones.delete.action', { title: milestone.title })}
+                className="h-11 w-11 text-ink-muted hover:text-destructive"
+              >
+                <TrashIcon className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
-        {baby && (
-          <div className="mb-1.5 flex items-center gap-1.5">
-            <span
-              className={cn(
-                'flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-[8px] font-black',
-                avatarAppearance?.className,
-              )}
-              style={avatarAppearance?.style}
+      </article>
+      <Dialog open={photoOpen} onOpenChange={setPhotoOpen}>
+        <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-4xl">
+          <DialogHeader>
+            <DialogTitle className="break-words pr-6">{milestone.title}</DialogTitle>
+            <DialogDescription>
+              {formatDateDisplay(milestone.achievedAt, i18n.language)}
+            </DialogDescription>
+          </DialogHeader>
+          {milestone.photoUrl && (
+            <img
+              crossOrigin={photoCrossOrigin}
+              src={milestone.photoUrl}
+              alt={milestone.title}
+              className="max-h-[65dvh] w-full rounded-xl object-contain"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+      <AlertDialog open={confirm} onOpenChange={(open) => !deletion.isPending && setConfirm(open)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('milestones.delete.confirmTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('milestones.delete.confirmDescription', { title: milestone.title })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletion.isPending}>
+              {t('milestones.delete.confirmDismiss')}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              disabled={deletion.isPending}
+              onClick={async (event) => {
+                event.preventDefault()
+                if (deletion.isPending) return
+                try {
+                  await deletion.mutateAsync(milestone.id)
+                  setConfirm(false)
+                  toast.success(t('milestones.delete.successToast'))
+                } catch {
+                  toast.error(t('milestones.delete.genericError'))
+                }
+              }}
             >
-              {babyInitials(baby.name)}
-            </span>
-            <span className="text-[11px] font-semibold text-ink-muted">{baby.name}</span>
-          </div>
-        )}
-        {milestone.description && (
-          <p className="text-[13px] leading-relaxed text-ink-muted">{milestone.description}</p>
-        )}
-      </div>
-    </div>
+              {t(deletion.isPending ? 'common.loading' : 'milestones.delete.confirmAction')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }

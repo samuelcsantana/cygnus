@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
-import { todayDateString } from '@/lib/date'
+import { parseDateString, todayDateString } from '@/lib/date'
+import { parseDecimalInput } from '@/shared/utils/measurements'
 
 /**
  * Sexo ao nascer — variável clínica, não identidade de gênero, e por isso este nome.
@@ -19,7 +20,16 @@ export type BloodType = z.infer<typeof bloodTypeSchema>
 // Matches the backend's validation for `avatarColor` — a hex color used as the avatar's border.
 export const avatarColorHexRegex = /^#[0-9A-Fa-f]{6}$/
 
+export const babyMeasurementSchema = z.object({
+  id: z.string().uuid(),
+  measuredOn: z.string().date(),
+  weightGrams: z.number().int().nullable(),
+  heightMillimeters: z.number().int().nullable(),
+})
+export type BabyMeasurement = z.infer<typeof babyMeasurementSchema>
+
 export const babySchema = z.object({
+  measurements: z.array(babyMeasurementSchema).default([]),
   id: z.string().uuid(),
   userId: z.string().uuid(),
   name: z.string(),
@@ -40,10 +50,11 @@ export const babyListSchema = z.array(babySchema)
 // Shared by both the create and edit flows — the form always collects the
 // same fields; only the API call (POST vs PATCH) differs.
 export const babyFormSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().trim().min(1),
   birthDate: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .refine((value) => !!parseDateString(value))
     .refine((value) => value <= todayDateString(), { message: 'babies.form.birthDateFuture' }),
   sexAtBirth: sexAtBirthSchema.optional(),
   bloodType: bloodTypeSchema.optional(),
@@ -56,6 +67,21 @@ export const babyFormSchema = z.object({
   // A native <input> always yields "" (never undefined) when left blank.
   avatarUrl: z.union([z.string().url(), z.literal('')]).optional(),
   avatarColor: z.union([z.string().regex(avatarColorHexRegex), z.literal('')]).optional(),
+  weightKg: z.string().optional(),
+  heightCm: z.string().optional(),
+  measuredOn: z.string().optional(),
+}).superRefine((values, ctx) => {
+  for (const [path, min, max] of [['weightKg', 0.1, 150], ['heightCm', 10, 250]] as const) {
+    const number = parseDecimalInput(values[path])
+    if (number !== null && (!Number.isFinite(number) || number < min || number > max)) {
+      ctx.addIssue({ code: 'custom', path: [path], message: `babies.editor.${path}Error` })
+    }
+  }
+  if (values.weightKg?.trim() || values.heightCm?.trim()) {
+    if (!values.measuredOn || !parseDateString(values.measuredOn) || values.measuredOn < values.birthDate || values.measuredOn > todayDateString()) {
+      ctx.addIssue({ code: 'custom', path: ['measuredOn'], message: 'babies.editor.dateError' })
+    }
+  }
 })
 export type BabyFormInput = z.infer<typeof babyFormSchema>
 

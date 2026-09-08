@@ -1,28 +1,10 @@
 import { z } from 'zod'
 
-/**
- * currentPassword is only required when the email actually changes — the
- * backend enforces the same rule, so this mirrors it client-side to avoid a
- * round trip. originalEmail comes from the loaded user, not a static value.
- */
-export function buildProfileFormSchema(originalEmail: string) {
-  return z
-    .object({
-      name: z.string().min(1),
-      email: z.string().email(),
-      currentPassword: z.string().optional(),
-    })
-    .superRefine((values, ctx) => {
-      if (values.email !== originalEmail && !values.currentPassword) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'profile.form.currentPasswordRequiredForEmail',
-          path: ['currentPassword'],
-        })
-      }
-    })
-}
-export type ProfileFormInput = z.infer<ReturnType<typeof buildProfileFormSchema>>
+export const profileFormSchema = z.object({
+  name: z.string().trim().min(1),
+  avatarUrl: z.string().max(524288).optional(),
+})
+export type ProfileFormInput = z.infer<typeof profileFormSchema>
 
 export const changePasswordFormSchema = z
   .object({

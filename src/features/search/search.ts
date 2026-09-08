@@ -3,9 +3,11 @@ import type { Baby } from '@/features/babies/api/babies.schemas'
 import type { Medication } from '@/features/medications/api/medications.schemas'
 import type { Milestone } from '@/features/milestones/api/milestones.schemas'
 import type { Specialist } from '@/features/specialists/api/specialists.schemas'
-import type { VaccineItem } from '@/features/vaccines/api/vaccines.schemas'
+import { formatDateDisplay, formatDateTimeDisplay } from '@/lib/date'
+import type { AdhocVaccineRecord, VaccineItem } from '@/features/vaccines/api/vaccines.schemas'
 
-export type SearchDomain = 'babies' | 'vaccines' | 'appointments' | 'medications' | 'milestones' | 'specialists'
+export type SearchDomain =
+  'babies' | 'vaccines' | 'appointments' | 'medications' | 'milestones' | 'specialists'
 
 export interface SearchResult {
   /** Unique across domains — two features can hold the same row id. */
@@ -15,6 +17,8 @@ export interface SearchResult {
   /** Who and when, when there is a who and a when. */
   subtitle: string | null
   to: string
+  babyId?: string
+  detail?: string
 }
 
 /**
@@ -39,6 +43,7 @@ export function normalise(text: string): string {
     .replace(/\p{Diacritic}/gu, '')
     .toLowerCase()
     .trim()
+    .replace(/\s+/g, ' ')
 }
 
 /** True when any of the fields contains the query. Nulls are fields nobody filled in. */
@@ -51,6 +56,9 @@ export function matches(fields: readonly (string | null | undefined)[], query: s
 
 interface SearchInput {
   query: string
+  locale?: string
+  doseLabel?: string
+  adhoc?: readonly AdhocVaccineRecord[]
   babies: readonly Baby[]
   vaccines: readonly { baby: Baby; items: readonly VaccineItem[] }[]
   appointments: readonly { baby: Baby; items: readonly Appointment[] }[]
@@ -75,13 +83,23 @@ interface SearchInput {
  */
 export function search(input: SearchInput): SearchResult[] {
   const { query } = input
+  const date = (value: string) => formatDateDisplay(value, input.locale ?? 'pt-BR')
   if (normalise(query).length < MIN_QUERY_LENGTH) return []
 
   const results: SearchResult[] = []
 
   for (const baby of input.babies) {
-    if (matches([baby.name, baby.healthPlanName, baby.healthPlanNumber, ...baby.allergies], query)) {
-      results.push({ key: `baby:${baby.id}`, domain: 'babies', title: baby.name, subtitle: null, to: '/dashboard' })
+    if (
+      matches([baby.name, baby.healthPlanName, baby.healthPlanNumber, ...baby.allergies], query)
+    ) {
+      results.push({
+        key: `baby:${baby.id}`,
+        domain: 'babies',
+        title: baby.name,
+        subtitle: null,
+        to: '/dashboard',
+        babyId: baby.id,
+      })
     }
   }
 
@@ -89,13 +107,32 @@ export function search(input: SearchInput): SearchResult[] {
     for (const item of items) {
       // `description` and `guidance` are the catalogue's own prose — long, and
       // the reason "hepatite" finds a dose whose name says only "Penta".
-      if (matches([item.name, item.description, item.guidance, item.location, item.professional, item.notes], query)) {
+      if (
+        matches(
+          [
+            item.name,
+            item.description,
+            item.guidance,
+            item.location,
+            item.professional,
+            item.notes,
+          ],
+          query,
+        )
+      ) {
         results.push({
           key: `vaccine:${baby.id}:${item.vaccineId}:${item.doseNumber}`,
           domain: 'vaccines',
           title: item.name,
+          detail: [
+            `${input.doseLabel ?? 'Dose'} ${item.doseNumber}`,
+            item.applicationDate && date(item.applicationDate),
+          ]
+            .filter(Boolean)
+            .join(' · '),
           subtitle: baby.name,
           to: '/vaccines',
+          babyId: baby.id,
         })
       }
     }
@@ -103,13 +140,17 @@ export function search(input: SearchInput): SearchResult[] {
 
   for (const { baby, items } of input.appointments) {
     for (const item of items) {
-      if (matches([item.doctorName, item.specialty, item.location, item.reason, item.notes], query)) {
+      if (
+        matches([item.doctorName, item.specialty, item.location, item.reason, item.notes], query)
+      ) {
         results.push({
           key: `appointment:${item.id}`,
           domain: 'appointments',
           title: item.doctorName,
+          detail: formatDateTimeDisplay(item.scheduledAt, input.locale ?? 'pt-BR'),
           subtitle: [baby.name, item.specialty].filter(Boolean).join(' · '),
           to: '/appointments',
+          babyId: baby.id,
         })
       }
     }
@@ -117,13 +158,22 @@ export function search(input: SearchInput): SearchResult[] {
 
   for (const { baby, items } of input.medications) {
     for (const item of items) {
-      if (matches([item.name, item.dosage, item.frequency, item.reason, item.prescriberName, item.notes], query)) {
+      if (
+        matches(
+          [item.name, item.dosage, item.frequency, item.reason, item.prescriberName, item.notes],
+          query,
+        )
+      ) {
         results.push({
           key: `medication:${item.id}`,
           domain: 'medications',
           title: item.name,
+          detail: [date(item.startedOn), item.endedOn && date(item.endedOn)]
+            .filter(Boolean)
+            .join(' → '),
           subtitle: [baby.name, item.dosage].filter(Boolean).join(' · '),
           to: '/medications',
+          babyId: baby.id,
         })
       }
     }
@@ -136,13 +186,41 @@ export function search(input: SearchInput): SearchResult[] {
           key: `milestone:${item.id}`,
           domain: 'milestones',
           title: item.title,
+          detail: date(item.achievedAt),
           subtitle: baby.name,
           to: '/milestones',
+          babyId: baby.id,
         })
       }
     }
   }
 
+  for (const item of input.adhoc ?? []) {
+    if (
+      matches(
+        [
+          item.customName,
+          item.customDose,
+          item.notes,
+          item.professional,
+          item.location,
+          item.batchNumber,
+        ],
+        query,
+      )
+    )
+      results.push({
+        key: `adhoc:${item.id}`,
+        domain: 'vaccines',
+        title: item.customName,
+        subtitle: input.babies.find((baby) => baby.id === item.babyId)?.name ?? null,
+        detail: [item.customDose, item.applicationDate && date(item.applicationDate)]
+          .filter(Boolean)
+          .join(' · '),
+        to: '/vaccines',
+        babyId: item.babyId,
+      })
+  }
   for (const specialist of input.specialists) {
     if (matches([specialist.name, specialist.specialty, specialist.phone], query)) {
       results.push({
@@ -159,8 +237,17 @@ export function search(input: SearchInput): SearchResult[] {
 }
 
 /** The results of one domain, in the menu's order, for a list with headings. */
-export function groupByDomain(results: readonly SearchResult[]): { domain: SearchDomain; results: SearchResult[] }[] {
-  const order: SearchDomain[] = ['babies', 'vaccines', 'appointments', 'specialists', 'medications', 'milestones']
+export function groupByDomain(
+  results: readonly SearchResult[],
+): { domain: SearchDomain; results: SearchResult[] }[] {
+  const order: SearchDomain[] = [
+    'babies',
+    'vaccines',
+    'appointments',
+    'specialists',
+    'medications',
+    'milestones',
+  ]
 
   return order
     .map((domain) => ({ domain, results: results.filter((result) => result.domain === domain) }))

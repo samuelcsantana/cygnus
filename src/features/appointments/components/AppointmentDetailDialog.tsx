@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import type { Baby } from '@/features/babies/api/babies.schemas'
+import { formatDateTimeDisplay } from '@/lib/date'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -35,6 +37,7 @@ import type { Appointment } from '../api/appointments.schemas'
 import { AppointmentStatusBadge } from './AppointmentStatusBadge'
 
 interface AppointmentDetailDialogProps {
+  baby?: Baby
   appointment: Appointment | null
   onOpenChange: (open: boolean) => void
 }
@@ -48,8 +51,12 @@ function outOfRange(value: string, min: number, max: number): boolean {
   return parsed !== null && (!Number.isFinite(parsed) || parsed < min || parsed > max)
 }
 
-export function AppointmentDetailDialog({ appointment, onOpenChange }: AppointmentDetailDialogProps) {
-  const { t } = useTranslation()
+export function AppointmentDetailDialog({
+  appointment,
+  baby,
+  onOpenChange,
+}: AppointmentDetailDialogProps) {
+  const { t, i18n } = useTranslation()
   const updateAppointment = useUpdateAppointment(appointment?.babyId ?? '')
   const deleteAppointment = useDeleteAppointment(appointment?.babyId ?? '')
   const [notes, setNotes] = useState('')
@@ -59,9 +66,12 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
   // Uma visita ainda por acontecer não tem o que medir, e a API recusa o valor — mostrar os campos
   // aqui seria oferecer o que o servidor devolve como 400. O caminho é marcar como realizada
   // primeiro, que é um clique já existente logo abaixo.
-  const visitHasHappened = appointment !== null && appointment.status !== 'SCHEDULED'
+  const visitHasHappened = appointment !== null && appointment.status === 'COMPLETED'
   const measurementError =
-    outOfRange(weightKg, WEIGHT_KG_MIN, WEIGHT_KG_MAX) || outOfRange(heightCm, HEIGHT_CM_MIN, HEIGHT_CM_MAX)
+    visitHasHappened &&
+    (outOfRange(weightKg, WEIGHT_KG_MIN, WEIGHT_KG_MAX) ||
+      outOfRange(heightCm, HEIGHT_CM_MIN, HEIGHT_CM_MAX))
+  const busy = updateAppointment.isPending || deleteAppointment.isPending
 
   useEffect(() => {
     if (appointment) {
@@ -72,7 +82,7 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
   }, [appointment])
 
   async function handleSaveNotes() {
-    if (!appointment || measurementError) return
+    if (!appointment || measurementError || busy) return
     // A mensagem de erro já é renderizada acima a partir de updateAppointment
     // .isError; o que faltava era o catch. Sem ele a rejeição sobe como
     // unhandled rejection e vira evento de crash no Sentry para uma falha que
@@ -99,7 +109,7 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
   }
 
   async function handleDelete() {
-    if (!appointment) return
+    if (!appointment || busy) return
     try {
       await deleteAppointment.mutateAsync(appointment.id)
     } catch {
@@ -111,9 +121,12 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
   }
 
   async function handleSetStatus(status: 'COMPLETED' | 'CANCELLED') {
-    if (!appointment) return
+    if (!appointment || busy) return
     try {
-      await updateAppointment.mutateAsync({ appointmentId: appointment.id, input: { status, notes: notes || null } })
+      await updateAppointment.mutateAsync({
+        appointmentId: appointment.id,
+        input: { status, notes: notes || null },
+      })
     } catch {
       return
     }
@@ -126,18 +139,46 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
   }
 
   return (
-    <Dialog open={!!appointment} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+    <Dialog
+      open={!!appointment}
+      onOpenChange={(open) => {
+        if (!busy) onOpenChange(open)
+      }}
+    >
+      <DialogContent className="max-h-[90dvh] overflow-y-auto rounded-3xl sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{t('appointments.detail.title')}</DialogTitle>
         </DialogHeader>
 
         {appointment && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <p className="font-bold text-ink">{appointment.doctorName}</p>
-              <AppointmentStatusBadge status={appointment.status} />
-            </div>
+            <section className="rounded-2xl border border-violet-200 bg-violet-50/60 p-4 dark:border-violet-900 dark:bg-violet-950/30">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div>
+                  <p className="font-bold text-ink">{appointment.doctorName}</p>
+                  <p className="mt-1 text-sm text-ink-muted">
+                    {[baby?.name, appointment.specialty].filter(Boolean).join(' · ')}
+                  </p>
+                </div>
+                <AppointmentStatusBadge status={appointment.status} />
+              </div>
+              <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+                {[
+                  ['date', formatDateTimeDisplay(appointment.scheduledAt, i18n.language)],
+                  ['location', appointment.location],
+                  ['reason', appointment.reason],
+                ]
+                  .filter(([, value]) => value)
+                  .map(([key, value]) => (
+                    <div key={key} className="min-w-0">
+                      <dt className="text-xs font-semibold text-ink-muted">
+                        {t(`appointments.page.${key}`)}
+                      </dt>
+                      <dd className="mt-1 break-words text-ink">{value}</dd>
+                    </div>
+                  ))}
+              </dl>
+            </section>
 
             <div>
               <Label htmlFor="detail-notes">{t('appointments.detail.notesLabel')}</Label>
@@ -145,6 +186,7 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
                 id="detail-notes"
                 rows={4}
                 className="mt-2"
+                disabled={busy}
                 value={notes}
                 onChange={(event) => setNotes(event.target.value)}
               />
@@ -160,6 +202,7 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
                     placeholder={t('appointments.form.weightPlaceholder')}
                     aria-invalid={outOfRange(weightKg, WEIGHT_KG_MIN, WEIGHT_KG_MAX)}
                     className="mt-2 font-mono"
+                    disabled={busy}
                     value={weightKg}
                     onChange={(event) => setWeightKg(event.target.value)}
                   />
@@ -172,6 +215,7 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
                     placeholder={t('appointments.form.heightPlaceholder')}
                     aria-invalid={outOfRange(heightCm, HEIGHT_CM_MIN, HEIGHT_CM_MAX)}
                     className="mt-2 font-mono"
+                    disabled={busy}
                     value={heightCm}
                     onChange={(event) => setHeightCm(event.target.value)}
                   />
@@ -198,22 +242,24 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
                 type="button"
                 variant="outline"
                 onClick={handleSaveNotes}
-                disabled={updateAppointment.isPending || measurementError}
+                disabled={busy || measurementError}
               >
                 {t('appointments.detail.saveNotes')}
               </Button>
 
               {appointment.status === 'SCHEDULED' && (
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button type="button" variant="outline" disabled={updateAppointment.isPending}>
+                      <Button type="button" variant="outline" disabled={busy}>
                         {t('appointments.detail.cancelAppointment')}
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>{t('appointments.detail.cancelConfirmTitle')}</AlertDialogTitle>
+                        <AlertDialogTitle>
+                          {t('appointments.detail.cancelConfirmTitle')}
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
                           {t('appointments.detail.cancelConfirmDescription', {
                             doctorName: appointment.doctorName,
@@ -221,17 +267,23 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>{t('appointments.detail.cancelConfirmDismiss')}</AlertDialogCancel>
+                        <AlertDialogCancel>
+                          {t('appointments.detail.cancelConfirmDismiss')}
+                        </AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() => handleSetStatus('CANCELLED')}
-                          disabled={updateAppointment.isPending}
+                          disabled={busy}
                         >
                           {t('appointments.detail.cancelConfirmAction')}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                  <Button type="button" onClick={() => handleSetStatus('COMPLETED')} disabled={updateAppointment.isPending}>
+                  <Button
+                    type="button"
+                    onClick={() => handleSetStatus('COMPLETED')}
+                    disabled={busy}
+                  >
                     {t('appointments.detail.markCompleted')}
                   </Button>
                 </div>
@@ -246,24 +298,31 @@ export function AppointmentDetailDialog({ appointment, onOpenChange }: Appointme
             <div className="flex justify-start border-t border-border pt-4">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button type="button" variant="ghost" className="text-destructive" disabled={deleteAppointment.isPending}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-destructive"
+                    disabled={busy}
+                  >
                     {t('appointments.detail.deleteAppointment')}
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>{t('appointments.detail.deleteConfirmTitle')}</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      {t('appointments.detail.deleteConfirmTitle')}
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
-                      {t('appointments.detail.deleteConfirmDescription', { doctorName: appointment.doctorName })}
+                      {t('appointments.detail.deleteConfirmDescription', {
+                        doctorName: appointment.doctorName,
+                      })}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>{t('appointments.detail.deleteConfirmDismiss')}</AlertDialogCancel>
-                    <AlertDialogAction
-                      variant="destructive"
-                      onClick={handleDelete}
-                      disabled={deleteAppointment.isPending}
-                    >
+                    <AlertDialogCancel>
+                      {t('appointments.detail.deleteConfirmDismiss')}
+                    </AlertDialogCancel>
+                    <AlertDialogAction variant="destructive" onClick={handleDelete} disabled={busy}>
                       {t('appointments.detail.deleteConfirmAction')}
                     </AlertDialogAction>
                   </AlertDialogFooter>

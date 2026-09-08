@@ -1,194 +1,110 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { useAgeLabel } from '@/hooks/useAgeLabel'
-import { Link, useNavigate } from 'react-router-dom'
-
+import { useNavigate } from 'react-router-dom'
 import { useCurrentUser } from '@/features/auth/api/auth.hooks'
-import { useBabies } from '@/features/babies/api/babies.hooks'
-import type { Baby } from '@/features/babies/api/babies.schemas'
-import { EditBabyDialog } from '@/features/babies/components/EditBabyDialog'
-import { cn } from '@/lib/utils'
 import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
-import { IdCardIcon } from '@/shared/icons/id-card-icon'
-import { PencilIcon } from '@/shared/icons/pencil-icon'
-import { PlusIcon } from '@/shared/icons/plus-icon'
-import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
-import { useAddBabyDialogStore } from '@/shared/stores/addBabyDialog.store'
-import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
-
+import { Skeleton } from '@/components/ui/skeleton'
 import { ChangePasswordForm } from '../components/ChangePasswordForm'
 import { DeleteAccountDialog } from '../components/DeleteAccountDialog'
 import { ProfileForm } from '../components/ProfileForm'
 
 export function ProfileRoute() {
   const { t } = useTranslation()
-  const ageLabel = useAgeLabel()
   const navigate = useNavigate()
   const currentUser = useCurrentUser()
-  const babies = useBabies()
-  const openAddBabyDialog = useAddBabyDialogStore((state) => state.open)
-  const [editTarget, setEditTarget] = useState<Baby | null>(null)
-
-  if (currentUser.isPending) {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <div className="border-t-transparent h-8 w-8 animate-spin rounded-full border-2 border-primary" />
-      </div>
-    )
-  }
-
-  if (!currentUser.data) {
-    return null
-  }
-
-  const babyList = babies.data ?? []
-  const accountInitial = currentUser.data.name.trim().slice(0, 1).toUpperCase()
-
   return (
-    <div className="animate-fade-in-up mx-auto max-w-3xl">
-      <div className="from-primary relative mb-7 overflow-hidden rounded-2xl bg-gradient-to-br to-emerald-600 px-6 py-7 sm:px-8 sm:py-8">
-        <div className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/10" />
-        <div className="pointer-events-none absolute -bottom-14 right-16 h-28 w-28 rounded-full bg-white/10" />
-        <div className="relative flex items-center gap-4">
-          <span className="font-display flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-white/20 text-2xl font-black text-white ring-2 ring-white/40">
-            {accountInitial}
-          </span>
-          <div className="min-w-0">
-            <h2 className="font-display truncate text-2xl font-extrabold text-white">{currentUser.data.name}</h2>
-            <p className="truncate text-sm text-white/80">{currentUser.data.email}</p>
-          </div>
+    <div className="mx-auto max-w-5xl animate-fade-in-up">
+      <header className="mb-6">
+        <h1 className="font-display text-3xl font-extrabold text-ink">{t('profile.page.title')}</h1>
+        <p className="mt-2 text-sm text-ink-muted">{t('profile.subtitle')}</p>
+      </header>
+      {currentUser.isPending ? (
+        <div
+          role="status"
+          aria-label={t('common.loading')}
+          className="grid gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
+        >
+          <Skeleton className="h-96 rounded-2xl" />
+          <Skeleton className="h-64 rounded-2xl" />
         </div>
-        <p className="relative mt-5 text-sm text-white/80">{t('profile.subtitle')}</p>
-      </div>
-
-      <div className="flex flex-col gap-5">
-        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
-          <h3 className="font-display mb-4 text-base font-extrabold text-ink">{t('profile.language.sectionTitle')}</h3>
-          <LanguageSwitcher variant="field" className="w-full max-w-xs" />
-          <h3 className="font-display mt-5 mb-4 text-base font-extrabold text-ink">{t('common.theme.label')}</h3>
-          <ThemeToggle variant="field" className="w-full max-w-xs" />
-        </section>
-
-        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
-          <h3 className="font-display mb-5 text-base font-extrabold text-ink">{t('profile.form.sectionTitle')}</h3>
-          <ProfileForm user={currentUser.data} />
-        </section>
-
-        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
-          <h3 className="font-display mb-5 text-base font-extrabold text-ink">{t('profile.password.sectionTitle')}</h3>
-          <ChangePasswordForm />
-        </section>
-
-        {/* As duas telas de cadastro da conta. Ficam aqui porque é onde já moram as configurações
-            e a lista de filhos — e porque a barra inferior não comporta um sétimo e um oitavo item:
-            medido, a 320px cada alvo cairia para ~38px, abaixo do piso de 44. */}
-        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
-          <h3 className="font-display mb-4 text-base font-extrabold text-ink">{t('profile.manage.sectionTitle')}</h3>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Link
-              to="/profissionais"
-              className="flex flex-1 items-center gap-3 rounded-xl border border-border p-4 transition-colors hover:bg-muted"
-            >
-              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
-                <StethoscopeIcon className="h-[18px] w-[18px]" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-sm font-bold text-ink">{t('specialists.title')}</span>
-                <span className="block text-xs text-ink-muted">{t('profile.manage.specialistsHint')}</span>
-              </span>
-            </Link>
-            <Link
-              to="/plano-de-saude"
-              className="flex flex-1 items-center gap-3 rounded-xl border border-border p-4 transition-colors hover:bg-muted"
-            >
-              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300">
-                <IdCardIcon className="h-[18px] w-[18px]" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-sm font-bold text-ink">{t('healthPlan.title')}</span>
-                <span className="block text-xs text-ink-muted">{t('profile.manage.healthPlanHint')}</span>
-              </span>
-            </Link>
-          </div>
-        </section>
-
-        <section className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
-          <div className="mb-5 flex items-center justify-between">
-            <h3 className="font-display text-base font-extrabold text-ink">{t('profile.babies.sectionTitle')}</h3>
-            {babyList.length > 0 && (
-              <button
-                type="button"
-                onClick={openAddBabyDialog}
-                aria-label={t('babies.addChild')}
-                className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
+      ) : currentUser.isError || !currentUser.data ? (
+        <div role="alert" className="rounded-2xl border border-border bg-card p-6">
+          <p className="text-sm text-ink-muted">{t('profile.page.error')}</p>
+          <button
+            type="button"
+            className="mt-2 min-h-11 font-semibold text-primary"
+            onClick={() => {
+              void currentUser.refetch()
+            }}
+          >
+            {t('nav.shell.retry')}
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+            <div className="min-w-0 space-y-5">
+              <section
+                className="rounded-2xl border border-border bg-card p-5 sm:p-6"
+                aria-labelledby="profile-personal-title"
               >
-                <PlusIcon className="h-3.5 w-3.5" />
-                {t('babies.addChild')}
-              </button>
-            )}
-          </div>
-          {babyList.length === 0 ? (
-            <p className="text-sm text-ink-muted">
-              {t('profile.babies.empty')}{' '}
-              <button type="button" onClick={openAddBabyDialog} className="font-bold text-emerald-700 dark:text-emerald-300">
-                {t('profile.babies.addFirst')}
-              </button>
-            </p>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {babyList.map((baby) => {
-                const avatarAppearance = babyAvatarAppearance(baby.id, baby.avatarColor)
-                return (
-                  <div key={baby.id} className="flex items-center gap-3">
-                    {baby.avatarUrl ? (
-                      <img
-                        src={baby.avatarUrl}
-                        alt=""
-                        className={cn(
-                          'h-10 w-10 flex-shrink-0 rounded-full bg-emerald-50 dark:bg-emerald-950/40 object-cover',
-                          baby.avatarColor && 'border-2',
-                        )}
-                        style={baby.avatarColor ? { borderColor: baby.avatarColor } : undefined}
-                      />
-                    ) : (
-                      <span
-                        className={`font-display flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-black ${avatarAppearance.className}`}
-                        style={avatarAppearance.style}
-                      >
-                        {babyInitials(baby.name)}
-                      </span>
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-[13px] font-bold text-ink">{baby.name}</p>
-                      <p className="text-[11px] text-ink-muted">
-                        {ageLabel(baby.birthDate)}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setEditTarget(baby)}
-                      aria-label={t('babies.edit.action', { name: baby.name })}
-                      className="flex-shrink-0 rounded-lg p-1.5 text-ink-faint transition-colors hover:bg-muted hover:text-emerald-700 dark:hover:text-emerald-300"
-                    >
-                      <PencilIcon className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                )
-              })}
+                <h2
+                  id="profile-personal-title"
+                  className="mb-5 font-display text-lg font-extrabold text-ink"
+                >
+                  {t('profile.form.sectionTitle')}
+                </h2>
+                <ProfileForm key={currentUser.data.id} user={currentUser.data} />
+              </section>
+              <section
+                className="rounded-2xl border border-border bg-card p-5 sm:p-6"
+                aria-labelledby="profile-security-title"
+              >
+                <h2
+                  id="profile-security-title"
+                  className="mb-4 font-display text-lg font-extrabold text-ink"
+                >
+                  {t('profile.password.sectionTitle')}
+                </h2>
+                <ChangePasswordForm />
+              </section>
             </div>
-          )}
-        </section>
-
-        <section className="rounded-2xl border border-rose-100 bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
-          <h3 className="font-display mb-2 text-base font-extrabold text-ink">{t('profile.delete.sectionTitle')}</h3>
-          <p className="mb-5 text-sm text-ink-muted">{t('profile.delete.sectionDescription')}</p>
-          <DeleteAccountDialog onDeleted={() => navigate('/login', { replace: true })} />
-        </section>
-      </div>
-
-      <EditBabyDialog baby={editTarget} onOpenChange={(open) => !open && setEditTarget(null)} />
+            <aside
+              className="min-w-0 rounded-2xl border border-border bg-card p-5 sm:p-6"
+              aria-labelledby="profile-preferences-title"
+            >
+              <h2
+                id="profile-preferences-title"
+                className="font-display text-lg font-extrabold text-ink"
+              >
+                {t('profile.page.preferences')}
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                {t('profile.page.preferencesHint')}
+              </p>
+              <h3 className="mb-3 mt-6 text-sm font-semibold text-ink">
+                {t('profile.language.sectionTitle')}
+              </h3>
+              <LanguageSwitcher variant="field" className="w-full" />
+              <h3 className="mb-3 mt-6 text-sm font-semibold text-ink">
+                {t('common.theme.label')}
+              </h3>
+              <ThemeToggle variant="field" className="w-full" />
+            </aside>
+          </div>
+          <section className="mt-8 flex flex-col gap-4 border-t border-border px-1 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="font-display text-base font-bold text-ink">
+                {t('profile.delete.sectionTitle')}
+              </h2>
+              <p className="mt-1 max-w-xl text-sm text-ink-muted">
+                {t('profile.delete.sectionDescription')}
+              </p>
+            </div>
+            <DeleteAccountDialog onDeleted={() => navigate('/login', { replace: true })} />
+          </section>
+        </>
+      )}
     </div>
   )
 }

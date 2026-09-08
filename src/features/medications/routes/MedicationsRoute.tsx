@@ -1,3 +1,18 @@
+import { useSearchDestination } from '@/shared/stores/searchDestination.store'
+import { useQueryClient } from '@tanstack/react-query'
+import { useLocalToday } from '@/hooks/useLocalToday'
+import { useDebouncedValue } from '@/hooks/useDebouncedValue'
+import { SearchInput } from '@/shared/components/SearchInput'
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
@@ -11,7 +26,12 @@ import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 import { HeartIcon } from '@/shared/icons/heart-icon'
 
 import { useAllBabiesMedications, useEndMedication } from '../api/medications.hooks'
-import { isOngoing, type Medication } from '../api/medications.schemas'
+import {
+  isOngoing,
+  medicationStatus,
+  sortMedications,
+  type Medication,
+} from '../api/medications.schemas'
 import { AddMedicationDialog } from '../components/AddMedicationDialog'
 import { EditMedicationDialog } from '../components/EditMedicationDialog'
 import { MedicationCard } from '../components/MedicationCard'
@@ -19,17 +39,59 @@ import { MedicationRecordNotice } from '../components/MedicationRecordNotice'
 
 export function MedicationsRoute() {
   const { t } = useTranslation()
-  const { isPending, isError, isEmpty, babies, items } = useAllBabiesMedications()
+  const all = useAllBabiesMedications()
+  const client = useQueryClient()
+  const today = useLocalToday()
+  const [filter, setFilter] = useState<'ALL' | 'ACTIVE' | 'PLANNED' | 'ENDED'>('ALL')
+  const [search, setSearch] = useState('')
+  const debounced = useDebouncedValue(search)
+  const normalize = (value: string) =>
+    value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .replace(/\s+/g, ' ')
+      .toLowerCase()
+  const term = normalize(debounced)
   // The child filter is the menu's, not this page's: the choice outlives the page
   // it was made on. See selectedBaby.store.ts.
   const babyFilter = useSelectedBabyStore((state) => state.selectedBabyId)
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [editTarget, setEditTarget] = useState<Medication | null>(null)
 
-  const filteredItems = items.filter((item) => !babyFilter || item.babyId === babyFilter)
-  // Sem fim registrado primeiro: é o que alguém abre a tela para conferir. O resto é histórico, e
-  // histórico se lê do mais recente para trás — a ordem que a API já manda.
-  const orderedItems = [...filteredItems.filter(isOngoing), ...filteredItems.filter((item) => !isOngoing(item))]
+  const babies = all.babies.filter((baby) => !babyFilter || baby.id === babyFilter)
+  const entries = all.perBaby.filter((entry) => !babyFilter || entry.baby.id === babyFilter)
+  const isPending = all.babies.length ? entries.some((entry) => entry.isPending) : all.isPending
+  const isError = all.babies.length ? entries.some((entry) => entry.isError) : all.isError
+  const isEmpty = all.isEmpty
+  const destination = useSearchDestination('/medications')
+  const items = entries
+    .filter((entry) => !entry.isError)
+    .flatMap((entry) => entry.items)
+    .filter((item) => !destination || destination.keys.includes(`medication:${item.id}`))
+  const matches = (item: Medication, value: typeof filter) =>
+    value === 'ALL' ||
+    (value === 'ACTIVE' ? isOngoing(item, today) : medicationStatus(item, today) === value)
+  const orderedItems = sortMedications(
+    items.filter(
+      (item) =>
+        matches(item, filter) &&
+        (!term ||
+          [item.name, item.reason, item.prescriberName].some(
+            (value) => value && normalize(value).includes(term),
+          )),
+    ),
+    today,
+  )
+  const retry = () => {
+    if (!all.babies.length) void client.invalidateQueries({ queryKey: ['babies'] })
+    entries
+      .filter((entry) => entry.isError)
+      .forEach(
+        (entry) =>
+          void client.invalidateQueries({ queryKey: ['babies', entry.baby.id, 'medications'] }),
+      )
+  }
 
   if (isEmpty) {
     return <Navigate to="/dashboard" replace />
@@ -39,15 +101,10 @@ export function MedicationsRoute() {
     <div className="animate-fade-in-up">
       <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <h2 className="font-display text-3xl font-extrabold text-ink">{t('medications.title')}</h2>
-          {/* Sem a lista, `items.length` é zero porque nada carregou, não porque nada foi
-              registrado — e "0 medicamentos" se lê como um fato sobre a criança. Mesma forma das
-              outras telas. */}
-          {isError ? null : (
-            <p className="mt-1 text-lg text-ink-muted">
-              {isPending ? t('medications.summaryUnavailable') : t('medications.summary', { count: items.length })}
-            </p>
-          )}
+          <h1 className="font-display text-3xl font-extrabold text-ink">
+            {t('medications.title')}
+          </h1>
+          <p className="mt-1 text-sm text-ink-muted">{t('medications.page.intro')}</p>
         </div>
         <Button
           type="button"
@@ -65,15 +122,58 @@ export function MedicationsRoute() {
       <AddMedicationDialog open={isAddOpen} onOpenChange={setIsAddOpen} />
       <EditMedicationDialog medication={editTarget} onOpenChange={() => setEditTarget(null)} />
 
-      {isPending ? (
-        <div className="grid gap-4 lg:grid-cols-2">
-          {[0, 1].map((index) => (
-            <div key={index} className="h-44 animate-pulse rounded-2xl bg-card shadow-sm" />
-          ))}
+      {isError && (
+        <div role="alert" className="mb-5 rounded-2xl bg-card p-5">
+          <p>
+            {t('medications.genericError')}{' '}
+            {entries
+              .filter((entry) => entry.isError)
+              .map((entry) => entry.baby.name)
+              .join(', ')}
+          </p>
+          <button type="button" onClick={retry} className="min-h-11 font-semibold text-primary">
+            {t('nav.shell.retry')}
+          </button>
         </div>
-      ) : isError ? (
-        <p className="py-16 text-center text-ink-muted">{t('medications.genericError')}</p>
-      ) : orderedItems.length === 0 ? (
+      )}
+      {isPending && (
+        <p role="status" className="py-8 text-center text-ink-muted">
+          {t('common.loading')}
+        </p>
+      )}
+      {items.length > 0 && (
+        <div className="mb-5 space-y-4">
+          <div
+            role="group"
+            aria-label={t('medications.page.filters')}
+            className="flex flex-wrap gap-2"
+          >
+            {(['ALL', 'ACTIVE', 'PLANNED', 'ENDED'] as const).map((value) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={filter === value}
+                onClick={() => setFilter(value)}
+                className={`min-h-11 rounded-xl px-4 py-2 text-sm font-semibold ${filter === value ? 'bg-sky-700 text-white' : 'bg-card text-ink-muted'}`}
+              >
+                {t(`medications.page.${value}`)} (
+                {items.filter((item) => matches(item, value)).length})
+              </button>
+            ))}
+          </div>
+          <SearchInput
+            id="medication-search"
+            label={t('medications.page.search')}
+            placeholder={t('medications.page.search')}
+            value={search}
+            onChange={setSearch}
+            clearLabel={t('vaccines.searchUi.clear')}
+            inputClassName="h-12 rounded-xl"
+            className="w-full sm:max-w-lg"
+          />
+        </div>
+      )}
+      {!isPending && !isError && !items.length && (
         <EmptyState
           icon={<HeartIcon className="h-10 w-10" />}
           title={t('medications.empty.title')}
@@ -90,10 +190,21 @@ export function MedicationsRoute() {
             </Button>
           }
         />
-      ) : (
+      )}
+      {items.length > 0 && !orderedItems.length && (
+        <p role="status" className="rounded-2xl bg-card p-8 text-center text-ink-muted">
+          {t('medications.page.noResults')}
+        </p>
+      )}
+      {orderedItems.length > 0 && (
         <div className="grid gap-4 lg:grid-cols-2">
           {orderedItems.map((medication) => (
-            <MedicationRow key={medication.id} medication={medication} babies={babies} onEdit={setEditTarget} />
+            <MedicationRow
+              key={medication.id}
+              medication={medication}
+              babies={babies}
+              onEdit={setEditTarget}
+            />
           ))}
         </div>
       )}
@@ -114,24 +225,56 @@ interface MedicationRowProps {
 function MedicationRow({ medication, babies, onEdit }: MedicationRowProps) {
   const { t } = useTranslation()
   const endMedication = useEndMedication(medication.babyId)
-  const baby = babies.find((candidate) => candidate.id === medication.babyId)
+  const baby =
+    babies.length > 1 ? babies.find((candidate) => candidate.id === medication.babyId) : undefined
+  const [confirm, setConfirm] = useState(false)
 
   return (
-    <MedicationCard
-      medication={medication}
-      baby={baby}
-      onEdit={() => onEdit(medication)}
-      onEnd={() => {
-        // Encerra hoje, que é o caso esmagador — "acabou o frasco". Uma data diferente é uma
-        // correção, e correção se faz no formulário, onde ela pode ser lida antes de ser salva.
-        endMedication.mutate(
-          { medicationId: medication.id, endedOn: todayDateString() },
-          {
-            onSuccess: () => toast.success(t('medications.endSuccessToast')),
-            onError: () => toast.error(t('medications.form.genericError')),
-          },
-        )
-      }}
-    />
+    <>
+      <MedicationCard
+        medication={medication}
+        baby={baby}
+        busy={endMedication.isPending}
+        onEdit={() => onEdit(medication)}
+        onEnd={() => setConfirm(true)}
+      />
+      <AlertDialog
+        open={confirm}
+        onOpenChange={(open) => {
+          if (!endMedication.isPending) setConfirm(open)
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('medications.page.endTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('medications.page.endHint', { name: medication.name })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={endMedication.isPending}>
+              {t('common.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              disabled={endMedication.isPending}
+              onClick={async (event) => {
+                event.preventDefault()
+                const today = todayDateString()
+                if (endMedication.isPending || !isOngoing(medication, today)) return
+                try {
+                  await endMedication.mutateAsync({ medicationId: medication.id, endedOn: today })
+                  setConfirm(false)
+                  toast.success(t('medications.page.endSaved'))
+                } catch {
+                  toast.error(t('medications.form.genericError'))
+                }
+              }}
+            >
+              {t('medications.page.endConfirm')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }

@@ -51,7 +51,9 @@ describe('DeleteAccountDialog', () => {
   })
 
   it('keeps the dialog open and shows an error on an incorrect password', async () => {
-    server.use(http.delete(`${config.apiBaseUrl}/users/me`, () => HttpResponse.json(null, { status: 400 })))
+    server.use(
+      http.delete(`${config.apiBaseUrl}/users/me`, () => HttpResponse.json(null, { status: 400 })),
+    )
 
     const user = userEvent.setup()
     const onDeleted = vi.fn()
@@ -122,4 +124,34 @@ describe('DeleteAccountDialog', () => {
 
     expect(screen.getByRole('button', { name: 'Excluir conta permanentemente' })).toBeDisabled()
   })
+})
+
+it('blocks dismissal during deletion and resets confirmation after closing', async () => {
+  let release!: () => void
+  const gate = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  server.use(
+    http.delete(`${config.apiBaseUrl}/users/me`, async () => {
+      await gate
+      return new HttpResponse(null, { status: 400 })
+    }),
+  )
+  const user = userEvent.setup()
+  renderWithProviders(<DeleteAccountDialog />)
+  await user.click(screen.getByRole('button', { name: 'Excluir minha conta' }))
+  await user.type(screen.getByLabelText('Confirme sua senha atual'), 'wrong-password')
+  await user.click(screen.getByRole('button', { name: 'Excluir conta permanentemente' }))
+  try {
+    await user.keyboard('{Escape}')
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Cancelar' })).toBeDisabled()
+  } finally {
+    release()
+  }
+  await screen.findByText('Senha atual incorreta.')
+  await user.click(screen.getByRole('button', { name: 'Cancelar' }))
+  await user.click(screen.getByRole('button', { name: 'Excluir minha conta' }))
+  expect(screen.getByLabelText('Confirme sua senha atual')).toHaveValue('')
+  expect(screen.queryByText('Senha atual incorreta.')).not.toBeInTheDocument()
 })

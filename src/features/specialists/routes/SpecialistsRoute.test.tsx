@@ -1,11 +1,12 @@
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 
 import { config } from '@/lib/config'
 import { buildBaby } from '@/test/fixtures/baby'
 import { server } from '@/test/msw/server'
-import { renderWithProviders, screen, waitFor } from '@/test/test-utils'
+import { renderWithProviders, screen, waitFor, within } from '@/test/test-utils'
 
 import { SpecialistsRoute } from './SpecialistsRoute'
 
@@ -29,7 +30,10 @@ function specialist(overrides: Record<string, unknown> = {}) {
 
 beforeEach(() => {
   server.use(
-    http.get(`${config.apiBaseUrl}/babies`, () => HttpResponse.json([buildBaby({ id: babyId, name: 'Elis' })])),
+    http.get(`${config.apiBaseUrl}/babies/${babyId}/guardians`, () => HttpResponse.json([])),
+    http.get(`${config.apiBaseUrl}/babies`, () =>
+      HttpResponse.json([buildBaby({ id: babyId, name: 'Elis' })]),
+    ),
   )
 })
 
@@ -44,7 +48,11 @@ describe('SpecialistsRoute', () => {
       http.get(`${config.apiBaseUrl}/specialists`, () =>
         HttpResponse.json([
           specialist({ id: '11111111-1111-4111-8111-111111111112', name: 'Só minha' }),
-          specialist({ id: '22222222-2222-4222-8222-222222222222', name: 'Da Elis', babyIds: [babyId] }),
+          specialist({
+            id: '22222222-2222-4222-8222-222222222222',
+            name: 'Da Elis',
+            babyIds: [babyId],
+          }),
         ]),
       ),
     )
@@ -95,9 +103,11 @@ describe('SpecialistsRoute', () => {
 
     await user.click(await screen.findByRole('button', { name: 'Adicionar o primeiro' }))
     await user.type(screen.getByLabelText('Nome'), 'Dra. Fernanda Lima')
-    await user.type(screen.getByLabelText('Telefone'), '+55 11 99999-0000')
-    await user.click(screen.getByLabelText('Elis'))
-    await user.click(screen.getByRole('button', { name: 'Salvar' }))
+    await user.type(screen.getByLabelText(/Telefone/), '+55 11 99999-0000')
+    await user.click(screen.getByRole('checkbox', { name: 'Elis' }))
+    await user.click(
+      within(screen.getByRole('dialog')).getByRole('button', { name: 'Adicionar profissional' }),
+    )
 
     await waitFor(() => {
       expect(receivedBody).toMatchObject({
@@ -109,7 +119,9 @@ describe('SpecialistsRoute', () => {
   })
 
   it('mostra o telefone como link discável, que é o motivo de a lista existir', async () => {
-    server.use(http.get(`${config.apiBaseUrl}/specialists`, () => HttpResponse.json([specialist()])))
+    server.use(
+      http.get(`${config.apiBaseUrl}/specialists`, () => HttpResponse.json([specialist()])),
+    )
 
     renderWithProviders(<SpecialistsRoute />)
 
@@ -122,4 +134,76 @@ describe('SpecialistsRoute', () => {
       'tel:+551199999-0000',
     )
   })
+})
+
+afterEach(() => useSelectedBabyStore.getState().select(null))
+it('filters the selected child and returns to personal contacts explicitly', async () => {
+  server.use(
+    http.get(`${config.apiBaseUrl}/specialists`, () =>
+      HttpResponse.json([
+        specialist({ name: 'Contato pessoal' }),
+        specialist({
+          id: '22222222-2222-4222-8222-222222222222',
+          name: 'Da Elis',
+          babyIds: [babyId],
+        }),
+      ]),
+    ),
+  )
+  useSelectedBabyStore.getState().select(babyId)
+  const user = userEvent.setup()
+  renderWithProviders(<SpecialistsRoute />)
+  expect(await screen.findByText('Da Elis')).toBeVisible()
+  expect(screen.queryByText('Contato pessoal')).not.toBeInTheDocument()
+  await user.click(screen.getByRole('button', { name: 'Ver todos os contatos' }))
+  expect(await screen.findByText('Contato pessoal')).toBeVisible()
+  expect(useSelectedBabyStore.getState().selectedBabyId).toBeNull()
+})
+it('searches without accents, normalizes phone punctuation and filters shared contacts', async () => {
+  server.use(
+    http.get(`${config.apiBaseUrl}/specialists`, () =>
+      HttpResponse.json([
+        specialist({ name: 'Dra. Márcia', phone: '(11) 99999-0000' }),
+        specialist({
+          id: '22222222-2222-4222-8222-222222222222',
+          name: 'Dra. Compartilhada',
+          userId: SOMEBODY_ELSE,
+          babyIds: [babyId],
+        }),
+      ]),
+    ),
+  )
+  const user = userEvent.setup()
+  renderWithProviders(<SpecialistsRoute />)
+  const search = await screen.findByRole('searchbox')
+  await user.type(search, 'nao existe')
+  expect(await screen.findByText(/Nenhum contato encontrado/)).toBeVisible()
+  await user.clear(search)
+  await user.type(search, 'marcia')
+  expect(await screen.findByText('Dra. Márcia')).toBeVisible()
+  expect(screen.queryByText('Dra. Compartilhada')).not.toBeInTheDocument()
+  await user.clear(search)
+  await user.type(search, '11999990000')
+  expect(await screen.findByText('Dra. Márcia')).toBeVisible()
+  await user.click(screen.getByRole('button', { name: 'Limpar busca' }))
+  await user.click(screen.getByRole('button', { name: 'Compartilhados comigo' }))
+  expect(await screen.findByText('Dra. Compartilhada')).toBeVisible()
+  expect(screen.queryByText('Dra. Márcia')).not.toBeInTheDocument()
+  expect(
+    screen.getByText('Você pode consultar este contato. A edição é feita por quem o cadastrou.'),
+  ).toBeVisible()
+})
+it('does not describe unavailable child links as personal contacts', async () => {
+  server.use(
+    http.get(`${config.apiBaseUrl}/babies`, () => new HttpResponse(null, { status: 500 })),
+    http.get(`${config.apiBaseUrl}/specialists`, () =>
+      HttpResponse.json([specialist({ babyIds: [babyId] })]),
+    ),
+  )
+  renderWithProviders(<SpecialistsRoute />)
+  expect(await screen.findByText('Dra. Fernanda Lima')).toBeVisible()
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    'Não foi possível carregar os vínculos',
+  )
+  expect(screen.queryByText('Só na sua lista')).not.toBeInTheDocument()
 })

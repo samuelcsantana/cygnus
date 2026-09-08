@@ -2,13 +2,10 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
-import type { Baby } from '@/features/babies/api/babies.schemas'
-
 import { cn } from '@/lib/utils'
 import { LogoIcon } from '@/shared/icons/logo-icon'
-import { LogoutIcon } from '@/shared/icons/logout-icon'
 import { PlusIcon } from '@/shared/icons/plus-icon'
-import { BabySwitcher } from './BabySwitcher'
+import { AccountMenu } from './AccountMenu'
 import { SidebarNavItem } from './SidebarNavItem'
 
 export interface SidebarNavEntry {
@@ -19,11 +16,9 @@ export interface SidebarNavEntry {
 }
 
 interface AppSidebarProps {
+  showAccount?: boolean
   items: SidebarNavEntry[]
-  babies: readonly Baby[]
-  /** The child the whole app is narrowed to; `null` is all of them. */
-  selectedBabyId: string | null
-  onSelectBaby: (babyId: string | null) => void
+  accountAvatarUrl?: string | null
   accountName: string
   accountEmail: string
   onAddBaby: () => void
@@ -49,11 +44,10 @@ interface AppSidebarProps {
  * passes.
  */
 export function AppSidebar({
+  showAccount = false,
   items,
-  babies,
-  selectedBabyId,
-  onSelectBaby,
   accountName,
+  accountAvatarUrl,
   accountEmail,
   onAddBaby,
   onLogout,
@@ -64,23 +58,24 @@ export function AppSidebar({
   const { t } = useTranslation()
 
   return (
-    <div className={cn('flex h-full w-full flex-col border-r border-border bg-card', className)}>
-      <Link to="/dashboard" onClick={onNavigate} className="flex flex-shrink-0 items-center gap-3 px-5 py-4">
+    <div
+      className={cn(
+        'flex h-full min-h-0 w-full flex-col border-r border-border bg-card',
+        className,
+      )}
+    >
+      <Link
+        to="/dashboard"
+        onClick={onNavigate}
+        className="flex flex-shrink-0 items-center gap-3 px-5 py-4"
+      >
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md">
           <LogoIcon className="h-5 w-5" />
         </span>
-        <span className="font-display text-xl font-extrabold tracking-tight text-ink">{t('common.appName')}</span>
+        <span className="font-display text-xl font-extrabold tracking-tight text-ink">
+          {t('common.appName')}
+        </span>
       </Link>
-
-      {/* The children first, then the sections: the menu reads "who am I
-          looking at" before "at what". Only when there is more than one — a
-          single-child household has nothing to switch between, and a radio group
-          of one is furniture. */}
-      {babies.length > 1 && (
-        <div className="flex-shrink-0 px-3 pb-3">
-          <BabySwitcher babies={babies} value={selectedBabyId} onChange={onSelectBaby} />
-        </div>
-      )}
 
       <div className="flex-shrink-0 px-3 pb-3">
         <button
@@ -96,27 +91,42 @@ export function AppSidebar({
       {/* Scrolls on its own, so the account foot stays reachable on a short
           phone in landscape — 320x360 is where a seventh section first pushes
           "Sair da conta" off the column. */}
-      <nav aria-label={t('nav.sections')} className="flex flex-1 flex-col gap-1 overflow-y-auto px-3">
-        {items.map((item) => (
-          <SidebarNavItem key={item.to} {...item} onNavigate={onNavigate} />
+      <nav aria-label={t('nav.sections')} className="min-h-0 flex-1 overflow-y-auto px-3 pb-3">
+        {['overview', 'care', 'development'].map((group) => (
+          <div key={group} className="mb-3 space-y-1">
+            {group !== 'overview' && (
+              <p className="px-3 pb-1 pt-2 text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+                {t(`nav.shell.${group}`)}
+              </p>
+            )}
+            {items
+              .filter(
+                (item) =>
+                  (item.to === '/dashboard'
+                    ? 'overview'
+                    : ['/crescimento', '/milestones'].includes(item.to)
+                      ? 'development'
+                      : 'care') === group,
+              )
+              .map((item) => (
+                <SidebarNavItem key={item.to} {...item} onNavigate={onNavigate} />
+              ))}
+          </div>
         ))}
       </nav>
 
-      <div className="flex-shrink-0 border-t border-border px-3 py-3">
-        <div className="px-3 py-2">
-          <p className="truncate text-sm font-bold text-ink">{accountName}</p>
-          <p className="truncate text-xs text-ink-faint">{accountEmail}</p>
+      {showAccount && (
+        <div className="shrink-0 border-t border-border p-3">
+          <AccountMenu
+            avatarUrl={accountAvatarUrl}
+            name={accountName}
+            email={accountEmail}
+            onLogout={onLogout}
+            pending={logoutPending}
+            onNavigate={onNavigate}
+          />
         </div>
-        <button
-          type="button"
-          onClick={onLogout}
-          disabled={logoutPending}
-          className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-ink-muted transition-colors hover:bg-rose-50 hover:text-rose-600 disabled:opacity-60 dark:hover:bg-rose-950/40 dark:hover:text-rose-300"
-        >
-          <LogoutIcon className="h-5 w-5 flex-shrink-0" />
-          <span>{t('nav.logout')}</span>
-        </button>
-      </div>
+      )}
     </div>
   )
 }

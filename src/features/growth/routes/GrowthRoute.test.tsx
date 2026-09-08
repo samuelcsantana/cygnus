@@ -92,7 +92,7 @@ describe('GrowthRoute', () => {
 
     renderRoute()
 
-    expect(await screen.findByText(/ainda não desenha uma curva/i)).toBeInTheDocument()
+    expect(await screen.findByText(/Uma medida inicia o histórico/i)).toBeInTheDocument()
   })
 
   /**

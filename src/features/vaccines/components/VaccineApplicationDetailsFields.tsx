@@ -8,11 +8,13 @@ import { DatePickerField } from '@/shared/components/DatePickerField'
 import { fieldErrorKey } from '@/shared/utils/zod-error'
 
 import type { VaccineApplicationDetailsInput } from '../api/vaccines.schemas'
+import { VaccineProofField } from './VaccineProofField'
 
 interface VaccineApplicationDetailsFieldsProps<T extends VaccineApplicationDetailsInput> {
   register: UseFormRegister<T>
   control: Control<T>
   errors: FieldErrors<T>
+  onProcessingChange?: (busy: boolean) => void
 }
 
 // Generic over T so the same field set can be reused by ApplyVaccineDialog's
@@ -23,6 +25,7 @@ export function VaccineApplicationDetailsFields<T extends VaccineApplicationDeta
   register,
   control,
   errors,
+  onProcessingChange,
 }: VaccineApplicationDetailsFieldsProps<T>) {
   const { t } = useTranslation()
   const dateErrorKey = fieldErrorKey(errors.applicationDate as never)
@@ -40,6 +43,8 @@ export function VaccineApplicationDetailsFields<T extends VaccineApplicationDeta
               id="applicationDate"
               value={field.value as string}
               onValueChange={field.onChange}
+              ref={field.ref}
+              onBlur={field.onBlur}
               className="mt-2"
               aria-invalid={!!errors.applicationDate}
               aria-describedby={dateErrorKey ? 'applicationDate-error' : undefined}
@@ -85,15 +90,16 @@ export function VaccineApplicationDetailsFields<T extends VaccineApplicationDeta
       </div>
 
       <div>
-        <Label htmlFor="photoUrl">{t('vaccines.applicationDetails.photoUrlLabel')}</Label>
-        <Input
-          id="photoUrl"
-          type="url"
-          placeholder={t('vaccines.applicationDetails.photoUrlPlaceholder')}
-          className="mt-2"
-          aria-invalid={!!errors.photoUrl}
-          aria-describedby={photoUrlErrorKey ? 'photoUrl-error' : undefined}
-          {...register('photoUrl' as Path<T>)}
+        <Controller
+          control={control}
+          name={'photoUrl' as Path<T>}
+          render={({ field }) => (
+            <VaccineProofField
+              value={(field.value as string) ?? ''}
+              onChange={field.onChange}
+              onProcessingChange={onProcessingChange}
+            />
+          )}
         />
         {photoUrlErrorKey && (
           <p id="photoUrl-error" className="text-destructive mt-1 text-sm">

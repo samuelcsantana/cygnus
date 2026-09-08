@@ -15,6 +15,7 @@ interface BabyProfileFieldsProps {
   register: UseFormRegister<BabyFormInput>
   control: Control<BabyFormInput>
   errors: FieldErrors<BabyFormInput>
+  hideAvatar?: boolean
 }
 
 /**
@@ -43,7 +44,7 @@ const AVATAR_BORDER_COLORS = ['#2A9D8F', '#E8853A', '#D95560', '#6C63FF']
 /** O cartão de "não informar" precisa de um valor para o grupo de rádio; ele nunca é enviado. */
 const NOT_INFORMED = 'none'
 
-export function BabyProfileFields({ register, control, errors }: BabyProfileFieldsProps) {
+export function BabyProfileFields({ register, control, errors, hideAvatar }: BabyProfileFieldsProps) {
   const { t } = useTranslation()
   const nameErrorKey = fieldErrorKey(errors.name)
   const birthDateErrorKey = fieldErrorKey(errors.birthDate)
@@ -60,7 +61,7 @@ export function BabyProfileFields({ register, control, errors }: BabyProfileFiel
 
   return (
     <div className="space-y-6">
-      <div>
+      {!hideAvatar && <div>
         <Label htmlFor="avatarUrl">{t('babies.form.avatarLabel')}</Label>
         <AvatarUploadField
           id="avatarUrl"
@@ -78,7 +79,7 @@ export function BabyProfileFields({ register, control, errors }: BabyProfileFiel
           invalidImageError={t('babies.form.avatarInvalidImage')}
         />
         {avatarUrlErrorKey && <p className="text-destructive mt-1 text-sm">{t(avatarUrlErrorKey)}</p>}
-      </div>
+      </div>}
 
       <div>
         <Label htmlFor="name">{t('babies.form.nameLabel')}</Label>
@@ -138,6 +139,7 @@ export function BabyProfileFields({ register, control, errors }: BabyProfileFiel
                   linhas no celular. */}
               <SelectorCardGroup
                 layout="vertical"
+                className={hideAvatar ? 'gap-2 [&>label]:min-h-11 [&>label]:px-3 [&>label]:py-2.5' : undefined}
                 value={field.value ?? NOT_INFORMED}
                 onValueChange={(value) => field.onChange(value === NOT_INFORMED ? undefined : value)}
                 options={[

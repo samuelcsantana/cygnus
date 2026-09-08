@@ -16,12 +16,19 @@ interface MilestonePhotoUploadFieldProps {
   value: string | undefined
   onValueChange: (value: string) => void
   className?: string
+  onFileChange?: (file: File | null, preview: string | null) => void
 }
 
 // Two visual states share this component: a local instant preview (an object
 // URL, shown the moment a file is picked) while the real upload is in
 // flight, then the server's returned URL once it lands — see handleFileChange.
-export function MilestonePhotoUploadField({ id, value, onValueChange, className }: MilestonePhotoUploadFieldProps) {
+export function MilestonePhotoUploadField({
+  id,
+  value,
+  onValueChange,
+  className,
+  onFileChange,
+}: MilestonePhotoUploadFieldProps) {
   const { t } = useTranslation()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(null)
@@ -54,6 +61,10 @@ export function MilestonePhotoUploadField({ id, value, onValueChange, className 
 
     const objectUrl = URL.createObjectURL(file)
     setLocalPreviewUrl(objectUrl)
+    if (onFileChange) {
+      onFileChange(file, objectUrl)
+      return
+    }
 
     try {
       const url = await uploadPhoto.mutateAsync(file)
@@ -66,6 +77,8 @@ export function MilestonePhotoUploadField({ id, value, onValueChange, className 
   }
 
   const handleRemove = () => {
+    setLocalPreviewUrl(null)
+    onFileChange?.(null, null)
     onValueChange('')
     setClientError(null)
   }
@@ -76,11 +89,14 @@ export function MilestonePhotoUploadField({ id, value, onValueChange, className 
   return (
     <div className={cn('space-y-2', className)}>
       {previewSrc ? (
-        <div className="relative inline-flex">
+        <div className="relative w-full">
           <img
             src={previewSrc}
             alt=""
-            className={cn('h-28 w-28 rounded-xl object-cover shadow-sm', isUploading && 'opacity-50')}
+            className={cn(
+              'h-44 w-full rounded-xl object-contain bg-muted shadow-sm',
+              isUploading && 'opacity-50',
+            )}
           />
           {isUploading && (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -92,7 +108,7 @@ export function MilestonePhotoUploadField({ id, value, onValueChange, className 
               type="button"
               onClick={handleRemove}
               aria-label={t('milestones.form.photoRemoveAria')}
-              className="bg-ink/70 absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full text-white shadow-sm transition-colors hover:bg-ink"
+              className="bg-ink absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-full text-white shadow-sm"
             >
               <CloseIcon className="h-3.5 w-3.5" />
             </button>
@@ -102,10 +118,12 @@ export function MilestonePhotoUploadField({ id, value, onValueChange, className 
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="flex h-28 w-28 flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-border text-ink-faint transition-colors hover:border-primary hover:text-primary"
+          className="flex h-40 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border text-ink-muted transition-colors hover:border-primary hover:text-primary"
         >
           <UploadIcon className="h-5 w-5" />
-          <span className="text-[11px] font-semibold">{t('milestones.form.photoUploadAction')}</span>
+          <span className="text-[11px] font-semibold">
+            {t('milestones.form.photoUploadAction')}
+          </span>
         </button>
       )}
 
@@ -119,6 +137,17 @@ export function MilestonePhotoUploadField({ id, value, onValueChange, className 
         aria-hidden="true"
         tabIndex={-1}
       />
+
+      {previewSrc && !isUploading && (
+        <button
+          type="button"
+          className="text-sm font-semibold underline"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          {t('milestones.editor.photoReplace')}
+        </button>
+      )}
+      <p className="text-xs text-ink-muted">{t('milestones.editor.photoHint')}</p>
 
       {clientError && (
         <p role="alert" className="text-destructive text-sm">

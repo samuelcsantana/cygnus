@@ -59,7 +59,7 @@ export function SidebarNavItem({ to, icon, label, disabled, onNavigate }: Sideba
         cn(
           baseClass,
           isActive
-            ? 'bg-primary text-primary-foreground'
+            ? 'bg-emerald-50 text-emerald-900 ring-1 ring-inset ring-emerald-200 dark:bg-emerald-950 dark:text-emerald-200 dark:ring-emerald-800'
             : 'text-ink-muted hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300',
         )
       }

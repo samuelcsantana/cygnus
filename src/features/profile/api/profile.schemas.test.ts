@@ -1,36 +1,19 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildProfileFormSchema, changePasswordFormSchema } from './profile.schemas'
+import { profileFormSchema, changePasswordFormSchema } from './profile.schemas'
 
-describe('buildProfileFormSchema', () => {
-  const profileFormSchema = buildProfileFormSchema('parent@example.com')
-
-  it('rejects an email change without currentPassword', () => {
-    const result = profileFormSchema.safeParse({
-      name: 'Jane Doe',
-      email: 'new@example.com',
-    })
-
-    expect(result.success).toBe(false)
+describe('profileFormSchema', () => {
+  it('strips email and password from profile form data', () => {
+    expect(
+      profileFormSchema.parse({
+        name: ' Jane ',
+        email: 'new@example.com',
+        currentPassword: 'password',
+      }),
+    ).toEqual({ name: 'Jane' })
   })
-
-  it('accepts an email change with currentPassword', () => {
-    const result = profileFormSchema.safeParse({
-      name: 'Jane Doe',
-      email: 'new@example.com',
-      currentPassword: 'my-password',
-    })
-
-    expect(result.success).toBe(true)
-  })
-
-  it('accepts a name change with the original email and no currentPassword', () => {
-    const result = profileFormSchema.safeParse({
-      name: 'Jane Smith',
-      email: 'parent@example.com',
-    })
-
-    expect(result.success).toBe(true)
+  it('rejects a blank name', () => {
+    expect(profileFormSchema.safeParse({ name: '   ' }).success).toBe(false)
   })
 })
 

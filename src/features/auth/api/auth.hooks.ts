@@ -57,7 +57,12 @@ export function useSyncAuthIdentity() {
 
   useEffect(() => {
     if (currentUser.data) {
-      setIdentity({ id: currentUser.data.id, email: currentUser.data.email, name: currentUser.data.name })
+      setIdentity({
+        id: currentUser.data.id,
+        email: currentUser.data.email,
+        name: currentUser.data.name,
+        avatarUrl: currentUser.data.avatarUrl,
+      })
     }
   }, [currentUser.data, setIdentity])
 
@@ -70,7 +75,7 @@ export function useRegister() {
   return useMutation({
     mutationFn: (input: RegisterInput) => registerUser(input),
     onSuccess: (user) => {
-      setIdentity({ id: user.id, email: user.email, name: user.name })
+      setIdentity({ id: user.id, email: user.email, name: user.name, avatarUrl: user.avatarUrl })
     },
   })
 }

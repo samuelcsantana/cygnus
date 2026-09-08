@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { PasswordInput as Input } from './PasswordInput'
 import { Label } from '@/components/ui/label'
 import { ApiError } from '@/lib/http-client'
 import { fieldErrorKey } from '@/shared/utils/zod-error'
@@ -38,7 +38,10 @@ export function ChangePasswordForm() {
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      await updateProfile.mutateAsync({ password: values.newPassword, currentPassword: values.currentPassword })
+      await updateProfile.mutateAsync({
+        password: values.newPassword,
+        currentPassword: values.currentPassword,
+      })
       reset()
       // Fecha ao salvar: a tarefa acabou, e deixar os campos abertos e vazios sugere que não.
       setIsOpen(false)
@@ -49,6 +52,7 @@ export function ChangePasswordForm() {
   })
 
   function close() {
+    if (isSubmitting) return
     reset()
     updateProfile.reset()
     setIsOpen(false)
@@ -79,9 +83,12 @@ export function ChangePasswordForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-6" noValidate>
       <div>
-        <Label htmlFor="change-password-current">{t('profile.password.currentPasswordLabel')}</Label>
+        <Label htmlFor="change-password-current">
+          {t('profile.password.currentPasswordLabel')}
+        </Label>
         <Input
           id="change-password-current"
+          disabled={isSubmitting}
           type="password"
           autoComplete="current-password"
           aria-invalid={!!errors.currentPassword}
@@ -100,6 +107,7 @@ export function ChangePasswordForm() {
         <Label htmlFor="change-password-new">{t('profile.password.newPasswordLabel')}</Label>
         <Input
           id="change-password-new"
+          disabled={isSubmitting}
           type="password"
           autoComplete="new-password"
           aria-invalid={!!errors.newPassword}
@@ -115,13 +123,18 @@ export function ChangePasswordForm() {
       </div>
 
       <div>
-        <Label htmlFor="change-password-confirm">{t('profile.password.confirmNewPasswordLabel')}</Label>
+        <Label htmlFor="change-password-confirm">
+          {t('profile.password.confirmNewPasswordLabel')}
+        </Label>
         <Input
           id="change-password-confirm"
+          disabled={isSubmitting}
           type="password"
           autoComplete="new-password"
           aria-invalid={!!errors.confirmNewPassword}
-          aria-describedby={confirmNewPasswordErrorKey ? 'change-password-confirm-error' : undefined}
+          aria-describedby={
+            confirmNewPasswordErrorKey ? 'change-password-confirm-error' : undefined
+          }
           className="mt-2"
           {...register('confirmNewPassword')}
         />
@@ -142,7 +155,8 @@ export function ChangePasswordForm() {
         <button
           type="button"
           onClick={close}
-          className="px-2 py-2 text-sm font-bold text-ink-muted transition-colors hover:text-ink"
+          disabled={isSubmitting}
+          className="min-h-11 px-3 py-2 text-sm font-bold text-ink-muted transition-colors hover:text-ink"
         >
           {t('common.cancel')}
         </button>

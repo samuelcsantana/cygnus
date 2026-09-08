@@ -50,7 +50,9 @@ describe('ChangePasswordForm', () => {
   })
 
   it('shows an incorrect-current-password message on a 400 response', async () => {
-    server.use(http.patch(`${config.apiBaseUrl}/users/me`, () => HttpResponse.json(null, { status: 400 })))
+    server.use(
+      http.patch(`${config.apiBaseUrl}/users/me`, () => HttpResponse.json(null, { status: 400 })),
+    )
 
     const user = userEvent.setup()
     renderWithProviders(<ChangePasswordForm />)
@@ -96,4 +98,32 @@ describe('ChangePasswordForm', () => {
     await open(user)
     expect(screen.getByLabelText('Senha atual')).toHaveValue('')
   })
+})
+
+it('reveals passwords and blocks cancellation and editing during submission', async () => {
+  let release!: () => void
+  const gate = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  server.use(
+    http.patch(`${config.apiBaseUrl}/users/me`, async () => {
+      await gate
+      return new HttpResponse(null, { status: 500 })
+    }),
+  )
+  const user = userEvent.setup()
+  renderWithProviders(<ChangePasswordForm />)
+  await open(user)
+  await user.type(screen.getByLabelText('Senha atual'), 'current-Password1')
+  await user.type(screen.getByLabelText('Nova senha'), 'new-Password1')
+  await user.type(screen.getByLabelText('Confirmar nova senha'), 'new-Password1')
+  await user.click(screen.getAllByRole('button', { name: 'Mostrar senha' })[0]!)
+  expect(screen.getByLabelText('Senha atual')).toHaveAttribute('type', 'text')
+  await user.click(screen.getByRole('button', { name: 'Atualizar Senha' }))
+  try {
+    expect(screen.getByRole('button', { name: 'Cancelar' })).toBeDisabled()
+    expect(screen.getByLabelText('Nova senha')).toBeDisabled()
+  } finally {
+    release()
+  }
 })

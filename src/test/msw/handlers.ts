@@ -9,6 +9,7 @@ const api = (path: string) => `${config.apiBaseUrl}${path}`
  * Individual tests override the endpoint they care about via `server.use()`.
  */
 export const handlers = [
+  http.get(api('/babies/:babyId/appointments'), () => HttpResponse.json([])),
   http.get(api('/babies'), () => HttpResponse.json([])),
   http.get(api('/notifications'), () => HttpResponse.json([])),
   http.get(api('/specialties'), () => HttpResponse.json(['Pediatria', 'Cardiologia Pediátrica', 'Odontopediatria'])),

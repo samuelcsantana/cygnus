@@ -1,4 +1,7 @@
 import { z } from 'zod'
+import { todayDateString } from '@/lib/date'
+
+export const vaccineApplicationDateSchema = z.string().date().refine(value => value <= todayDateString(), { message: 'vaccines.editor.dateError' })
 
 export const vaccineStatusSchema = z.enum(['PENDING', 'APPLIED', 'DELAYED', 'GUIDANCE'])
 export type VaccineStatus = z.infer<typeof vaccineStatusSchema>
@@ -71,10 +74,7 @@ export const vaccineCalendarSchema = z.object({
 export type VaccineCalendar = z.infer<typeof vaccineCalendarSchema>
 
 export const applyVaccineSchema = z.object({
-  applicationDate: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/)
-    .optional(),
+  applicationDate: vaccineApplicationDateSchema.optional(),
   ...applicationDetailsShape,
 })
 export type ApplyVaccineInput = z.infer<typeof applyVaccineSchema>
@@ -83,7 +83,7 @@ export const createAdhocVaccineSchema = z.object({
   source: adhocSourceSchema,
   customName: z.string().trim().min(1),
   customDose: z.string().trim().optional(),
-  applicationDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  applicationDate: vaccineApplicationDateSchema,
   ...applicationDetailsShape,
 })
 export type CreateAdhocVaccineInput = z.infer<typeof createAdhocVaccineSchema>

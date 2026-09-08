@@ -17,23 +17,13 @@ const sampleUser: User = {
 }
 
 describe('ProfileForm', () => {
-  /**
-   * A senha atual só é exigida pelo backend quando o e-mail muda, e agora só aparece nesse caso.
-   * Pedi-la para salvar o nome era pedido sem motivo — e campo de senha sem motivo é como se
-   * aprende a digitar senha sem perguntar por quê.
-   */
-  it('só pede a senha atual depois que o e-mail muda', async () => {
-    const user = userEvent.setup()
+  it('keeps email read-only and does not request a password', async () => {
     renderWithProviders(<ProfileForm user={sampleUser} />)
-
+    const input = screen.getByLabelText('E-mail')
+    expect(input).toHaveAttribute('readonly')
+    await userEvent.type(input, 'other@example.com')
+    expect(input).toHaveValue(sampleUser.email)
     expect(screen.queryByLabelText('Senha atual')).not.toBeInTheDocument()
-
-    await user.clear(screen.getByLabelText('E-mail'))
-    await user.type(screen.getByLabelText('E-mail'), 'outro@example.com')
-
-    await waitFor(() => {
-      expect(screen.getByLabelText('Senha atual')).toBeInTheDocument()
-    })
   })
 
   it('saves a name-only change without sending currentPassword', async () => {
@@ -54,43 +44,41 @@ describe('ProfileForm', () => {
     await user.click(screen.getByRole('button', { name: 'Salvar Alterações' }))
 
     await waitFor(() => {
-      expect(receivedBody).toEqual({ name: 'Jane Smith', email: undefined, currentPassword: undefined })
+      expect(receivedBody).toEqual({ name: 'Jane Smith' })
     })
   })
 
-  it('rejects an email change without a current password, without calling the API', async () => {
-    let callCount = 0
+  it('shows a generic error banner when the server rejects the update', async () => {
     server.use(
-      http.patch(`${config.apiBaseUrl}/users/me`, () => {
-        callCount += 1
-        return HttpResponse.json(sampleUser)
-      }),
+      http.patch(`${config.apiBaseUrl}/users/me`, () => HttpResponse.json(null, { status: 500 })),
     )
 
     const user = userEvent.setup()
     renderWithProviders(<ProfileForm user={sampleUser} />)
 
-    const emailInput = screen.getByLabelText('E-mail')
-    await user.clear(emailInput)
-    await user.type(emailInput, 'new@example.com')
-    await user.click(screen.getByRole('button', { name: 'Salvar Alterações' }))
-
-    await waitFor(() => {
-      expect(screen.getByText('Informe sua senha atual para alterar o e-mail.')).toBeInTheDocument()
-    })
-    expect(callCount).toBe(0)
-  })
-
-  it('shows a generic error banner when the server rejects the update', async () => {
-    server.use(http.patch(`${config.apiBaseUrl}/users/me`, () => HttpResponse.json(null, { status: 500 })))
-
-    const user = userEvent.setup()
-    renderWithProviders(<ProfileForm user={sampleUser} />)
-
+    await user.type(screen.getByLabelText('Nome completo'), ' Updated')
     await user.click(screen.getByRole('button', { name: 'Salvar Alterações' }))
 
     await waitFor(() => {
       expect(screen.getByText('Não foi possível salvar. Tente novamente.')).toBeInTheDocument()
     })
   })
+})
+
+it('removes a saved photo and enables saving only after a change', async () => {
+  let body: unknown
+  server.use(
+    http.patch(`${config.apiBaseUrl}/users/me`, async ({ request }) => {
+      body = await request.json()
+      return HttpResponse.json({ ...sampleUser, avatarUrl: null })
+    }),
+  )
+  const user = userEvent.setup()
+  renderWithProviders(
+    <ProfileForm user={{ ...sampleUser, avatarUrl: 'data:image/jpeg;base64,/9j/AA==' }} />,
+  )
+  expect(screen.getByRole('button', { name: 'Salvar Alterações' })).toBeDisabled()
+  await user.click(screen.getByRole('button', { name: 'Remover foto' }))
+  await user.click(screen.getByRole('button', { name: 'Salvar Alterações' }))
+  await waitFor(() => expect(body).toEqual({ name: sampleUser.name, avatarUrl: null }))
 })

@@ -1,3 +1,6 @@
+import { useQueryClient } from '@tanstack/react-query'
+import { useSearchDestinationStore } from '@/shared/stores/searchDestination.store'
+import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
@@ -6,7 +9,10 @@ import { useBabies } from '@/features/babies/api/babies.hooks'
 import { useAllBabiesMedications } from '@/features/medications/api/medications.hooks'
 import { useAllBabiesMilestones } from '@/features/milestones/api/milestones.hooks'
 import { useSpecialists } from '@/features/specialists/api/specialists.hooks'
-import { useAllBabiesVaccineCalendars } from '@/features/vaccines/api/vaccines.hooks'
+import {
+  useAllBabiesAdhocVaccines,
+  useAllBabiesVaccineCalendars,
+} from '@/features/vaccines/api/vaccines.hooks'
 import { DashboardIcon } from '@/shared/icons/dashboard-icon'
 import { HeartIcon } from '@/shared/icons/heart-icon'
 import { SparkleIcon } from '@/shared/icons/sparkle-icon'
@@ -14,18 +20,25 @@ import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { UsersIcon } from '@/shared/icons/users-icon'
 
-import { groupByDomain, MIN_QUERY_LENGTH, normalise, search, type SearchDomain } from '../search'
+import {
+  groupByDomain,
+  MIN_QUERY_LENGTH,
+  normalise,
+  search,
+  type SearchDomain,
+  type SearchResult,
+} from '../search'
 
-/**
- * Rows shown per section before the list defers to the section itself.
- *
- * A household with three children matches the same word across a hundred
- * calendar doses, and a dialog that renders all of them is neither readable nor
- * cheap. Eight is what fits above the fold beside a second section's heading,
- * which is the thing worth seeing: that the word also matched somewhere else.
- */
-const PER_DOMAIN_LIMIT = 8
+const PER_DOMAIN_LIMIT = 5
 
+const DOMAIN_TONE: Record<SearchDomain, string> = {
+  babies: 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300',
+  vaccines: 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300',
+  appointments: 'bg-violet-50 text-violet-800 dark:bg-violet-950/40 dark:text-violet-300',
+  specialists: 'bg-teal-50 text-teal-800 dark:bg-teal-950/40 dark:text-teal-300',
+  medications: 'bg-sky-50 text-sky-800 dark:bg-sky-950/40 dark:text-sky-300',
+  milestones: 'bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300',
+}
 const DOMAIN_ICON: Record<SearchDomain, typeof SyringeIcon> = {
   babies: DashboardIcon,
   vaccines: SyringeIcon,
@@ -45,147 +58,195 @@ const DOMAIN_LABEL: Record<SearchDomain, string> = {
   milestones: 'nav.milestones',
 }
 
-interface SearchResultsListProps {
+export function SearchResultsList({
+  query,
+  scope = null,
+  onExpandScope,
+  onNavigate,
+}: {
   query: string
+  scope?: string | null
+  onExpandScope?: () => void
   onNavigate: () => void
-}
-
-/**
- * The results, and the six queries behind them.
- *
- * **This component is mounted only while the dialog is open**, which is the
- * whole strategy: the hooks it calls are the same aggregate hooks the pages use,
- * with no `enabled` flag to pass, so mounting it in the shell would fetch every
- * child's vaccines, appointments, medications and milestones on every page of
- * the app. Mounted on open, the cost is one fetch per domain the first time
- * someone searches, and cache afterwards.
- *
- * Searching what is already loaded is also a safety property, not only a
- * performance one: there is no search endpoint, and adding one would be a second
- * implementation of every domain's visibility rules — the class of bug that
- * shows one family another family's data. A result here can only be something
- * the reader could have reached by walking the app.
- */
-export function SearchResultsList({ query, onNavigate }: SearchResultsListProps) {
-  const { t } = useTranslation()
+}) {
+  const { t, i18n } = useTranslation()
+  const client = useQueryClient()
   const babies = useBabies()
   const vaccines = useAllBabiesVaccineCalendars()
+  const adhoc = useAllBabiesAdhocVaccines(scope ? [scope] : undefined)
   const appointments = useAllBabiesAppointments()
   const medications = useAllBabiesMedications()
   const milestones = useAllBabiesMilestones()
   const specialists = useSpecialists()
-
+  const entries = [
+    ...vaccines.perBaby,
+    ...appointments.perBaby,
+    ...medications.perBaby,
+    ...milestones.perBaby,
+  ].filter((entry) => !scope || entry.baby.id === scope)
   const isPending =
     babies.isPending ||
-    vaccines.isPending ||
-    appointments.isPending ||
-    medications.isPending ||
-    milestones.isPending ||
-    specialists.isPending
-
-  // Any one of the six failing means the search saw less than the account holds.
+    entries.some((entry) => entry.isPending) ||
+    specialists.isPending ||
+    adhoc.isPending
   const isError =
-    babies.isError ||
-    vaccines.isError ||
-    appointments.isError ||
-    medications.isError ||
-    milestones.isError ||
-    specialists.isError
-
-  // Not memoised, and that is the honest version: every one of these inputs is a
-  // fresh array on every render — the aggregate hooks build `perBaby` with
-  // `babyList.map(...)` each time they run — so a `useMemo` over them recomputes
-  // on every render anyway. It would read like a performance guarantee and be
-  // decoration. The work it saves is a substring scan over a few hundred rows,
-  // which is microseconds; the memo would cost a reader the assumption that
-  // something here is expensive.
+    babies.isError || entries.some((entry) => entry.isError) || specialists.isError || adhoc.isError
+  const scoped = <T extends { baby: { id: string } }>(values: T[]) =>
+    values.filter((entry) => !scope || entry.baby.id === scope)
   const groups = groupByDomain(
     search({
       query,
-      babies: babies.data ?? [],
-      vaccines: vaccines.perBaby.map((entry) => ({ baby: entry.baby, items: entry.items })),
-      appointments: appointments.perBaby.map((entry) => ({ baby: entry.baby, items: entry.items })),
-      medications: medications.perBaby.map((entry) => ({ baby: entry.baby, items: entry.items })),
-      milestones: milestones.perBaby.map((entry) => ({ baby: entry.baby, items: entry.items })),
-      specialists: specialists.data ?? [],
+      locale: i18n.language,
+      doseLabel: t('search.ui.dose'),
+      babies: (babies.data ?? []).filter((baby) => !scope || baby.id === scope),
+      vaccines: scoped(vaccines.perBaby),
+      appointments: scoped(appointments.perBaby),
+      medications: scoped(medications.perBaby),
+      milestones: scoped(milestones.perBaby),
+      adhoc: adhoc.items,
+      specialists: (specialists.data ?? []).filter(
+        (item) => !scope || item.babyIds.includes(scope),
+      ),
     }),
   )
-
-  if (normalise(query).length < MIN_QUERY_LENGTH) {
-    return <p className="px-4 py-10 text-center text-sm text-ink-faint">{t('search.hint')}</p>
+  const go = (results: SearchResult[], child: string | null) => {
+    useSelectedBabyStore.getState().select(child)
+    useSearchDestinationStore
+      .getState()
+      .set({ path: results[0]!.to, keys: results.map((item) => item.key), query, babyId: child })
+    onNavigate()
   }
-
-  // Pending is checked *after* the query length, so an empty field never shows a
-  // spinner for six requests nobody asked for yet.
-  if (isPending) {
-    return <p className="px-4 py-10 text-center text-sm text-ink-faint">{t('search.loading')}</p>
-  }
-
-  // Said before "nothing found", never instead of it. A list that failed to load
-  // matches nothing, so the honest-looking sentence — "nada encontrado para
-  // fernanda" — is a lie about data that is sitting there. This was found by a
-  // test whose fixture broke one response's parse: the dialog reported an empty
-  // search with a straight face.
-  if (isError && groups.length === 0) {
-    return <p className="px-4 py-10 text-center text-sm text-ink-muted">{t('search.error')}</p>
-  }
-
-  if (groups.length === 0) {
-    return <p className="px-4 py-10 text-center text-sm text-ink-muted">{t('search.noResults', { query })}</p>
-  }
-
+  const retry = () =>
+    void client.refetchQueries({
+      predicate: (entry) =>
+        entry.state.status === 'error' &&
+        ['babies', 'specialists'].includes(String(entry.queryKey[0])),
+      type: 'active',
+    })
+  const count = groups.reduce((sum, group) => sum + group.results.length, 0)
   return (
-    // Its own scroller with a ceiling: a search for "a" — well, for two letters
-    // that match everything — must not grow the dialog past the viewport, which
-    // on a phone would put the field itself off screen.
-    <div className="max-h-[60vh] overflow-y-auto">
-      {groups.map((group) => {
-        const Icon = DOMAIN_ICON[group.domain]
-
-        return (
-          <section key={group.domain} className="border-b border-border last:border-0">
-            <h3 className="px-4 pt-4 pb-2 text-[11px] font-bold tracking-wide text-ink-faint uppercase">
-              {t(DOMAIN_LABEL[group.domain])}
-            </h3>
-            <ul>
-              {group.results.slice(0, PER_DOMAIN_LIMIT).map((result) => (
-                <li key={result.key}>
-                  <Link
-                    to={result.to}
-                    onClick={onNavigate}
-                    className="flex min-h-11 items-center gap-3 px-4 py-2 transition-colors hover:bg-muted"
-                  >
-                    <Icon className="h-4 w-4 flex-shrink-0 text-ink-faint" />
-                    <span className="min-w-0">
-                      <span className="block truncate text-sm font-semibold text-ink">{result.title}</span>
-                      {result.subtitle && (
-                        <span className="block truncate text-xs text-ink-muted">{result.subtitle}</span>
-                      )}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            {group.results.length > PER_DOMAIN_LIMIT && (
-              <Link
-                to={group.results[0]!.to}
-                onClick={onNavigate}
-                className="flex min-h-11 items-center px-4 py-2 text-xs font-semibold text-primary hover:underline"
+    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-2 sm:p-3">
+      {normalise(query).length < MIN_QUERY_LENGTH ? (
+        <div className="px-4 py-10 text-center">
+          <p className="font-semibold text-ink">{t('search.ui.start')}</p>
+          <p className="mt-2 text-sm text-ink-muted">{t('search.hint')}</p>
+          <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-ink-muted">
+            {t('search.ui.examples')}
+          </p>
+        </div>
+      ) : (
+        <>
+          <div role="status" aria-live="polite" className="px-3 py-2 text-xs text-ink-muted">
+            {t('search.ui.results', { count })}
+            {isPending && ` · ${t('search.loading')}`}
+          </div>
+          {isError && (
+            <div role="alert" className="mx-2 mb-3 rounded-xl bg-muted px-3 py-2">
+              <p className="text-sm text-ink-muted">
+                {t(count ? 'search.partialError' : 'search.error')}
+              </p>
+              <button
+                type="button"
+                onClick={retry}
+                className="min-h-11 text-sm font-semibold text-primary"
               >
-                {t('search.more', {
-                  count: group.results.length - PER_DOMAIN_LIMIT,
-                  section: t(DOMAIN_LABEL[group.domain]),
-                })}
-              </Link>
-            )}
-          </section>
-        )
-      })}
-
-      {/* Results *and* a failure: what is listed is real, and there may be more
-          that was never read. Saying nothing here would present a partial answer
-          as a complete one. */}
-      {isError && <p className="px-4 py-3 text-xs text-ink-faint">{t('search.partialError')}</p>}
+                {t('nav.shell.retry')}
+              </button>
+            </div>
+          )}
+          {!count && !isPending && !isError && (
+            <div className="px-4 py-8 text-center">
+              <p className="break-words text-sm text-ink-muted">
+                {t('search.noResults', { query })}
+              </p>
+              {scope && (
+                <button
+                  type="button"
+                  onClick={onExpandScope}
+                  className="mt-3 min-h-11 rounded-xl px-4 font-semibold text-primary hover:bg-muted"
+                >
+                  {t('search.ui.expand')}
+                </button>
+              )}
+            </div>
+          )}
+          {groups.map((group) => {
+            const Icon = DOMAIN_ICON[group.domain]
+            return (
+              <section key={group.domain} className="mb-3 last:mb-0">
+                <h3 className="flex items-center justify-between px-3 py-2 text-xs font-bold text-ink-muted">
+                  <span>{t(DOMAIN_LABEL[group.domain])}</span>
+                  <span>{group.results.length}</span>
+                </h3>
+                <ul>
+                  {group.results.slice(0, PER_DOMAIN_LIMIT).map((result) => (
+                    <li key={result.key}>
+                      <Link
+                        data-search-result
+                        to={result.to}
+                        onClick={(event) => {
+                          if (
+                            !event.ctrlKey &&
+                            !event.metaKey &&
+                            !event.shiftKey &&
+                            !event.altKey &&
+                            event.button === 0
+                          )
+                            go([result], result.babyId ?? scope)
+                        }}
+                        className="flex min-h-16 items-start gap-3 rounded-xl px-3 py-3 hover:bg-muted focus-visible:bg-muted focus-visible:outline-2 focus-visible:outline-primary"
+                      >
+                        <span
+                          className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${DOMAIN_TONE[group.domain]}`}
+                        >
+                          <Icon className="size-4" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block break-words text-sm font-semibold text-ink">
+                            {result.title}
+                          </span>
+                          {result.subtitle && (
+                            <span className="mt-0.5 block break-words text-xs text-ink-muted">
+                              {result.subtitle}
+                            </span>
+                          )}
+                          {result.detail && (
+                            <span className="mt-1 block text-xs text-ink-muted">
+                              {result.detail}
+                            </span>
+                          )}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                {group.results.length > PER_DOMAIN_LIMIT && (
+                  <Link
+                    data-search-result
+                    to={group.results[0]!.to}
+                    onClick={(event) => {
+                      if (
+                        !event.ctrlKey &&
+                        !event.metaKey &&
+                        !event.shiftKey &&
+                        !event.altKey &&
+                        event.button === 0
+                      )
+                        go(group.results, scope)
+                    }}
+                    className="mx-3 flex min-h-11 items-center text-sm font-semibold text-primary hover:underline focus-visible:outline-2"
+                  >
+                    {t('search.ui.more', {
+                      count: group.results.length,
+                      section: t(DOMAIN_LABEL[group.domain]),
+                    })}
+                  </Link>
+                )}
+              </section>
+            )
+          })}
+        </>
+      )}
     </div>
   )
 }

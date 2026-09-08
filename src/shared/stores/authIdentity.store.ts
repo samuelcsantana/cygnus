@@ -9,6 +9,7 @@ import { create } from 'zustand'
  * (name can be briefly null) rather than assume it's always populated.
  */
 interface AuthIdentity {
+  avatarUrl?: string | null
   id: string | null
   email: string
   name: string | null

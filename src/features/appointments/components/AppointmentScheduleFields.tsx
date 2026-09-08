@@ -15,9 +15,15 @@ interface AppointmentScheduleFieldsProps {
   register: UseFormRegister<AppointmentFormInput>
   control: Control<AppointmentFormInput>
   errors: FieldErrors<AppointmentFormInput>
+  hideIntent?: boolean
 }
 
-export function AppointmentScheduleFields({ register, control, errors }: AppointmentScheduleFieldsProps) {
+export function AppointmentScheduleFields({
+  register,
+  control,
+  errors,
+  hideIntent,
+}: AppointmentScheduleFieldsProps) {
   const { t } = useTranslation()
   const dateErrorKey = fieldErrorKey(errors.date)
   const timeErrorKey = fieldErrorKey(errors.time)
@@ -31,43 +37,46 @@ export function AppointmentScheduleFields({ register, control, errors }: Appoint
           Asked rather than inferred. Reading a past date as "they must have
           meant to record it" would silently reinterpret the exact typo the
           scheduling rule exists to catch. */}
-      <div>
-        <Label htmlFor="appointment-intent">{t('appointments.form.intentLabel')}</Label>
-        <Controller
-          control={control}
-          name="status"
-          render={({ field }) => (
-            <SelectorCardGroup
-              name="appointment-intent"
-              value={field.value}
-              onValueChange={field.onChange}
-              className="mt-2 grid-cols-1 sm:grid-cols-2"
-              options={[
-                {
-                  value: 'SCHEDULED',
-                  label: t('appointments.form.intentScheduled'),
-                  description: t('appointments.form.intentScheduledHint'),
-                  media: (
-                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300">
-                      <CalendarIcon className="h-5 w-5" />
-                    </span>
-                  ),
-                },
-                {
-                  value: 'COMPLETED',
-                  label: t('appointments.form.intentCompleted'),
-                  description: t('appointments.form.intentCompletedHint'),
-                  media: (
-                    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
-                      <CheckIcon className="h-5 w-5" />
-                    </span>
-                  ),
-                },
-              ]}
-            />
-          )}
-        />
-      </div>
+      {!hideIntent && (
+        <div>
+          <Label id="appointment-intent-label">{t('appointments.form.intentLabel')}</Label>
+          <Controller
+            control={control}
+            name="status"
+            render={({ field }) => (
+              <SelectorCardGroup
+                name="appointment-intent"
+                value={field.value}
+                onValueChange={field.onChange}
+                layout="vertical"
+                className="mt-2 [&>label]:p-3"
+                options={[
+                  {
+                    value: 'SCHEDULED',
+                    label: t('appointments.form.intentScheduled'),
+                    description: t('appointments.form.intentScheduledHint'),
+                    media: (
+                      <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300">
+                        <CalendarIcon className="h-5 w-5" />
+                      </span>
+                    ),
+                  },
+                  {
+                    value: 'COMPLETED',
+                    label: t('appointments.form.intentCompleted'),
+                    description: t('appointments.form.intentCompletedHint'),
+                    media: (
+                      <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
+                        <CheckIcon className="h-5 w-5" />
+                      </span>
+                    ),
+                  },
+                ]}
+              />
+            )}
+          />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div>
@@ -80,6 +89,8 @@ export function AppointmentScheduleFields({ register, control, errors }: Appoint
                 id="date"
                 value={field.value}
                 onValueChange={field.onChange}
+                ref={field.ref}
+                onBlur={field.onBlur}
                 aria-invalid={!!errors.date}
                 aria-describedby={dateErrorKey ? 'date-error' : undefined}
                 className="mt-2"

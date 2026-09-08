@@ -41,7 +41,9 @@ describe('MedicationsRoute', () => {
    */
   it('diz que é registro e não orientação, antes de qualquer dose aparecer', async () => {
     server.use(
-      http.get(`${config.apiBaseUrl}/babies/:babyId/medications`, () => HttpResponse.json([medication()])),
+      http.get(`${config.apiBaseUrl}/babies/:babyId/medications`, () =>
+        HttpResponse.json([medication()]),
+      ),
     )
 
     renderWithProviders(<MedicationsRoute />)
@@ -53,18 +55,20 @@ describe('MedicationsRoute', () => {
   })
 
   /**
-   * "Sem fim registrado" e não "em uso": o app sabe o que alguém escreveu, não o que a criança está
+   * "Sem fim definido" e não "em uso": o app sabe o que alguém escreveu, não o que a criança está
    * tomando hoje. O rótulo mais fraco é o único verdadeiro.
    */
   it('rotula o curso aberto pelo que o registro sabe, não pelo que ele sugere', async () => {
     server.use(
-      http.get(`${config.apiBaseUrl}/babies/:babyId/medications`, () => HttpResponse.json([medication()])),
+      http.get(`${config.apiBaseUrl}/babies/:babyId/medications`, () =>
+        HttpResponse.json([medication()]),
+      ),
     )
 
     renderWithProviders(<MedicationsRoute />)
 
     await waitFor(() => {
-      expect(screen.getByText('Sem fim registrado')).toBeInTheDocument()
+      expect(screen.getAllByText('Sem fim definido')).toHaveLength(2)
     })
     expect(screen.queryByText('Em uso')).not.toBeInTheDocument()
   })
@@ -103,21 +107,27 @@ describe('MedicationsRoute', () => {
   it('encerra um curso com a data de hoje', async () => {
     let receivedBody: Record<string, unknown> = {}
     server.use(
-      http.get(`${config.apiBaseUrl}/babies/:babyId/medications`, () => HttpResponse.json([medication()])),
-      http.patch(`${config.apiBaseUrl}/babies/:babyId/medications/:medicationId`, async ({ request }) => {
-        receivedBody = (await request.json()) as Record<string, unknown>
-        return HttpResponse.json(medication({ endedOn: '2026-09-04' }))
-      }),
+      http.get(`${config.apiBaseUrl}/babies/:babyId/medications`, () =>
+        HttpResponse.json([medication()]),
+      ),
+      http.patch(
+        `${config.apiBaseUrl}/babies/:babyId/medications/:medicationId`,
+        async ({ request }) => {
+          receivedBody = (await request.json()) as Record<string, unknown>
+          return HttpResponse.json(medication({ endedOn: '2026-09-04' }))
+        },
+      ),
     )
 
     const user = userEvent.setup()
     renderWithProviders(<MedicationsRoute />)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Encerrar' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Registrar término' })).toBeInTheDocument()
     })
 
-    await user.click(screen.getByRole('button', { name: 'Encerrar' }))
+    await user.click(screen.getByRole('button', { name: 'Registrar término' }))
+    await user.click(screen.getByRole('button', { name: 'Confirmar término hoje' }))
 
     await waitFor(() => {
       // Só `endedOn` no corpo: encerrar não pode tocar em mais nada do registro.
@@ -137,6 +147,6 @@ describe('MedicationsRoute', () => {
     await waitFor(() => {
       expect(screen.getByText('Encerrado')).toBeInTheDocument()
     })
-    expect(screen.queryByRole('button', { name: 'Encerrar' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Registrar término' })).not.toBeInTheDocument()
   })
 })

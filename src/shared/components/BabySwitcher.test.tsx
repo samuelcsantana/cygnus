@@ -7,8 +7,16 @@ import { renderWithProviders, screen } from '@/test/test-utils'
 import { useSelectedBabyStore } from '../stores/selectedBaby.store'
 import { BabySwitcher } from './BabySwitcher'
 
-const ana = buildBaby({ id: '11111111-1111-4111-8111-111111111111', name: 'Ana', birthDate: '2026-01-10' })
-const bento = buildBaby({ id: '22222222-2222-4222-8222-222222222222', name: 'Bento', birthDate: '2021-03-02' })
+const ana = buildBaby({
+  id: '11111111-1111-4111-8111-111111111111',
+  name: 'Ana',
+  birthDate: '2026-01-10',
+})
+const bento = buildBaby({
+  id: '22222222-2222-4222-8222-222222222222',
+  name: 'Bento',
+  birthDate: '2021-03-02',
+})
 
 function renderSwitcher() {
   const select = useSelectedBabyStore.getState().select
@@ -29,15 +37,15 @@ describe('BabySwitcher', () => {
   it('anuncia qual criança está escolhida, não só a pinta', () => {
     renderSwitcher()
 
-    expect(screen.getByRole('radio', { name: 'Todas as crianças' })).toBeChecked()
-    expect(screen.getByRole('radio', { name: /Ana/ })).not.toBeChecked()
+    expect(screen.getByRole('menuitemradio', { name: 'Todas as crianças' })).toBeChecked()
+    expect(screen.getByRole('menuitemradio', { name: /Ana/ })).not.toBeChecked()
   })
 
   it('escolhe a criança clicada e guarda a escolha fora da tela', async () => {
     const user = userEvent.setup()
     renderSwitcher()
 
-    await user.click(screen.getByRole('radio', { name: /Ana/ }))
+    await user.click(screen.getByRole('menuitemradio', { name: /Ana/ }))
 
     // O store é o que as seis telas leem; sem isto a escolha morreria no menu.
     expect(useSelectedBabyStore.getState().selectedBabyId).toBe(ana.id)
@@ -47,8 +55,8 @@ describe('BabySwitcher', () => {
     renderSwitcher()
 
     // Ana nasceu em 2026 e Bento em 2021: meses para uma, anos para o outro.
-    expect(screen.getByRole('radio', { name: /Ana/ })).toHaveTextContent(/mês|meses|anos/)
-    expect(screen.getByRole('radio', { name: /Bento/ })).toHaveTextContent(/anos/)
+    expect(screen.getByRole('menuitemradio', { name: /Ana/ })).toHaveTextContent(/mês|meses|anos/)
+    expect(screen.getByRole('menuitemradio', { name: /Bento/ })).toHaveTextContent(/anos/)
   })
 
   it('volta para a família inteira, que é uma escolha e não a ausência de uma', async () => {
@@ -56,7 +64,7 @@ describe('BabySwitcher', () => {
     useSelectedBabyStore.getState().select(bento.id)
     renderSwitcher()
 
-    await user.click(screen.getByRole('radio', { name: 'Todas as crianças' }))
+    await user.click(screen.getByRole('menuitemradio', { name: 'Todas as crianças' }))
 
     expect(useSelectedBabyStore.getState().selectedBabyId).toBeNull()
   })

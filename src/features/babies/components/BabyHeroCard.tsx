@@ -13,6 +13,7 @@ import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarCol
 import { formatCentimeters, formatKilograms } from '@/shared/utils/measurements'
 
 export interface BabyHeroCardProps {
+  compact?: boolean
   baby: Baby
   delayedVaccineCount: number
   /**
@@ -34,7 +35,7 @@ export interface BabyHeroCardProps {
    * nem uma requisição. Vem com a data de propósito — número de crescimento sem data é o defeito
    * que guardar a medida no perfil teria criado: um peso de oito meses atrás lido como o de hoje.
    */
-  latestMeasuredVisit: Appointment | null
+  latestMeasuredVisit: Pick<Appointment, 'scheduledAt' | 'weightGrams' | 'heightMillimeters'> | null
   onEdit: (baby: Baby) => void
 }
 
@@ -66,6 +67,7 @@ export interface BabyHeroCardProps {
  */
 export function BabyHeroCard({
   baby,
+  compact = false,
   delayedVaccineCount,
   vaccineStatusKnown,
   latestMeasuredVisit,
@@ -75,6 +77,45 @@ export function BabyHeroCard({
   const ageLabel = useAgeLabel()
   const avatarAppearance = babyAvatarAppearance(baby.id, baby.avatarColor)
 
+  if (compact)
+    return (
+      <article className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4">
+        <span
+          aria-hidden
+          className={cn(
+            'flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl font-bold',
+            avatarAppearance.className,
+          )}
+          style={avatarAppearance.style}
+        >
+          {baby.avatarUrl ? (
+            <img src={baby.avatarUrl} alt="" className="size-full object-cover" />
+          ) : (
+            babyInitials(baby.name)
+          )}
+        </span>
+        <div className="min-w-0 flex-1">
+          <h2 className="break-words font-display text-lg font-bold text-ink">{baby.name}</h2>
+          <p className="text-sm text-ink-muted">{ageLabel(baby.birthDate)}</p>
+          {baby.allergies.length > 0 && (
+            <p className="mt-1 text-xs text-amber-800 dark:text-amber-200">
+              {t('babies.hero.allergies', {
+                count: baby.allergies.length,
+                list: baby.allergies.join(', '),
+              })}
+            </p>
+          )}
+        </div>
+        <button
+          type="button"
+          aria-label={t('babies.edit.action', { name: baby.name })}
+          onClick={() => onEdit(baby)}
+          className="flex size-11 shrink-0 items-center justify-center rounded-xl text-ink-muted hover:bg-muted"
+        >
+          <PencilIcon className="size-4" />
+        </button>
+      </article>
+    )
   return (
     // O cartão pinta o próprio fundo, então é escuro nos dois temas e as cores
     // abaixo são fixas de propósito — sem variante `dark:`. É o mesmo padrão do
@@ -130,7 +171,9 @@ export function BabyHeroCard({
             {baby.bloodType && (
               <>
                 {' · '}
-                <span className="font-mono">{t('babies.hero.bloodType', { value: baby.bloodType })}</span>
+                <span className="font-mono">
+                  {t('babies.hero.bloodType', { value: baby.bloodType })}
+                </span>
               </>
             )}
           </p>
@@ -150,7 +193,9 @@ export function BabyHeroCard({
               </span>
             </p>
           ) : (
-            <p className="mt-1.5 text-[13px] text-emerald-50">{t('babies.hero.noAllergiesRecorded')}</p>
+            <p className="mt-1.5 text-[13px] text-emerald-50">
+              {t('babies.hero.noAllergiesRecorded')}
+            </p>
           )}
 
           {/* Ao contrário das alergias, esta linha **some** quando não há dado, e a diferença é
@@ -192,7 +237,10 @@ export function BabyHeroCard({
                 <span aria-hidden>· </span>
                 <span className="sr-only">{t('babies.hero.measuredOn')} </span>
                 <span className="font-mono">
-                  {formatDateDisplay(splitScheduledAt(latestMeasuredVisit.scheduledAt).date, i18n.language)}
+                  {formatDateDisplay(
+                    splitScheduledAt(latestMeasuredVisit.scheduledAt).date,
+                    i18n.language,
+                  )}
                 </span>
               </span>
             </p>
@@ -202,7 +250,9 @@ export function BabyHeroCard({
             <p className="mt-1.5 flex items-start gap-1.5 text-[13px] text-emerald-50">
               <IdCardIcon aria-hidden className="mt-0.5 h-3.5 w-3.5 flex-shrink-0" />
               <span className="min-w-0">
-                {baby.healthPlanName && <span>{t('babies.hero.healthPlanName', { value: baby.healthPlanName })}</span>}
+                {baby.healthPlanName && (
+                  <span>{t('babies.hero.healthPlanName', { value: baby.healthPlanName })}</span>
+                )}
                 {baby.healthPlanName && baby.healthPlanNumber && ' · '}
                 {baby.healthPlanNumber && (
                   <>

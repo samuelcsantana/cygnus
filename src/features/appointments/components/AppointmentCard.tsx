@@ -1,181 +1,108 @@
 import { useTranslation } from 'react-i18next'
-
+import { MapPin, ClipboardList } from 'lucide-react'
 import type { Baby } from '@/features/babies/api/babies.schemas'
-import { formatDateDisplay, formatDayMonthParts, splitScheduledAt } from '@/lib/date'
-import { cn } from '@/lib/utils'
-import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
-import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
+import { formatDateDisplay, splitScheduledAt } from '@/lib/date'
 import { formatCentimeters, formatKilograms } from '@/shared/utils/measurements'
-
-import type { Appointment } from '../api/appointments.schemas'
 import { AppointmentStatusBadge } from './AppointmentStatusBadge'
-
-interface AppointmentCardProps {
+import { appointmentGroup } from './appointment-view'
+import type { Appointment } from '../api/appointments.schemas'
+interface Props {
   appointment: Appointment
   baby?: Baby
+  featured?: boolean
   onReschedule: () => void
   onViewDetails: () => void
 }
-
-export function AppointmentCard({ appointment, baby, onReschedule, onViewDetails }: AppointmentCardProps) {
+export function AppointmentCard({
+  appointment,
+  baby,
+  featured = false,
+  onReschedule,
+  onViewDetails,
+}: Props) {
   const { t, i18n } = useTranslation()
   const { date, time } = splitScheduledAt(appointment.scheduledAt)
-  const { day, month } = formatDayMonthParts(date, i18n.language)
-  const isScheduled = appointment.status === 'SCHEDULED'
-  const avatarAppearance = baby ? babyAvatarAppearance(baby.id, baby.avatarColor) : null
-
+  const group = appointmentGroup(appointment, Date.now())
   return (
-    <div
-      className={cn(
-        'rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6',
-        isScheduled ? 'border-[1.5px] border-violet-200' : 'border-[1.5px] border-transparent',
-      )}
+    <article
+      className={`flex min-w-0 flex-col rounded-2xl border p-5 ${featured ? 'border-violet-300 bg-violet-50/60 dark:border-violet-800 dark:bg-violet-950/30 lg:col-span-2' : 'border-border bg-card'}`}
     >
-      <div className="mb-3 flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3.5">
-          {/* Só a consulta agendada troca o avatar pelo bloco de data.
-              Numa lista misturada, a data que importa escanear é a que ainda
-              vai acontecer; numa consulta concluída ela é histórico, e um bloco
-              gritando o dia competiria com as que pedem ação.
-
-              Adaptado da referência `LoginAndDashboardDesign`, que faz o mesmo
-              corte entre "Próximas" e "Histórico" — lá em duas seções, aqui
-              dentro de uma lista só, porque esta é cronológica e mesclada entre
-              as crianças da casa.
-
-              `bg-violet-600`, e não o `violet-500` que é a cor de consultas
-              deste app: branco sobre o 500 mede **4.32:1** e reprova. O 600
-              (stock, o `@theme` não redefine essa parada) dá 5.70:1. */}
-          {isScheduled ? (
-            <span
-              className="flex h-12 w-12 flex-shrink-0 flex-col items-center justify-center rounded-2xl bg-violet-600 text-white"
-              aria-hidden
-            >
-              <span className="font-mono text-lg leading-none">{day}</span>
-              <span className="mt-0.5 text-[10px] leading-none uppercase">{month}</span>
-            </span>
-          ) : baby ? (
-            <span
-              className={cn(
-                'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-base font-black',
-                avatarAppearance?.className,
-              )}
-              style={avatarAppearance?.style}
-              title={baby.name}
-            >
-              {babyInitials(baby.name)}
-            </span>
-          ) : (
-            <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
-              <StethoscopeIcon className="h-5 w-5" />
-            </span>
-          )}
-          <div>
-            <h3 className="text-[15px] font-bold text-ink">{appointment.doctorName}</h3>
-            <p className="flex items-center gap-1.5 text-[13px] text-ink-muted">
-              {/* Com o bloco de data ocupando o lugar do avatar, a criança
-                  perderia sua marca de cor — o que numa lista de várias
-                  crianças é o que se olha primeiro. O ponto colorido devolve
-                  isso sem roubar espaço; o nome ao lado continua sendo quem
-                  informa, então ele é `aria-hidden`. */}
-              {isScheduled && baby && (
-                <span
-                  aria-hidden
-                  className={cn('h-2 w-2 flex-shrink-0 rounded-full', avatarAppearance?.className)}
-                  style={avatarAppearance?.style}
-                />
-              )}
-              {baby?.name}
-              {baby && appointment.specialty && ' · '}
-              {appointment.specialty}
-            </p>
-          </div>
-        </div>
-        <div className="flex-shrink-0 text-right">
-          <AppointmentStatusBadge status={appointment.status} />
-          {/* A data completa continua escrita aqui, inclusive na agendada: o
-              bloco à esquerda é `aria-hidden`, então sem esta linha a data
-              simplesmente não existiria para leitor de tela — e o ano, que o
-              bloco não mostra, não existiria para ninguém. */}
-          <p className="font-mono mt-1 text-xs text-ink-faint">
+      {featured && (
+        <p className="mb-3 text-xs font-bold uppercase tracking-wide text-violet-800 dark:text-violet-200">
+          {t('appointments.page.next')}
+        </p>
+      )}
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="mb-2 font-mono text-sm text-violet-800 dark:text-violet-200">
             {formatDateDisplay(date, i18n.language)} · {time}
           </p>
+          <h3 className="break-words text-lg font-bold text-ink">{appointment.doctorName}</h3>
+          <p className="mt-1 break-words text-sm text-ink-muted">
+            {[baby?.name, appointment.specialty].filter(Boolean).join(' · ')}
+          </p>
         </div>
+        <AppointmentStatusBadge status={appointment.status} />
       </div>
-
-      {/* O que a visita mediu, em etiquetas — o desenho que a referência usa no
-          histórico, e o mais barato: cabe na linha que já existe e não abre
-          seção nova.
-
-          Só aparecem quando há medida, e medida só existe em consulta que
-          aconteceu (a API recusa nas demais). Os números vão em mono porque são
-          dado factual, e o rótulo fica em `sr-only`: para quem vê, o ícone e a
-          unidade já dizem o que é; para quem ouve, "15,8 kg" sozinho não diz. */}
-      {(appointment.weightGrams !== null || appointment.heightMillimeters !== null) && (
-        <div className="mb-2 flex flex-wrap items-center gap-2">
-          {appointment.weightGrams !== null && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-surface px-2.5 py-1 text-xs text-ink-muted">
-              <span aria-hidden>⚖️</span>
-              <span className="sr-only">{t('common.weight')} </span>
-              <span className="font-mono">{formatKilograms(appointment.weightGrams, i18n.language)}</span>
-            </span>
-          )}
-          {appointment.heightMillimeters !== null && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-surface px-2.5 py-1 text-xs text-ink-muted">
-              <span aria-hidden>📏</span>
-              <span className="sr-only">{t('common.height')} </span>
-              <span className="font-mono">{formatCentimeters(appointment.heightMillimeters, i18n.language)}</span>
-            </span>
-          )}
-        </div>
+      {group === 'REVIEW' && (
+        <p className="mt-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+          {t('appointments.page.reviewHint')}
+        </p>
       )}
-
-      {appointment.reason && <p className="mb-1 text-[13px] text-ink-muted">{appointment.reason}</p>}
-      {appointment.location && <p className="mb-1 text-[13px] text-ink-muted">{appointment.location}</p>}
-
+      <dl className="mt-4 space-y-2 text-sm text-ink-muted">
+        {appointment.location && (
+          <div className="flex items-start gap-2">
+            <MapPin aria-hidden className="mt-0.5 size-4 shrink-0" />
+            <dt className="sr-only">{t('appointments.page.location')}</dt>
+            <dd className="break-words">{appointment.location}</dd>
+          </div>
+        )}
+        {appointment.reason && (
+          <div className="flex items-start gap-2">
+            <ClipboardList aria-hidden className="mt-0.5 size-4 shrink-0" />
+            <dt className="sr-only">{t('appointments.page.reason')}</dt>
+            <dd className="break-words">{appointment.reason}</dd>
+          </div>
+        )}
+      </dl>
+      {appointment.status === 'COMPLETED' &&
+        (appointment.weightGrams !== null || appointment.heightMillimeters !== null) && (
+          <p className="mt-3 font-mono text-sm text-ink-muted">
+            {[
+              appointment.weightGrams !== null
+                ? formatKilograms(appointment.weightGrams, i18n.language)
+                : null,
+              appointment.heightMillimeters !== null
+                ? formatCentimeters(appointment.heightMillimeters, i18n.language)
+                : null,
+            ]
+              .filter(Boolean)
+              .join(' · ')}
+          </p>
+        )}
       {appointment.notes && (
-        <div className="mt-3 rounded-[10px] bg-surface px-3.5 py-2.5">
-          <p className="text-[13px] leading-relaxed text-ink-muted">📋 {appointment.notes}</p>
-        </div>
+        <p className="mt-3 line-clamp-2 whitespace-pre-wrap break-words rounded-xl bg-muted/50 p-3 text-sm text-ink-muted">
+          {appointment.notes}
+        </p>
       )}
-
-      {isScheduled ? (
-        <div className="mt-4 flex gap-3">
+      <div className="mt-auto flex flex-wrap justify-end gap-2 pt-5">
+        {appointment.status === 'SCHEDULED' && (
           <button
             type="button"
             onClick={onReschedule}
-            className="flex-1 rounded-xl border-2 border-border py-2.5 text-sm font-bold text-ink-muted transition-colors hover:border-border hover:bg-muted"
+            className="min-h-11 rounded-xl border border-border px-4 py-2 text-sm font-semibold text-ink-muted hover:bg-muted"
           >
             {t('appointments.reschedule.action')}
           </button>
-          <button
-            type="button"
-            onClick={onViewDetails}
-            className="flex-1 rounded-xl bg-violet-50 dark:bg-violet-950/40 py-2.5 text-sm font-bold text-violet-700 dark:text-violet-300 transition-colors hover:bg-violet-100 dark:hover:bg-violet-900/40"
-          >
-            {t('appointments.detail.action')}
-          </button>
-        </div>
-      ) : (
+        )}
         <button
           type="button"
           onClick={onViewDetails}
-          className={cn(
-            'mt-4 w-full rounded-xl py-2.5 text-sm font-bold transition-colors',
-            // Cancelada é neutra, não verde. O DESIGN.md já mapeia
-            // `Appointment CANCELLED` para slate neutro, e o badge no topo do
-            // cartão segue isso — só este botão não seguia, porque o ternário
-            // era binário (agendada ou "todo o resto") e jogava cancelada no
-            // mesmo balde de concluída. Consulta cancelada com botão verde lê
-            // como se estivesse tudo certo com ela.
-            appointment.status === 'CANCELLED'
-              ? 'bg-muted text-ink-muted hover:bg-muted/70'
-              : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/40',
-          )}
+          className="min-h-11 rounded-xl bg-violet-700 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-800"
         >
           {t('appointments.detail.action')}
         </button>
-      )}
-    </div>
+      </div>
+    </article>
   )
 }
