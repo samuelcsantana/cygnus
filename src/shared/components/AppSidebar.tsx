@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 import { cn } from '@/lib/utils'
-import { LogoIcon } from '@/shared/icons/logo-icon'
+import { BrandSignature } from './BrandSignature'
 import { PlusIcon } from '@/shared/icons/plus-icon'
 import { AccountMenu } from './AccountMenu'
 import { SidebarNavItem } from './SidebarNavItem'
@@ -69,12 +69,7 @@ export function AppSidebar({
         onClick={onNavigate}
         className="flex flex-shrink-0 items-center gap-3 px-5 py-4"
       >
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md">
-          <LogoIcon className="h-5 w-5" />
-        </span>
-        <span className="font-display text-xl font-extrabold tracking-tight text-ink">
-          {t('common.appName')}
-        </span>
+        <BrandSignature compact />
       </Link>
 
       <div className="flex-shrink-0 px-3 pb-3">

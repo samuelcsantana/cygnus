@@ -9,7 +9,7 @@ export function WelcomeDashboard({ greetingKey }: { greetingKey: string }) {
       <section className="grid overflow-hidden rounded-3xl border border-border bg-card lg:grid-cols-[1.5fr_1fr]">
         <div className="p-6 sm:p-10 lg:py-14">
           <p className="mb-4 text-sm font-semibold text-primary">{t(greetingKey)}</p>
-          <h1 className="max-w-lg font-display text-3xl font-black leading-tight text-ink sm:text-4xl">
+          <h1 className="max-w-lg font-display text-3xl font-medium leading-tight text-ink sm:text-4xl">
             {t('babies.home.welcome')}
           </h1>
           <p className="mt-4 max-w-lg text-base leading-relaxed text-ink-muted">

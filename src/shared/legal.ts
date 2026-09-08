@@ -30,8 +30,8 @@ export interface LegalDocument {
 }
 
 export const LEGAL_DOCUMENTS: Record<LegalDocumentId, LegalDocument> = {
-  privacy: { id: 'privacy', version: '0.1.0-draft', effectiveFrom: '2026-08-26', status: 'draft', path: '/privacidade' },
-  terms: { id: 'terms', version: '0.1.0-draft', effectiveFrom: '2026-08-26', status: 'draft', path: '/termos' },
+  privacy: { id: 'privacy', version: '1.0.0', effectiveFrom: '2026-09-08', status: 'in-force', path: '/privacidade' },
+  terms: { id: 'terms', version: '1.0.0', effectiveFrom: '2026-09-08', status: 'in-force', path: '/termos' },
 }
 
 /** As categorias de dado que o app realmente manuseia, derivadas dos schemas. */

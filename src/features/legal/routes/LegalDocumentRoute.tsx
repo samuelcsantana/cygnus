@@ -4,26 +4,14 @@ import { Link } from 'react-router-dom'
 import { BINDING_LOCALE, legalContent } from '@/features/legal/content'
 import { AlertCircleIcon } from '@/shared/icons/alert-circle-icon'
 import { LogoIcon } from '@/shared/icons/logo-icon'
-import { DATA_CATEGORIES, LEGAL_DOCUMENTS, type LegalDocumentId } from '@/shared/legal'
+import { LEGAL_DOCUMENTS, type LegalDocumentId } from '@/shared/legal'
 import { formatDateDisplay } from '@/lib/date'
 
 interface LegalDocumentRouteProps {
   documentId: LegalDocumentId
 }
 
-/**
- * Uma rota para os dois documentos: a estrutura é a mesma e só a cópia muda.
- *
- * Pública de propósito — uma política de privacidade que exige login para ser
- * lida não cumpre o que existe para cumprir.
- *
- * **O texto jurídico é placeholder e a página diz isso em cima**, antes de
- * qualquer outra coisa. O que **não** é placeholder é o inventário de dados:
- * aquelas categorias saem dos schemas Zod deste repositório, então descrevem o
- * sistema de verdade. A separação é deliberada — descrever o que o software faz
- * é factual; prometer prazo de retenção e base legal é jurídico, e isso precisa
- * de revisão humana.
- */
+/** Public legal documents retain their draft notice until reviewed and activated. */
 export function LegalDocumentRoute({ documentId }: LegalDocumentRouteProps) {
   const { t, i18n } = useTranslation()
   const doc = LEGAL_DOCUMENTS[documentId]
@@ -46,7 +34,9 @@ export function LegalDocumentRoute({ documentId }: LegalDocumentRouteProps) {
 
       <h1 className="font-display mt-8 text-3xl font-extrabold text-ink">{t(`legal.${documentId}.title`)}</h1>
       <p className="text-ink-muted mt-1 text-sm">
-        {t('legal.versionLine', { version: doc.version, date: formatDateDisplay(doc.effectiveFrom, i18n.language) })}
+        {doc.status === 'draft'
+          ? t('legal.draftVersionLine', { version: doc.version })
+          : t('legal.versionLine', { version: doc.version, date: formatDateDisplay(doc.effectiveFrom, i18n.language) })}
       </p>
 
       {doc.status === 'draft' && (
@@ -62,18 +52,7 @@ export function LegalDocumentRoute({ documentId }: LegalDocumentRouteProps) {
         </div>
       )}
 
-      <section className="mt-8">
-        <h2 className="font-display text-xl font-bold text-ink">{t('legal.inventory.title')}</h2>
-        <p className="text-ink-muted mt-1 text-sm">{t('legal.inventory.intro')}</p>
-        <dl className="mt-4 space-y-3">
-          {DATA_CATEGORIES.map((categoria) => (
-            <div key={categoria} className="rounded-2xl bg-card p-4 shadow-sm">
-              <dt className="font-semibold text-ink">{t(`legal.inventory.categories.${categoria}.label`)}</dt>
-              <dd className="text-ink-muted mt-1 text-sm">{t(`legal.inventory.categories.${categoria}.detail`)}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
+
 
       {/* O documento em si. O texto vem de `features/legal/content`, não das
           chaves de i18n: ele é artefato versionado, e a substituição pela versão

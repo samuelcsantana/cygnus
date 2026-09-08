@@ -3,6 +3,7 @@
 @import 'shadcn/tailwind.css';
 @import '@fontsource-variable/inter';
 @import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/fraunces/wght-italic.css';
 /* Terceira voz tipográfica, e só para dado factual — data, hora, contagem,
    percentual. Ver `--font-mono` no `@theme inline` abaixo para o que isso
    quer dizer e onde vale aplicar.
@@ -64,6 +65,16 @@
   --color-violet-400: #8b80f9;
   --color-violet-500: #6c63ff;
 
+  /* Quiet auth surfaces and domain overview fills, with dark equivalents below. */
+  --color-auth-surface: #f7f4ef;
+  --color-auth-button: #2d6a4f;
+  --color-auth-button-hover: #245540;
+  --color-auth-action: #2d6a4f;
+  --color-auth-panel: #1a2e25;
+  --color-overview-sage: #eef5f0;
+  --color-overview-violet: #f4f1fa;
+  --color-overview-sky: #eef6f7;
+  --color-overview-amber: #fcf6ed;
   --color-surface: #f6f7f4;
   --color-ink: #1a2332;
   --color-ink-muted: #5a6478;
@@ -291,6 +302,12 @@
      stayed a near-white slab in dark mode and `text-ink-muted` (#5A6478) sat
      far below AA on a dark card. Ratios below are against --card (oklch .205),
      the darkest surface these are painted on. */
+  --color-auth-surface: #171e1b;
+  --color-auth-action: #9dceb4;
+  --color-overview-sage: #1d2a23;
+  --color-overview-violet: #25222e;
+  --color-overview-sky: #1d282c;
+  --color-overview-amber: #2c261e;
   --color-surface: oklch(0.185 0 0);
   --color-ink: #f2f5f9; /* 16.4:1 */
   --color-ink-muted: #aab4c4; /* 8.6:1 */

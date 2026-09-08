@@ -158,7 +158,7 @@ export function DashboardRoute() {
   return (
     <div className="animate-fade-in-up">
       <div className="mb-6">
-        <h1 className="font-display text-2xl font-black text-ink">
+        <h1 className="font-display text-3xl font-medium text-ink">
           {t('babies.dashboard.greetingLine', { greeting: t(getGreetingKey()), name: parentName })}
         </h1>
         <p className="text-sm text-ink-muted">
@@ -173,7 +173,7 @@ export function DashboardRoute() {
       </div>
       {firstRecords && (
         <section className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-5 sm:p-6">
-          <h2 className="font-display text-xl font-bold text-ink">{t('babies.home.start')}</h2>
+          <h2 className="font-display text-xl font-medium text-ink">{t('babies.home.start')}</h2>
           <p className="mt-1 text-sm text-ink-muted">{t('babies.home.startBody')}</p>
           <div className="mt-4 flex flex-wrap gap-2">
             {[
@@ -194,7 +194,7 @@ export function DashboardRoute() {
       )}
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
         <div className="min-w-0 space-y-5">
-          <h2 className="font-display text-xl font-bold text-ink">{t('babies.home.care')}</h2>
+          <h2 className="font-display text-xl font-medium text-ink">{t('babies.home.care')}</h2>
           <AppointmentsOverviewCard
             babies={visibleBabies}
             items={visibleAppointments}
@@ -212,9 +212,9 @@ export function DashboardRoute() {
           />
         </div>
         <div className="min-w-0 space-y-5">
-          <h2 className="font-display text-xl font-bold text-ink">{t('babies.home.growing')}</h2>
-          <section className="rounded-2xl border border-border bg-card p-5">
-            <h3 className="mb-4 font-display font-bold text-ink">{t('nav.growth')}</h3>
+          <h2 className="font-display text-xl font-medium text-ink">{t('babies.home.growing')}</h2>
+          <section className="rounded-2xl border border-border/60 bg-overview-sage p-5">
+            <h3 className="mb-4 font-display text-lg font-medium text-ink">{t('nav.growth')}</h3>
             <div className="space-y-4">
               {familyItems.map(({ baby, latestMeasuredVisit: measurement }) => (
                 <div key={baby.id}>

@@ -95,7 +95,7 @@ export function BabyHeroCard({
           )}
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="break-words font-display text-lg font-bold text-ink">{baby.name}</h2>
+          <h2 className="break-words font-display text-xl font-medium text-ink">{baby.name}</h2>
           <p className="text-sm text-ink-muted">{ageLabel(baby.birthDate)}</p>
           {baby.allergies.length > 0 && (
             <p className="mt-1 text-xs text-amber-800 dark:text-amber-200">

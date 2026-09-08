@@ -30,19 +30,19 @@ export function MedicationsOverviewCard({
   const latest = sortMedications(items, today).slice(0, MAX_ITEMS)
 
   return (
-    <div className="flex flex-col rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
+    <div className="flex flex-col rounded-2xl border border-border/60 bg-overview-sky p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300">
             <HeartIcon className="h-[18px] w-[18px]" />
           </span>
-          <h3 className="font-display text-base font-extrabold text-ink">
+          <h3 className="font-display text-lg font-medium text-ink">
             {t('medications.title')}
           </h3>
         </div>
         <Link
           to="/medications"
-          className="text-xs font-bold text-emerald-700 dark:text-emerald-300"
+          className="text-xs font-semibold text-emerald-700 dark:text-emerald-300"
         >
           {t('babies.dashboard.viewAll')}
         </Link>

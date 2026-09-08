@@ -1,3 +1,4 @@
+import { LoaderCircle } from 'lucide-react'
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { ApiError } from '@/lib/http-client'
@@ -11,13 +12,15 @@ export function GoogleSignInButton({ onRedirect = redirect }: { onRedirect?: (ur
   const { t } = useTranslation()
   const status = useGoogleStatus()
   const start = useMutation({ mutationFn: startGoogleSignIn, onSuccess: (url) => onRedirect(url) })
+  const checking = status.isFetching && !status.data
   const pending = start.isPending || start.isSuccess
+  const label = t(checking ? 'auth.social.googleChecking' : pending ? 'auth.social.googleRedirecting' : 'auth.social.google')
   return (
     <div className="space-y-2">
-      <button type="button" disabled={!status.data?.enabled || pending} onClick={() => start.mutate()}
+      <button type="button" aria-label={label} aria-busy={checking || pending} disabled={!status.data?.enabled || pending} onClick={() => start.mutate()}
         className="flex h-12 w-full items-center justify-center gap-2.5 rounded-[10px] border border-border bg-card text-sm font-medium text-ink transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60">
-        <GoogleIcon className="h-[18px] w-[18px]" />
-        {t(pending ? 'auth.social.googleRedirecting' : 'auth.social.google')}
+        {checking ? <LoaderCircle aria-hidden="true" className="size-[18px] animate-spin motion-reduce:animate-none" /> : <GoogleIcon className="h-[18px] w-[18px]" />}
+        <span role={checking ? 'status' : undefined}>{label}</span>
       </button>
       {status.isError ? (
         <p className="text-center text-xs text-ink-muted" role="status">

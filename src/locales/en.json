@@ -107,6 +107,8 @@
       "register": "Create account"
     },
     "brand": {
+      "headlineLead": "Every moment",
+      "headlineEmphasis": "matters.",
       "headline": "Every moment matters.",
       "tagline": "The complete dashboard for your family's health and memories.",
       "featureVaccinesTitle": "Complete vaccine calendar",
@@ -123,6 +125,7 @@
       "or": "or",
       "google": "Continue with Google",
       "googleUnavailable": "Google sign-in is currently unavailable. Use another sign-in method.",
+      "googleChecking": "Loading Google sign-in…",
       "googleRedirecting": "Opening Google…",
       "googleRetry": "Try again",
       "googleError": "Could not sign in with Google. Try again or use your email.",
@@ -1394,15 +1397,16 @@
     }
   },
   "legal": {
+    "draftVersionLine": "Version {{version}} · effective date not yet set",
     "versionLine": "Version {{version}} · in force from {{date}}",
     "sectionNeedsReview": "This section still needs professional review and states no final commitment.",
     "bindingLocaleNotice": "This document is published in Portuguese, which is the language in which it binds. Translating this interface does not change the agreed text.",
     "gate": {
       "title": "Before you continue",
-      "description": "We have updated the documents governing the use of this app. Read and accept them to continue — the app handles a child’s health data, and the consent has to be yours and on record.",
+      "description": "Read the updated documents. By continuing, you accept the Terms of Use and acknowledge the Privacy Policy. This does not replace specific consent where required.",
       "versionLabel": "Version {{version}}",
       "readFirst": "Opens on another screen. Read it before accepting.",
-      "acceptAction": "I have read and accept",
+      "acceptAction": "Accept terms and acknowledge policy",
       "genericError": "Could not record your acceptance. Please try again.",
       "noWayAround": "You cannot continue without accepting. You may sign out at any time."
     },

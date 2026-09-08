@@ -38,6 +38,9 @@ export async function registerAndLogin(page: Page, user: TestUser): Promise<void
   await page.getByRole('button', { name: 'Entrar na Conta' }).click()
 
   await expect(page).toHaveURL(/\/dashboard$/)
+  await expect(page.getByRole('heading', { name: 'Antes de continuar' })).toBeVisible()
+  await page.getByRole('button', { name: 'Aceitar termos e confirmar ciência' }).click()
+  await expect(page.getByRole('heading', { name: 'Antes de continuar' })).toHaveCount(0)
 }
 
 export interface TestBaby {

@@ -1,116 +1,108 @@
 # Ninho
 
-Frontend React (Vite + TypeScript) do "Ninho" — app mobile-first que ajuda pais a acompanhar a saúde e o desenvolvimento dos filhos: calendário de vacinas do PNI, consultas, marcos de desenvolvimento, medicamentos registrados, a agenda de profissionais, o plano de saúde e a curva de crescimento com a faixa de referência da OMS.
+Aplicação web mobile-first para famílias acompanharem a saúde e o desenvolvimento dos filhos. **Ninho** é o nome do produto; **Cygnus** identifica este repositório e suas integrações.
 
-Consome a API `cygnus-api` (backend separado).
+[Aplicação](https://cygnus.samuelsantana.dev) · [Design system](https://samuelcsantana.github.io/cygnus/) · [Backend](https://github.com/samuelcsantana/cygnus-api) · [Licença MIT](LICENSE)
+
+## Recursos
+
+- Cadastro, login com senha ou Google e recuperação de acesso.
+- Perfis de crianças e compartilhamento com responsáveis.
+- Calendário de vacinas, consultas, medicamentos e agenda de profissionais.
+- Medidas de crescimento, referências da OMS e marcos de desenvolvimento.
+- Planos de saúde, busca e notificações.
+- Termos de Uso, Política de Privacidade e registro de aceite.
+- Português, inglês e espanhol; temas claro e escuro.
+
+O Ninho organiza informações e não substitui orientação de profissionais de saúde. A versão web depende da API para os dados da família. O cache da aplicação não oferece armazenamento offline completo desses registros.
 
 ## Stack
 
-- Vite + React 19 + TypeScript (strict)
-- TanStack Query (estado de servidor) + Zustand (estado de UI compartilhado, uso pontual)
-- React Hook Form + Zod (formulários e validação)
-- Tailwind CSS v4 + shadcn/ui (Radix)
-- react-i18next (pt-BR padrão, en e es)
-- Vitest + Testing Library + MSW (testes)
-- Storybook 10 (design system documentado, testado e publicado)
+React 19, Vite 8 e TypeScript estrito; TanStack Query para estado do servidor; React Hook Form e Zod para formulários; Zustand para estado compartilhado de interface; Tailwind CSS v4, shadcn/ui e Radix; i18next para idiomas.
 
-## Rodando localmente
+Vitest, Testing Library e MSW cobrem testes de aplicação. Storybook documenta componentes e verifica interações e acessibilidade. Playwright cobre jornadas no navegador.
 
-Pré-requisito: o backend `cygnus-api` precisa estar acessível (por padrão em `http://localhost:3005`, configurável via `.env`).
+## Desenvolvimento local
+
+Use Node.js 24 e npm. Inicie o backend separado, normalmente em `http://localhost:3005`, seguindo as instruções do [cygnus-api](https://github.com/samuelcsantana/cygnus-api).
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-Abre em `http://localhost:4205`.
+Frontend em `http://localhost:4205`. Para configurar a API, crie um arquivo `.env.local` com `VITE_API_BASE_URL`. Variáveis `VITE_*` são públicas e incorporadas durante o build: nunca coloque segredos nelas. As credenciais do Google pertencem ao backend.
 
-## Scripts
-
-| Comando | O que faz |
-|---|---|
-| `npm run dev` | Servidor de desenvolvimento (porta 4205) |
-| `npm run build` | Typecheck + app + widget de embed + remote de Module Federation, nessa ordem |
-| `npm run preview` | Serve o build de produção localmente |
-| `npm run lint` | Lint (oxlint) |
-| `npm run test` | Testes (Vitest) |
-| `npm run test:watch` | Testes em modo watch |
-| `npm run storybook` | Storybook em modo dev (porta 6006) |
-| `npm run build-storybook` | Build estático do Storybook (`storybook-static/`) |
-| `npm run test:storybook` | Roda cada story como teste (interação + acessibilidade) |
-| `npm run test:e2e` | Playwright, contra o stack de pé (este repo + `cygnus-api`) |
-| `npm run contract:check` | Compara o que o front espera com o `openapi.json` publicado da API |
-| `npm run build:embed` / `build:mf` | Os dois artefatos extras, também parte do `build` |
-
-## Design System (Storybook)
-
-📖 **[Ver o design system publicado →](https://samuelcsantana.github.io/cygnus/)**
-
-Documentação viva dos 17 primitivos em `src/components/ui` e dos componentes compostos em
-`src/shared/components`, com página de design tokens (cores, tipografia, raios) gerada a partir do
-mesmo `@theme` que o app usa.
-
-Não é vitrine: é parte da suíte de testes.
-
-- **Acessibilidade** — o axe roda em cada story a cada build, e `parameters.a11y.test = 'error'`
-  transforma violação em falha, não em aviso. **Não existe lista de exceções**: nenhuma story
-  desliga a checagem, e uma violação derruba o build. Os quatro tokens que ficavam abaixo de AA
-  (`--primary`, `--color-ink-faint`, `--destructive`, `--muted-foreground`) foram escurecidos em vez
-  de dispensados — cada um traz a medição e o motivo comentados no ponto de definição, em
-  `src/index.css`.
-- **Interação** — stories com `play` são testes de verdade: abrem diálogos, navegam por teclado,
-  digitam em campos e verificam o resultado. Rodam headless no CI, então regressão de foco ou de
-  navegação por teclado quebra o build.
-- **Estados** — carregando, erro, vazio e desabilitado são stories de primeira classe, não algo que
-  cada tela improvisa.
+### Docker
 
 ```bash
-npm run storybook                 # dev server em :6006
-npx playwright install chromium   # uma vez, para a suíte de testes
-npm run test:storybook            # cada story como teste
+docker compose up -d --build web
 ```
 
-O deploy para GitHub Pages acontece a cada push na `main` (`.github/workflows/storybook.yml`), que
-liga o Pages sozinho na primeira execução — não é preciso mexer em Settings.
+O Nginx serve o build estático na porta 4205, sem recarga automática do código. Reconstrua o serviço após alterações. Docker e Vite usam a mesma porta: execute apenas um deles nela. O Compose não inicia o backend; configure `VITE_API_BASE_URL` como argumento de build quando necessário.
 
-## Docker
+## Validação
 
-```bash
-docker compose up -d --build
-```
+| Comando | Finalidade |
+| --- | --- |
+| `npm run lint` | Lint com oxlint |
+| `npx tsc -b` | Typecheck da aplicação, stories e integrações |
+| `npm test` | Testes unitários e de componentes |
+| `npm run contract:check` | Contratos dos endpoints mapeados contra o OpenAPI |
+| `npm run test:storybook` | Stories, interações e axe em Chromium |
+| `npm run test:e2e` | Jornadas Playwright com os serviços já iniciados |
+| `npm run build` | Typecheck, aplicação, embed e Module Federation |
+| `npm run storybook` | Design system na porta 6006 |
+| `npm run build-storybook` | Design system estático em `storybook-static/` |
+| `npm run preview` | Visualização local do build |
 
-Sobe o build de produção servido por Nginx em `http://localhost:4205`. O compose não define um serviço para o backend — aponte `VITE_API_BASE_URL` (build arg) para onde o `cygnus-api` estiver rodando.
+Instale o navegador dos testes com `npx playwright install chromium`. Consulte [as instruções de E2E](e2e/README.md) antes de executar testes que criam dados.
 
-After changing production headers or caching, verify the running Docker build:
+O CI verifica lint, tipos, contratos, testes unitários, build e Storybook. E2E é uma execução separada. O verificador de contratos cobre um mapa explícito de endpoints; axe não substitui uma avaliação manual de acessibilidade.
+
+## Estrutura e design system
+
+| Diretório | Responsabilidade |
+| --- | --- |
+| `src/app/` | Rotas, providers e layouts |
+| `src/features/` | Domínios, APIs, schemas, hooks e páginas |
+| `src/components/ui/` | Primitivos de interface |
+| `src/shared/`, `src/hooks/`, `src/lib/` | Componentes e infraestrutura reutilizáveis |
+| `src/locales/` | Textos em pt-BR, inglês e espanhol |
+| `src/docs/` | Páginas do Storybook |
+| `e2e/` | Jornadas Playwright e fixtures |
+
+Os tokens visuais ficam em `src/index.css`. Stories ficam ao lado dos componentes; a configuração está em `.storybook/`. A suíte trata violações de acessibilidade como erros. O workflow `storybook.yml` publica o design system no GitHub Pages a partir da `main`.
+
+## Build e publicação
+
+Três artefatos compartilham o build de produção:
+
+| Artefato | Entrada pública | Documentação |
+| --- | --- | --- |
+| Aplicação React | `/` | Este README |
+| Widget independente | `/embed/embed.js`, `/embed/iframe.html` | [Embed](embed/README.md) |
+| Module Federation | `/mf/remoteEntry.js` | [Module Federation](mf/README.md) |
+
+Preserve os endereços e identificadores técnicos Cygnus usados por consumidores externos. Entradas estáveis precisam de cache curto ou revalidação; arquivos com hash podem usar cache imutável.
+
+A configuração Vercel encaminha `/api/*` e `/uploads/*` ao backend no Render. Alterações na `main` acionam publicação. Docker usa Nginx, com configuração própria de cabeçalhos e cache. Para verificar o servidor estático após mudanças:
 
 ```bash
 node scripts/check-static-serving.mjs
-# Also load the iframe from another origin against the real API (requires Chromium):
 node scripts/check-static-serving.mjs --browser
 ```
 
-Set `STATIC_BASE_URL` to check a different deployment. The checks cover app frame
-protection, embed frame permissions, Module Federation CORS, cache policies and
-missing assets. Stable entry files use a short cache; hashed assets are immutable.
+Use `STATIC_BASE_URL` para outro destino. A segunda verificação precisa de Chromium e acesso à API.
 
-## Estrutura
+## Termos e privacidade
 
-```
-src/
-├── app/            # Router, providers raiz, layouts (shell autenticado, rota protegida)
-├── components/ui/  # Componentes shadcn/ui (gerados via CLI, sem lógica de negócio)
-├── shared/         # Componentes/hooks/utils reutilizáveis entre features
-├── features/       # auth, babies, vaccines, appointments, specialists, medications,
-│                   #   growth, milestones, search, notifications, legal, profile
-│   └── <feature>/
-│       ├── api/        # fetch + hooks TanStack Query + schemas Zod
-│       ├── components/ # componentes de apresentação
-│       └── routes/     # páginas roteadas
-├── lib/            # cliente HTTP, config, i18n, query client, utilitários de data
-├── hooks/          # hooks reutilizáveis entre features
-├── docs/           # páginas MDX do Storybook (introdução, design tokens)
-└── locales/        # pt-BR.json, en.json, es.json
-```
+Os documentos estão disponíveis nas rotas [Termos de Uso](https://cygnus.samuelsantana.dev/termos) e [Política de Privacidade](https://cygnus.samuelsantana.dev/privacidade). Os textos ficam em `src/features/legal/content/`; versão, status e vigência em `src/shared/legal.ts`. Alterações locais passam a aparecer no site após publicação.
 
-As stories ficam ao lado do componente que documentam (`button.tsx` → `button.stories.tsx`), e a
-configuração do Storybook em `.storybook/`.
+O aplicativo Android com dados locais tem planejamento separado e não é entregue por este repositório.
+
+## Licença e contato
+
+Código distribuído sob a [licença MIT](LICENSE), copyright © 2026 Samuel Santana. Dependências e materiais de terceiros permanecem sujeitos às respectivas licenças.
+
+Responsável: Samuel Santana — [samuel.ssa89@gmail.com](mailto:samuel.ssa89@gmail.com).

@@ -8,8 +8,8 @@ export function RegisterRoute() {
 
   return (
     <>
-      <div className="mt-7 mb-6">
-        <h1 className="font-display text-2xl font-extrabold tracking-tight text-balance text-ink">
+      <div className="mb-6">
+        <h1 className="font-display text-[28px] font-medium leading-tight tracking-tight text-balance text-ink">
           {t('auth.register.title')}
         </h1>
         <p className="mt-1.5 text-[13.5px] text-ink-muted">{t('auth.register.subtitle')}</p>
@@ -21,7 +21,7 @@ export function RegisterRoute() {
         {t('auth.register.hasAccount')}{' '}
         <Link
           to="/login"
-          className="rounded-sm font-semibold text-emerald-700 underline-offset-4 hover:underline focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none dark:text-emerald-400"
+          className="rounded-sm font-semibold text-auth-action underline-offset-4 hover:underline focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none"
         >
           {t('auth.register.loginLink')}
         </Link>
