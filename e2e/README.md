@@ -1,30 +1,25 @@
 # E2E tests (Playwright)
 
-Covers the four critical end-user journeys:
-register + log in, add a baby, log a vaccine as applied, schedule an
-appointment. Everything else stays in Vitest/RTL component tests.
+Browser coverage includes authentication, legal documents and acceptance, child profiles, vaccines, appointments and interface regressions. Some scenarios mock API responses; others write to a real backend.
 
 ## Running
 
-These tests hit a real, already-running stack over HTTP — Playwright does
-**not** start anything for you (`playwright.config.ts` has no `webServer`
-entry on purpose, since the backend lives in the separate `cygnus-api`
-repository).
+Playwright does not start services. Use a local or dedicated test environment.
 
-1. Start `cygnus-api`'s own stack (Postgres + Redis + API) — see that
-   repo's `docker-compose.yml`.
-2. Start this repo's frontend: `docker compose up -d --build web` (serves
-   the production build via Nginx on `:4205`), or `npm run dev` for a
-   faster inner loop against `:4205`.
-3. `npm run test:e2e`
+1. Start the separate cygnus-api stack, following that repository's instructions.
+2. Start this frontend with `docker compose up -d --build web` or `npm run dev`. Both use port 4205; run only one on that port.
+3. Install Chromium with `npx playwright install chromium`.
+4. Run `npm run test:e2e`.
 
-Override the target URL with `E2E_BASE_URL` if the frontend isn't on the
-default `http://localhost:4205`.
+Set `E2E_BASE_URL` to override the default frontend URL, `http://localhost:4205`. Inspect each spec for any direct API target configuration.
 
-## Notes
+## Fixtures and limitations
 
-- Each spec registers its own fresh user (`support/fixtures.ts` generates a
-  unique email per run) — no shared fixtures/seed data, so specs are safe
-  to run in parallel and repeatedly against the same database.
-- Locale is pinned to `pt-BR` in `playwright.config.ts`, matching the
-  app's default — selectors use the literal Portuguese copy.
+- Registration helpers generate unique email addresses. The shared login helper also completes legal acceptance for new accounts.
+- Real API scenarios create persistent records; do not assume automatic cleanup.
+- Unique accounts do not isolate infrastructure limits. The shared-IP API rate limiter can affect a complete parallel run; reduce concurrency or run focused specs when diagnosing failures.
+- A focused passing scenario does not establish that the complete suite passes.
+- Locale is pinned to `pt-BR`; selectors use Portuguese interface copy.
+- E2E is not currently part of the main CI workflow. Unit and Storybook checks run separately.
+
+Example focused run: `npm run test:e2e -- e2e/legal-documents.spec.ts`.
