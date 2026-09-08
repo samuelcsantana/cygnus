@@ -36,11 +36,18 @@ jobs:
 
       - run: npm ci
 
+      # Measure this checkout rather than copying a report from another commit.
+      - name: Measure unit coverage
+        run: npm run test:coverage
+
       - name: Build Storybook
         # Pages serves the site from /cygnus/, not the domain root.
         env:
           STORYBOOK_BASE_PATH: /cygnus/
         run: npm run build-storybook
+
+      - name: Include coverage report in Pages
+        run: cp -r coverage storybook-static/coverage
 
       - uses: actions/configure-pages@v5
         with:

@@ -17,6 +17,18 @@ export default mergeConfig(
       // is in a negative offset; the tests should be too.
       env: { TZ: 'America/Sao_Paulo' },
       css: true,
+      coverage: {
+        provider: 'v8',
+        reporter: ['text-summary', 'html', 'json-summary', 'lcov'],
+        // Include unimported production modules so the denominator is honest.
+        include: ['src/**/*.{ts,tsx}', 'embed/**/*.ts', 'mf/**/*.{ts,tsx}'],
+        exclude: [
+          '**/*.d.ts',
+          '**/*.{test,spec,stories}.{ts,tsx}',
+          '**/__tests__/**',
+          'src/test/**',
+        ],
+      },
       // e2e/ holds Playwright specs (a different test runner, real browser,
       // no jsdom) — Vitest's default glob would otherwise also pick them up.
       exclude: ['**/node_modules/**', '**/.git/**', 'e2e/**'],

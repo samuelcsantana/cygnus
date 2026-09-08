@@ -4,6 +4,7 @@
 [![CI](https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml)
 [![Storybook deployment](https://github.com/samuelcsantana/cygnus/actions/workflows/storybook.yml/badge.svg?branch=main)](https://samuelcsantana.github.io/cygnus/)
 [![MIT License](https://img.shields.io/github/license/samuelcsantana/cygnus)](LICENSE)
+[![Unit test line coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fsamuelcsantana.github.io%2Fcygnus%2Fcoverage%2Fbadge.json)](https://samuelcsantana.github.io/cygnus/coverage/)
 
 ![React 19](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
 ![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
@@ -58,6 +59,7 @@ O Nginx serve o build estático na porta 4205, sem recarga automática do códig
 | `npm run lint` | Lint com oxlint |
 | `npx tsc -b` | Typecheck da aplicação, stories e integrações |
 | `npm test` | Testes unitários e de componentes |
+| `npm run test:coverage` | Cobertura V8, relatório HTML e resumo de métricas |
 | `npm run contract:check` | Contratos dos endpoints mapeados contra o OpenAPI |
 | `npm run test:storybook` | Stories, interações e axe em Chromium |
 | `npm run test:e2e` | Jornadas Playwright com os serviços já iniciados |
@@ -69,6 +71,8 @@ O Nginx serve o build estático na porta 4205, sem recarga automática do códig
 Instale o navegador dos testes com `npx playwright install chromium`. Consulte [as instruções de E2E](e2e/README.md) antes de executar testes que criam dados.
 
 O CI verifica lint, tipos, contratos, testes unitários, build e Storybook. E2E é uma execução separada. O verificador de contratos cobre um mapa explícito de endpoints; axe não substitui uma avaliação manual de acessibilidade.
+
+O [relatório público de cobertura](https://samuelcsantana.github.io/cygnus/coverage/) mostra linhas, instruções, funções e ramificações exercitadas pelos testes unitários e de componentes. O badge exibe cobertura de linhas da última publicação bem-sucedida do Pages. O relatório inclui módulos TypeScript de `src/`, `embed/` e `mf/`, mesmo sem importação pelos testes; exclui declarações de tipos, testes, stories e infraestrutura de teste. Storybook e E2E têm verificações separadas e não entram nesse percentual. O CI também disponibiliza o relatório como artefato por 14 dias. Não há percentual mínimo obrigatório nesta primeira medição.
 
 ## Estrutura e design system
 
