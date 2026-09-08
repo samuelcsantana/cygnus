@@ -11,38 +11,38 @@
 ![Vite 8](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
 ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
 
-Aplicação web mobile-first para famílias acompanharem a saúde e o desenvolvimento dos filhos. **Ninho** é o nome do produto; **Cygnus** identifica este repositório e suas integrações.
+A mobile-first web application for families to track their children's health and development. **Ninho** is the product name; **Cygnus** identifies this repository and its integrations.
 
-[Aplicação](https://cygnus.samuelsantana.dev) · [Design system](https://samuelcsantana.github.io/cygnus/) · [Backend](https://github.com/samuelcsantana/cygnus-api) · [Licença MIT](LICENSE)
+[Live application](https://cygnus.samuelsantana.dev) · [Design system](https://samuelcsantana.github.io/cygnus/) · [Backend](https://github.com/samuelcsantana/cygnus-api) · [MIT License](LICENSE)
 
-## Recursos
+## Features
 
-- Cadastro, login com senha ou Google e recuperação de acesso.
-- Perfis de crianças e compartilhamento com responsáveis.
-- Calendário de vacinas, consultas, medicamentos e agenda de profissionais.
-- Medidas de crescimento, referências da OMS e marcos de desenvolvimento.
-- Planos de saúde, busca e notificações.
-- Termos de Uso, Política de Privacidade e registro de aceite.
-- Português, inglês e espanhol; temas claro e escuro.
+- Registration, password or Google sign-in, and account recovery.
+- Child profiles and shared access for guardians.
+- Vaccination schedules, appointments, medications, and a professional directory.
+- Growth measurements, WHO reference ranges, and developmental milestones.
+- Health plans, search, and notifications.
+- Terms of Use, Privacy Policy, and versioned acceptance records.
+- Portuguese, English, and Spanish interfaces; light and dark themes.
 
-O Ninho organiza informações e não substitui orientação de profissionais de saúde. A versão web depende da API para os dados da família. O cache da aplicação não oferece armazenamento offline completo desses registros.
+Ninho organizes information and does not replace advice from healthcare professionals. The web application relies on the API for family records. Its cache does not provide complete offline storage of those records.
 
 ## Stack
 
-React 19, Vite 8 e TypeScript estrito; TanStack Query para estado do servidor; React Hook Form e Zod para formulários; Zustand para estado compartilhado de interface; Tailwind CSS v4, shadcn/ui e Radix; i18next para idiomas.
+React 19, Vite 8, and strict TypeScript; TanStack Query for server state; React Hook Form and Zod for forms; Zustand for shared UI state; Tailwind CSS v4, shadcn/ui, and Radix; i18next for localization.
 
-Vitest, Testing Library e MSW cobrem testes de aplicação. Storybook documenta componentes e verifica interações e acessibilidade. Playwright cobre jornadas no navegador.
+Vitest, Testing Library, and MSW cover application tests. Storybook documents components and checks interactions and accessibility. Playwright covers browser journeys.
 
-## Desenvolvimento local
+## Local development
 
-Use Node.js 24 e npm. Inicie o backend separado, normalmente em `http://localhost:3005`, seguindo as instruções do [cygnus-api](https://github.com/samuelcsantana/cygnus-api).
+Use Node.js 24 and npm. Start the separate backend, normally at `http://localhost:3005`, following the [cygnus-api instructions](https://github.com/samuelcsantana/cygnus-api).
 
 ```bash
 npm ci
 npm run dev
 ```
 
-Frontend em `http://localhost:4205`. Para configurar a API, crie um arquivo `.env.local` com `VITE_API_BASE_URL`. Variáveis `VITE_*` são públicas e incorporadas durante o build: nunca coloque segredos nelas. As credenciais do Google pertencem ao backend.
+The frontend runs at `http://localhost:4205`. To configure the API, create a `.env.local` file with `VITE_API_BASE_URL`. Variables prefixed with `VITE_*` are public and compiled into the build: never put secrets in them. Google credentials belong in the backend.
 
 ### Docker
 
@@ -50,73 +50,73 @@ Frontend em `http://localhost:4205`. Para configurar a API, crie um arquivo `.en
 docker compose up -d --build web
 ```
 
-O Nginx serve o build estático na porta 4205, sem recarga automática do código. Reconstrua o serviço após alterações. Docker e Vite usam a mesma porta: execute apenas um deles nela. O Compose não inicia o backend; configure `VITE_API_BASE_URL` como argumento de build quando necessário.
+Nginx serves the static build on port 4205 without hot reload. Rebuild the service after changes. Docker and Vite use the same port, so run only one of them on it. Compose does not start the backend; set `VITE_API_BASE_URL` as a build argument when needed.
 
-## Validação
+## Validation
 
-| Comando | Finalidade |
+| Command | Purpose |
 | --- | --- |
-| `npm run lint` | Lint com oxlint |
-| `npx tsc -b` | Typecheck da aplicação, stories e integrações |
-| `npm test` | Testes unitários e de componentes |
-| `npm run test:coverage` | Cobertura V8, relatório HTML e resumo de métricas |
-| `npm run contract:check` | Contratos dos endpoints mapeados contra o OpenAPI |
-| `npm run test:storybook` | Stories, interações e axe em Chromium |
-| `npm run test:e2e` | Jornadas Playwright com os serviços já iniciados |
-| `npm run build` | Typecheck, aplicação, embed e Module Federation |
-| `npm run storybook` | Design system na porta 6006 |
-| `npm run build-storybook` | Design system estático em `storybook-static/` |
-| `npm run preview` | Visualização local do build |
+| `npm run lint` | Lint with oxlint |
+| `npx tsc -b` | Typecheck the application, stories, and integrations |
+| `npm test` | Unit and component tests |
+| `npm run test:coverage` | V8 coverage, HTML report, and metrics summary |
+| `npm run contract:check` | Check mapped endpoint contracts against OpenAPI |
+| `npm run test:storybook` | Stories, interactions, and axe checks in Chromium |
+| `npm run test:e2e` | Playwright journeys against running services |
+| `npm run build` | Typecheck, application, embed, and Module Federation |
+| `npm run storybook` | Design system on port 6006 |
+| `npm run build-storybook` | Static design system in `storybook-static/` |
+| `npm run preview` | Preview the build locally |
 
-Instale o navegador dos testes com `npx playwright install chromium`. Consulte [as instruções de E2E](e2e/README.md) antes de executar testes que criam dados.
+Install the test browser with `npx playwright install chromium`. Read the [E2E instructions](e2e/README.md) before running tests that create data.
 
-O CI verifica lint, tipos, contratos, testes unitários, build e Storybook. E2E é uma execução separada. O verificador de contratos cobre um mapa explícito de endpoints; axe não substitui uma avaliação manual de acessibilidade.
+CI checks lint, types, contracts, unit tests, the build, and Storybook. E2E runs separately. The contract checker covers an explicit endpoint map; axe does not replace a manual accessibility assessment.
 
-O [relatório público de cobertura](https://samuelcsantana.github.io/cygnus/coverage/) mostra linhas, instruções, funções e ramificações exercitadas pelos testes unitários e de componentes. O badge exibe cobertura de linhas da última publicação bem-sucedida do Pages. O relatório inclui módulos TypeScript de `src/`, `embed/` e `mf/`, mesmo sem importação pelos testes; exclui declarações de tipos, testes, stories e infraestrutura de teste. Storybook e E2E têm verificações separadas e não entram nesse percentual. O CI também disponibiliza o relatório como artefato por 14 dias. Não há percentual mínimo obrigatório nesta primeira medição.
+The [public coverage report](https://samuelcsantana.github.io/cygnus/coverage/) shows lines, statements, functions, and branches exercised by unit and component tests. The badge displays line coverage from the latest successful Pages publication. The report includes TypeScript modules in `src/`, `embed/`, and `mf/`, even when tests do not import them; it excludes type declarations, tests, stories, and test infrastructure. Storybook and E2E checks are separate and do not contribute to this percentage. CI also retains the report as an artifact for 14 days. No minimum coverage threshold is enforced for this initial baseline.
 
-## Estrutura e design system
+## Structure and design system
 
-| Diretório | Responsabilidade |
+| Directory | Responsibility |
 | --- | --- |
-| `src/app/` | Rotas, providers e layouts |
-| `src/features/` | Domínios, APIs, schemas, hooks e páginas |
-| `src/components/ui/` | Primitivos de interface |
-| `src/shared/`, `src/hooks/`, `src/lib/` | Componentes e infraestrutura reutilizáveis |
-| `src/locales/` | Textos em pt-BR, inglês e espanhol |
-| `src/docs/` | Páginas do Storybook |
-| `e2e/` | Jornadas Playwright e fixtures |
+| `src/app/` | Routes, providers, and layouts |
+| `src/features/` | Domains, APIs, schemas, hooks, and pages |
+| `src/components/ui/` | UI primitives |
+| `src/shared/`, `src/hooks/`, `src/lib/` | Reusable components and infrastructure |
+| `src/locales/` | Brazilian Portuguese, English, and Spanish copy |
+| `src/docs/` | Storybook pages |
+| `e2e/` | Playwright journeys and fixtures |
 
-Os tokens visuais ficam em `src/index.css`. Stories ficam ao lado dos componentes; a configuração está em `.storybook/`. A suíte trata violações de acessibilidade como erros. O workflow `storybook.yml` publica o design system no GitHub Pages a partir da `main`.
+Design tokens live in `src/index.css`. Stories sit beside their components; configuration lives in `.storybook/`. The suite treats accessibility violations as errors. The `storybook.yml` workflow publishes the design system from `main` to GitHub Pages.
 
-## Build e publicação
+## Build and deployment
 
-Três artefatos compartilham o build de produção:
+Three artifacts share the production build:
 
-| Artefato | Entrada pública | Documentação |
+| Artifact | Public entry point | Documentation |
 | --- | --- | --- |
-| Aplicação React | `/` | Este README |
-| Widget independente | `/embed/embed.js`, `/embed/iframe.html` | [Embed](embed/README.md) |
+| React application | `/` | This README |
+| Standalone widget | `/embed/embed.js`, `/embed/iframe.html` | [Embed](embed/README.md) |
 | Module Federation | `/mf/remoteEntry.js` | [Module Federation](mf/README.md) |
 
-Preserve os endereços e identificadores técnicos Cygnus usados por consumidores externos. Entradas estáveis precisam de cache curto ou revalidação; arquivos com hash podem usar cache imutável.
+Preserve the Cygnus URLs and technical identifiers used by external consumers. Stable entry points need short caching or revalidation; hashed assets can use immutable caching.
 
-A configuração Vercel encaminha `/api/*` e `/uploads/*` ao backend no Render. Alterações na `main` acionam publicação. Docker usa Nginx, com configuração própria de cabeçalhos e cache. Para verificar o servidor estático após mudanças:
+The Vercel configuration proxies `/api/*` and `/uploads/*` to the backend on Render. Changes to `main` trigger deployment. Docker uses Nginx with its own header and cache configuration. To check static serving after changes:
 
 ```bash
 node scripts/check-static-serving.mjs
 node scripts/check-static-serving.mjs --browser
 ```
 
-Use `STATIC_BASE_URL` para outro destino. A segunda verificação precisa de Chromium e acesso à API.
+Set `STATIC_BASE_URL` to check another target. The second check requires Chromium and API access.
 
-## Termos e privacidade
+## Terms and privacy
 
-Os documentos estão disponíveis nas rotas [Termos de Uso](https://cygnus.samuelsantana.dev/termos) e [Política de Privacidade](https://cygnus.samuelsantana.dev/privacidade). Os textos ficam em `src/features/legal/content/`; versão, status e vigência em `src/shared/legal.ts`. Alterações locais passam a aparecer no site após publicação.
+The documents are available at the public [Terms of Use](https://cygnus.samuelsantana.dev/termos) and [Privacy Policy](https://cygnus.samuelsantana.dev/privacidade) routes. Content lives in `src/features/legal/content/`; version, status, and effective date are defined in `src/shared/legal.ts`. Local changes appear on the website after deployment.
 
-O aplicativo Android com dados locais tem planejamento separado e não é entregue por este repositório.
+The Android application with local data storage is planned separately and is not delivered by this repository.
 
-## Licença e contato
+## License and contact
 
-Código distribuído sob a [licença MIT](LICENSE), copyright © 2026 Samuel Santana. Dependências e materiais de terceiros permanecem sujeitos às respectivas licenças.
+Code is distributed under the [MIT License](LICENSE), copyright © 2026 Samuel Santana. Dependencies and third-party materials remain subject to their respective licenses.
 
-Responsável: Samuel Santana — [samuel.ssa89@gmail.com](mailto:samuel.ssa89@gmail.com).
+Maintainer: Samuel Santana — [samuel.ssa89@gmail.com](mailto:samuel.ssa89@gmail.com).
