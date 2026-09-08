@@ -1,5 +1,15 @@
 # Ninho
 
+[![Latest release](https://img.shields.io/github/v/release/samuelcsantana/cygnus?label=release)](https://github.com/samuelcsantana/cygnus/releases/latest)
+[![CI](https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml)
+[![Storybook deployment](https://github.com/samuelcsantana/cygnus/actions/workflows/storybook.yml/badge.svg?branch=main)](https://samuelcsantana.github.io/cygnus/)
+[![MIT License](https://img.shields.io/github/license/samuelcsantana/cygnus)](LICENSE)
+
+![React 19](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
+![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+![Vite 8](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+
 Aplicação web mobile-first para famílias acompanharem a saúde e o desenvolvimento dos filhos. **Ninho** é o nome do produto; **Cygnus** identifica este repositório e suas integrações.
 
 [Aplicação](https://cygnus.samuelsantana.dev) · [Design system](https://samuelcsantana.github.io/cygnus/) · [Backend](https://github.com/samuelcsantana/cygnus-api) · [Licença MIT](LICENSE)
