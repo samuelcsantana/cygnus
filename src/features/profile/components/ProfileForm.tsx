@@ -1,4 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
+import { AvatarUploadField } from '@/shared/components/AvatarUploadField'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -7,11 +9,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import type { User } from '@/features/auth/api/auth.schemas'
-import { ApiError } from '@/lib/http-client'
 import { fieldErrorKey } from '@/shared/utils/zod-error'
 
 import { useUpdateProfile } from '../api/profile.hooks'
-import { buildProfileFormSchema, type ProfileFormInput } from '../api/profile.schemas'
+import { profileFormSchema, type ProfileFormInput } from '../api/profile.schemas'
 
 interface ProfileFormProps {
   user: User
@@ -20,64 +21,71 @@ interface ProfileFormProps {
 export function ProfileForm({ user }: ProfileFormProps) {
   const { t } = useTranslation()
   const updateProfile = useUpdateProfile()
+  const [processingPhoto, setProcessingPhoto] = useState(false)
 
   const {
     register,
     control,
+    setValue,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<ProfileFormInput>({
-    resolver: zodResolver(buildProfileFormSchema(user.email)),
-    defaultValues: { name: user.name, email: user.email, currentPassword: '' },
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: { name: user.name, avatarUrl: user.avatarUrl ?? '' },
   })
 
-  /**
-   * A senha atual só existe na tela quando o e-mail de fato mudou.
-   *
-   * Ela nunca foi obrigatória para salvar o nome — o backend só a exige quando o endereço muda, e o
-   * schema espelha isso. Mostrá-la sempre pedia a senha para editar o nome, o que é ao mesmo tempo
-   * um pedido desnecessário e um treino ruim: campo de senha que aparece sem motivo é como as
-   * pessoas aprendem a digitar senha sem perguntar por quê.
-   */
-  const email = useWatch({ control, name: 'email' })
-  const emailChanged = (email ?? '') !== user.email
-
+  const [name, avatarUrl] = useWatch({ control, name: ['name', 'avatarUrl'] })
   const onSubmit = handleSubmit(async (values) => {
-    const emailChanged = values.email !== user.email
-
     try {
-      await updateProfile.mutateAsync({
+      const saved = await updateProfile.mutateAsync({
         name: values.name,
-        email: emailChanged ? values.email : undefined,
-        currentPassword: emailChanged ? values.currentPassword : undefined,
+        ...(values.avatarUrl !== (user.avatarUrl ?? '')
+          ? { avatarUrl: values.avatarUrl || null }
+          : {}),
       })
-      reset({ name: values.name, email: values.email, currentPassword: '' })
+      reset({ name: saved.name, avatarUrl: saved.avatarUrl ?? '' })
       toast.success(t('profile.form.savedToast'))
     } catch {
-      // surfaced below via updateProfile.error
+      // The mutation error is displayed below.
     }
   })
 
   const nameErrorKey = fieldErrorKey(errors.name)
-  const emailErrorKey = fieldErrorKey(errors.email)
-  const currentPasswordErrorKey = fieldErrorKey(errors.currentPassword)
-
-  const submitErrorMessage =
-    updateProfile.error instanceof ApiError && updateProfile.error.status === 409
-      ? t('profile.form.emailTaken')
-      : updateProfile.error instanceof ApiError && updateProfile.error.status === 400
-        ? t('profile.form.incorrectCurrentPassword')
-        : updateProfile.error
-          ? t('profile.form.genericError')
-          : null
+  const submitErrorMessage = updateProfile.error ? t('profile.form.genericError') : null
 
   return (
     <form onSubmit={onSubmit} className="space-y-6" noValidate>
+      <div className="rounded-2xl bg-muted/40 p-4">
+        <p className="mb-3 text-sm font-semibold text-ink">{t('profile.photo.title')}</p>
+        <AvatarUploadField
+          value={avatarUrl}
+          onValueChange={(value) =>
+            setValue('avatarUrl', value, { shouldDirty: true, shouldValidate: true })
+          }
+          fallback={
+            <span className="text-2xl font-bold text-primary">
+              {(name || user.name).trim().slice(0, 1).toUpperCase()}
+            </span>
+          }
+          uploadLabel={t(avatarUrl ? 'profile.photo.change' : 'profile.photo.add')}
+          removeLabel={t('profile.photo.remove')}
+          fileTooLargeError={t('profile.photo.tooLarge')}
+          invalidImageError={t('profile.photo.invalid')}
+          color={undefined}
+          onColorChange={() => {}}
+          colorOptions={[]}
+          colorGroupLabel={t('profile.photo.title')}
+          disabled={isSubmitting}
+          onProcessingChange={setProcessingPhoto}
+        />
+        <p className="mt-3 text-xs text-ink-muted">{t('profile.photo.hint')}</p>
+      </div>
       <div>
         <Label htmlFor="profile-name">{t('profile.form.nameLabel')}</Label>
         <Input
           id="profile-name"
+          disabled={isSubmitting}
           autoComplete="name"
           aria-invalid={!!errors.name}
           aria-describedby={nameErrorKey ? 'profile-name-error' : undefined}
@@ -97,43 +105,15 @@ export function ProfileForm({ user }: ProfileFormProps) {
           id="profile-email"
           type="email"
           autoComplete="email"
-          aria-invalid={!!errors.email}
-          aria-describedby={emailErrorKey ? 'profile-email-error' : undefined}
-          className="mt-2"
-          {...register('email')}
+          value={user.email}
+          readOnly
+          aria-describedby="profile-email-hint"
+          className="mt-2 bg-muted text-ink-muted"
         />
-        {emailErrorKey && (
-          <p id="profile-email-error" className="text-destructive mt-1 text-sm">
-            {t(emailErrorKey)}
-          </p>
-        )}
+        <p id="profile-email-hint" className="mt-2 text-xs text-ink-muted">
+          {t('profile.form.emailReadOnly')}
+        </p>
       </div>
-
-      {emailChanged && (
-        <div>
-          <Label htmlFor="profile-current-password">{t('profile.form.currentPasswordLabel')}</Label>
-          <Input
-            id="profile-current-password"
-            type="password"
-            autoComplete="current-password"
-            aria-invalid={!!errors.currentPassword}
-            aria-describedby={
-              currentPasswordErrorKey ? 'profile-current-password-error' : 'profile-current-password-hint'
-            }
-            className="mt-2"
-            {...register('currentPassword')}
-          />
-          {currentPasswordErrorKey ? (
-            <p id="profile-current-password-error" className="text-destructive mt-1 text-sm">
-              {t(currentPasswordErrorKey)}
-            </p>
-          ) : (
-            <p id="profile-current-password-hint" className="text-ink-muted mt-1 text-sm">
-              {t('profile.form.currentPasswordHint')}
-            </p>
-          )}
-        </div>
-      )}
 
       {submitErrorMessage && (
         <p role="alert" className="text-destructive text-sm">
@@ -142,7 +122,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
       )}
 
       <div className="flex justify-end">
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting || processingPhoto || !isDirty}>
           {isSubmitting ? t('common.saving') : t('profile.form.submit')}
         </Button>
       </div>

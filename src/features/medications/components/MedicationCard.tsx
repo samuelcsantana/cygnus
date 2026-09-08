@@ -1,119 +1,87 @@
 import { useTranslation } from 'react-i18next'
-
 import type { Baby } from '@/features/babies/api/babies.schemas'
 import { formatDateDisplay } from '@/lib/date'
-import { cn } from '@/lib/utils'
-import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
-
-import { isOngoing, type Medication } from '../api/medications.schemas'
-
-interface MedicationCardProps {
+import { useLocalToday } from '@/hooks/useLocalToday'
+import { medicationStatus, type Medication } from '../api/medications.schemas'
+interface Props {
   medication: Medication
   baby?: Baby
   onEnd: () => void
   onEdit: () => void
+  busy?: boolean
 }
-
-export function MedicationCard({ medication, baby, onEnd, onEdit }: MedicationCardProps) {
+export function MedicationCard({ medication, baby, onEnd, onEdit, busy }: Props) {
   const { t, i18n } = useTranslation()
-  const ongoing = isOngoing(medication)
-  const avatarAppearance = baby ? babyAvatarAppearance(baby.id, baby.avatarColor) : null
-
+  const today = useLocalToday()
+  const status = medicationStatus(medication, today)
+  const fields = [
+    ['dosage', medication.dosage],
+    ['frequency', medication.frequency],
+    ['start', formatDateDisplay(medication.startedOn, i18n.language)],
+    [
+      'end',
+      medication.endedOn
+        ? formatDateDisplay(medication.endedOn, i18n.language)
+        : t('medications.period.OPEN'),
+    ],
+    ['prescriber', medication.prescriberName],
+    ['reason', medication.reason],
+  ]
   return (
-    <div
-      className={cn(
-        'rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6',
-        // A borda marca o que não tem fim registrado, do mesmo jeito que a consulta agendada é
-        // marcada em `AppointmentCard`. Âmbar e não verde: "sem fim registrado" é uma pendência de
-        // registro, não uma afirmação de que está tudo certo.
-        ongoing ? 'border-[1.5px] border-amber-200' : 'border-[1.5px] border-transparent',
-      )}
-    >
-      <div className="mb-3 flex items-start justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3.5">
-          {baby && (
-            <span
-              className={cn(
-                'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-base font-black',
-                avatarAppearance?.className,
-              )}
-              style={avatarAppearance?.style}
-              title={baby.name}
-            >
-              {babyInitials(baby.name)}
-            </span>
-          )}
-          <div className="min-w-0">
-            <h3 className="truncate text-[15px] font-bold text-ink">{medication.name}</h3>
-            <p className="truncate text-[13px] text-ink-muted">
-              {baby?.name}
-              {baby && medication.reason && ' · '}
-              {medication.reason}
-            </p>
-          </div>
+    <article className="flex min-w-0 flex-col rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="break-words text-lg font-bold text-ink">{medication.name}</h3>
+          {baby && <p className="mt-1 text-sm text-ink-muted">{baby.name}</p>}
         </div>
-
-        {/* "Sem fim registrado", e não "em uso": o app sabe o que alguém escreveu, não o que a
-            criança está tomando hoje. A diferença é a única coisa que impede este rótulo de virar
-            uma afirmação que ninguém verificou.
-
-            amber-700 sobre amber-50 e ink-muted sobre muted são pares opacos — o contraste é medido
-            contra o próprio chip, não contra o cartão. */}
         <span
-          className={cn(
-            'flex-shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold',
-            ongoing ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300' : 'bg-muted text-ink-muted',
-          )}
+          className={`rounded-lg px-2.5 py-1 text-xs font-semibold ${status === 'ENDED' ? 'bg-muted text-ink-muted' : status === 'ENDING_TODAY' ? 'bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-200' : 'bg-sky-50 text-sky-800 dark:bg-sky-950/40 dark:text-sky-200'}`}
         >
-          {ongoing ? t('medications.status.open') : t('medications.status.ended')}
+          {t(`medications.period.${status}`)}
         </span>
       </div>
-
-      {/* Dose e frequência em mono porque são o dado factual da receita, lido em voz alta ou
-          conferido caractere a caractere — mesma regra do tipo sanguíneo e da carteirinha. */}
-      {(medication.dosage || medication.frequency) && (
-        <p className="mb-1 font-mono text-[13px] text-ink">
-          {medication.dosage}
-          {medication.dosage && medication.frequency && ' · '}
-          {medication.frequency}
-        </p>
-      )}
-
-      <p className="text-[13px] text-ink-muted">
-        <span className="font-mono">{formatDateDisplay(medication.startedOn, i18n.language)}</span>
-        {medication.endedOn ? (
-          <>
-            {' → '}
-            <span className="font-mono">{formatDateDisplay(medication.endedOn, i18n.language)}</span>
-          </>
-        ) : null}
-        {medication.prescriberName && ` · ${medication.prescriberName}`}
-      </p>
-
+      <dl className="mt-4 grid grid-cols-2 gap-4">
+        {fields
+          .filter(([, value]) => value)
+          .map(([key, value]) => (
+            <div key={key} className="min-w-0">
+              <dt className="text-xs font-semibold text-ink-muted">
+                {t(`medications.page.${key}`)}
+              </dt>
+              <dd className="mt-1 break-words text-sm text-ink">{value}</dd>
+            </div>
+          ))}
+      </dl>
       {medication.notes && (
-        <div className="mt-3 rounded-[10px] bg-surface px-3.5 py-2.5">
-          <p className="text-[13px] leading-relaxed text-ink-muted">📋 {medication.notes}</p>
-        </div>
+        <details className="mt-4 rounded-xl bg-muted/40 px-3">
+          <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold text-ink-muted">
+            {t('medications.page.notes')}
+          </summary>
+          <p className="whitespace-pre-wrap break-words pb-3 text-sm text-ink-muted">
+            {medication.notes}
+          </p>
+        </details>
       )}
-
-      <div className="mt-4 flex gap-3">
+      <div className="mt-auto flex flex-wrap justify-end gap-2 pt-5">
         <button
           type="button"
+          disabled={busy}
           onClick={onEdit}
-          className="flex-1 rounded-xl border-2 border-border py-2.5 text-sm font-bold text-ink-muted transition-colors hover:bg-muted"
+          className="min-h-11 rounded-xl bg-sky-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
         >
           {t('medications.editAction')}
         </button>
-        {ongoing && (
+        {(status === 'OPEN' || status === 'ACTIVE') && (
           <button
             type="button"
+            disabled={busy}
             onClick={onEnd}
-            className="flex-1 rounded-xl bg-emerald-50 py-2.5 text-sm font-bold text-emerald-700 transition-colors hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/40"
+            className="min-h-11 rounded-xl border border-border px-4 py-2 text-sm font-semibold text-ink-muted disabled:opacity-50"
           >
-            {t('medications.endAction')}
+            {t('medications.page.endAction')}
           </button>
         )}
       </div>
-    </div>
+    </article>
   )
 }

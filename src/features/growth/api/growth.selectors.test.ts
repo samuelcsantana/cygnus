@@ -7,6 +7,15 @@ import { clipBand, growthSeries, indicatorPoints, outgrewReference, referenceBan
 const BIRTH = '2026-01-15'
 
 describe('growthSeries', () => {
+  it('merges profile dates with completed visits without shifting calendar days', () => {
+    const series = growthSeries([
+      buildAppointment({ id: 'visit', status: 'COMPLETED', scheduledAt: '2026-03-01T10:00:00.000Z', weightGrams: 5400 }),
+    ], BIRTH, [{ id: 'profile', measuredOn: '2026-02-15', weightGrams: 4200, heightMillimeters: null }])
+    expect(series.map(point => point.appointmentId)).toEqual(['profile', 'visit'])
+    expect(new Date(series[0]!.scheduledAt).getDate()).toBe(15)
+    expect(series[0]!.ageMonthsWhole).toBe(1)
+    expect(indicatorPoints(series, 'height')).toEqual([])
+  })
   it('ordena da consulta mais antiga para a mais recente', () => {
     // A lista de consultas ordena ao contrário — certo para "o que aconteceu
     // agora", errado para uma curva, que se lê da esquerda para a direita.

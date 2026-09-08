@@ -55,7 +55,7 @@ export interface TestBaby {
  * navigating.
  */
 export async function openAddBabyDialog(page: Page): Promise<void> {
-  await page.getByRole('button', { name: 'Cadastrar Primeiro Filho' }).click()
+  await page.getByRole('button', { name: 'Adicionar meu primeiro filho' }).click()
   await expect(page.getByRole('dialog')).toBeVisible()
 }
 

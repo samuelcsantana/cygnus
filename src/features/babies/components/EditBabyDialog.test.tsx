@@ -24,6 +24,8 @@ describe('EditBabyDialog delete flow', () => {
     const user = userEvent.setup()
     renderWithProviders(<EditBabyDialog baby={sampleBaby} onOpenChange={vi.fn()} />)
 
+    await user.click(screen.getByRole('button', { name: /03.*Responsáveis/ }))
+    await user.click(screen.getByText('Zona de Perigo'))
     await user.click(screen.getByRole('button', { name: "Excluir perfil de Alice" }))
 
     expect(deleteCallCount).toBe(0)
@@ -43,6 +45,8 @@ describe('EditBabyDialog delete flow', () => {
     const onOpenChange = vi.fn()
     renderWithProviders(<EditBabyDialog baby={sampleBaby} onOpenChange={onOpenChange} />)
 
+    await user.click(screen.getByRole('button', { name: /03.*Responsáveis/ }))
+    await user.click(screen.getByText('Zona de Perigo'))
     await user.click(screen.getByRole('button', { name: "Excluir perfil de Alice" }))
 
     const confirmDialog = screen.getByRole('alertdialog')
@@ -66,6 +70,8 @@ describe('EditBabyDialog delete flow', () => {
     const user = userEvent.setup()
     renderWithProviders(<EditBabyDialog baby={sampleBaby} onOpenChange={vi.fn()} />)
 
+    await user.click(screen.getByRole('button', { name: /03.*Responsáveis/ }))
+    await user.click(screen.getByText('Zona de Perigo'))
     await user.click(screen.getByRole('button', { name: "Excluir perfil de Alice" }))
     const confirmDialog = screen.getByRole('alertdialog')
     await user.click(within(confirmDialog).getByRole('button', { name: 'Cancelar' }))
@@ -80,6 +86,8 @@ describe('EditBabyDialog delete flow', () => {
     const user = userEvent.setup()
     renderWithProviders(<EditBabyDialog baby={sampleBaby} onOpenChange={vi.fn()} />)
 
+    await user.click(screen.getByRole('button', { name: /03.*Responsáveis/ }))
+    await user.click(screen.getByText('Zona de Perigo'))
     await user.click(screen.getByRole('button', { name: "Excluir perfil de Alice" }))
     const confirmDialog = screen.getByRole('alertdialog')
     await user.click(within(confirmDialog).getByRole('button', { name: 'Excluir' }))

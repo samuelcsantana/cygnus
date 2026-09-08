@@ -88,10 +88,13 @@ describe('AppointmentDetailDialog', () => {
   it('deletes the appointment and closes, for any status', async () => {
     let deleted: string | null = null
     server.use(
-      http.delete(`${config.apiBaseUrl}/babies/:babyId/appointments/:appointmentId`, ({ params }) => {
-        deleted = params.appointmentId as string
-        return new HttpResponse(null, { status: 204 })
-      }),
+      http.delete(
+        `${config.apiBaseUrl}/babies/:babyId/appointments/:appointmentId`,
+        ({ params }) => {
+          deleted = params.appointmentId as string
+          return new HttpResponse(null, { status: 204 })
+        },
+      ),
     )
 
     const user = userEvent.setup()
@@ -99,7 +102,10 @@ describe('AppointmentDetailDialog', () => {
     // COMPLETED on purpose: cancelling only makes sense for a scheduled visit,
     // and a typo in one that already happened had no way out before this.
     renderWithProviders(
-      <AppointmentDetailDialog appointment={{ ...sampleAppointment, status: 'COMPLETED' }} onOpenChange={onOpenChange} />,
+      <AppointmentDetailDialog
+        appointment={{ ...sampleAppointment, status: 'COMPLETED' }}
+        onOpenChange={onOpenChange}
+      />,
     )
 
     await user.click(screen.getByRole('button', { name: 'Excluir consulta' }))
@@ -120,7 +126,9 @@ describe('AppointmentDetailDialog', () => {
 
     const user = userEvent.setup()
     const onOpenChange = vi.fn()
-    renderWithProviders(<AppointmentDetailDialog appointment={sampleAppointment} onOpenChange={onOpenChange} />)
+    renderWithProviders(
+      <AppointmentDetailDialog appointment={sampleAppointment} onOpenChange={onOpenChange} />,
+    )
 
     await user.click(screen.getByRole('button', { name: 'Excluir consulta' }))
     await user.click(await screen.findByRole('button', { name: 'Excluir' }))
@@ -131,5 +139,17 @@ describe('AppointmentDetailDialog', () => {
       expect(onOpenChange).not.toHaveBeenCalledWith(false)
     })
   })
+})
 
+it('does not offer measurements for a cancelled appointment and shows its context', () => {
+  renderWithProviders(
+    <AppointmentDetailDialog
+      appointment={{ ...sampleAppointment, status: 'CANCELLED' }}
+      onOpenChange={vi.fn()}
+    />,
+  )
+  expect(screen.queryByLabelText(/Peso/)).not.toBeInTheDocument()
+  expect(screen.queryByLabelText(/Altura/)).not.toBeInTheDocument()
+  expect(screen.getByText('Clínica Central')).toBeVisible()
+  expect(screen.getByText('Checkup')).toBeVisible()
 })

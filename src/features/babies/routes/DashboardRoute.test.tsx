@@ -11,8 +11,16 @@ import { renderWithProviders, screen } from '@/test/test-utils'
 
 import { DashboardRoute } from './DashboardRoute'
 
-const ana = buildBaby({ id: '11111111-1111-4111-8111-111111111111', name: 'Ana', birthDate: '2026-01-10' })
-const bento = buildBaby({ id: '22222222-2222-4222-8222-222222222222', name: 'Bento', birthDate: '2021-03-02' })
+const ana = buildBaby({
+  id: '11111111-1111-4111-8111-111111111111',
+  name: 'Ana',
+  birthDate: '2026-01-10',
+})
+const bento = buildBaby({
+  id: '22222222-2222-4222-8222-222222222222',
+  name: 'Bento',
+  birthDate: '2021-03-02',
+})
 
 const EMPTY_CALENDAR = {
   metadata: {
@@ -45,11 +53,16 @@ function milestone(id: string, babyId: string, title: string) {
 function withFamily() {
   server.use(
     http.get(`${config.apiBaseUrl}/babies`, () => HttpResponse.json([ana, bento])),
-    http.get(`${config.apiBaseUrl}/babies/:babyId/vaccines`, () => HttpResponse.json(EMPTY_CALENDAR)),
+    http.get(`${config.apiBaseUrl}/babies/:babyId/vaccines`, () =>
+      HttpResponse.json(EMPTY_CALENDAR),
+    ),
     http.get(`${config.apiBaseUrl}/babies/:babyId/appointments`, ({ params }) =>
       HttpResponse.json([
         buildAppointment({
-          id: params.babyId === ana.id ? '33333333-3333-4333-8333-333333333333' : '44444444-4444-4444-8444-444444444444',
+          id:
+            params.babyId === ana.id
+              ? '33333333-3333-4333-8333-333333333333'
+              : '44444444-4444-4444-8444-444444444444',
           babyId: params.babyId as string,
           doctorName: 'Dra. Carla Mendes',
         }),
@@ -109,8 +122,28 @@ describe('DashboardRoute e a criança escolhida no menu', () => {
     // "1 criança", e não "2 crianças".
     expect(screen.getByText(/1 criança/)).toBeInTheDocument()
 
-    // O contador de marcos é o que já mentiu uma vez.
-    const milestoneCard = screen.getByText('Marcos registrados', { exact: false }).closest('div')!
-    expect(milestoneCard).toHaveTextContent('1')
+    expect(await screen.findByText('Sentou sem apoio')).toBeInTheDocument()
+    expect(screen.queryByText('Andou de bicicleta')).not.toBeInTheDocument()
   })
+})
+
+it('guides a new family without showing example records', async () => {
+  server.use(http.get(`${config.apiBaseUrl}/babies`, () => HttpResponse.json([])))
+  renderDashboard()
+  expect(await screen.findByRole('button', { name: 'Adicionar meu primeiro filho' })).toBeVisible()
+  expect(screen.queryByText('65%')).not.toBeInTheDocument()
+  expect(screen.queryByText('Dra. Carla Mendes')).not.toBeInTheDocument()
+})
+it('offers first actions only after the empty records have loaded', async () => {
+  withFamily()
+  server.use(
+    http.get(`${config.apiBaseUrl}/babies/:babyId/appointments`, () => HttpResponse.json([])),
+    http.get(`${config.apiBaseUrl}/babies/:babyId/milestones`, () => HttpResponse.json([])),
+  )
+  renderDashboard()
+  expect(await screen.findByRole('heading', { name: 'Comece por aqui' })).toBeVisible()
+  expect(screen.getByRole('link', { name: 'Registrar vacinas já tomadas' })).toHaveAttribute(
+    'href',
+    '/vaccines',
+  )
 })

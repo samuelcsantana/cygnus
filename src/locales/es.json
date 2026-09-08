@@ -50,8 +50,21 @@
     "growth": "Crecimiento",
     "milestones": "Hitos",
     "notifications": "Notificaciones",
+    "loggingOut": "Cerrando sesión…",
     "logoutError": "No se pudo cerrar la sesión. Sigues conectado; inténtalo de nuevo.",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "shell": {
+      "family": "Tu familia",
+      "chooseContext": "Elegir niño o familia",
+      "account": "Cuenta y preferencias",
+      "care": "Cuidados",
+      "development": "Desarrollo",
+      "childrenError": "No se pudieron cargar los niños.",
+      "retry": "Reintentar",
+      "noChildren": "Usa “Añadir hijo” en el menú para empezar.",
+      "done": "Confirmar selección",
+      "closeMenu": "Cerrar menú"
+    }
   },
   "search": {
     "title": "Buscar",
@@ -63,7 +76,29 @@
     "more_other": "y {{count}} más en {{section}}",
     "error": "No se pudo buscar ahora — alguna lista no cargó.",
     "partialError": "Parte de la búsqueda no se pudo leer: alguna lista no cargó.",
-    "open": "Abrir la búsqueda"
+    "open": "Abrir la búsqueda",
+    "ui": {
+      "close": "Cerrar búsqueda",
+      "clear": "Limpiar búsqueda",
+      "scope": "Buscar en",
+      "family": "Toda la familia",
+      "keyboard": "↑ ↓ para navegar · Enter para abrir · Esc para cerrar",
+      "start": "¿Qué quieres encontrar?",
+      "examples": "Busca una vacuna, profesional, medicamento o algo escrito en tus recuerdos y consultas.",
+      "results_one": "{{count}} resultado disponible",
+      "results_other": "{{count}} resultados disponibles",
+      "expand": "Buscar en toda la familia",
+      "more": "Ver los {{count}} resultados en {{section}}",
+      "dose": "Dosis",
+      "destination": "Resultados de la búsqueda de “{{query}}”",
+      "showAll": "Volver a la lista completa"
+    },
+    "scope": {
+      "choose": "Buscar en: {{name}}",
+      "title": "¿Dónde quieres buscar?",
+      "hint": "Esta elección solo se aplica a la búsqueda. El peque de la página cambia al abrir un resultado.",
+      "familyHint": "Buscar en los registros de todos los peques"
+    }
   },
   "auth": {
     "tabs": {
@@ -110,7 +145,7 @@
       "sendCode": "Enviar código",
       "sending": "Enviando...",
       "requestSent": "Si existe una cuenta con ese correo, enviamos un código.",
-    "requestSentPasswordless": "Enviamos un código a tu correo.",
+      "requestSentPasswordless": "Enviamos un código a tu correo.",
       "codeLabel": "Código de 6 dígitos",
       "codePlaceholder": "000000",
       "codeFormat": "Escribe los 6 dígitos del código.",
@@ -174,10 +209,45 @@
     }
   },
   "babies": {
+    "editor": {
+      "subtitle": "Un perfil para acompañar cada descubrimiento.",
+      "sections": "Secciones del perfil",
+      "profile": "Perfil",
+      "health": "Salud",
+      "guardians": "Responsables",
+      "profileTitle": "Vamos a conocer a tu hijo",
+      "profileHint": "Empieza con el nombre y la fecha de nacimiento. Los demás datos son opcionales.",
+      "healthTitle": "Salud y crecimiento",
+      "healthHint": "Completa lo que sepas ahora. Puedes añadir más después.",
+      "guardiansTitle": "Cuidar juntos",
+      "guardiansHint": "Gestiona el acceso al perfil. Los cambios de acceso se guardan de inmediato.",
+      "previewName": "Nombre del niño",
+      "previewHint": "Una nueva historia empieza aquí",
+      "identityTitle": "A su manera",
+      "identityHint": "Elige una foto y un color para reconocer este perfil en todo Ninho.",
+      "measurements": "Medidas • opcional",
+      "weightKg": "Peso (kg)",
+      "heightCm": "Altura (cm)",
+      "measuredOn": "Fecha de medición",
+      "measurementsHint": "Introduce una o ambas medidas. El registro se añadirá al historial de crecimiento en esta fecha.",
+      "weightKgError": "Introduce un peso entre 0,1 y 150 kg.",
+      "heightCmError": "Introduce una altura entre 10 y 250 cm.",
+      "dateError": "Introduce una fecha entre el nacimiento y hoy.",
+      "lastMeasurement": "Última medición",
+      "noMeasurement": "Todavía no hay medidas registradas.",
+      "addMeasurement": "Registrar nueva medida",
+      "cancelMeasurement": "Cancelar nueva medida",
+      "discardTitle": "¿Descartar cambios?",
+      "discardHint": "Los cambios de este formulario aún no se han guardado.",
+      "keepEditing": "Seguir editando",
+      "discard": "Descartar cambios"
+    },
     "addChild": "Agregar Hijo",
     "switcher": {
       "heading": "Niños",
-      "all": "Todos los niños"
+      "all": "Todos los niños",
+      "prompt": "¿A quién quieres acompañar?",
+      "familyDescription": "Los registros familiares en una vista"
     },
     "age": {
       "months_zero": "{{count}} meses",
@@ -213,10 +283,26 @@
         "cardSubtitle": "Calendario completo",
         "progressLabel": "Progreso",
         "items": [
-          { "name": "BCG", "dose": "Dosis única", "status": "taken" },
-          { "name": "Penta (DTP/Hib/HepB)", "dose": "3ª dosis", "status": "taken" },
-          { "name": "Influenza", "dose": "Anual", "status": "overdue" },
-          { "name": "Triple viral (SRP)", "dose": "2ª dosis", "status": "pending" }
+          {
+            "name": "BCG",
+            "dose": "Dosis única",
+            "status": "taken"
+          },
+          {
+            "name": "Penta (DTP/Hib/HepB)",
+            "dose": "3ª dosis",
+            "status": "taken"
+          },
+          {
+            "name": "Influenza",
+            "dose": "Anual",
+            "status": "overdue"
+          },
+          {
+            "name": "Triple viral (SRP)",
+            "dose": "2ª dosis",
+            "status": "pending"
+          }
         ]
       },
       "previewMilestones": {
@@ -224,9 +310,21 @@
         "cardSubtitle": "Motor · Lenguaje · Social · Cognitivo",
         "footerNote": "Cada momento especial registrado para siempre",
         "items": [
-          { "title": "Primera sonrisa", "date": "20/04/2022", "category": "social" },
-          { "title": "Primeros pasos", "date": "15/01/2023", "category": "motor" },
-          { "title": "Primera palabra", "date": "03/11/2022", "category": "language" }
+          {
+            "title": "Primera sonrisa",
+            "date": "20/04/2022",
+            "category": "social"
+          },
+          {
+            "title": "Primeros pasos",
+            "date": "15/01/2023",
+            "category": "motor"
+          },
+          {
+            "title": "Primera palabra",
+            "date": "03/11/2022",
+            "category": "language"
+          }
         ]
       },
       "previewAppointments": {
@@ -234,8 +332,18 @@
         "cardSubtitle": "Historial y citas",
         "footerNote": "Anota observaciones e informes de cada visita",
         "items": [
-          { "doctorName": "Dra. Carla Mendes", "specialty": "Pediatría", "date": "15/08", "status": "scheduled" },
-          { "doctorName": "Dr. Paulo Andrade", "specialty": "Odontopediatría", "date": "05/07", "status": "completed" }
+          {
+            "doctorName": "Dra. Carla Mendes",
+            "specialty": "Pediatría",
+            "date": "15/08",
+            "status": "scheduled"
+          },
+          {
+            "doctorName": "Dr. Paulo Andrade",
+            "specialty": "Odontopediatría",
+            "date": "05/07",
+            "status": "completed"
+          }
         ]
       },
       "previewNotifications": {
@@ -243,17 +351,32 @@
         "cardSubtitle": "Recordatorios automáticos",
         "footerNote": "Tú controlas qué alertas recibir",
         "items": [
-          { "text": "Penta 3ª dosis — vence en 3 días" },
-          { "text": "Consulta pediátrica mañana a las 14h" },
-          { "text": "¡Tu bebé cumple un mes más hoy! 🎂" }
+          {
+            "text": "Penta 3ª dosis — vence en 3 días"
+          },
+          {
+            "text": "Consulta pediátrica mañana a las 14h"
+          },
+          {
+            "text": "¡Tu bebé cumple un mes más hoy! 🎂"
+          }
         ]
       },
       "stepsSectionTitle": "Comienza en 3 pasos simples 🚀",
       "steps": {
         "items": [
-          { "title": "Registra a tu hijo", "description": "Nombre, fecha de nacimiento y listo — toma menos de 1 minuto" },
-          { "title": "Registra las vacunas", "description": "Marca las que ya recibió y la app organiza las próximas automáticamente" },
-          { "title": "Sigue el crecimiento", "description": "Consultas, hitos y notificaciones para no perder nunca nada importante" }
+          {
+            "title": "Registra a tu hijo",
+            "description": "Nombre, fecha de nacimiento y listo — toma menos de 1 minuto"
+          },
+          {
+            "title": "Registra las vacunas",
+            "description": "Marca las que ya recibió y la app organiza las próximas automáticamente"
+          },
+          {
+            "title": "Sigue el crecimiento",
+            "description": "Consultas, hitos y notificaciones para no perder nunca nada importante"
+          }
         ]
       },
       "bottomCtaTitle": "¿Listo(a) para comenzar?",
@@ -290,8 +413,7 @@
       "noAppointmentsScheduled": "Sin consultas agendadas",
       "vaccineStatusDelayed_one": "{{count}} vacuna atrasada",
       "vaccineStatusDelayed_other": "{{count}} vacunas atrasadas",
-      "vaccineStatusUpToDate": "Vacunas al día"
-,
+      "vaccineStatusUpToDate": "Vacunas al día",
       "vaccineStatusUnknown": "No se pudieron verificar las vacunas"
     },
     "form": {
@@ -319,7 +441,7 @@
       "avatarRemove": "Quitar foto",
       "avatarFileTooLarge": "La imagen debe tener como máximo 10MB.",
       "avatarInvalidImage": "No se pudo cargar esa imagen. Prueba con otro archivo.",
-      "avatarColorGroupLabel": "Color del borde del avatar",
+      "avatarColorGroupLabel": "Color del avatar",
       "avatarColorOption": "Color {{number}}",
       "submit": "Crear Perfil",
       "genericError": "No se pudo guardar. Inténtalo de nuevo.",
@@ -381,9 +503,61 @@
         "copyError": "No se pudo copiar el enlace.",
         "newInviteAction": "Generar otra invitación"
       }
+    },
+    "home": {
+      "welcome": "Un lugar para cuidar y guardar recuerdos",
+      "intro": "Organiza los cuidados y acompaña cada descubrimiento al ritmo de tu familia.",
+      "addFirst": "Añadir a mi primer hijo",
+      "later": "Empieza por el perfil. Puedes completar los datos de salud después.",
+      "benefit0Title": "Cuidados organizados",
+      "benefit0Body": "Vacunas y consultas juntas para facilitar la rutina.",
+      "benefit1Title": "Crecimiento de cerca",
+      "benefit1Body": "Peso, altura e historial para acompañar cada etapa.",
+      "benefit2Title": "Recuerdos que quedan",
+      "benefit2Body": "Guarda pequeños y grandes logros con fotos e historias.",
+      "start": "Empieza por aquí",
+      "startBody": "El perfil está listo. Elige qué registrar ahora, sin necesidad de completarlo todo.",
+      "recordVaccines": "Registrar vacunas recibidas",
+      "schedule": "Programar una consulta",
+      "memory": "Guardar un hito",
+      "care": "Próximos cuidados",
+      "growing": "Crecimiento y momentos",
+      "measureUnavailable": "Medidas no disponibles en este momento.",
+      "noMeasurement": "Todavía no hay medidas registradas.",
+      "growthLink": "Ver historial de crecimiento",
+      "pastAppointments": "Hay consultas pasadas que siguen marcadas como programadas. Revisa los registros."
     }
   },
   "vaccines": {
+    "editor": {
+      "record": "Registro de vacuna",
+      "child": "Niño",
+      "chooseChild": "Selecciona un niño",
+      "vaccine": "Vacuna",
+      "preview": "Selecciona una vacuna",
+      "railTitle": "Cada dosis, una historia",
+      "railHint": "Revisa el niño, la vacuna y la dosis antes de guardar. El registro formará parte de la cartilla.",
+      "subtitle": "Completa los datos de aplicación de la cartilla.",
+      "application": "Aplicación",
+      "loadError": "No se pudieron cargar los datos.",
+      "retry": "Reintentar",
+      "noChildren": "Añade un niño para registrar vacunas.",
+      "search": "Buscar vacuna por nombre",
+      "noResults": "Ninguna vacuna coincide con la búsqueda.",
+      "proof": "Comprobante (opcional)",
+      "proofHint": "Selecciona una foto legible de la cartilla. Imágenes de hasta 10 MB.",
+      "proofPreview": "Vista previa del comprobante",
+      "choosePhoto": "Seleccionar foto",
+      "removePhoto": "Eliminar",
+      "processing": "Preparando imagen…",
+      "proofError": "No se pudo usar esta imagen. Selecciona una foto más pequeña en JPG o PNG.",
+      "useLink": "Usar un enlace de imagen",
+      "dateError": "Introduce una fecha válida entre el nacimiento y hoy.",
+      "discardTitle": "¿Descartar registro?",
+      "discardHint": "Los datos todavía no se han guardado.",
+      "keepEditing": "Seguir editando",
+      "discard": "Descartar"
+    },
     "title": "Vacunas",
     "summary": "{{applied}} aplicadas · {{delayed}} atrasadas · {{pending}} pendientes",
     "summaryUnavailable": "Cargando el calendario…",
@@ -395,7 +569,9 @@
       "pending": "Pendientes",
       "delayed": "Atrasadas"
     },
-    "statusFilter": { "groupLabel": "Filtrar por situación" },
+    "statusFilter": {
+      "groupLabel": "Filtrar por situación"
+    },
     "filterAll": "Todas",
     "filterApplied": "Aplicadas ({{count}})",
     "filterPending": "Pendientes ({{count}})",
@@ -408,7 +584,8 @@
       "pending": "Pendiente",
       "delayed": "Atrasada",
       "applied": "Aplicada el {{date}}",
-      "guidance": "Orientación"
+      "guidance": "Orientación",
+      "appliedShort": "Aplicada"
     },
     "catalog": {
       "title": "Calendario oficial y orientaciones clínicas",
@@ -518,6 +695,47 @@
       "columnVaccine": "Vacuna",
       "columnDose": "Dosis",
       "columnStatus": "Estado"
+    },
+    "page": {
+      "intro": "Consulta las dosis y mantén organizados los registros de vacunación.",
+      "noFilter": "No hay dosis en este filtro. Elige otro estado para continuar.",
+      "details": "Ver detalles",
+      "recordDose": "Registrar dosis",
+      "noAdhoc": "No hay vacunas de campaña o personalizadas registradas.",
+      "routineProgress": "Progreso de las dosis de rutina"
+    },
+    "document": {
+      "generated": "Generado el {{date}}",
+      "applied": "Dosis aplicadas",
+      "noApplied": "Todavía no hay dosis aplicadas registradas.",
+      "upcoming": "Calendario a seguir",
+      "noUpcoming": "No hay dosis ni orientaciones a seguir en este calendario.",
+      "recordNote": "Este documento reúne los registros introducidos en Ninho.",
+      "noDate": "Sin fecha",
+      "sourceCATALOG": "Calendario",
+      "sourceCAMPAIGN": "Campaña",
+      "sourceCUSTOM": "Personalizada",
+      "batch": "Lote",
+      "location": "Lugar de vacunación",
+      "professional": "Profesional",
+      "notes": "Observaciones",
+      "proof": "Comprobante",
+      "details": "Detalles del registro",
+      "back": "Volver a vacunas",
+      "print": "Imprimir / Guardar PDF",
+      "printScope": "Contenido de impresión",
+      "include": "Incluir calendario a seguir",
+      "onlyApplied": "Solo dosis aplicadas",
+      "nothingToPrint": "No hay dosis aplicadas para imprimir. Incluye el calendario para imprimir el resto de la información.",
+      "notFound": "Niño no encontrado. Vuelve a vacunas para elegir otra cartilla."
+    },
+    "searchUi": {
+      "placeholder": "Buscar vacuna por nombre",
+      "clear": "Limpiar búsqueda",
+      "results_one": "{{count}} resultado",
+      "results_other": "{{count}} resultados",
+      "filtered": "Filtro: {{status}}",
+      "results_zero": "{{count}} resultados"
     }
   },
   "specialists": {
@@ -558,10 +776,92 @@
       "title": "Ningún profesional guardado",
       "description": "Guarde al pediatra, a la fonoaudióloga, a quien más cuide de sus niños — con el teléfono, que es lo que se busca con prisa.",
       "cta": "Añadir el primero"
+    },
+    "editor": {
+      "contact": "Profesional",
+      "preview": "Tu contacto de confianza",
+      "specialtyPreview": "Especialidad y contacto en un solo lugar",
+      "children": "Atiende a",
+      "linkedChildren": "Niños vinculados",
+      "noLinks": "Ningún niño vinculado",
+      "railTitle": "Cuidado cercano",
+      "railHint": "Guarda el contacto y elige con quién compartir esta información.",
+      "details": "Datos del profesional",
+      "optional": "(opcional)",
+      "nameRequired": "Introduce el nombre del profesional.",
+      "links": "Niños y acceso",
+      "babiesHint": "Los responsables de los niños seleccionados también tendrán acceso a este profesional.",
+      "noChildren": "Aún no tienes niños registrados. Puedes guardar un contacto personal.",
+      "babiesError": "No se pudieron cargar los niños. Tus selecciones se han conservado.",
+      "additionalShare": "Compartir individualmente",
+      "shareHint": "Da acceso a otros responsables, incluso sin vincular al niño que comparten. Desmarcar aquí no elimina el acceso a través de los niños.",
+      "noGuardians": "No hay otros responsables disponibles para compartir.",
+      "guardiansError": "No se pudieron cargar los responsables. Se han conservado los accesos existentes.",
+      "specialtiesLoading": "Cargando sugerencias de especialidades…",
+      "specialtiesError": "No se cargaron las sugerencias. Puedes escribir la especialidad.",
+      "retry": "Reintentar",
+      "visibility": "Quién tendrá acceso",
+      "privateAccess": "Solo tú. Este contacto quedará en tu lista personal.",
+      "childAccess": "Tú y todos los responsables de los niños seleccionados.",
+      "sharedAccess": "Tú y los responsables seleccionados.",
+      "directAccess": "Acceso individual ({{count}}):",
+      "add": "Añadir profesional",
+      "saveChanges": "Guardar cambios",
+      "discardTitle": "¿Descartar cambios?",
+      "discardHint": "Tus cambios aún no se han guardado.",
+      "keepEditing": "Seguir editando",
+      "discard": "Descartar"
+    },
+    "page": {
+      "intro": "Guarda los contactos de los profesionales que acompañan a tu familia.",
+      "noSpecialty": "Especialidad no informada",
+      "accessUnknown": "No se pudieron confirmar los permisos de este contacto.",
+      "shared": "Compartido conmigo",
+      "readOnly": "Puedes consultar este contacto. Solo quien lo creó puede editarlo.",
+      "noPhone": "Teléfono no informado",
+      "linksError": "No se pudieron cargar los vínculos con los niños.",
+      "otherLinks": "Hay niños vinculados cuyos datos no están disponibles.",
+      "childContext": "Mostrando los profesionales vinculados al niño seleccionado.",
+      "allContacts": "Ver todos los contactos",
+      "filters": "Filtrar profesionales",
+      "ALL": "Todos",
+      "OWN": "Mis contactos",
+      "SHARED": "Compartidos conmigo",
+      "search": "Buscar nombre, especialidad o teléfono",
+      "noSearch": "No se encontraron contactos. Prueba otro término o limpia la búsqueda.",
+      "noLinks": "No hay profesionales vinculados a este niño. Añade uno o consulta todos los contactos para editar un vínculo existente.",
+      "noFilter": "No hay contactos en este filtro.",
+      "clear": "Limpiar búsqueda y filtros",
+      "edit": "Editar"
     }
   },
-
   "appointments": {
+    "editor": {
+      "record": "Consulta",
+      "child": "Niño",
+      "chooseChild": "Selecciona un niño",
+      "professional": "Profesional",
+      "preview": "Quién va a cuidar",
+      "railTitle": "Todo listo para la consulta",
+      "railHint": "Revisa el niño, el profesional, el lugar y la hora antes de guardar.",
+      "subtitle": "Organiza los detalles de la próxima visita.",
+      "schedule": "Fecha y detalles",
+      "discardTitle": "¿Descartar cambios?",
+      "discardHint": "Los datos de la consulta todavía no se han guardado.",
+      "keepEditing": "Seguir editando",
+      "discard": "Descartar",
+      "loadingProfessionals": "Cargando sugerencias de profesionales…",
+      "professionalsError": "No se pudieron cargar las sugerencias. Puedes introducir los datos o reintentar.",
+      "retry": "Reintentar",
+      "saveProfessionalError": "No se pudo guardar el profesional. La consulta todavía no se ha guardado.",
+      "appointmentAfterProfessionalError": "El profesional se guardó, pero la consulta no. Reintenta para completar el registro.",
+      "beforeBirth": "La consulta no puede ser anterior al nacimiento.",
+      "completedTitle": "Registrar consulta realizada",
+      "completedSubmit": "Registrar consulta",
+      "scheduleSubmit": "Programar consulta",
+      "childrenError": "No se pudieron cargar los niños.",
+      "noChildren": "Añade un niño para programar consultas."
+    },
     "title": "Consultas",
     "summary": "{{completed}} realizadas · {{scheduled}} agendadas",
     "summaryUnavailable": "Cargando las consultas…",
@@ -645,6 +945,23 @@
     },
     "search": {
       "label": "Buscar consulta"
+    },
+    "page": {
+      "intro": "Organiza los próximos cuidados y consulta el historial de cada visita.",
+      "recordPast": "Registrar consulta realizada",
+      "filters": "Filtrar consultas",
+      "ALL": "Todas",
+      "UPCOMING": "Próximas",
+      "REVIEW": "Por actualizar",
+      "COMPLETED": "Realizadas",
+      "CANCELLED": "Canceladas",
+      "search": "Buscar profesional, especialidad, lugar o motivo",
+      "noFilter": "No hay consultas en este filtro.",
+      "next": "Próxima consulta",
+      "reviewHint": "Esta fecha ya pasó. Indica si la consulta se realizó, se canceló o necesita reprogramarse.",
+      "location": "Lugar",
+      "reason": "Motivo",
+      "date": "Fecha y hora"
     }
   },
   "medications": {
@@ -708,6 +1025,56 @@
       "notesLabel": "Observaciones (Opcional)",
       "startedOnFuture": "La fecha de inicio no puede estar en el futuro.",
       "endedOnBeforeStart": "El fin no puede ser anterior al inicio."
+    },
+    "editor": {
+      "child": "Niño",
+      "chooseChild": "Selecciona un niño",
+      "discardTitle": "¿Descartar cambios?",
+      "discardHint": "Tus cambios aún no se han guardado.",
+      "keepEditing": "Seguir editando",
+      "discard": "Descartar",
+      "childrenError": "No se pudieron cargar los niños.",
+      "retry": "Reintentar",
+      "record": "Medicamento",
+      "medicine": "Medicamento",
+      "details": "Período y detalles",
+      "preview": "El cuidado registrado",
+      "railTitle": "Historial de cuidados",
+      "railHint": "Revisa el medicamento, el niño y el período antes de guardar.",
+      "subtitle": "Guarda los datos del medicamento y del período registrado.",
+      "noEnd": "Sin fecha de finalización registrada",
+      "loadingPrescribers": "Cargando profesionales del niño…",
+      "prescribersError": "No se pudieron cargar los profesionales. Puedes escribir el nombre de quien lo recetó.",
+      "noChildren": "Añade un niño para registrar un medicamento."
+    },
+    "page": {
+      "intro": "Organiza los medicamentos por las fechas registradas, incluidos los próximos períodos.",
+      "dosage": "Dosis",
+      "frequency": "Frecuencia",
+      "start": "Inicio",
+      "end": "Fin",
+      "prescriber": "Quién lo recetó",
+      "reason": "Motivo",
+      "notes": "Observaciones",
+      "endAction": "Registrar fin",
+      "filters": "Filtrar medicamentos",
+      "ALL": "Todos",
+      "ACTIVE": "En curso",
+      "PLANNED": "Programados",
+      "ENDED": "Finalizados",
+      "search": "Buscar medicamento, motivo o prescriptor",
+      "noResults": "Ningún registro coincide con la búsqueda y el filtro.",
+      "endTitle": "¿Registrar el fin hoy?",
+      "endHint": "El fin de {{name}} se registrará con la fecha de hoy, sustituyendo una fecha futura si existe. Aparecerá como “Termina hoy” hasta el final del día.",
+      "endConfirm": "Confirmar fin hoy",
+      "endSaved": "Fecha de fin registrada."
+    },
+    "period": {
+      "PLANNED": "Programado",
+      "OPEN": "Sin fin definido",
+      "ACTIVE": "En curso",
+      "ENDING_TODAY": "Termina hoy",
+      "ENDED": "Finalizado"
     }
   },
   "healthPlan": {
@@ -742,12 +1109,12 @@
       "weightLabel": "Curva de peso de {{name}}, {{count}} medidas a lo largo del tiempo",
       "heightLabel": "Curva de altura de {{name}}, {{count}} medidas a lo largo del tiempo"
     },
-    "singlePoint": "Una sola medida todavía no dibuja una curva — la próxima consulta traza la línea.",
+    "singlePoint": "Una medida inicia el historial. La siguiente ayuda a dibujar la curva.",
     "noWeight": "Todavía no hay ningún peso registrado.",
     "noHeight": "Todavía no hay ninguna altura registrada.",
     "empty": {
       "title": "Ninguna medida registrada",
-      "description": "El peso y la altura se anotan en la consulta que los midió. Registra una consulta como realizada con los números y la curva empieza aquí.",
+      "description": "Registra peso y altura en el perfil del niño o en una consulta realizada para seguir su crecimiento.",
       "cta": "Ir a las consultas"
     },
     "table": {
@@ -766,7 +1133,9 @@
     "summary_other": "{{count}} momentos especiales registrados",
     "action": "Registrar Hito",
     "genericError": "No se pudieron cargar los hitos.",
-    "categoryFilter": { "groupLabel": "Filtrar por categoría" },
+    "categoryFilter": {
+      "groupLabel": "Filtrar por categoría"
+    },
     "filterAll": "Todos",
     "category": {
       "motor": "Motor",
@@ -831,6 +1200,58 @@
     },
     "search": {
       "label": "Buscar hito"
+    },
+    "editor": {
+      "child": "Niño",
+      "chooseChild": "Selecciona un niño",
+      "discardTitle": "¿Descartar cambios?",
+      "discardHint": "Tus cambios aún no se han guardado.",
+      "keepEditing": "Seguir editando",
+      "discard": "Descartar",
+      "childrenError": "No se pudieron cargar los niños.",
+      "retry": "Reintentar",
+      "record": "Un recuerdo",
+      "moment": "El momento",
+      "details": "El recuerdo",
+      "preview": "Un momento para recordar",
+      "railTitle": "Su historia juntos",
+      "railHint": "Pequeños descubrimientos y momentos que merecen recordarse.",
+      "subtitle": "Cuenta lo que pasó. Los detalles hacen que este recuerdo sea tuyo.",
+      "save": "Guardar recuerdo",
+      "suggestions": "Ideas para empezar",
+      "replaceTitle": "¿Usar esta idea?",
+      "replaceHint": "Se reemplazarán el título y la categoría. Se conservarán los demás detalles.",
+      "replace": "Usar idea",
+      "noChildren": "Añade un niño para guardar un hito.",
+      "photoHint": "Foto opcional · JPG, PNG o WebP · hasta 5 MB",
+      "photoReplace": "Cambiar foto",
+      "photoLoading": "Subiendo foto…",
+      "description": "¿Cómo fue este momento? (opcional)",
+      "categoryHints": {
+        "motor": "Movimientos y nuevas habilidades",
+        "language": "Sonidos, palabras y comunicación",
+        "social": "Sonrisas, vínculos y convivencia",
+        "cognitive": "Descubrimientos y aprendizajes",
+        "other": "Otros recuerdos especiales"
+      }
+    },
+    "page": {
+      "intro": "Primeros descubrimientos y momentos para recordar.",
+      "enlarge": "Ampliar foto de {{title}}",
+      "viewPhoto": "Ver foto",
+      "photoUnavailable": "No se pudo cargar la foto.",
+      "edit": "Editar",
+      "emptyTitle": "Una historia comienza con un recuerdo",
+      "emptyDescription": "Una sonrisa, un descubrimiento o un día especial. Guarda los momentos que forman parte de la historia de tu peque, con o sin foto.",
+      "ideas": "Ideas para empezar",
+      "ideasHint": "Son solo ideas. Tú eliges qué recordar.",
+      "search": "Buscar en los recuerdos…",
+      "results_one": "{{count}} recuerdo encontrado",
+      "results_other": "{{count}} recuerdos encontrados",
+      "partial": "Lista parcial",
+      "noSearch": "Ningún recuerdo coincide con tu búsqueda.",
+      "noCategory": "Todavía no hay recuerdos en esta categoría.",
+      "reset": "Limpiar búsqueda y filtros"
     }
   },
   "notifications": {
@@ -870,11 +1291,12 @@
       "savedToast": "¡Perfil actualizado con éxito!",
       "incorrectCurrentPassword": "Contraseña actual incorrecta.",
       "emailTaken": "Este correo electrónico ya está en uso por otra cuenta.",
-      "genericError": "No se pudo guardar. Inténtalo de nuevo."
+      "genericError": "No se pudo guardar. Inténtalo de nuevo.",
+      "emailReadOnly": "El correo de la cuenta no se puede cambiar."
     },
     "password": {
       "sectionTitle": "Cambiar Contraseña",
-      "sectionDescription": "Su contraseña nunca se muestra. Cámbiela cuando quiera.",
+      "sectionDescription": "Actualiza tu contraseña para proteger el acceso a tu cuenta.",
       "startAction": "Cambiar contraseña",
       "currentPasswordLabel": "Contraseña actual",
       "newPasswordLabel": "Nueva contraseña",
@@ -883,7 +1305,9 @@
       "submit": "Actualizar Contraseña",
       "savedToast": "¡Contraseña actualizada con éxito!",
       "incorrectCurrentPassword": "Contraseña actual incorrecta.",
-      "genericError": "No se pudo actualizar la contraseña. Inténtalo de nuevo."
+      "genericError": "No se pudo actualizar la contraseña. Inténtalo de nuevo.",
+      "show": "Mostrar contraseña",
+      "hide": "Ocultar contraseña"
     },
     "babies": {
       "sectionTitle": "Bebés que gestionas",
@@ -891,7 +1315,7 @@
       "addFirst": "Añadir Niño"
     },
     "delete": {
-      "sectionTitle": "Zona de Peligro",
+      "sectionTitle": "Eliminar cuenta",
       "sectionDescription": "Eliminar tu cuenta es permanente y eliminará todos los bebés, vacunas, citas e hitos asociados.",
       "action": "Eliminar mi cuenta",
       "confirmTitle": "¿Eliminar cuenta?",
@@ -904,7 +1328,23 @@
       "currentPasswordLabel": "Confirma tu contraseña actual",
       "confirmAction": "Eliminar cuenta permanentemente",
       "incorrectPassword": "Contraseña actual incorrecta.",
-      "genericError": "No se pudo eliminar la cuenta. Inténtalo de nuevo."
+      "genericError": "No se pudo eliminar la cuenta. Inténtalo de nuevo.",
+      "codeError": "No se pudo enviar el código. Cierra e inténtalo de nuevo."
+    },
+    "page": {
+      "title": "Mi perfil",
+      "preferences": "Preferencias",
+      "preferencesHint": "Ajusta el idioma y la apariencia de la aplicación.",
+      "error": "No se pudo cargar tu perfil."
+    },
+    "photo": {
+      "title": "Foto de perfil",
+      "add": "Añadir foto",
+      "change": "Cambiar foto",
+      "remove": "Quitar foto",
+      "hint": "Elige una imagen de hasta 10 MB. La foto se guardará junto con tus cambios.",
+      "tooLarge": "Elige una imagen de hasta 10 MB.",
+      "invalid": "No se pudo abrir esta imagen. Elige otra."
     }
   },
   "invites": {

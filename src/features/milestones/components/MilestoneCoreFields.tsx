@@ -22,6 +22,7 @@ export function MilestoneCoreFields({ control, register, errors }: MilestoneCore
   const categoryOptions = milestoneCategorySchema.options.map((category) => ({
     value: category,
     label: t(`milestones.category.${category.toLowerCase()}`),
+    description: t(`milestones.editor.categoryHints.${category.toLowerCase()}`),
     media: <span className="text-xl">{MILESTONE_CATEGORY_META[category].emoji}</span>,
   }))
 
@@ -31,29 +32,6 @@ export function MilestoneCoreFields({ control, register, errors }: MilestoneCore
 
   return (
     <div className="space-y-6">
-      <div>
-        <Label id="category-label">{t('milestones.form.categoryLabel')}</Label>
-        <Controller
-          control={control}
-          name="category"
-          render={({ field }) => (
-            <div
-              className="mt-2"
-              role="group"
-              aria-labelledby="category-label"
-              aria-describedby={categoryErrorKey ? 'category-error' : undefined}
-            >
-              <SelectorCardGroup value={field.value} onValueChange={field.onChange} options={categoryOptions} />
-            </div>
-          )}
-        />
-        {categoryErrorKey && (
-          <p id="category-error" className="text-destructive mt-1 text-sm">
-            {t(categoryErrorKey)}
-          </p>
-        )}
-      </div>
-
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <div className="md:col-span-2">
           <Label htmlFor="title">{t('milestones.form.titleLabel')}</Label>
@@ -80,6 +58,8 @@ export function MilestoneCoreFields({ control, register, errors }: MilestoneCore
               <DatePickerField
                 id="achievedAt"
                 value={field.value}
+                ref={field.ref}
+                onBlur={field.onBlur}
                 onValueChange={field.onChange}
                 aria-invalid={!!errors.achievedAt}
                 aria-describedby={achievedAtErrorKey ? 'achievedAt-error' : undefined}
@@ -93,6 +73,34 @@ export function MilestoneCoreFields({ control, register, errors }: MilestoneCore
             </p>
           )}
         </div>
+      </div>
+      <div>
+        <Label id="category-label">{t('milestones.form.categoryLabel')}</Label>
+        <Controller
+          control={control}
+          name="category"
+          render={({ field }) => (
+            <div
+              className="mt-2"
+              role="group"
+              aria-labelledby="category-label"
+              aria-describedby={categoryErrorKey ? 'category-error' : undefined}
+            >
+              <SelectorCardGroup
+                value={field.value}
+                onValueChange={field.onChange}
+                options={categoryOptions}
+                layout="vertical"
+                className="grid grid-cols-1 gap-2 sm:grid-cols-2 [&>label]:p-3"
+              />
+            </div>
+          )}
+        />
+        {categoryErrorKey && (
+          <p id="category-error" className="text-destructive mt-1 text-sm">
+            {t(categoryErrorKey)}
+          </p>
+        )}
       </div>
     </div>
   )

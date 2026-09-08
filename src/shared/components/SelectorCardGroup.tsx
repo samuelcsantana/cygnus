@@ -47,7 +47,7 @@ export function SelectorCardGroup({
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-bold text-ink-muted">{option.label}</span>
             {layout === 'vertical' && option.description && (
-              <span className="mt-0.5 block text-xs font-normal text-ink-muted/80">{option.description}</span>
+              <span className="mt-0.5 block text-xs font-normal text-ink-muted">{option.description}</span>
             )}
           </span>
         </label>

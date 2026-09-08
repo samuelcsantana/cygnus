@@ -1,4 +1,7 @@
+import { useSearchDestination } from '@/shared/stores/searchDestination.store'
 import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
@@ -14,66 +17,94 @@ import { AppointmentsSkeleton } from '../components/AppointmentsSkeleton'
 
 export function AppointmentsRoute() {
   const { t } = useTranslation()
-  const { isPending, isError, isEmpty, babies, items } = useAllBabiesAppointments()
+  const all = useAllBabiesAppointments()
+  const selectedId = useSelectedBabyStore((state) => state.selectedBabyId)
+  const client = useQueryClient()
+  const babies = all.babies.filter((baby) => !selectedId || baby.id === selectedId)
+  const entries = all.perBaby.filter((entry) => !selectedId || entry.baby.id === selectedId)
+  const destination = useSearchDestination('/appointments')
+  const items = entries
+    .filter((entry) => !entry.isError)
+    .flatMap((entry) => entry.items)
+    .filter((item) => !destination || destination.keys.includes(`appointment:${item.id}`))
+  const isEmpty = all.isEmpty
+  const isPending = all.babies.length ? entries.some((entry) => entry.isPending) : all.isPending
+  const isError = all.babies.length ? entries.some((entry) => entry.isError) : all.isError
+  const [initialStatus, setInitialStatus] = useState<'SCHEDULED' | 'COMPLETED'>('SCHEDULED')
+  const openEditor = (status: 'SCHEDULED' | 'COMPLETED') => {
+    setInitialStatus(status)
+    setIsAddOpen(true)
+  }
+  const retry = () => {
+    if (!all.babies.length) void client.invalidateQueries({ queryKey: ['babies'] })
+    entries
+      .filter((entry) => entry.isError)
+      .forEach(
+        (entry) =>
+          void client.invalidateQueries({ queryKey: ['babies', entry.baby.id, 'appointments'] }),
+      )
+  }
   const [isAddOpen, setIsAddOpen] = useState(false)
 
   if (isEmpty) {
     return <Navigate to="/dashboard" replace />
   }
 
-  const completedCount = items.filter((appointment) => appointment.status === 'COMPLETED').length
-  const scheduledCount = items.filter((appointment) => appointment.status === 'SCHEDULED').length
-
-  // Upcoming visits first (soonest first), then past ones (most recent first) —
-  // reads as "what's next" followed by "history".
-  const sortedItems = [...items].sort((a, b) => {
-    const aScheduled = a.status === 'SCHEDULED'
-    const bScheduled = b.status === 'SCHEDULED'
-    if (aScheduled !== bScheduled) return aScheduled ? -1 : 1
-    return aScheduled ? a.scheduledAt.localeCompare(b.scheduledAt) : b.scheduledAt.localeCompare(a.scheduledAt)
-  })
-
   return (
     <div className="animate-fade-in-up">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <h2 className="font-display text-3xl font-extrabold text-ink">{t('appointments.title')}</h2>
-          {/* Without the list, both counts are zeros derived from an empty
-              array. Printed unconditionally they sat directly above "Não foi
-              possível carregar as consultas." — the page asserted a count and
-              then admitted, one line down, that it had read nothing. Same
-              shape as the vaccine summary, same treatment. */}
-          {isError ? (
-            // Nothing here on error: the message below already says the list
-            // did not load, and repeating it in a subtitle only competes with
-            // it for attention.
-            null
-          ) : (
-            <p className="mt-1 text-lg text-ink-muted">
-              {isPending
-                ? t('appointments.summaryUnavailable')
-                : t('appointments.summary', { completed: completedCount, scheduled: scheduledCount })}
-            </p>
-          )}
+          <h1 className="font-display text-3xl font-extrabold text-ink">
+            {t('appointments.title')}
+          </h1>
+          <p className="mt-1 text-sm text-ink-muted">{t('appointments.page.intro')}</p>
         </div>
-        <Button
-          type="button"
-          size="cta"
-          onClick={() => setIsAddOpen(true)}
-          className="rounded-2xl shadow-lg shadow-emerald-900/20 active:scale-[0.98]"
-        >
-          <PlusIcon className="mr-2 h-5 w-5" />
-          {t('appointments.scheduleAction')}
-        </Button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={() => openEditor('COMPLETED')}
+            className="min-h-11 rounded-xl px-3 text-sm font-semibold text-ink-muted hover:bg-muted"
+          >
+            {t('appointments.page.recordPast')}
+          </button>
+          <Button
+            type="button"
+            size="cta"
+            onClick={() => openEditor('SCHEDULED')}
+            className="rounded-2xl shadow-lg shadow-emerald-900/20 active:scale-[0.98]"
+          >
+            <PlusIcon className="mr-2 h-5 w-5" />
+            {t('appointments.scheduleAction')}
+          </Button>
+        </div>
       </div>
 
-      <AddAppointmentDialog open={isAddOpen} onOpenChange={setIsAddOpen} />
+      <AddAppointmentDialog
+        open={isAddOpen}
+        onOpenChange={setIsAddOpen}
+        initialStatus={initialStatus}
+      />
 
-      {isPending ? (
-        <AppointmentsSkeleton />
-      ) : isError ? (
-        <p className="py-16 text-center text-ink-muted">{t('appointments.genericError')}</p>
-      ) : items.length === 0 ? (
+      {isError && (
+        <div role="alert" className="mb-5 rounded-2xl border border-border bg-card p-5">
+          <p>
+            {t('appointments.genericError')}{' '}
+            {entries
+              .filter((entry) => entry.isError)
+              .map((entry) => entry.baby.name)
+              .join(', ')}
+          </p>
+          <button
+            type="button"
+            onClick={retry}
+            className="mt-2 min-h-11 font-semibold text-primary"
+          >
+            {t('nav.shell.retry')}
+          </button>
+        </div>
+      )}
+      {isPending && <AppointmentsSkeleton />}
+      {!isPending && !isError && items.length === 0 && (
         <EmptyState
           icon={<CalendarIcon className="h-10 w-10" />}
           title={t('appointments.empty.title')}
@@ -82,17 +113,16 @@ export function AppointmentsRoute() {
           action={
             <Button
               type="button"
-          size="cta"
-              onClick={() => setIsAddOpen(true)}
+              size="cta"
+              onClick={() => openEditor('SCHEDULED')}
               className="rounded-xl shadow-md shadow-emerald-900/20"
             >
               {t('appointments.empty.cta')}
             </Button>
           }
         />
-      ) : (
-        <AppointmentsList items={sortedItems} babies={babies} />
       )}
+      {items.length > 0 && <AppointmentsList items={items} babies={babies} />}
     </div>
   )
 }

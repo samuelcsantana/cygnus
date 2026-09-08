@@ -17,6 +17,7 @@ import type { Baby } from '@/features/babies/api/babies.schemas'
  */
 export function buildBaby(overrides: Partial<Baby> = {}): Baby {
   return {
+    measurements: [],
     id: '11111111-1111-4111-8111-111111111111',
     userId: '99999999-9999-4999-8999-999999999999',
     name: 'Baby One',

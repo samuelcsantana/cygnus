@@ -1,20 +1,15 @@
 import type { Appointment } from '@/features/appointments/api/appointments.schemas'
-import type { SexAtBirth } from '@/features/babies/api/babies.schemas'
+import type { BabyMeasurement, SexAtBirth } from '@/features/babies/api/babies.schemas'
 import { ageInMonthsAt, ageInMonthsExactAt } from '@/lib/date'
 
 import { WHO_REFERENCE, WHO_REFERENCE_MAX_MONTHS, type WhoReferenceRow } from './who-reference'
 
 /**
- * One visit that measured something, placed on an age axis.
- *
- * There is no growth endpoint and there does not need to be one: weight and
- * height are recorded on the visit that took them, so the series is the visits,
- * read in order. That also means the curve can never disagree with the
- * appointment list — they are the same rows.
+ * A dated profile measurement or completed visit, placed on an age axis.
  */
 export interface GrowthPoint {
   appointmentId: string
-  /** The visit's instant, exactly as the API stores it. */
+  /** Visit timestamp or local noon for a date-only profile measurement. */
   scheduledAt: string
   /** Where the point sits on the axis: age in months, fractional. */
   ageMonths: number
@@ -35,8 +30,8 @@ export interface GrowthPoint {
  * Oldest first because a curve is read left to right; the appointment list sorts
  * the other way, which is right for "what happened recently" and wrong here.
  */
-export function growthSeries(appointments: Appointment[], birthDate: string): GrowthPoint[] {
-  return appointments
+export function growthSeries(appointments: Appointment[], birthDate: string, measurements: BabyMeasurement[] = []): GrowthPoint[] {
+  const visits = appointments
     .filter(
       (appointment) =>
         appointment.status === 'COMPLETED' &&
@@ -53,7 +48,20 @@ export function growthSeries(appointments: Appointment[], birthDate: string): Gr
         heightMillimeters: appointment.heightMillimeters,
       }
     })
-    .sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt))
+  const recorded = measurements.map((measurement): GrowthPoint => {
+    // Calendar dates stay local. Noon avoids changing the recorded day in UTC offsets.
+    const scheduledAt = `${measurement.measuredOn}T12:00:00`
+    const at = new Date(scheduledAt)
+    return {
+      appointmentId: measurement.id,
+      scheduledAt,
+      ageMonths: ageInMonthsExactAt(birthDate, at),
+      ageMonthsWhole: ageInMonthsAt(birthDate, at),
+      weightGrams: measurement.weightGrams,
+      heightMillimeters: measurement.heightMillimeters,
+    }
+  })
+  return [...visits, ...recorded].sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime())
 }
 
 export type GrowthIndicator = 'weight' | 'height'

@@ -6,7 +6,6 @@ import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { usePagedList } from '@/hooks/usePagedList'
 import { cn } from '@/lib/utils'
 import { LoadMoreButton } from '@/shared/components/LoadMoreButton'
-import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 import { NoSearchResults } from '@/shared/components/NoSearchResults'
 import { SearchInput } from '@/shared/components/SearchInput'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
@@ -18,6 +17,7 @@ import { VaccineStatusBadge } from './VaccineStatusBadge'
 interface VaccineCalendarListProps {
   items: VaccineItemWithBaby[]
   babies: Baby[]
+  filterKey?: string
 }
 
 // The glyphs below are text, not SVG, so these pairs owe the full 4.5:1 — the
@@ -39,27 +39,40 @@ const STATUS_ICON_GLYPH: Record<VaccineItemWithBaby['status'], string> = {
 // Renders a single, merged, household-wide list — each row tagged with which
 // baby it belongs to, so a family with several children sees one urgency-sorted
 // list instead of one full section repeated per child.
-export function VaccineCalendarList({ items, babies }: VaccineCalendarListProps) {
+export function VaccineCalendarList({
+  items,
+  babies,
+  filterKey = 'ALL',
+}: VaccineCalendarListProps) {
   const { t } = useTranslation()
   const [applyTarget, setApplyTarget] = useState<VaccineItemWithBaby | null>(null)
   // The child filter is the menu's, not this page's: the choice outlives the page
   // it was made on. See selectedBaby.store.ts.
-  const babyFilter = useSelectedBabyStore((state) => state.selectedBabyId)
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebouncedValue(search)
   const babyById = new Map(babies.map((baby) => [baby.id, baby]))
 
-  const babyFiltered = babyFilter ? items.filter((item) => item.babyId === babyFilter) : items
-  const normalizedSearch = debouncedSearch.trim().toLowerCase()
+  const babyFiltered = items
+  const normalize = (value: string) =>
+    value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .replace(/\s+/g, ' ')
+      .toLowerCase()
+  const normalizedSearch = normalize(debouncedSearch)
   const filteredItems = normalizedSearch
     ? babyFiltered.filter(
         (item) =>
-          item.name.toLowerCase().includes(normalizedSearch) ||
-          item.description.toLowerCase().includes(normalizedSearch),
+          normalize(item.name).includes(normalizedSearch) ||
+          normalize(item.description).includes(normalizedSearch),
       )
     : babyFiltered
 
-  const { visibleItems, hasMore, loadMore } = usePagedList(filteredItems, `${normalizedSearch}|${babyFilter}`)
+  const { visibleItems, hasMore, loadMore } = usePagedList(
+    filteredItems,
+    `${normalizedSearch}|${babies.map((baby) => baby.id).join()}|${filterKey}`,
+  )
 
   return (
     <div>
@@ -69,19 +82,45 @@ export function VaccineCalendarList({ items, babies }: VaccineCalendarListProps)
           label={t('vaccines.search.label')}
           value={search}
           onChange={setSearch}
-          placeholder={t('common.search.placeholder')}
-          className="sm:w-64"
+          placeholder={t('vaccines.searchUi.placeholder')}
+          clearLabel={t('vaccines.searchUi.clear')}
+          inputClassName="h-12 rounded-xl"
+          className="w-full sm:max-w-lg"
         />
       </div>
 
+      <p role="status" aria-live="polite" className="mb-4 text-sm text-ink-muted">
+        {t('vaccines.searchUi.results', { count: filteredItems.length })}
+        {filterKey !== 'ALL' && (
+          <>
+            {' '}
+            ·{' '}
+            {t('vaccines.searchUi.filtered', {
+              status: t(
+                `vaccines.status.${filterKey === 'APPLIED' ? 'appliedShort' : filterKey.toLowerCase()}`,
+              ),
+            })}
+          </>
+        )}
+      </p>
       {filteredItems.length === 0 ? (
-        <NoSearchResults />
+        normalizedSearch ? (
+          <NoSearchResults />
+        ) : (
+          <p role="status" className="rounded-2xl bg-card p-8 text-center text-sm text-ink-muted">
+            {t('vaccines.page.noFilter')}
+          </p>
+        )
       ) : (
         <>
           <ul className="flex flex-col gap-2">
             {visibleItems.map((item) => (
               <li key={`${item.babyId}-${item.vaccineId}`}>
-                <VaccineRow item={item} baby={babyById.get(item.babyId)} onApply={() => setApplyTarget(item)} />
+                <VaccineRow
+                  item={item}
+                  baby={babies.length > 1 ? babyById.get(item.babyId) : undefined}
+                  onApply={() => setApplyTarget(item)}
+                />
               </li>
             ))}
           </ul>
@@ -133,12 +172,10 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
       <div className="min-w-0 flex-1">
         <p className="text-sm font-bold text-ink">{item.name}</p>
         <p className="text-xs text-ink-muted">
-          {baby?.name} · {t('vaccines.doseLabel', { count: item.doseNumber })} ·{' '}
+          {baby ? `${baby.name} · ` : ''}
+          {t('vaccines.doseLabel', { count: item.doseNumber })} ·{' '}
           {t('vaccines.ageGroupLabel', { count: item.recommendedAgeInMonths })}
         </p>
-      </div>
-      <div className="hidden flex-1 sm:block">
-        <p className="text-xs text-ink-muted">{item.guidance ?? item.description}</p>
       </div>
       <VaccineStatusBadge item={item} />
     </>
@@ -149,13 +186,26 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
     item.status === 'DELAYED' ? 'border border-rose-100' : 'border border-transparent',
   )
 
-  if (item.status === 'APPLIED' || item.recommendationKind === 'RECURRING') {
-    return <div className={rowClass}>{content}</div>
-  }
-
   return (
-    <button type="button" onClick={onApply} className={cn(rowClass, 'text-left transition-colors hover:bg-muted/50')}>
-      {content}
-    </button>
+    <article className={cn(rowClass, 'flex-col items-stretch')}>
+      <div className="flex flex-wrap items-center gap-3">{content}</div>
+      <div className="flex flex-wrap items-start justify-between gap-3 border-t border-border pt-2">
+        <details className="min-w-0 flex-1 text-sm text-ink-muted">
+          <summary className="min-h-11 cursor-pointer py-3 font-semibold">
+            {t('vaccines.page.details')}
+          </summary>
+          <p className="pb-3 leading-relaxed">{item.guidance ?? item.description}</p>
+        </details>
+        {item.status !== 'APPLIED' && item.recommendationKind !== 'RECURRING' && (
+          <button
+            type="button"
+            onClick={onApply}
+            className="min-h-11 rounded-xl bg-primary/5 px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/10"
+          >
+            {t('vaccines.page.recordDose')}
+          </button>
+        )}
+      </div>
+    </article>
   )
 }

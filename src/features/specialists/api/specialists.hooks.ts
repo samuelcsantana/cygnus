@@ -51,6 +51,10 @@ export interface CoGuardian {
  * recusar transforma uma regra de segurança em erro de formulário sem explicação.
  */
 export function useCoGuardians(currentUserId: string | undefined): CoGuardian[] {
+  return useCoGuardiansState(currentUserId).data
+}
+
+export function useCoGuardiansState(currentUserId: string | undefined) {
   const babies = useBabies()
   const babyList = babies.data ?? []
 
@@ -58,7 +62,7 @@ export function useCoGuardians(currentUserId: string | undefined): CoGuardian[] 
     queries: babyList.map((baby) => ({
       queryKey: babyGuardiansQueryKey(baby.id),
       queryFn: () => fetchBabyGuardians(baby.id),
-      enabled: babies.isSuccess,
+      enabled: babies.isSuccess && !!currentUserId,
     })),
   })
 
@@ -71,7 +75,12 @@ export function useCoGuardians(currentUserId: string | undefined): CoGuardian[] 
     }
   }
 
-  return [...seen.values()].sort((a, b) => a.name.localeCompare(b.name))
+  return {
+    data: [...seen.values()].sort((a, b) => a.name.localeCompare(b.name)),
+    isPending: babies.isPending || !currentUserId || results.some((result) => result.isPending),
+    isError: babies.isError || results.some((result) => result.isError),
+    retry: () => { void babies.refetch(); results.forEach((result) => { void result.refetch() }) },
+  }
 }
 
 export function useCreateSpecialist() {

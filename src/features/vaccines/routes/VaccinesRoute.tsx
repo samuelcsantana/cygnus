@@ -1,11 +1,11 @@
+import { useSearchDestination } from '@/shared/stores/searchDestination.store'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Navigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
-import { FamilyStrip } from '@/features/babies/components/FamilyStrip'
-import { EditBabyDialog } from '@/features/babies/components/EditBabyDialog'
-import type { Baby } from '@/features/babies/api/babies.schemas'
+import { useQueryClient } from '@tanstack/react-query'
+import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 import { cn } from '@/lib/utils'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { PlusIcon } from '@/shared/icons/plus-icon'
@@ -26,10 +26,38 @@ type Filter = 'ALL' | VaccineStatus
 
 export function VaccinesRoute() {
   const { t } = useTranslation()
-  const { isPending, isError, isEmpty, babies, items, metadata, perBaby } = useAllBabiesVaccineCalendars()
+  const calendar = useAllBabiesVaccineCalendars()
+  const selectedId = useSelectedBabyStore((state) => state.selectedBabyId)
+  const client = useQueryClient()
+  const { isEmpty, metadata } = calendar
+  const babies = calendar.babies.filter((baby) => !selectedId || baby.id === selectedId)
+  const entries = calendar.perBaby.filter((entry) => !selectedId || entry.baby.id === selectedId)
+  const destination = useSearchDestination('/vaccines')
+  const items = entries
+    .filter((entry) => !entry.isError)
+    .flatMap((entry) => entry.items)
+    .filter(
+      (item) =>
+        !destination ||
+        destination.keys.includes(`vaccine:${item.babyId}:${item.vaccineId}:${item.doseNumber}`),
+    )
+  const isPending = !calendar.babies.length
+    ? calendar.isPending
+    : entries.some((entry) => entry.isPending)
+  const isError = !calendar.babies.length
+    ? calendar.isError
+    : entries.some((entry) => entry.isError)
+  const retry = () => {
+    if (!calendar.babies.length) void client.invalidateQueries({ queryKey: ['babies'] })
+    entries
+      .filter((entry) => entry.isError)
+      .forEach(
+        (entry) =>
+          void client.invalidateQueries({ queryKey: ['babies', entry.baby.id, 'vaccines'] }),
+      )
+  }
   const [filter, setFilter] = useState<Filter>('ALL')
   const [isRegisterOpen, setRegisterOpen] = useState(false)
-  const [editTarget, setEditTarget] = useState<Baby | null>(null)
 
   if (isEmpty) {
     return <Navigate to="/dashboard" replace />
@@ -42,19 +70,9 @@ export function VaccinesRoute() {
     GUIDANCE: items.filter((item) => item.status === 'GUIDANCE').length,
   }
 
-  // Por filho, e não pelo agregado: uma requisição pode falhar enquanto as
-  // outras respondem, e marcar todas como desconhecidas por causa de uma seria
-  // trocar um erro por outro.
-  const familyStripItems = babies.map((baby) => {
-    const entry = perBaby.find((candidate) => candidate.baby.id === baby.id)
-    return {
-      baby,
-      delayedVaccineCount: items.filter((item) => item.babyId === baby.id && item.status === 'DELAYED').length,
-      vaccineStatusKnown: entry ? !entry.isPending && !entry.isError : false,
-    }
-  })
-
-  const filteredItems = (filter === 'ALL' ? items : items.filter((item) => item.status === filter)).sort((a, b) => {
+  const filteredItems = (
+    filter === 'ALL' ? items : items.filter((item) => item.status === filter)
+  ).sort((a, b) => {
     const rank = { DELAYED: 0, GUIDANCE: 1, PENDING: 2, APPLIED: 3 } as const
     if (a.status !== b.status) return rank[a.status] - rank[b.status]
     return a.recommendedAgeInMonths - b.recommendedAgeInMonths
@@ -64,22 +82,8 @@ export function VaccinesRoute() {
     <div className="animate-fade-in-up">
       <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <h2 className="font-display text-3xl font-extrabold text-ink">{t('vaccines.title')}</h2>
-          {/* Sem o calendário, `counts` é três zeros vindos de uma lista vazia.
-              Impressos aqui, ficavam logo acima da mensagem de erro — a página
-              afirmava "0 tomadas · 0 atrasadas · 0 pendentes" e, três linhas
-              abaixo, admitia não ter conseguido ler nada. */}
-          {isError ? (
-            // Nada aqui no erro: a mensagem abaixo já diz que o calendário não
-            // carregou, e repetir num subtítulo só rouba a atenção dela.
-            null
-          ) : (
-            <p className="mt-1 text-lg text-ink-muted">
-              {isPending
-                ? t('vaccines.summaryUnavailable')
-                : t('vaccines.summary', { applied: counts.APPLIED, delayed: counts.DELAYED, pending: counts.PENDING })}
-            </p>
-          )}
+          <h1 className="font-display text-3xl font-extrabold text-ink">{t('vaccines.title')}</h1>
+          <p className="mt-1 text-sm text-ink-muted">{t('vaccines.page.intro')}</p>
         </div>
         <Button
           type="button"
@@ -94,42 +98,46 @@ export function VaccinesRoute() {
 
       <RegisterVaccineDialog open={isRegisterOpen} onOpenChange={setRegisterOpen} />
 
-      {metadata && <VaccineCatalogNotice metadata={metadata} className="mb-6" />}
-
-      {isPending ? (
-        <VaccineCalendarSkeleton />
-      ) : isError ? (
-        <p className="py-16 text-center text-ink-muted">{t('vaccines.genericError')}</p>
-      ) : items.length === 0 ? (
+      {isError && (
+        <div role="alert" className="mb-5 rounded-2xl border border-border bg-card p-4">
+          <p className="text-sm text-ink-muted">
+            {t('vaccines.genericError')}{' '}
+            {entries
+              .filter((entry) => entry.isError)
+              .map((entry) => entry.baby.name)
+              .join(', ')}
+          </p>
+          <button
+            type="button"
+            onClick={retry}
+            className="mt-2 min-h-11 text-sm font-semibold text-primary"
+          >
+            {t('nav.shell.retry')}
+          </button>
+        </div>
+      )}
+      {isPending && <VaccineCalendarSkeleton />}
+      {!destination && !isPending && !isError && items.length === 0 && (
         <EmptyState
-          icon={<SyringeIcon className="h-10 w-10" />}
+          icon={<SyringeIcon className="size-8" />}
           title={t('vaccines.empty.title')}
           description={t('vaccines.empty.description')}
           tone="emerald"
         />
-      ) : (
+      )}
+      {items.length > 0 && (
         <>
-          {babies.length > 1 && (
-            <div className="mb-6">
-              <FamilyStrip items={familyStripItems} onEdit={setEditTarget} />
+          {!destination && !isPending && !isError && (
+            <div className="mb-5">
+              <VaccineProgressCard progress={vaccineProgress(items)} />
             </div>
           )}
-
-          {/* Só depois de `isPending`/`isError`: uma barra em 0% sobre um
-              calendário que não carregou afirma que nada foi tomado, o que é o
-              mesmo erro que o subtítulo acima já evita não imprimindo os
-              contadores no erro. Aqui isso sai de graça — o bloco inteiro está
-              dentro do ramo que já provou ter dados. */}
-          <div className="mb-6">
-            <VaccineProgressCard progress={vaccineProgress(items)} />
-          </div>
-
           <div className="mb-6 flex flex-wrap gap-2">
             {babies.map((baby) => (
               <Link
                 key={baby.id}
                 to={`/vaccines/${baby.id}/card`}
-                className="inline-flex items-center gap-1.5 rounded-full bg-card px-3.5 py-1.5 text-[13px] font-semibold text-ink-muted shadow-sm transition-colors hover:bg-muted hover:text-ink"
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-card px-3.5 py-1.5 text-[13px] font-semibold text-ink-muted shadow-sm transition-colors hover:bg-muted hover:text-ink"
               >
                 <PrinterIcon className="h-3.5 w-3.5" />
                 {t('vaccines.card.viewAction', { name: baby.name })}
@@ -140,7 +148,11 @@ export function VaccinesRoute() {
           {/* Same treatment as the milestone category row and the shared
               BabyFilterChips: the group carries a name, each chip carries its
               pressed state. Selection was previously fill colour only. */}
-          <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label={t('vaccines.statusFilter.groupLabel')}>
+          <div
+            className="mb-6 flex flex-wrap gap-2"
+            role="group"
+            aria-label={t('vaccines.statusFilter.groupLabel')}
+          >
             {(
               [
                 ['ALL', t('vaccines.filterAll')],
@@ -156,8 +168,10 @@ export function VaccinesRoute() {
                 aria-pressed={filter === value}
                 onClick={() => setFilter(value)}
                 className={cn(
-                  'rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors',
-                  filter === value ? 'bg-primary text-primary-foreground' : 'bg-card text-ink-muted shadow-sm hover:bg-muted',
+                  'min-h-11 rounded-xl px-4 py-1.5 text-[13px] font-semibold transition-colors',
+                  filter === value
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-card text-ink-muted shadow-sm hover:bg-muted',
                 )}
               >
                 {label}
@@ -165,12 +179,21 @@ export function VaccinesRoute() {
             ))}
           </div>
 
-          <VaccineCalendarList items={filteredItems} babies={babies} />
-          <AdhocVaccineList babies={babies} />
+          <VaccineCalendarList items={filteredItems} babies={babies} filterKey={filter} />
         </>
       )}
 
-      <EditBabyDialog baby={editTarget} onOpenChange={(open) => !open && setEditTarget(null)} />
+      {(!destination || destination.keys.some((key) => key.startsWith('adhoc:'))) && (
+        <AdhocVaccineList babies={babies} />
+      )}
+      {metadata && (
+        <details className="mt-6 rounded-2xl border border-border bg-card p-4">
+          <summary className="cursor-pointer py-2 text-sm font-semibold text-ink">
+            {t('vaccines.catalog.title')}
+          </summary>
+          <VaccineCatalogNotice metadata={metadata} className="mt-3" />
+        </details>
+      )}
     </div>
   )
 }

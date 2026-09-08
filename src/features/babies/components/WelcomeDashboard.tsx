@@ -1,332 +1,57 @@
-import { Fragment, type ReactNode } from 'react'
+import { Heart, Sprout, CalendarDays, Sparkles, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { BellIcon } from '@/shared/icons/bell-icon'
-import { DashboardIcon } from '@/shared/icons/dashboard-icon'
-import { LogoIcon } from '@/shared/icons/logo-icon'
-import { PlusIcon } from '@/shared/icons/plus-icon'
-import { SparkleIcon } from '@/shared/icons/sparkle-icon'
-import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
-import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { useAddBabyDialogStore } from '@/shared/stores/addBabyDialog.store'
-import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
-
-interface WelcomeDashboardProps {
-  greetingKey: string
-}
-
-interface PreviewVaccineItem {
-  name: string
-  dose: string
-  status: 'taken' | 'overdue' | 'pending'
-}
-
-interface PreviewMilestoneItem {
-  title: string
-  date: string
-  category: string
-}
-
-interface PreviewAppointmentItem {
-  doctorName: string
-  specialty: string
-  date: string
-  status: 'scheduled' | 'completed'
-}
-
-interface PreviewNotificationItem {
-  text: string
-}
-
-interface StepItem {
-  title: string
-  description: string
-}
-
-const VACCINE_STATUS_STYLE: Record<PreviewVaccineItem['status'], { bg: string; text: string; symbol: string }> = {
-  taken: { bg: 'bg-emerald-50 dark:bg-emerald-950/40', text: 'text-emerald-700 dark:text-emerald-300', symbol: '✓' },
-  overdue: { bg: 'bg-rose-50 dark:bg-rose-950/40', text: 'text-rose-700 dark:text-rose-300', symbol: '!' },
-  pending: { bg: 'bg-amber-50 dark:bg-amber-950/40', text: 'text-amber-700 dark:text-amber-300', symbol: '○' },
-}
-
-const MILESTONE_CATEGORY_STYLE: Record<string, { bg: string; text: string }> = {
-  social: { bg: 'bg-amber-50 dark:bg-amber-950/40', text: 'text-amber-700 dark:text-amber-300' },
-  motor: { bg: 'bg-emerald-50 dark:bg-emerald-950/40', text: 'text-emerald-700 dark:text-emerald-300' },
-  language: { bg: 'bg-violet-50 dark:bg-violet-950/40', text: 'text-violet-600 dark:text-violet-300' },
-}
-
-const STEP_ICONS = [PlusIcon, SyringeIcon, DashboardIcon]
-
-export function WelcomeDashboard({ greetingKey }: WelcomeDashboardProps) {
+export function WelcomeDashboard({ greetingKey }: { greetingKey: string }) {
   const { t } = useTranslation()
-  const identity = useAuthIdentityStore((state) => state.identity)
-  const parentName = identity?.name ?? identity?.email ?? ''
-  const openAddBabyDialog = useAddBabyDialogStore((state) => state.open)
-
-  const vaccineItems = t('babies.dashboard.previewVaccines.items', { returnObjects: true }) as PreviewVaccineItem[]
-  const milestoneItems = t('babies.dashboard.previewMilestones.items', { returnObjects: true }) as PreviewMilestoneItem[]
-  const appointmentItems = t('babies.dashboard.previewAppointments.items', {
-    returnObjects: true,
-  }) as PreviewAppointmentItem[]
-  const notificationItems = t('babies.dashboard.previewNotifications.items', {
-    returnObjects: true,
-  }) as PreviewNotificationItem[]
-  const steps = t('babies.dashboard.steps.items', { returnObjects: true }) as StepItem[]
-
+  const open = useAddBabyDialogStore((state) => state.open)
   return (
-    <div>
-      {/* Hero */}
-      <div className="relative mb-7 overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-700 to-emerald-900 p-8 sm:p-11">
-        <div className="pointer-events-none absolute -top-12 -right-12 h-60 w-60 rounded-full bg-white/5" />
-        <div className="pointer-events-none absolute -right-16 -bottom-20 h-80 w-80 rounded-full bg-white/[0.04]" />
-        <div className="relative">
-          <p className="mb-1.5 text-sm font-semibold text-white/70">
-            {t(greetingKey)}, {parentName} 👋
-          </p>
-          <h1 className="font-display mb-3 flex items-center gap-2.5 text-3xl leading-tight font-black text-white sm:text-4xl">
-            <LogoIcon className="h-7 w-7 sm:h-8 sm:w-8" />
-            {t('babies.dashboard.welcomeHeading')}
+    <div className="space-y-8">
+      <section className="grid overflow-hidden rounded-3xl border border-border bg-card lg:grid-cols-[1.5fr_1fr]">
+        <div className="p-6 sm:p-10 lg:py-14">
+          <p className="mb-4 text-sm font-semibold text-primary">{t(greetingKey)}</p>
+          <h1 className="max-w-lg font-display text-3xl font-black leading-tight text-ink sm:text-4xl">
+            {t('babies.home.welcome')}
           </h1>
-          <p className="mb-7 max-w-xl text-[15px] leading-relaxed text-white/80">
-            {t('babies.dashboard.welcomeDescription')}
+          <p className="mt-4 max-w-lg text-base leading-relaxed text-ink-muted">
+            {t('babies.home.intro')}
           </p>
-          {/* Literal white, and no `dark:` on the label either: this button sits
-              on the emerald hero panel, which is the same colour in both themes.
-              A card-coloured surface here goes near-black in dark, and a light
-              emerald label would then be painted on white — the panel does not
-              flip, so nothing painted on it may flip. */}
-          <Button
+          <button
             type="button"
-          size="cta"
-            onClick={openAddBabyDialog}
-            className="rounded-xl bg-white text-emerald-700 shadow-lg shadow-black/10 transition-transform hover:bg-white hover:-translate-y-0.5"
+            onClick={open}
+            className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-primary-foreground"
           >
-            <PlusIcon className="h-5 w-5" />
-            {t('babies.dashboard.welcomeCta')}
-          </Button>
+            <Plus aria-hidden className="size-5" />
+            {t('babies.home.addFirst')}
+          </button>
+          <p className="mt-3 max-w-md text-sm text-ink-muted">{t('babies.home.later')}</p>
         </div>
-      </div>
-
-      {/* Feature previews */}
-      <p className="font-display mb-3.5 text-[17px] font-extrabold text-ink">
-        {t('babies.dashboard.previewSectionTitle')}
-      </p>
-      <div className="mb-7 grid grid-cols-1 gap-3.5 md:grid-cols-2">
-        <PreviewCard
-          gradientClassName="from-emerald-50 to-emerald-100 dark:from-emerald-950/50 dark:to-emerald-900/40"
-          iconClassName="bg-emerald-600"
-          icon={<SyringeIcon className="h-[18px] w-[18px] text-white" />}
-          title={t('babies.dashboard.previewVaccines.cardTitle')}
-          titleClassName="text-emerald-800 dark:text-emerald-300"
-          subtitle={t('babies.dashboard.previewVaccines.cardSubtitle')}
-          subtitleClassName="text-emerald-700 dark:text-emerald-300"
+        <div
+          aria-hidden="true"
+          className="relative flex min-h-48 items-center justify-center overflow-hidden bg-emerald-50 p-8 dark:bg-emerald-950/40"
         >
-          <div className="flex flex-col gap-2.5">
-            {vaccineItems.map((item, index) => {
-              const style = VACCINE_STATUS_STYLE[item.status]
-              return (
-                <div key={index} className="flex items-center gap-2">
-                  <span
-                    className={cn(
-                      'flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md text-[10px] font-bold',
-                      style.bg,
-                      style.text,
-                    )}
-                  >
-                    {style.symbol}
-                  </span>
-                  <span className="flex-1 truncate text-xs text-ink">{item.name}</span>
-                  <span className="flex-shrink-0 text-[10px] text-ink-faint">{item.dose}</span>
-                </div>
-              )
-            })}
-            <div className="mt-1">
-              <div className="mb-1 flex items-center justify-between">
-                <span className="text-[11px] text-ink-muted">
-                  {t('babies.dashboard.previewVaccines.progressLabel')}
-                </span>
-                <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300">65%</span>
-              </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                <div className="h-full w-[65%] rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400" />
-              </div>
+          <div className="absolute size-64 rounded-full border border-primary/10" />
+          <div className="absolute size-44 rounded-full bg-primary/5" />
+          <div className="relative flex size-28 rotate-[-8deg] items-center justify-center rounded-[2rem] bg-card shadow-sm">
+            <Sprout className="size-16 text-primary" />
+          </div>
+          <Heart className="absolute right-[22%] top-[22%] size-7 rotate-12 text-amber-700 dark:text-amber-300" />
+        </div>
+      </section>
+      <div className="grid gap-5 sm:grid-cols-3">
+        {[CalendarDays, Sprout, Sparkles].map((Icon, index) => (
+          <section key={index} className="flex items-start gap-3 p-2">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/5 text-primary">
+              <Icon aria-hidden className="size-5" />
+            </span>
+            <div>
+              <h2 className="font-semibold text-ink">{t(`babies.home.benefit${index}Title`)}</h2>
+              <p className="mt-1 text-sm leading-relaxed text-ink-muted">
+                {t(`babies.home.benefit${index}Body`)}
+              </p>
             </div>
-          </div>
-        </PreviewCard>
-
-        <PreviewCard
-          gradientClassName="from-amber-50 to-amber-100 dark:from-amber-950/50 dark:to-amber-900/40"
-          iconClassName="bg-amber-700"
-          icon={<SparkleIcon className="h-[18px] w-[18px] text-white" />}
-          title={t('babies.dashboard.previewMilestones.cardTitle')}
-          titleClassName="text-amber-900 dark:text-amber-200"
-          subtitle={t('babies.dashboard.previewMilestones.cardSubtitle')}
-          subtitleClassName="text-amber-700 dark:text-amber-300"
-        >
-          <div className="flex flex-col gap-2.5">
-            {milestoneItems.map((item, index) => {
-              const style = MILESTONE_CATEGORY_STYLE[item.category] ?? MILESTONE_CATEGORY_STYLE.social!
-              return (
-                <div key={index} className="flex items-center gap-2.5">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-xs font-bold text-ink">{item.title}</p>
-                    <p className="text-[10px] text-ink-faint">{item.date}</p>
-                  </div>
-                  <span
-                    className={cn('flex-shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold', style.bg, style.text)}
-                  >
-                    {t(`milestones.category.${item.category}`)}
-                  </span>
-                </div>
-              )
-            })}
-            <div className="mt-0.5 flex items-center gap-2 rounded-lg bg-surface px-2.5 py-2">
-              <SparkleIcon className="h-3.5 w-3.5 flex-shrink-0 text-amber-700 dark:text-amber-300" />
-              <p className="text-[11px] text-ink-muted">{t('babies.dashboard.previewMilestones.footerNote')}</p>
-            </div>
-          </div>
-        </PreviewCard>
-
-        <PreviewCard
-          gradientClassName="from-violet-50 to-violet-100 dark:from-violet-950/50 dark:to-violet-900/40"
-          iconClassName="bg-violet-600"
-          icon={<StethoscopeIcon className="h-[18px] w-[18px] text-white" />}
-          title={t('babies.dashboard.previewAppointments.cardTitle')}
-          titleClassName="text-violet-900 dark:text-violet-200"
-          subtitle={t('babies.dashboard.previewAppointments.cardSubtitle')}
-          subtitleClassName="text-violet-600 dark:text-violet-300"
-        >
-          <div className="flex flex-col gap-2">
-            {appointmentItems.map((item, index) => (
-              <div key={index} className="flex items-center gap-2.5 rounded-lg bg-surface px-2.5 py-2">
-                <StethoscopeIcon className="h-4 w-4 flex-shrink-0 text-violet-500 dark:text-violet-300" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-bold text-ink">{item.doctorName}</p>
-                  <p className="text-[10px] text-ink-faint">
-                    {item.specialty} · {item.date}
-                  </p>
-                </div>
-                <span
-                  className={cn(
-                    'flex-shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold',
-                    item.status === 'scheduled' ? 'bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-300' : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300',
-                  )}
-                >
-                  {item.status === 'scheduled' ? t('appointments.status.scheduled') : t('appointments.status.completed')}
-                </span>
-              </div>
-            ))}
-            <p className="mt-0.5 text-[11px] text-ink-faint">{t('babies.dashboard.previewAppointments.footerNote')}</p>
-          </div>
-        </PreviewCard>
-
-        <PreviewCard
-          gradientClassName="from-rose-50 to-rose-100 dark:from-rose-950/50 dark:to-rose-900/40"
-          iconClassName="bg-rose-600"
-          icon={<BellIcon className="h-[18px] w-[18px] text-white" />}
-          title={t('babies.dashboard.previewNotifications.cardTitle')}
-          titleClassName="text-rose-900 dark:text-rose-200"
-          subtitle={t('babies.dashboard.previewNotifications.cardSubtitle')}
-          subtitleClassName="text-rose-600 dark:text-rose-300"
-        >
-          <div className="flex flex-col gap-2">
-            {notificationItems.map((item, index) => (
-              <div key={index} className="flex items-center gap-2.5 rounded-lg bg-rose-50/60 dark:bg-rose-950/40 px-2.5 py-2">
-                <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-rose-500" />
-                <p className="flex-1 text-xs text-ink">{item.text}</p>
-              </div>
-            ))}
-            <p className="mt-0.5 text-[11px] text-ink-faint">{t('babies.dashboard.previewNotifications.footerNote')}</p>
-          </div>
-        </PreviewCard>
+          </section>
+        ))}
       </div>
-
-      {/* Steps */}
-      <div className="mb-7 rounded-3xl bg-card p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-8">
-        <p className="font-display mb-5 text-center text-base font-extrabold text-ink">
-          {t('babies.dashboard.stepsSectionTitle')}
-        </p>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center">
-          {steps.map((step, index) => {
-            const StepIcon = STEP_ICONS[index] ?? PlusIcon
-            return (
-              <Fragment key={index}>
-                <div className="text-center">
-                  <div className="mx-auto mb-3 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gradient-to-br from-emerald-700 to-emerald-600 shadow-md shadow-emerald-900/20">
-                    <StepIcon className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="mx-auto mb-2 flex h-[22px] w-[22px] items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/40">
-                    <span className="text-[11px] font-extrabold text-emerald-700 dark:text-emerald-300">{index + 1}</span>
-                  </div>
-                  <p className="font-display mb-1 text-sm font-extrabold text-ink">{step.title}</p>
-                  <p className="text-xs leading-relaxed text-ink-muted">{step.description}</p>
-                </div>
-                {index < steps.length - 1 && (
-                  <span className="hidden text-2xl text-emerald-100 sm:block" aria-hidden="true">
-                    →
-                  </span>
-                )}
-              </Fragment>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Bottom CTA */}
-      <div className="flex flex-col items-start justify-between gap-5 rounded-2xl bg-gradient-to-br from-amber-50 to-rose-50 dark:from-amber-950/50 dark:to-rose-950/50 p-6 sm:flex-row sm:items-center">
-        <div>
-          <p className="font-display mb-1 text-base font-extrabold text-ink">{t('babies.dashboard.bottomCtaTitle')}</p>
-          <p className="text-[13px] text-ink-muted">{t('babies.dashboard.bottomCtaDescription')}</p>
-        </div>
-        <Button
-          type="button"
-          size="cta"
-          onClick={openAddBabyDialog}
-          className="flex-shrink-0 rounded-xl shadow-lg shadow-emerald-900/20 transition-transform hover:-translate-y-0.5"
-        >
-          <PlusIcon className="h-4 w-4" />
-          {t('babies.dashboard.bottomCtaAction')}
-        </Button>
-      </div>
-    </div>
-  )
-}
-
-interface PreviewCardProps {
-  gradientClassName: string
-  iconClassName: string
-  icon: ReactNode
-  title: string
-  titleClassName: string
-  subtitle: string
-  subtitleClassName: string
-  children: ReactNode
-}
-
-function PreviewCard({
-  gradientClassName,
-  iconClassName,
-  icon,
-  title,
-  titleClassName,
-  subtitle,
-  subtitleClassName,
-  children,
-}: PreviewCardProps) {
-  return (
-    <div className="overflow-hidden rounded-2xl bg-card shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
-      <div className={cn('flex items-center gap-2.5 bg-gradient-to-br px-5 py-4', gradientClassName)}>
-        <div className={cn('flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px]', iconClassName)}>
-          {icon}
-        </div>
-        <div className="min-w-0">
-          <p className={cn('font-display truncate text-[15px] font-extrabold', titleClassName)}>{title}</p>
-          <p className={cn('truncate text-[11px] font-semibold', subtitleClassName)}>{subtitle}</p>
-        </div>
-      </div>
-      <div className="p-5 pt-3.5">{children}</div>
     </div>
   )
 }

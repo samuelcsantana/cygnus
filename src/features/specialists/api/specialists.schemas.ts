@@ -18,7 +18,7 @@ export type Specialist = z.infer<typeof specialistSchema>
 export const specialistListSchema = z.array(specialistSchema)
 
 export const specialistFormSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().trim().min(1),
   specialty: z.string().optional(),
   // Sem checagem de formato, igual à API. Um número pode ser fixo, celular, ramal de clínica ou vir
   // com código do país — e é o campo que precisa funcionar às 3h.

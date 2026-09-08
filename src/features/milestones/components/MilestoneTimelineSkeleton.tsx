@@ -2,24 +2,19 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export function MilestoneTimelineSkeleton() {
   return (
-    <div className="relative ml-4 max-w-3xl sm:ml-8" aria-hidden="true">
-      <div className="absolute top-6 bottom-6 left-6 w-1 rounded-full bg-muted" />
-
-      <div className="space-y-10">
-        {[0, 1, 2].map((index) => (
-          <div key={index} className="relative flex items-start">
-            <Skeleton className="absolute left-6 z-10 -ml-[1.65rem] h-14 w-14 rounded-2xl" />
-            <div className="ml-20 w-full space-y-3 rounded-[2rem] border border-border bg-card p-8 shadow-sm">
-              <div className="flex items-center justify-between gap-2">
-                <Skeleton className="h-6 w-24 rounded-lg" />
-                <Skeleton className="h-6 w-20 rounded-full" />
-              </div>
-              <Skeleton className="h-6 w-2/3" />
-              <Skeleton className="h-4 w-full" />
-            </div>
+    <div aria-hidden="true" className="space-y-8">
+      {[0, 1].map((index) => (
+        <div key={index} className="grid gap-3 lg:grid-cols-[140px_minmax(0,1fr)] lg:gap-6">
+          <Skeleton className="mt-2 h-6 w-32" />
+          <div className="space-y-4 rounded-2xl border border-border bg-card p-6">
+            <Skeleton className="h-4 w-36" />
+            <Skeleton className="h-7 w-2/3" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-11 w-20" />
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { AxeBuilder } from '@axe-core/playwright'
 
 import { addBaby, openAddBabyDialog, registerAndLogin, uniqueTestUser } from './support/fixtures.js'
 
@@ -45,7 +46,18 @@ test('a user can log a vaccine as applied for their baby', async ({ page }) => {
 
   const linhaBcg = page.getByRole('listitem').filter({ hasText: 'BCG' }).first()
   await expect(linhaBcg).toBeVisible()
-  await linhaBcg.getByRole('button').first().click()
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.screenshot({ path: 'docs/verification/vaccines-desktop.png' })
+  await page.setViewportSize({ width: 375, height: 812 })
+  await linhaBcg.getByText('Ver detalhes', { exact: true }).click()
+  await expect(linhaBcg.locator('details')).toHaveAttribute('open', '')
+  expect(await page.locator('body').evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
+  expect(
+    (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze())
+      .violations,
+  ).toEqual([])
+  await page.screenshot({ path: 'docs/verification/vaccines-mobile.png' })
+  await linhaBcg.getByRole('button', { name: 'Registrar dose' }).click()
 
   // Pelo nome, e não `getByRole('dialog')` solto: o seletor de data dentro do
   // diálogo é um popover do Radix que também carrega `role="dialog"` e fica no
@@ -53,9 +65,46 @@ test('a user can log a vaccine as applied for their baby', async ({ page }) => {
   // independente de visibilidade — a asserção nunca teria como passar.
   const dialogo = page.getByRole('dialog', { name: 'Aplicar Vacina' })
   await expect(dialogo).toBeVisible()
+  await dialogo.getByLabel(/Lote/).fill('AB-123')
   await dialogo.getByRole('button', { name: 'Salvar Registro' }).click()
   await expect(dialogo).not.toBeVisible()
 
   await page.getByRole('button', { name: /^Tomadas/ }).click()
-  await expect(page.getByRole('listitem').filter({ hasText: 'BCG' }).getByText(/^Aplicada em/)).toBeVisible()
+  await expect(
+    page
+      .getByRole('listitem')
+      .filter({ hasText: 'BCG' })
+      .getByText(/^Aplicada em/),
+  ).toBeVisible()
+  const search = page.getByRole('searchbox')
+  await search.fill('bcg')
+  await expect(page.getByRole('status').filter({ hasText: '1 resultado' })).toBeVisible()
+  await page.getByRole('button', { name: 'Limpar busca' }).click()
+  await expect(search).toBeFocused()
+  await page.getByRole('link', { name: 'Ver carteira de Bruno E2E' }).click()
+  await expect(page.getByRole('heading', { name: 'Bruno E2E', exact: true })).toBeVisible()
+  await expect(page.getByRole('radio', { name: 'Somente doses aplicadas' })).toBeChecked()
+  expect(await page.locator('body').evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
+  expect(
+    (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze())
+      .violations,
+  ).toEqual([])
+  await page.getByText('Detalhes do registro', { exact: true }).click()
+  await expect(page.getByText('AB-123').first()).toBeVisible()
+  await page.getByRole('link', {name:'Voltar às vacinas'}).scrollIntoViewIfNeeded()
+  await page.screenshot({ path: 'docs/verification/card-mobile.png' })
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.getByRole('link', {name:'Voltar às vacinas'}).scrollIntoViewIfNeeded()
+  await page.screenshot({ path: 'docs/verification/card-desktop.png' })
+  await page.emulateMedia({ media: 'print' })
+  await expect(page.getByRole('heading', { name: /Calendário a acompanhar/ })).toBeHidden()
+  await expect(page.getByRole('heading', { name: 'Bruno E2E', exact: true })).toBeVisible()
+  await page.pdf({ path: 'docs/verification/card-applied.pdf', preferCSSPageSize: true })
+  await page.screenshot({ path: 'docs/verification/card-print.png' })
+  await page.emulateMedia({ media: 'screen' })
+  await page.getByRole('radio', { name: 'Incluir calendário a acompanhar' }).check()
+  await page.emulateMedia({ media: 'print' })
+  await expect(page.getByRole('heading', { name: /Calendário a acompanhar/ })).toBeVisible()
+  await page.pdf({ path: 'docs/verification/card-complete.pdf', preferCSSPageSize: true })
+  await page.emulateMedia({ media: 'screen' })
 })

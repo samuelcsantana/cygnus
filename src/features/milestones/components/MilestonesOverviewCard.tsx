@@ -20,11 +20,18 @@ interface MilestonesOverviewCardProps {
 
 // Household-wide milestones widget for the dashboard: the most recent
 // milestones across every child, newest first.
-export function MilestonesOverviewCard({ babies, items, isPending, isError }: MilestonesOverviewCardProps) {
+export function MilestonesOverviewCard({
+  babies,
+  items,
+  isPending,
+  isError,
+}: MilestonesOverviewCardProps) {
   const { t, i18n } = useTranslation()
   const babyById = new Map(babies.map((baby) => [baby.id, baby]))
 
-  const latest = [...items].sort((a, b) => b.achievedAt.localeCompare(a.achievedAt)).slice(0, MAX_ITEMS)
+  const latest = [...items]
+    .sort((a, b) => b.achievedAt.localeCompare(a.achievedAt))
+    .slice(0, MAX_ITEMS)
 
   return (
     <div className="flex flex-col rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
@@ -52,7 +59,9 @@ export function MilestonesOverviewCard({ babies, items, isPending, isError }: Mi
              calendário do que a criança "deveria" fazer — e leva para a tela
              onde eles abrem o formulário já preenchido. */
           <div className="py-4">
-            <p className="text-ink-muted mb-3 text-center text-[13px]">{t('babies.dashboard.noMilestonesYet')}</p>
+            <p className="text-ink-muted mb-3 text-center text-[13px]">
+              {t('babies.dashboard.noMilestonesYet')}
+            </p>
             <ul className="mb-4 space-y-2">
               {MILESTONE_SUGGESTIONS.slice(0, 3).map((item) => (
                 <li key={item.titleKey} className="flex items-center gap-2.5">
@@ -76,11 +85,31 @@ export function MilestonesOverviewCard({ babies, items, isPending, isError }: Mi
             const meta = MILESTONE_CATEGORY_META[milestone.category]
             return (
               <div key={milestone.id} className="flex items-start gap-3">
-                <span className="flex-shrink-0 text-xl">{meta.emoji}</span>
+                {milestone.photoUrl ? (
+                  <img
+                    src={milestone.photoUrl}
+                    alt=""
+                    loading="lazy"
+                    className="size-16 shrink-0 rounded-xl object-cover"
+                  />
+                ) : (
+                  <span
+                    aria-hidden
+                    className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-xl dark:bg-amber-950/40"
+                  >
+                    {meta.emoji}
+                  </span>
+                )}
                 <div className="min-w-0 flex-1">
-                  <p className="mb-0.5 truncate text-[13px] font-bold text-ink">{milestone.title}</p>
+                  <p className="mb-0.5 truncate text-[13px] font-bold text-ink">
+                    {milestone.title}
+                  </p>
                   <div className="flex items-center gap-2">
-                    {baby && <span className="truncate text-[11px] font-semibold text-ink-muted">{baby.name}</span>}
+                    {baby && (
+                      <span className="truncate text-[11px] font-semibold text-ink-muted">
+                        {baby.name}
+                      </span>
+                    )}
                     <span className="text-[11px] text-ink-faint">·</span>
                     <span className="font-mono text-[11px] text-ink-muted">
                       {formatDateDisplay(milestone.achievedAt, i18n.language)}

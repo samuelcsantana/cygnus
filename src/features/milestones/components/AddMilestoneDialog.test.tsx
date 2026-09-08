@@ -49,28 +49,29 @@ describe('AddMilestoneDialog', () => {
 
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
 
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(screen.getAllByText('Valor muito curto.').length).toBeGreaterThan(0)
     })
-    expect(screen.queryByLabelText('Detalhes')).not.toBeInTheDocument()
+    expect(screen.getByLabelText('Como foi esse momento? (opcional)')).not.toBeVisible()
   })
 
   it('lets the user go back to the first step without losing what was typed', async () => {
     const user = userEvent.setup()
     renderWithProviders(<AddMilestoneDialog open onOpenChange={vi.fn()} />)
 
-    await user.type(screen.getByLabelText('O que aconteceu?'), 'Primeiros passos')
+    await user.type(await screen.findByLabelText('O que aconteceu?'), 'Primeiros passos')
     fireEvent.change(screen.getByLabelText('Data'), { target: { value: '2024-06-01' } })
     await user.click(screen.getAllByRole('radio', { name: /Motor/ })[0]!)
+
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
 
-    await waitFor(() => {
-      expect(screen.getByLabelText('Detalhes')).toBeInTheDocument()
+    await waitFor(async () => {
+      expect(screen.getByLabelText('Como foi esse momento? (opcional)')).toBeInTheDocument()
     })
 
     await user.click(screen.getByRole('button', { name: 'Voltar' }))
 
-    expect(screen.getByLabelText('O que aconteceu?')).toHaveValue('Primeiros passos')
+    expect(await screen.findByLabelText('O que aconteceu?')).toHaveValue('Primeiros passos')
   })
 
   it('creates the milestone across both steps and closes the dialog', async () => {
@@ -98,17 +99,18 @@ describe('AddMilestoneDialog', () => {
     const onOpenChange = vi.fn()
     renderWithProviders(<AddMilestoneDialog open onOpenChange={onOpenChange} />)
 
-    await user.type(screen.getByLabelText('O que aconteceu?'), 'Primeiros passos')
+    await user.type(await screen.findByLabelText('O que aconteceu?'), 'Primeiros passos')
     fireEvent.change(screen.getByLabelText('Data'), { target: { value: '2024-06-01' } })
     await user.click(screen.getAllByRole('radio', { name: /Motor/ })[0]!)
+
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Salvar Marco' })).toBeInTheDocument()
+    await waitFor(async () => {
+      expect(screen.getByRole('button', { name: 'Guardar lembrança' })).toBeInTheDocument()
     })
-    await user.click(screen.getByRole('button', { name: 'Salvar Marco' }))
+    await user.click(screen.getByRole('button', { name: 'Guardar lembrança' }))
 
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(postCallCount).toBe(1)
     })
     expect(onOpenChange).toHaveBeenCalledWith(false)
@@ -120,11 +122,11 @@ describe('AddMilestoneDialog', () => {
     const user = userEvent.setup()
     renderWithProviders(<AddMilestoneDialog open onOpenChange={vi.fn()} />)
 
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(screen.getByText('Baby One')).toBeInTheDocument()
     })
     expect(screen.getByText('Baby Two')).toBeInTheDocument()
-    expect(screen.queryByLabelText('O que aconteceu?')).not.toBeInTheDocument()
+    expect(screen.getByLabelText('O que aconteceu?')).not.toBeVisible()
 
     const continueButton = screen.getByRole('button', { name: 'Continuar' })
     expect(continueButton).toBeDisabled()
@@ -133,37 +135,44 @@ describe('AddMilestoneDialog', () => {
     expect(continueButton).toBeEnabled()
 
     await user.click(continueButton)
-    expect(screen.getByLabelText('O que aconteceu?')).toBeInTheDocument()
+    expect(await screen.findByLabelText('O que aconteceu?')).toBeInTheDocument()
   })
   it('opens already filled when a suggestion is given, and keeps it editable', async () => {
     renderWithProviders(
-      <AddMilestoneDialog open onOpenChange={vi.fn()} suggestion={{ title: 'Primeira palavra', category: 'LANGUAGE' }} />,
+      <AddMilestoneDialog
+        open
+        onOpenChange={vi.fn()}
+        suggestion={{ title: 'Primeira palavra', category: 'LANGUAGE' }}
+      />,
     )
 
-    await waitFor(() => {
-      expect(screen.getByLabelText('O que aconteceu?')).toHaveValue('Primeira palavra')
+    await waitFor(async () => {
+      expect(await screen.findByLabelText('O que aconteceu?')).toHaveValue('Primeira palavra')
     })
 
     // The category comes selected with it: a suggestion that filled only the
     // title would still leave the person choosing where it belongs, which is
     // the part of the form that is not obvious.
-    const linguagem = screen.getAllByRole('radio').find((radio) => radio.getAttribute('value') === 'LANGUAGE')
+    const linguagem = screen
+      .getAllByRole('radio')
+      .find((radio) => radio.getAttribute('value') === 'LANGUAGE')
     expect(linguagem).toHaveAttribute('aria-checked', 'true')
 
     // A starting point, not a template.
     const user = userEvent.setup()
-    await user.clear(screen.getByLabelText('O que aconteceu?'))
-    await user.type(screen.getByLabelText('O que aconteceu?'), 'Falou mamãe')
-    expect(screen.getByLabelText('O que aconteceu?')).toHaveValue('Falou mamãe')
+    await user.clear(await screen.findByLabelText('O que aconteceu?'))
+    await user.type(await screen.findByLabelText('O que aconteceu?'), 'Falou mamãe')
+    expect(await screen.findByLabelText('O que aconteceu?')).toHaveValue('Falou mamãe')
   })
 
   it('opens blank when no suggestion is given', async () => {
     renderWithProviders(<AddMilestoneDialog open onOpenChange={vi.fn()} />)
 
-    await waitFor(() => {
-      expect(screen.getByLabelText('O que aconteceu?')).toHaveValue('')
+    await waitFor(async () => {
+      expect(await screen.findByLabelText('O que aconteceu?')).toHaveValue('')
     })
-    expect(screen.getAllByRole('radio').every((radio) => radio.getAttribute('aria-checked') === 'false')).toBe(true)
+    expect(
+      screen.getAllByRole('radio').every((radio) => radio.getAttribute('aria-checked') === 'false'),
+    ).toBe(true)
   })
-
 })

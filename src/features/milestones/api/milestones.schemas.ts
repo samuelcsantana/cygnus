@@ -26,12 +26,12 @@ export const milestoneListSchema = z.array(milestoneSchema)
  */
 export function createMilestoneFormSchema(birthDate: string) {
   return z.object({
-    title: z.string().min(1),
+    title: z.string().trim().min(1),
     description: z.string().optional(),
     achievedAt: z
       .string()
       .min(1)
-      .regex(/^\d{4}-\d{2}-\d{2}$/)
+      .date()
       .superRefine((value, ctx) => {
         if (value > todayDateString()) {
           ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'milestones.form.achievedAtFuture' })

@@ -9,6 +9,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useSpecialistsForBaby } from '@/features/specialists/api/specialists.hooks'
 import { AutocompleteInput } from '@/shared/components/AutocompleteInput'
@@ -40,8 +41,10 @@ export function AppointmentProfessionalFields({
   babyId,
 }: AppointmentProfessionalFieldsProps) {
   const { t } = useTranslation()
-  const { data: specialtySuggestions = [] } = useMedicalSpecialties()
-  const { data: specialists = [] } = useSpecialistsForBaby(babyId ?? null)
+  const specialtiesQuery = useMedicalSpecialties()
+  const specialistsQuery = useSpecialistsForBaby(babyId ?? null)
+  const specialtySuggestions = specialtiesQuery.data ?? []
+  const specialists = specialistsQuery.data ?? []
   const doctorNameErrorKey = fieldErrorKey(errors.doctorName)
 
   const doctorName = useWatch({ control, name: 'doctorName' }) ?? ''
@@ -50,10 +53,31 @@ export function AppointmentProfessionalFields({
   )
   // O gatilho só aparece quando há um nome digitado que ainda não está salvo. Oferecer "salvar"
   // para quem acabou de escolher alguém da lista seria oferecer duplicata.
-  const canOfferToSave = !!babyId && doctorName.trim().length > 0 && !matchedSpecialist
+  const canOfferToSave =
+    !!babyId && specialistsQuery.isSuccess && doctorName.trim().length > 0 && !matchedSpecialist
 
   return (
     <div className="space-y-6">
+      {(specialistsQuery.isPending || specialtiesQuery.isPending) && (
+        <p role="status" className="text-sm text-ink-muted">
+          {t('appointments.editor.loadingProfessionals')}
+        </p>
+      )}
+      {(specialistsQuery.isError || specialtiesQuery.isError) && (
+        <div role="alert" className="space-y-2 rounded-xl border border-border p-3 text-sm">
+          <p>{t('appointments.editor.professionalsError')}</p>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              void specialistsQuery.refetch()
+              void specialtiesQuery.refetch()
+            }}
+          >
+            {t('appointments.editor.retry')}
+          </Button>
+        </div>
+      )}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div>
           <Label htmlFor="doctorName">{t('appointments.form.doctorNameLabel')}</Label>
@@ -72,6 +96,7 @@ export function AppointmentProfessionalFields({
                 aria-describedby={doctorNameErrorKey ? 'doctorName-error' : undefined}
                 className="mt-2"
                 value={field.value ?? ''}
+                ref={field.ref}
                 onValueChange={(value) => {
                   field.onChange(value)
                   // Escolher alguém da lista preenche a especialidade e guarda o vínculo; digitar um
@@ -79,6 +104,7 @@ export function AppointmentProfessionalFields({
                   // dois casos — o vínculo é adicional, nunca substituto.
                   const picked = specialists.find((specialist) => specialist.name === value)
                   setValue('specialistId', picked?.id)
+                  setValue('saveSpecialist', false)
                   if (picked?.specialty) {
                     setValue('specialty', picked.specialty)
                   }

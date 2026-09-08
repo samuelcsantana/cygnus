@@ -41,7 +41,7 @@ export function GrowthRoute() {
 
   const sections = perBaby
     .filter((entry) => selectedBabyId === null || entry.baby.id === selectedBabyId)
-    .map((entry) => ({ baby: entry.baby, series: growthSeries(entry.items, entry.baby.birthDate) }))
+    .map((entry) => ({ baby: entry.baby, series: growthSeries(entry.items, entry.baby.birthDate, entry.baby.measurements) }))
 
   const measurementCount = sections.reduce((total, section) => total + section.series.length, 0)
 

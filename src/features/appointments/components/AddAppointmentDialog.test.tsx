@@ -9,6 +9,7 @@ import { buildBaby } from '@/test/fixtures/baby'
 import { fireEvent, renderWithProviders, screen, waitFor } from '@/test/test-utils'
 
 import { AddAppointmentDialog } from './AddAppointmentDialog'
+import { RescheduleDialog } from './RescheduleDialog'
 
 const babyId = '11111111-1111-4111-8111-111111111111'
 const otherBabyId = '33333333-3333-4333-8333-333333333333'
@@ -47,7 +48,8 @@ describe('AddAppointmentDialog', () => {
     const user = userEvent.setup()
     renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
 
-    await user.click(screen.getByRole('button', { name: 'Continuar' }))
+    await screen.findByLabelText('Nome do Profissional')
+    await user.click(await screen.findByRole('button', { name: 'Continuar' }))
 
     await waitFor(() => {
       expect(screen.getByText('Valor muito curto.')).toBeInTheDocument()
@@ -59,7 +61,7 @@ describe('AddAppointmentDialog', () => {
     const user = userEvent.setup()
     renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
 
-    await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
+    await user.type(await screen.findByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
 
     await waitFor(() => {
@@ -68,7 +70,7 @@ describe('AddAppointmentDialog', () => {
 
     await user.click(screen.getByRole('button', { name: 'Voltar' }))
 
-    expect(screen.getByLabelText('Nome do Profissional')).toHaveValue('Dra. Ana Silva')
+    expect(await screen.findByLabelText('Nome do Profissional')).toHaveValue('Dra. Ana Silva')
   })
 
   it('creates the appointment (with specialty) across both steps and closes the dialog', async () => {
@@ -94,7 +96,7 @@ describe('AddAppointmentDialog', () => {
     const onOpenChange = vi.fn()
     renderWithProviders(<AddAppointmentDialog open onOpenChange={onOpenChange} />)
 
-    await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
+    await user.type(await screen.findByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
     await user.type(screen.getByLabelText('Especialidade (Opcional)'), 'Pediatria')
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
 
@@ -104,7 +106,7 @@ describe('AddAppointmentDialog', () => {
     })
     fireEvent.change(screen.getByLabelText('Data'), { target: { value: futureDate } })
     fireEvent.change(screen.getByLabelText('Horário'), { target: { value: '10:00' } })
-    await user.click(screen.getByRole('button', { name: 'Salvar Consulta' }))
+    await user.click(screen.getByRole('button', { name: /^(Agendar consulta|Registrar consulta)$/ }))
 
     await waitFor(() => {
       expect(postCallCount).toBe(1)
@@ -132,7 +134,7 @@ describe('AddAppointmentDialog', () => {
     expect(continueButton).toBeEnabled()
 
     await user.click(continueButton)
-    expect(screen.getByLabelText('Nome do Profissional')).toBeInTheDocument()
+    expect(await screen.findByLabelText('Nome do Profissional')).toBeInTheDocument()
   })
   it('records a consultation that already happened, and says so to the API', async () => {
     let receivedBody: Record<string, unknown> = {}
@@ -155,7 +157,7 @@ describe('AddAppointmentDialog', () => {
     const user = userEvent.setup()
     renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
 
-    await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
+    await user.type(await screen.findByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
 
     await waitFor(() => {
@@ -171,7 +173,7 @@ describe('AddAppointmentDialog', () => {
     // recusa medida em visita futura, e o formulário não oferece o que o servidor recusa.
     await user.type(screen.getByLabelText('Peso (kg)'), '15,8')
     await user.type(screen.getByLabelText('Altura (cm)'), '100')
-    await user.click(screen.getByRole('button', { name: 'Salvar Consulta' }))
+    await user.click(screen.getByRole('button', { name: /^(Agendar consulta|Registrar consulta)$/ }))
 
     await waitFor(() => {
       expect(receivedBody.status).toBe('COMPLETED')
@@ -185,7 +187,7 @@ describe('AddAppointmentDialog', () => {
     const user = userEvent.setup()
     renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
 
-    await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
+    await user.type(await screen.findByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
 
     await waitFor(() => {
@@ -204,13 +206,16 @@ describe('AddAppointmentDialog', () => {
    * app para cadastrar o pediatra, abre para marcar consulta. Por isso o gatilho é uma caixa de
    * marcar dentro do formulário — e por isso ela só age **junto com** o salvamento da consulta.
    */
-  it('salva o profissional junto com a consulta quando a pessoa pede', async () => {
+  it('reuses the saved professional when retrying a failed appointment', async () => {
+    let specialistCalls = 0
+    let appointmentCalls = 0
     let specialistBody: Record<string, unknown> = {}
     let appointmentBody: Record<string, unknown> = {}
     const specialistId = '44444444-4444-4444-8444-444444444444'
 
     server.use(
       http.post(`${config.apiBaseUrl}/specialists`, async ({ request }) => {
+        specialistCalls += 1
         specialistBody = (await request.json()) as Record<string, unknown>
         return HttpResponse.json(
           {
@@ -228,6 +233,8 @@ describe('AddAppointmentDialog', () => {
       }),
       http.post(`${config.apiBaseUrl}/babies/:babyId/appointments`, async ({ request }) => {
         appointmentBody = (await request.json()) as Record<string, unknown>
+        appointmentCalls += 1
+        if (appointmentCalls === 1) return HttpResponse.json({}, { status: 500 })
         return HttpResponse.json(buildAppointment({ babyId }), { status: 201 })
       }),
     )
@@ -235,7 +242,7 @@ describe('AddAppointmentDialog', () => {
     const user = userEvent.setup()
     renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
 
-    await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
+    await user.type(await screen.findByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
     await user.type(screen.getByLabelText('Especialidade (Opcional)'), 'Pediatria')
     await user.click(screen.getByLabelText(/Salvar Dra. Ana Silva na lista/))
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
@@ -247,7 +254,7 @@ describe('AddAppointmentDialog', () => {
     const futureDate = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString().slice(0, 10)
     fireEvent.change(screen.getByLabelText('Data'), { target: { value: futureDate } })
     fireEvent.change(screen.getByLabelText('Horário'), { target: { value: '10:00' } })
-    await user.click(screen.getByRole('button', { name: 'Salvar Consulta' }))
+    await user.click(screen.getByRole('button', { name: /^(Agendar consulta|Registrar consulta)$/ }))
 
     await waitFor(() => {
       expect(appointmentBody.specialistId).toBe(specialistId)
@@ -256,6 +263,31 @@ describe('AddAppointmentDialog', () => {
     expect(specialistBody).toMatchObject({ name: 'Dra. Ana Silva', specialty: 'Pediatria', babyIds: [babyId] })
     // O nome continua gravado na consulta: o vínculo é adicional, nunca substituto.
     expect(appointmentBody.doctorName).toBe('Dra. Ana Silva')
+    expect(await screen.findByRole('alert')).toHaveTextContent('O profissional já foi salvo, mas a consulta não.')
+    await user.click(screen.getByRole('button', { name: 'Agendar consulta' }))
+    await waitFor(() => expect(appointmentCalls).toBe(2))
+    expect(specialistCalls).toBe(1)
+  })
+
+  it('reschedules without exposing completed status or measurements', async () => {
+    let body: Record<string, unknown> = {}
+    const appointment = buildAppointment({ babyId, scheduledAt: '2035-04-10T13:00:00.000Z' })
+    server.use(http.patch(`${config.apiBaseUrl}/babies/:babyId/appointments/:id`, async ({ request }) => {
+      body = await request.json() as Record<string, unknown>
+      return HttpResponse.json({ ...appointment, ...body })
+    }))
+    const user = userEvent.setup()
+    const close = vi.fn()
+    renderWithProviders(<RescheduleDialog appointment={appointment} onOpenChange={close} />)
+    await screen.findByLabelText('Data')
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Peso (kg)')).not.toBeInTheDocument()
+    fireEvent.change(screen.getByLabelText('Horário'), { target: { value: '14:30' } })
+    await user.click(screen.getByRole('button', { name: 'Salvar Alterações' }))
+    await waitFor(() => expect(close).toHaveBeenCalledWith(false))
+    expect(body.scheduledAt).toBe('2035-04-10T17:30:00.000Z')
+    expect(body).not.toHaveProperty('status')
+    expect(body).not.toHaveProperty('weightGrams')
   })
 
   it('não oferece salvar um profissional que já está na lista', async () => {
@@ -279,10 +311,10 @@ describe('AddAppointmentDialog', () => {
     const user = userEvent.setup()
     renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
 
-    await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana')
+    await user.type(await screen.findByLabelText('Nome do Profissional'), 'Dra. Ana')
     expect(screen.getByLabelText(/Salvar Dra. Ana na lista/)).toBeInTheDocument()
 
-    await user.type(screen.getByLabelText('Nome do Profissional'), ' Silva')
+    await user.type(await screen.findByLabelText('Nome do Profissional'), ' Silva')
 
     await waitFor(() => {
       expect(screen.queryByLabelText(/Salvar Dra. Ana Silva na lista/)).not.toBeInTheDocument()
@@ -303,7 +335,7 @@ describe('AddAppointmentDialog', () => {
     const user = userEvent.setup()
     renderWithProviders(<AddAppointmentDialog open onOpenChange={vi.fn()} />)
 
-    await user.type(screen.getByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
+    await user.type(await screen.findByLabelText('Nome do Profissional'), 'Dra. Ana Silva')
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
 
     await waitFor(() => {
@@ -313,7 +345,7 @@ describe('AddAppointmentDialog', () => {
     const pastDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString().slice(0, 10)
     fireEvent.change(screen.getByLabelText('Data'), { target: { value: pastDate } })
     fireEvent.change(screen.getByLabelText('Horário'), { target: { value: '10:00' } })
-    await user.click(screen.getByRole('button', { name: 'Salvar Consulta' }))
+    await user.click(screen.getByRole('button', { name: /^(Agendar consulta|Registrar consulta)$/ }))
 
     await waitFor(() => {
       expect(screen.getByText('A data e hora não podem estar no passado.')).toBeInTheDocument()

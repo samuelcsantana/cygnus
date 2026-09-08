@@ -42,12 +42,14 @@ interface AvatarUploadFieldProps {
   removeLabel: string
   fileTooLargeError: string
   invalidImageError: string
-  /** Border color applied around the preview once `value` is set — has no visible effect while there's no avatar. */
+  /** Background for initials, border for a photo. */
   color: string | undefined
   onColorChange: (color: string) => void
   colorOptions: AvatarColorOption[]
   colorGroupLabel: string
   className?: string
+  disabled?: boolean
+  onProcessingChange?: (processing: boolean) => void
 }
 
 /**
@@ -75,9 +77,12 @@ export function AvatarUploadField({
   colorOptions,
   colorGroupLabel,
   className,
+  disabled,
+  onProcessingChange,
 }: AvatarUploadFieldProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<string | null>(null)
+  const [processing, setProcessing] = useState(false)
 
   async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
@@ -90,20 +95,34 @@ export function AvatarUploadField({
     }
 
     try {
+      setProcessing(true)
+      onProcessingChange?.(true)
       const dataUrl = await fileToResizedDataUrl(file)
       setError(null)
       onValueChange(dataUrl)
     } catch {
       setError(invalidImageError)
+    } finally {
+      setProcessing(false)
+      onProcessingChange?.(false)
     }
   }
 
   return (
-    <div className={cn('flex items-center gap-4', className)}>
+    <fieldset
+      disabled={disabled || processing}
+      aria-busy={processing}
+      className={cn('flex min-w-0 items-center gap-4', className)}
+    >
       <div className="relative flex-shrink-0">
         <div
-          className={cn('h-20 w-20 overflow-hidden rounded-full bg-muted', value && color && 'border-4')}
-          style={value && color ? { borderColor: color } : undefined}
+          data-testid="avatar-preview"
+          className="h-16 w-16 overflow-hidden rounded-full border-4 bg-muted md:h-28 md:w-28"
+          style={{
+            borderColor: color || 'transparent',
+            backgroundColor: color || undefined,
+            color: color ? '#fff' : undefined,
+          }}
         >
           {value ? (
             <img src={value} alt="" className="h-full w-full object-cover" />
@@ -116,7 +135,7 @@ export function AvatarUploadField({
           id={id}
           onClick={() => fileInputRef.current?.click()}
           aria-label={uploadLabel}
-          className="bg-primary absolute -right-1 -bottom-1 flex h-7 w-7 items-center justify-center rounded-full text-primary-foreground shadow-sm ring-2 ring-white transition-colors hover:brightness-95"
+          className="bg-primary absolute -right-2 -bottom-2 flex h-11 w-11 items-center justify-center rounded-full text-primary-foreground shadow-sm ring-2 ring-white transition-colors hover:brightness-95 disabled:opacity-50"
         >
           <CameraIcon className="h-3.5 w-3.5" />
         </button>
@@ -138,35 +157,48 @@ export function AvatarUploadField({
           <button
             type="button"
             onClick={() => onValueChange('')}
-            className="text-ink-muted hover:text-destructive text-sm font-bold transition-colors"
+            className="min-h-11 text-sm font-bold underline underline-offset-4 transition-colors"
           >
             {removeLabel}
           </button>
         )}
-        {error && <p className="text-destructive mt-1 text-sm">{error}</p>}
+        {error && (
+          <p role="alert" className="mt-1 text-sm">
+            {error}
+          </p>
+        )}
 
-        <div className={cn('flex items-center gap-2', value && 'mt-2.5')} role="group" aria-label={colorGroupLabel}>
-          {colorOptions.map((option) => {
-            const selected = color === option.value
-            return (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => onColorChange(selected ? '' : option.value)}
-                aria-pressed={selected}
-                aria-label={option.label}
-                className={cn(
-                  'flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full ring-2 ring-offset-2 transition-transform hover:scale-110',
-                  selected ? 'ring-ink/30' : 'ring-transparent',
-                )}
-                style={{ backgroundColor: option.value }}
-              >
-                {selected && <CheckIcon className="h-3 w-3 text-white" />}
-              </button>
-            )
-          })}
-        </div>
+        {colorOptions.length > 0 && (
+          <div
+            className={cn(
+              'grid grid-cols-4 items-center max-[340px]:grid-cols-2',
+              value && 'mt-2.5',
+            )}
+            role="group"
+            aria-label={colorGroupLabel}
+          >
+            {colorOptions.map((option) => {
+              const selected = color === option.value
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => onColorChange(selected ? '' : option.value)}
+                  aria-pressed={selected}
+                  aria-label={option.label}
+                  className={cn(
+                    'flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border-8 border-transparent bg-clip-padding ring-2 transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2',
+                    selected ? 'ring-ink/30' : 'ring-transparent',
+                  )}
+                  style={{ backgroundColor: option.value }}
+                >
+                  {selected && <CheckIcon className="h-3 w-3 text-white" />}
+                </button>
+              )
+            })}
+          </div>
+        )}
       </div>
-    </div>
+    </fieldset>
   )
 }

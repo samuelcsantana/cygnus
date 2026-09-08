@@ -2,8 +2,8 @@ import { httpClient } from '@/lib/http-client'
 import { userSchema, type User } from '@/features/auth/api/auth.schemas'
 
 export interface UpdateProfilePayload {
+  avatarUrl?: string | null
   name?: string
-  email?: string
   password?: string
   currentPassword?: string
 }

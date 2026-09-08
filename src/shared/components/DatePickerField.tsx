@@ -1,5 +1,5 @@
 import { enUS, es, ptBR, type Locale } from 'date-fns/locale'
-import { useEffect, useState, type ComponentProps } from 'react'
+import { useEffect, useRef, useState, type ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Calendar } from '@/components/ui/calendar'
@@ -54,7 +54,9 @@ export function DatePickerField({ id, value, onValueChange, placeholder, disable
   // value itself changes (calendar pick, form reset) — not on every keystroke — so an in-progress,
   // not-yet-complete date the user is typing isn't clobbered.
   const [text, setText] = useState(() => formatBrDateString(safeValue))
+  const emittedValue = useRef<string | null>(null)
   useEffect(() => {
+    if (emittedValue.current === safeValue) return
     setText(formatBrDateString(safeValue))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [safeValue])
@@ -70,7 +72,9 @@ export function DatePickerField({ id, value, onValueChange, placeholder, disable
               const nextText = maskBrDateInput(event.target.value)
               setText(nextText)
               const parsed = parseBrDateString(nextText) ?? parseDateString(nextText)
-              if (parsed) onValueChange(toDateString(parsed))
+              const nextValue = parsed ? toDateString(parsed) : ''
+              emittedValue.current = nextValue
+              onValueChange(nextValue)
             }}
             onClick={() => setOpen(true)}
             onFocus={() => setOpen(true)}
@@ -109,6 +113,8 @@ export function DatePickerField({ id, value, onValueChange, placeholder, disable
           selected={selectedDate}
           onSelect={(date) => {
             if (date) {
+              emittedValue.current = null
+              setText(formatBrDateString(toDateString(date)))
               onValueChange(toDateString(date))
               setOpen(false)
             }

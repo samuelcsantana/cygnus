@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, within } from 'storybook/test'
+import { expect, within, userEvent, waitFor } from 'storybook/test'
 
 import { DashboardIcon } from '@/shared/icons/dashboard-icon'
 import { HeartIcon } from '@/shared/icons/heart-icon'
@@ -9,15 +9,8 @@ import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { UsersIcon } from '@/shared/icons/users-icon'
 
-import { buildBaby } from '@/test/fixtures/baby'
-
 import { AppSidebar } from './AppSidebar'
-
-/** Two children, because the switcher only exists when there is something to switch. */
-const babies = [
-  buildBaby({ id: '11111111-1111-4111-8111-111111111111', name: 'Ana', birthDate: '2026-01-10' }),
-  buildBaby({ id: '22222222-2222-4222-8222-222222222222', name: 'Maria Fernanda', birthDate: '2021-03-02' }),
-]
+import { ThemeContext } from '@/app/providers/theme-context'
 
 /**
  * The real sections, in the real order. Seven, and notifications is not among
@@ -58,9 +51,8 @@ const meta = {
   },
   args: {
     items,
-    babies,
-    selectedBabyId: babies[1]!.id,
-    onSelectBaby: () => {},
+
+    showAccount: true,
     accountName: 'Ana Andrade',
     accountEmail: 'ana@email.com',
     onAddBaby: () => {},
@@ -69,7 +61,11 @@ const meta = {
   decorators: [
     (Story) => (
       <div style={{ width: DRAWER_WIDTH, height: 640 }}>
-        <Story />
+        <ThemeContext.Provider
+          value={{ theme: 'system', resolvedTheme: 'light', setTheme: () => {} }}
+        >
+          <Story />
+        </ThemeContext.Provider>
       </div>
     ),
   ],
@@ -104,17 +100,29 @@ export const Default: Story = {
       // 35/29 at 110px.
       for (const row of rows) {
         const label = row.lastElementChild as HTMLElement
-        expect(label.scrollWidth, `"${label.textContent}" does not fit`).toBeLessThanOrEqual(label.clientWidth)
+        expect(label.scrollWidth, `"${label.textContent}" does not fit`).toBeLessThanOrEqual(
+          label.clientWidth,
+        )
       }
     })
 
     await step('the two account actions clear the same floor', async () => {
       // They are targets like any other and sit at the ends of the column, where a thumb is least
       // accurate. "Add a child" and "Sign out" are buttons, not links, so the nav query misses them.
-      for (const name of ['Adicionar Filho', 'Sair da conta']) {
+      for (const name of ['Adicionar Filho', 'Conta e preferências']) {
         const button = canvas.getByRole('button', { name })
         expect(button.getBoundingClientRect().height).toBeGreaterThanOrEqual(FLOOR)
       }
     })
   },
 }
+
+export const Account: Story = {
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body)
+    await userEvent.click(body.getByRole('button', { name: 'Conta e preferências' }))
+    await waitFor(() => expect(body.getByRole('button', { name: 'Sair da conta' })).toBeVisible())
+  },
+}
+export const Dark: Story = { globals: { theme: 'dark' } }
+export const Desktop: Story = { args: { showAccount: false } }

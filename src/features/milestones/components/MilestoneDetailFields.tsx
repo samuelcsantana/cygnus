@@ -1,4 +1,9 @@
-import { useController, type Control, type FieldErrors, type UseFormRegister } from 'react-hook-form'
+import {
+  useController,
+  type Control,
+  type FieldErrors,
+  type UseFormRegister,
+} from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { Label } from '@/components/ui/label'
@@ -12,9 +17,15 @@ interface MilestoneDetailFieldsProps {
   register: UseFormRegister<MilestoneFormInput>
   control: Control<MilestoneFormInput>
   errors: FieldErrors<MilestoneFormInput>
+  onFileChange?: (file: File | null, preview: string | null) => void
 }
 
-export function MilestoneDetailFields({ register, control, errors }: MilestoneDetailFieldsProps) {
+export function MilestoneDetailFields({
+  register,
+  control,
+  errors,
+  onFileChange,
+}: MilestoneDetailFieldsProps) {
   const { t } = useTranslation()
   const photoUrlErrorKey = fieldErrorKey(errors.photoUrl)
   const photoUrlField = useController({ control, name: 'photoUrl' })
@@ -22,7 +33,7 @@ export function MilestoneDetailFields({ register, control, errors }: MilestoneDe
   return (
     <div className="space-y-6">
       <div>
-        <Label htmlFor="description">{t('milestones.form.descriptionLabel')}</Label>
+        <Label htmlFor="description">{t('milestones.editor.description')}</Label>
         <Textarea
           id="description"
           rows={3}
@@ -35,6 +46,7 @@ export function MilestoneDetailFields({ register, control, errors }: MilestoneDe
       <div>
         <Label htmlFor="photoUrl">{t('milestones.form.photoUrlLabel')}</Label>
         <MilestonePhotoUploadField
+          onFileChange={onFileChange}
           id="photoUrl"
           className="mt-2"
           value={photoUrlField.field.value}

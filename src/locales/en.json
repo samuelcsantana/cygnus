@@ -50,8 +50,21 @@
     "growth": "Growth",
     "milestones": "Milestones",
     "notifications": "Notifications",
+    "loggingOut": "Signing out…",
     "logoutError": "Could not sign you out. You are still signed in — please try again.",
-    "logout": "Log out"
+    "logout": "Log out",
+    "shell": {
+      "family": "Your family",
+      "chooseContext": "Choose child or family",
+      "account": "Account and preferences",
+      "care": "Care",
+      "development": "Development",
+      "childrenError": "Could not load children.",
+      "retry": "Try again",
+      "noChildren": "Use “Add child” in the menu to get started.",
+      "done": "Done",
+      "closeMenu": "Close menu"
+    }
   },
   "search": {
     "title": "Search",
@@ -63,7 +76,29 @@
     "more_other": "and {{count}} more in {{section}}",
     "error": "Could not search right now — one of the lists did not load.",
     "partialError": "Part of the search could not be read: one of the lists did not load.",
-    "open": "Open search"
+    "open": "Open search",
+    "ui": {
+      "close": "Close search",
+      "clear": "Clear search",
+      "scope": "Search in",
+      "family": "Entire family",
+      "keyboard": "↑ ↓ to navigate · Enter to open · Esc to close",
+      "start": "What would you like to find?",
+      "examples": "Search for a vaccine, professional, medication or something written in your memories and appointments.",
+      "results_one": "{{count}} result available",
+      "results_other": "{{count}} results available",
+      "expand": "Search the entire family",
+      "more": "View all {{count}} results in {{section}}",
+      "dose": "Dose",
+      "destination": "Search results for “{{query}}”",
+      "showAll": "Back to the full list"
+    },
+    "scope": {
+      "choose": "Search in: {{name}}",
+      "title": "Where would you like to search?",
+      "hint": "This choice applies only to search. The page’s child changes only when you open a result.",
+      "familyHint": "Search records for all children"
+    }
   },
   "auth": {
     "tabs": {
@@ -110,7 +145,7 @@
       "sendCode": "Send code",
       "sending": "Sending...",
       "requestSent": "If an account exists for that e-mail, we sent a code.",
-    "requestSentPasswordless": "We sent a code to your e-mail.",
+      "requestSentPasswordless": "We sent a code to your e-mail.",
       "codeLabel": "6-digit code",
       "codePlaceholder": "000000",
       "codeFormat": "Enter the 6 digits of the code.",
@@ -174,10 +209,45 @@
     }
   },
   "babies": {
+    "editor": {
+      "subtitle": "A profile for every new discovery.",
+      "sections": "Profile sections",
+      "profile": "Profile",
+      "health": "Health",
+      "guardians": "Guardians",
+      "profileTitle": "Let's get to know your child",
+      "profileHint": "Start with a name and date of birth. All other details are optional.",
+      "healthTitle": "Health and growth",
+      "healthHint": "Add what you know now. You can complete it later.",
+      "guardiansTitle": "Caring together",
+      "guardiansHint": "Manage profile access. Access changes are saved immediately.",
+      "previewName": "Child's name",
+      "previewHint": "A new story starts here",
+      "identityTitle": "Make it yours",
+      "identityHint": "Choose a photo and a color to recognize this profile throughout Ninho.",
+      "measurements": "Measurements • optional",
+      "weightKg": "Weight (kg)",
+      "heightCm": "Height (cm)",
+      "measuredOn": "Measurement date",
+      "measurementsHint": "Enter one or both measurements. This record will be added to the growth history on this date.",
+      "weightKgError": "Enter a weight between 0.1 and 150 kg.",
+      "heightCmError": "Enter a height between 10 and 250 cm.",
+      "dateError": "Enter a date between birth and today.",
+      "lastMeasurement": "Latest measurement",
+      "noMeasurement": "No measurements recorded yet.",
+      "addMeasurement": "Record a new measurement",
+      "cancelMeasurement": "Cancel new measurement",
+      "discardTitle": "Discard changes?",
+      "discardHint": "Your changes to this form have not been saved.",
+      "keepEditing": "Keep editing",
+      "discard": "Discard changes"
+    },
     "addChild": "Add Child",
     "switcher": {
       "heading": "Children",
-      "all": "All children"
+      "all": "All children",
+      "prompt": "Who would you like to follow?",
+      "familyDescription": "Family records in one view"
     },
     "age": {
       "months_zero": "{{count}} months",
@@ -213,10 +283,26 @@
         "cardSubtitle": "Full immunization schedule",
         "progressLabel": "Progress",
         "items": [
-          { "name": "BCG", "dose": "Single dose", "status": "taken" },
-          { "name": "DTaP/Hib/HepB", "dose": "3rd dose", "status": "taken" },
-          { "name": "Influenza", "dose": "Annual", "status": "overdue" },
-          { "name": "MMR", "dose": "2nd dose", "status": "pending" }
+          {
+            "name": "BCG",
+            "dose": "Single dose",
+            "status": "taken"
+          },
+          {
+            "name": "DTaP/Hib/HepB",
+            "dose": "3rd dose",
+            "status": "taken"
+          },
+          {
+            "name": "Influenza",
+            "dose": "Annual",
+            "status": "overdue"
+          },
+          {
+            "name": "MMR",
+            "dose": "2nd dose",
+            "status": "pending"
+          }
         ]
       },
       "previewMilestones": {
@@ -224,9 +310,21 @@
         "cardSubtitle": "Motor · Language · Social · Cognitive",
         "footerNote": "Every special moment recorded forever",
         "items": [
-          { "title": "First smile", "date": "04/20/2022", "category": "social" },
-          { "title": "First steps", "date": "01/15/2023", "category": "motor" },
-          { "title": "First word", "date": "11/03/2022", "category": "language" }
+          {
+            "title": "First smile",
+            "date": "04/20/2022",
+            "category": "social"
+          },
+          {
+            "title": "First steps",
+            "date": "01/15/2023",
+            "category": "motor"
+          },
+          {
+            "title": "First word",
+            "date": "11/03/2022",
+            "category": "language"
+          }
         ]
       },
       "previewAppointments": {
@@ -234,8 +332,18 @@
         "cardSubtitle": "History and scheduling",
         "footerNote": "Jot down notes and reports for every visit",
         "items": [
-          { "doctorName": "Dr. Carla Mendes", "specialty": "Pediatrics", "date": "8/15", "status": "scheduled" },
-          { "doctorName": "Dr. Paulo Andrade", "specialty": "Pediatric Dentistry", "date": "7/05", "status": "completed" }
+          {
+            "doctorName": "Dr. Carla Mendes",
+            "specialty": "Pediatrics",
+            "date": "8/15",
+            "status": "scheduled"
+          },
+          {
+            "doctorName": "Dr. Paulo Andrade",
+            "specialty": "Pediatric Dentistry",
+            "date": "7/05",
+            "status": "completed"
+          }
         ]
       },
       "previewNotifications": {
@@ -243,17 +351,32 @@
         "cardSubtitle": "Automatic reminders",
         "footerNote": "You control which alerts you get",
         "items": [
-          { "text": "DTaP 3rd dose — due in 3 days" },
-          { "text": "Pediatric appointment tomorrow at 2pm" },
-          { "text": "Your baby turns another month older today! 🎂" }
+          {
+            "text": "DTaP 3rd dose — due in 3 days"
+          },
+          {
+            "text": "Pediatric appointment tomorrow at 2pm"
+          },
+          {
+            "text": "Your baby turns another month older today! 🎂"
+          }
         ]
       },
       "stepsSectionTitle": "Get started in 3 simple steps 🚀",
       "steps": {
         "items": [
-          { "title": "Add your child", "description": "Name, date of birth, done — takes less than a minute" },
-          { "title": "Log the vaccines", "description": "Mark the ones already taken and the app organizes the next ones automatically" },
-          { "title": "Track their growth", "description": "Appointments, milestones and notifications so you never miss anything important" }
+          {
+            "title": "Add your child",
+            "description": "Name, date of birth, done — takes less than a minute"
+          },
+          {
+            "title": "Log the vaccines",
+            "description": "Mark the ones already taken and the app organizes the next ones automatically"
+          },
+          {
+            "title": "Track their growth",
+            "description": "Appointments, milestones and notifications so you never miss anything important"
+          }
         ]
       },
       "bottomCtaTitle": "Ready to get started?",
@@ -290,8 +413,7 @@
       "noAppointmentsScheduled": "No appointments scheduled",
       "vaccineStatusDelayed_one": "{{count}} overdue vaccine",
       "vaccineStatusDelayed_other": "{{count}} overdue vaccines",
-      "vaccineStatusUpToDate": "Vaccines up to date"
-,
+      "vaccineStatusUpToDate": "Vaccines up to date",
       "vaccineStatusUnknown": "Could not check vaccines"
     },
     "form": {
@@ -319,7 +441,7 @@
       "avatarRemove": "Remove photo",
       "avatarFileTooLarge": "The image must be at most 10MB.",
       "avatarInvalidImage": "Couldn't load that image. Try a different file.",
-      "avatarColorGroupLabel": "Avatar border color",
+      "avatarColorGroupLabel": "Avatar color",
       "avatarColorOption": "Color {{number}}",
       "submit": "Create Profile",
       "genericError": "Could not save. Please try again.",
@@ -381,9 +503,61 @@
         "copyError": "Could not copy the link.",
         "newInviteAction": "Generate another invite"
       }
+    },
+    "home": {
+      "welcome": "A place for care and memories",
+      "intro": "Organize care and follow each discovery at your family’s pace.",
+      "addFirst": "Add my first child",
+      "later": "Start with the profile. Health details can be completed later.",
+      "benefit0Title": "Organized care",
+      "benefit0Body": "Vaccines and appointments together for everyday life.",
+      "benefit1Title": "Growing together",
+      "benefit1Body": "Weight, height and history through every stage.",
+      "benefit2Title": "Memories to keep",
+      "benefit2Body": "Save small and big achievements with photos and stories.",
+      "start": "Start here",
+      "startBody": "The profile is ready. Choose what to record now; there is no need to fill everything in.",
+      "recordVaccines": "Record previous vaccines",
+      "schedule": "Schedule an appointment",
+      "memory": "Save a milestone",
+      "care": "Upcoming care",
+      "growing": "Growth and moments",
+      "measureUnavailable": "Measurements are currently unavailable.",
+      "noMeasurement": "No measurements recorded yet.",
+      "growthLink": "View growth history",
+      "pastAppointments": "Some past appointments are still marked as scheduled. Review the records."
     }
   },
   "vaccines": {
+    "editor": {
+      "record": "Vaccine record",
+      "child": "Child",
+      "chooseChild": "Select a child",
+      "vaccine": "Vaccine",
+      "preview": "Select a vaccine",
+      "railTitle": "Every dose tells a story",
+      "railHint": "Check the child, vaccine and dose before saving. This record will become part of the vaccination card.",
+      "subtitle": "Enter the administration details from the vaccination card.",
+      "application": "Administration",
+      "loadError": "Could not load the information.",
+      "retry": "Try again",
+      "noChildren": "Add a child to record vaccines.",
+      "search": "Search vaccines by name",
+      "noResults": "No vaccines match your search.",
+      "proof": "Proof (optional)",
+      "proofHint": "Choose a readable photo of the vaccination card. Images up to 10 MB.",
+      "proofPreview": "Proof preview",
+      "choosePhoto": "Choose photo",
+      "removePhoto": "Remove",
+      "processing": "Preparing image…",
+      "proofError": "Could not use this image. Choose a smaller JPG or PNG photo.",
+      "useLink": "Use an image link",
+      "dateError": "Enter a valid date between birth and today.",
+      "discardTitle": "Discard record?",
+      "discardHint": "Your entries have not been saved yet.",
+      "keepEditing": "Keep editing",
+      "discard": "Discard"
+    },
     "title": "Vaccines",
     "summary": "{{applied}} taken · {{delayed}} overdue · {{pending}} pending",
     "summaryUnavailable": "Loading the schedule…",
@@ -395,7 +569,9 @@
       "pending": "Pending",
       "delayed": "Overdue"
     },
-    "statusFilter": { "groupLabel": "Filter by status" },
+    "statusFilter": {
+      "groupLabel": "Filter by status"
+    },
     "filterAll": "All",
     "filterApplied": "Applied ({{count}})",
     "filterPending": "Pending ({{count}})",
@@ -408,7 +584,8 @@
       "pending": "Pending",
       "delayed": "Delayed",
       "applied": "Applied on {{date}}",
-      "guidance": "Guidance"
+      "guidance": "Guidance",
+      "appliedShort": "Applied"
     },
     "catalog": {
       "title": "Official calendar and clinical guidance",
@@ -518,6 +695,47 @@
       "columnVaccine": "Vaccine",
       "columnDose": "Dose",
       "columnStatus": "Status"
+    },
+    "page": {
+      "intro": "Review doses and keep vaccination records organized.",
+      "noFilter": "No doses in this filter. Choose another status to continue.",
+      "details": "View details",
+      "recordDose": "Record dose",
+      "noAdhoc": "No campaign or custom vaccines recorded.",
+      "routineProgress": "Routine dose progress"
+    },
+    "document": {
+      "generated": "Generated on {{date}}",
+      "applied": "Applied doses",
+      "noApplied": "No applied doses recorded yet.",
+      "upcoming": "Calendar to follow",
+      "noUpcoming": "No doses or guidance to follow in this calendar.",
+      "recordNote": "This document brings together the records entered in Ninho.",
+      "noDate": "No date",
+      "sourceCATALOG": "Calendar",
+      "sourceCAMPAIGN": "Campaign",
+      "sourceCUSTOM": "Custom",
+      "batch": "Batch",
+      "location": "Vaccination location",
+      "professional": "Professional",
+      "notes": "Notes",
+      "proof": "Proof",
+      "details": "Record details",
+      "back": "Back to vaccines",
+      "print": "Print / Save PDF",
+      "printScope": "Print content",
+      "include": "Include calendar to follow",
+      "onlyApplied": "Applied doses only",
+      "nothingToPrint": "There are no applied doses to print. Include the calendar to print the other information.",
+      "notFound": "Child not found. Return to vaccines to choose another card."
+    },
+    "searchUi": {
+      "placeholder": "Search vaccines by name",
+      "clear": "Clear search",
+      "results_one": "{{count}} result",
+      "results_other": "{{count}} results",
+      "filtered": "Filter: {{status}}",
+      "results_zero": "{{count}} results"
     }
   },
   "specialists": {
@@ -558,10 +776,92 @@
       "title": "No professionals saved",
       "description": "Keep the paediatrician, the speech therapist, whoever else looks after your children — with the phone number, which is what gets looked up in a hurry.",
       "cta": "Add the first one"
+    },
+    "editor": {
+      "contact": "Professional",
+      "preview": "Your trusted contact",
+      "specialtyPreview": "Specialty and contact details in one place",
+      "children": "Cares for",
+      "linkedChildren": "Linked children",
+      "noLinks": "No children linked",
+      "railTitle": "Care close by",
+      "railHint": "Save the contact and choose who can see these details.",
+      "details": "Professional details",
+      "optional": "(optional)",
+      "nameRequired": "Enter the professional’s name.",
+      "links": "Children and access",
+      "babiesHint": "The guardians of the selected children will also have access to this professional.",
+      "noChildren": "You have no children registered yet. You can save a personal contact.",
+      "babiesError": "Could not load children. Your selections have been preserved.",
+      "additionalShare": "Share individually",
+      "shareHint": "Give other guardians access even without linking the child you share. Unchecking here does not remove access through children.",
+      "noGuardians": "No other guardians are available to share with.",
+      "guardiansError": "Could not load guardians. Existing shares have been preserved.",
+      "specialtiesLoading": "Loading specialty suggestions…",
+      "specialtiesError": "Suggestions could not load. You can type the specialty.",
+      "retry": "Try again",
+      "visibility": "Who will have access",
+      "privateAccess": "Only you. This contact will stay in your personal list.",
+      "childAccess": "You and all guardians of the selected children.",
+      "sharedAccess": "You and the selected guardians.",
+      "directAccess": "Individual access ({{count}}):",
+      "add": "Add professional",
+      "saveChanges": "Save changes",
+      "discardTitle": "Discard changes?",
+      "discardHint": "Your changes have not been saved yet.",
+      "keepEditing": "Keep editing",
+      "discard": "Discard"
+    },
+    "page": {
+      "intro": "Keep the contacts of professionals who care for your family.",
+      "noSpecialty": "Specialty not provided",
+      "accessUnknown": "Could not confirm permissions for this contact.",
+      "shared": "Shared with me",
+      "readOnly": "You can view this contact. Only its creator can edit it.",
+      "noPhone": "Phone not provided",
+      "linksError": "Could not load links to children.",
+      "otherLinks": "Some linked children’s details are unavailable.",
+      "childContext": "Showing professionals linked to the selected child.",
+      "allContacts": "View all contacts",
+      "filters": "Filter professionals",
+      "ALL": "All",
+      "OWN": "My contacts",
+      "SHARED": "Shared with me",
+      "search": "Search name, specialty or phone",
+      "noSearch": "No contacts found. Try another term or clear the search.",
+      "noLinks": "No professionals linked to this child. Add one or view all contacts to edit an existing link.",
+      "noFilter": "No contacts in this filter.",
+      "clear": "Clear search and filters",
+      "edit": "Edit"
     }
   },
-
   "appointments": {
+    "editor": {
+      "record": "Appointment",
+      "child": "Child",
+      "chooseChild": "Select a child",
+      "professional": "Professional",
+      "preview": "Who will provide care",
+      "railTitle": "Ready for the appointment",
+      "railHint": "Check the child, professional, location and time before saving.",
+      "subtitle": "Organize the details of the next visit.",
+      "schedule": "Date and details",
+      "discardTitle": "Discard changes?",
+      "discardHint": "The appointment details have not been saved yet.",
+      "keepEditing": "Keep editing",
+      "discard": "Discard",
+      "loadingProfessionals": "Loading professional suggestions…",
+      "professionalsError": "Could not load suggestions. You can enter the details manually or try again.",
+      "retry": "Try again",
+      "saveProfessionalError": "Could not save the professional. The appointment has not been saved.",
+      "appointmentAfterProfessionalError": "The professional was saved, but the appointment was not. Try again to finish recording it.",
+      "beforeBirth": "The appointment cannot be before birth.",
+      "completedTitle": "Record completed appointment",
+      "completedSubmit": "Record appointment",
+      "scheduleSubmit": "Schedule appointment",
+      "childrenError": "Could not load the children.",
+      "noChildren": "Add a child to schedule appointments."
+    },
     "title": "Appointments",
     "summary": "{{completed}} completed · {{scheduled}} scheduled",
     "summaryUnavailable": "Loading appointments…",
@@ -645,6 +945,23 @@
     },
     "search": {
       "label": "Search appointment"
+    },
+    "page": {
+      "intro": "Organize upcoming care and review the history of each visit.",
+      "recordPast": "Record a past appointment",
+      "filters": "Filter appointments",
+      "ALL": "All",
+      "UPCOMING": "Upcoming",
+      "REVIEW": "Needs update",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled",
+      "search": "Search professional, specialty, location or reason",
+      "noFilter": "No appointments in this filter.",
+      "next": "Next appointment",
+      "reviewHint": "This date has passed. Update whether the appointment took place, was cancelled or needs rescheduling.",
+      "location": "Location",
+      "reason": "Reason",
+      "date": "Date and time"
     }
   },
   "medications": {
@@ -708,6 +1025,56 @@
       "notesLabel": "Notes (Optional)",
       "startedOnFuture": "The start date cannot be in the future.",
       "endedOnBeforeStart": "The end cannot be before the start."
+    },
+    "editor": {
+      "child": "Child",
+      "chooseChild": "Select a child",
+      "discardTitle": "Discard changes?",
+      "discardHint": "Your changes have not been saved yet.",
+      "keepEditing": "Keep editing",
+      "discard": "Discard",
+      "childrenError": "Could not load the children.",
+      "retry": "Try again",
+      "record": "Medication",
+      "medicine": "Medication",
+      "details": "Period and details",
+      "preview": "Your care record",
+      "railTitle": "Care history",
+      "railHint": "Check the medication, child and period before saving.",
+      "subtitle": "Save the medication details and recorded period.",
+      "noEnd": "No recorded end",
+      "loadingPrescribers": "Loading the child’s professionals…",
+      "prescribersError": "Could not load professionals. You can type the prescriber’s name.",
+      "noChildren": "Add a child to record a medication."
+    },
+    "page": {
+      "intro": "Organize medications by their recorded dates, including upcoming periods.",
+      "dosage": "Dosage",
+      "frequency": "Frequency",
+      "start": "Start",
+      "end": "End",
+      "prescriber": "Prescriber",
+      "reason": "Reason",
+      "notes": "Notes",
+      "endAction": "Record end",
+      "filters": "Filter medications",
+      "ALL": "All",
+      "ACTIVE": "Ongoing",
+      "PLANNED": "Planned",
+      "ENDED": "Ended",
+      "search": "Search medication, reason or prescriber",
+      "noResults": "No records match the search and selected filter.",
+      "endTitle": "Record the end today?",
+      "endHint": "The end of {{name}} will be recorded as today, replacing a future date if present. It will appear as “Ends today” until the end of the day.",
+      "endConfirm": "Confirm end today",
+      "endSaved": "End date recorded."
+    },
+    "period": {
+      "PLANNED": "Planned",
+      "OPEN": "No end defined",
+      "ACTIVE": "Ongoing",
+      "ENDING_TODAY": "Ends today",
+      "ENDED": "Ended"
     }
   },
   "healthPlan": {
@@ -742,12 +1109,12 @@
       "weightLabel": "{{name}}'s weight over time, {{count}} measurements",
       "heightLabel": "{{name}}'s height over time, {{count}} measurements"
     },
-    "singlePoint": "One measurement is not a curve yet — the next visit draws the line.",
+    "singlePoint": "One measurement starts the history. The next helps draw the curve.",
     "noWeight": "No weight recorded yet.",
     "noHeight": "No height recorded yet.",
     "empty": {
       "title": "No measurements recorded",
-      "description": "Weight and height are written down at the visit that took them. Record a visit as completed with the numbers, and the curve starts here.",
+      "description": "Record weight and height in the child's profile or a completed appointment to track growth.",
       "cta": "Go to appointments"
     },
     "table": {
@@ -766,7 +1133,9 @@
     "summary_other": "{{count}} special moments recorded",
     "action": "Record Milestone",
     "genericError": "Could not load milestones.",
-    "categoryFilter": { "groupLabel": "Filter by category" },
+    "categoryFilter": {
+      "groupLabel": "Filter by category"
+    },
     "filterAll": "All",
     "category": {
       "motor": "Motor",
@@ -831,6 +1200,58 @@
     },
     "search": {
       "label": "Search milestone"
+    },
+    "editor": {
+      "child": "Child",
+      "chooseChild": "Select a child",
+      "discardTitle": "Discard changes?",
+      "discardHint": "Your changes have not been saved yet.",
+      "keepEditing": "Keep editing",
+      "discard": "Discard",
+      "childrenError": "Could not load the children.",
+      "retry": "Try again",
+      "record": "A memory",
+      "moment": "The moment",
+      "details": "The memory",
+      "preview": "A moment to remember",
+      "railTitle": "Your story together",
+      "railHint": "Small discoveries and moments worth remembering.",
+      "subtitle": "Tell us what happened. The details make this memory yours.",
+      "save": "Save memory",
+      "suggestions": "Ideas to get started",
+      "replaceTitle": "Use this idea?",
+      "replaceHint": "The title and category will be replaced. Other details will be kept.",
+      "replace": "Use idea",
+      "noChildren": "Add a child to save a milestone.",
+      "photoHint": "Optional photo · JPG, PNG or WebP · up to 5 MB",
+      "photoReplace": "Replace photo",
+      "photoLoading": "Uploading photo…",
+      "description": "What was this moment like? (optional)",
+      "categoryHints": {
+        "motor": "Movement and new skills",
+        "language": "Sounds, words and communication",
+        "social": "Smiles, bonds and interactions",
+        "cognitive": "Discoveries and learning",
+        "other": "Other special memories"
+      }
+    },
+    "page": {
+      "intro": "First discoveries and moments worth keeping.",
+      "enlarge": "Enlarge photo of {{title}}",
+      "viewPhoto": "View photo",
+      "photoUnavailable": "The photo could not be loaded.",
+      "edit": "Edit",
+      "emptyTitle": "A story begins with a memory",
+      "emptyDescription": "A smile, a discovery or a special day. Keep the moments that are part of your child’s story, with or without a photo.",
+      "ideas": "Ideas to get started",
+      "ideasHint": "Just a little inspiration. You choose what to remember.",
+      "search": "Search memories…",
+      "results_one": "{{count}} memory found",
+      "results_other": "{{count}} memories found",
+      "partial": "Partial list",
+      "noSearch": "No memories match your search.",
+      "noCategory": "There are no memories in this category yet.",
+      "reset": "Clear search and filters"
     }
   },
   "notifications": {
@@ -870,11 +1291,12 @@
       "savedToast": "Profile updated successfully!",
       "incorrectCurrentPassword": "Incorrect current password.",
       "emailTaken": "This email is already in use by another account.",
-      "genericError": "Could not save. Please try again."
+      "genericError": "Could not save. Please try again.",
+      "emailReadOnly": "The account email cannot be changed."
     },
     "password": {
       "sectionTitle": "Change Password",
-      "sectionDescription": "Your password is never shown. Change it whenever you want.",
+      "sectionDescription": "Update your password to protect access to your account.",
       "startAction": "Change password",
       "currentPasswordLabel": "Current password",
       "newPasswordLabel": "New password",
@@ -883,7 +1305,9 @@
       "submit": "Update Password",
       "savedToast": "Password updated successfully!",
       "incorrectCurrentPassword": "Incorrect current password.",
-      "genericError": "Could not update the password. Please try again."
+      "genericError": "Could not update the password. Please try again.",
+      "show": "Show password",
+      "hide": "Hide password"
     },
     "babies": {
       "sectionTitle": "Babies you manage",
@@ -891,7 +1315,7 @@
       "addFirst": "Add Child"
     },
     "delete": {
-      "sectionTitle": "Danger Zone",
+      "sectionTitle": "Delete account",
       "sectionDescription": "Deleting your account is permanent and will remove all associated babies, vaccines, appointments and milestones.",
       "action": "Delete my account",
       "confirmTitle": "Delete account?",
@@ -904,7 +1328,23 @@
       "currentPasswordLabel": "Confirm your current password",
       "confirmAction": "Permanently delete account",
       "incorrectPassword": "Incorrect current password.",
-      "genericError": "Could not delete the account. Please try again."
+      "genericError": "Could not delete the account. Please try again.",
+      "codeError": "The code could not be sent. Close and try again."
+    },
+    "page": {
+      "title": "My profile",
+      "preferences": "Preferences",
+      "preferencesHint": "Adjust the app language and appearance.",
+      "error": "Your profile could not be loaded."
+    },
+    "photo": {
+      "title": "Profile photo",
+      "add": "Add photo",
+      "change": "Change photo",
+      "remove": "Remove photo",
+      "hint": "Choose an image up to 10 MB. Your photo will be saved with your changes.",
+      "tooLarge": "Choose an image up to 10 MB.",
+      "invalid": "This image could not be opened. Choose another."
     }
   },
   "invites": {

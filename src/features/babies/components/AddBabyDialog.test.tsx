@@ -92,7 +92,7 @@ describe('AddBabyDialog', () => {
     })
 
     await user.click(screen.getByRole('button', { name: 'Cor 1' }))
-    expect(screen.getByAltText('').parentElement).toHaveStyle({ borderColor: '#2A9D8F' })
+    expect(screen.getByAltText('').parentElement).toHaveStyle({ borderColor: '#16745B' })
 
     await user.click(screen.getByRole('button', { name: 'Continuar' }))
 
@@ -105,7 +105,7 @@ describe('AddBabyDialog', () => {
       expect(postCallCount).toBe(1)
     })
     expect(receivedBody.avatarUrl).toBe(dataUrl)
-    expect(receivedBody.avatarColor).toBe('#2A9D8F')
+    expect(receivedBody.avatarColor).toBe('#16745B')
     expect(onOpenChange).toHaveBeenCalledWith(false)
   })
 

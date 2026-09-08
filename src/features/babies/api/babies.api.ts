@@ -1,4 +1,5 @@
 import { httpClient } from '@/lib/http-client'
+import { kilogramsInputToGrams, centimetersInputToMillimeters } from '@/shared/utils/measurements'
 
 import {
   babyFormSchema,
@@ -26,8 +27,10 @@ function optionalText(value: string | undefined): string | undefined {
 
 export async function createBaby(input: BabyFormInput): Promise<Baby> {
   const parsed = babyFormSchema.parse(input)
+  const { weightKg, heightCm, measuredOn, ...profile } = parsed
   const body = {
-    ...parsed,
+    ...profile,
+    measurement: measurementBody({ weightKg, heightCm, measuredOn }),
     healthPlanName: optionalText(parsed.healthPlanName),
     sexAtBirth: parsed.sexAtBirth,
     healthPlanNumber: optionalText(parsed.healthPlanNumber),
@@ -48,6 +51,7 @@ export async function createBaby(input: BabyFormInput): Promise<Baby> {
 export async function updateBaby(babyId: string, input: BabyFormInput): Promise<Baby> {
   const parsed = babyFormSchema.parse(input)
   const body = {
+    measurement: measurementBody(parsed),
     name: parsed.name,
     birthDate: parsed.birthDate,
     // `null` e não omissão: o formulário sempre mostra a escolha atual, então "prefiro não
@@ -62,6 +66,15 @@ export async function updateBaby(babyId: string, input: BabyFormInput): Promise<
   }
   const response = await httpClient.patch<unknown>(`/babies/${babyId}`, body)
   return babySchema.parse(response)
+}
+
+function measurementBody(values: Pick<BabyFormInput, 'weightKg' | 'heightCm' | 'measuredOn'>) {
+  if (!values.weightKg?.trim() && !values.heightCm?.trim()) return undefined
+  return {
+    measuredOn: values.measuredOn,
+    weightGrams: kilogramsInputToGrams(values.weightKg),
+    heightMillimeters: centimetersInputToMillimeters(values.heightCm),
+  }
 }
 
 export async function deleteBaby(babyId: string): Promise<void> {

@@ -36,4 +36,5 @@ add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 # events to it, and a CSP that omits it drops error reporting without any error
 # of its own. Keep in step with `vercel.json`, which spells out the same policy
 # by hand for the Vercel deployment.
-add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' ${API_ORIGIN} https://o325983.ingest.us.sentry.io; frame-ancestors 'none';" always;
+# The configured API origin also serves uploaded photos over HTTP in local Docker.
+add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https: ${API_ORIGIN}; connect-src 'self' ${API_ORIGIN} https://o325983.ingest.us.sentry.io; frame-ancestors 'none';" always;

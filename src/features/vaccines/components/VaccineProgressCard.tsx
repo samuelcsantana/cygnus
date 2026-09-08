@@ -42,7 +42,7 @@ export function VaccineProgressCard({ progress }: VaccineProgressCardProps) {
   return (
     <div className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
       <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <span className="text-[13px] font-semibold text-ink">{t('vaccines.progressLabel')}</span>
+        <span className="text-[13px] font-semibold text-ink">{t('vaccines.page.routineProgress')}</span>
         {/* Contagem e porcentagem em mono, como todo dado factual. O "de N" é o
             denominador que a nota do componente explica. */}
         <span className="font-mono text-[13px] text-ink-muted">

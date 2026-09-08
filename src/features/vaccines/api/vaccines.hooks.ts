@@ -101,7 +101,8 @@ export function useApplyVaccine(babyId: string | null) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ vaccineId, input }: ApplyVaccineVariables) => applyVaccine(babyId!, vaccineId, input),
+    mutationFn: ({ vaccineId, input }: ApplyVaccineVariables) =>
+      applyVaccine(babyId!, vaccineId, input),
     onSuccess: (updatedItem) => {
       queryClient.setQueryData<VaccineCalendar>(vaccinesQueryKey(babyId ?? ''), (prev) =>
         prev
@@ -109,7 +110,9 @@ export function useApplyVaccine(babyId: string | null) {
               ...prev,
               groups: prev.groups.map((group) => ({
                 ...group,
-                items: group.items.map((item) => (item.vaccineId === updatedItem.vaccineId ? updatedItem : item)),
+                items: group.items.map((item) =>
+                  item.vaccineId === updatedItem.vaccineId ? updatedItem : item,
+                ),
               })),
             }
           : prev,
@@ -136,9 +139,9 @@ export interface AllBabiesAdhocVaccines {
   items: AdhocVaccineRecord[]
 }
 
-export function useAllBabiesAdhocVaccines(): AllBabiesAdhocVaccines {
+export function useAllBabiesAdhocVaccines(visibleIds?: readonly string[]): AllBabiesAdhocVaccines {
   const babies = useBabies()
-  const babyList = babies.data ?? []
+  const babyList = (babies.data ?? []).filter((baby) => !visibleIds || visibleIds.includes(baby.id))
 
   const results = useQueries({
     queries: babyList.map((baby) => ({
@@ -161,10 +164,10 @@ export function useRegisterAdhocVaccine(babyId: string | null) {
   return useMutation({
     mutationFn: (input: CreateAdhocVaccineInput) => registerAdhocVaccine(babyId!, input),
     onSuccess: (created) => {
-      queryClient.setQueryData<AdhocVaccineRecord[]>(adhocVaccinesQueryKey(babyId ?? ''), (prev) => [
-        created,
-        ...(prev ?? []),
-      ])
+      queryClient.setQueryData<AdhocVaccineRecord[]>(
+        adhocVaccinesQueryKey(babyId ?? ''),
+        (prev) => [created, ...(prev ?? [])],
+      )
     },
   })
 }
