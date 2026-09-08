@@ -1,8 +1,6 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'sonner'
-
-import { GoogleIcon } from '@/shared/icons/google-icon'
+import { GoogleSignInButton } from './GoogleSignInButton'
 
 /**
  * Shared styling for the alternatives to the primary action. They are secondary
@@ -20,11 +18,7 @@ interface AuthSocialSectionProps {
 /**
  * "or" rule plus the alternative sign-in methods.
  *
- * Google is not wired yet — cygnus-api has no OAuth endpoint. The button is
- * deliberately live rather than disabled: a greyed-out Google button on a login
- * screen reads as broken, while a press that says plainly that the option is
- * not available yet is honest and costs the user nothing. Replacing the handler
- * with the real redirect is the whole of the integration on this side.
+ * Availability comes from the API, which owns the Google OAuth configuration.
  */
 export function AuthSocialSection({ children }: AuthSocialSectionProps) {
   const { t } = useTranslation()
@@ -38,14 +32,7 @@ export function AuthSocialSection({ children }: AuthSocialSectionProps) {
       </div>
 
       <div className="space-y-3">
-        <button
-          type="button"
-          onClick={() => toast.info(t('auth.social.googleUnavailable'))}
-          className={AUTH_ALTERNATIVE_CLASS}
-        >
-          <GoogleIcon className="h-[18px] w-[18px]" />
-          {t('auth.social.google')}
-        </button>
+        <GoogleSignInButton />
 
         {children}
       </div>

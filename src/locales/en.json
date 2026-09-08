@@ -122,7 +122,13 @@
     "social": {
       "or": "or",
       "google": "Continue with Google",
-      "googleUnavailable": "Google sign-in is not available yet."
+      "googleUnavailable": "Google sign-in is currently unavailable. Use another sign-in method.",
+      "googleRedirecting": "Opening Google…",
+      "googleRetry": "Try again",
+      "googleError": "Could not sign in with Google. Try again or use your email.",
+      "googleVerifyEmail": "To access this account, sign in with your email and password or request an email code.",
+      "googleCompleting": "Confirming your account…",
+      "googleBack": "Back to sign in"
     },
     "nameGate": {
       "title": "What should we call you?",

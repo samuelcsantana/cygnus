@@ -33,6 +33,10 @@ export const router = createBrowserRouter([
         lazy: () => import('@/features/auth/components/AuthLayout').then((m) => ({ Component: m.AuthLayout })),
         children: [
           {
+            path: '/auth/google/complete',
+            lazy: () => import('@/features/auth/routes/GoogleCompleteRoute').then((m) => ({ Component: m.GoogleCompleteRoute })),
+          },
+          {
             path: '/login',
             // `authTabs` is what puts the segmented control and the card's
             // height floor on screen — see AuthRouteHandle in AuthLayout.tsx.
