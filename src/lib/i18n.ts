@@ -6,6 +6,16 @@ import en from '@/locales/en.json'
 import es from '@/locales/es.json'
 import ptBR from '@/locales/pt-BR.json'
 
+// `<html lang>` follows the language on screen. index.html ships "pt-BR", and
+// without this a visitor reading the English page still had it declared as
+// Portuguese: screen readers pronounce it with the wrong voice, and it fails
+// WCAG 3.1.1 while axe stays green, because axe only checks that the attribute
+// is valid, not that it is true. Registered before init so the first
+// resolution, from the browser's language, is covered too.
+i18next.on('languageChanged', (language) => {
+  document.documentElement.lang = i18next.resolvedLanguage ?? language
+})
+
 void i18next
   .use(LanguageDetector)
   .use(initReactI18next)

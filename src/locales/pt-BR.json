@@ -19,7 +19,8 @@
       "light": "Claro",
       "dark": "Escuro",
       "system": "Sistema",
-      "switchAria": "Tema: {{current}}. Toque para alternar."
+      "switchToDark": "Mudar para o tema escuro",
+      "switchToLight": "Mudar para o tema claro"
     },
     "offline": {
       "message": "Você está offline. Algumas ações podem não funcionar até a conexão voltar."

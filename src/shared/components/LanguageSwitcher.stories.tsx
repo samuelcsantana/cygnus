@@ -13,11 +13,11 @@ const meta = {
     docs: {
       description: {
         component:
-          'Two treatments of one control. `compact` is the header/auth-screen ' +
-          'form — ghost, 36px, shaped to pair with ThemeToggle, and it drops to ' +
-          'the two-letter code below `sm`. `field` is the settings form: the same ' +
-          '44px tinted input the auth screens use. Each language is listed in its ' +
-          'own language, which is why the labels are not translated.',
+          'Two treatments of one control. `compact` is the public-screen header: ' +
+          'the three codes side by side, PT · EN · ES, so the language a visitor ' +
+          'from abroad needs is on screen without opening anything. `field` is the ' +
+          'settings form: the same 44px tinted input the auth screens use, with ' +
+          'each language listed in its own language.',
       },
     },
   },
@@ -31,14 +31,17 @@ export const Compact: Story = {
 }
 
 /**
- * How it actually appears in the app: beside the theme toggle, same height and
- * radius. The whole point of the compact treatment is that the two read as one
- * pair, so it is worth a story rather than a claim in a comment.
+ * How it appears on the public screens: beside the theme button, same height.
  *
  * ThemeToggle calls useTheme(), which throws outside a ThemeProvider — the
  * global decorators in .storybook/preview.tsx supply i18n, Query and a router,
  * but not that one. Wrapped here rather than added globally, because this is
  * the only story that needs it.
+ *
+ * The `play` flips the theme and back. The button shows where a click goes —
+ * a moon on the light page, a sun on the dark one — so its name is what the
+ * step checks, and it ends light so the stored preference does not leak into
+ * the next story.
  */
 export const PairedWithThemeToggle: Story = {
   args: { variant: 'compact' },
@@ -50,6 +53,17 @@ export const PairedWithThemeToggle: Story = {
       </div>
     </ThemeProvider>
   ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+
+    await step('the theme button offers the other theme, and flips back', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'Mudar para o tema escuro' }))
+      await waitFor(() => expect(document.documentElement).toHaveClass('dark'))
+      await userEvent.click(canvas.getByRole('button', { name: 'Mudar para o tema claro' }))
+      await waitFor(() => expect(document.documentElement).not.toHaveClass('dark'))
+      await expect(canvas.getByRole('button', { name: 'Mudar para o tema escuro' })).toBeVisible()
+    })
+  },
 }
 
 export const Field: Story = {
@@ -62,8 +76,37 @@ export const Field: Story = {
 }
 
 /**
- * The menu is the only state where the three languages and the checked row are
- * on screen, so it gets a `play` rather than a screenshot.
+ * The compact control is three toggle buttons in a named group; the pressed one
+ * is the language on screen, and `<html lang>` follows it.
+ */
+export const SwitchingLanguage: Story = {
+  name: 'Interaction — switching language',
+  args: { variant: 'compact' },
+  play: async ({ canvasElement, step }) => {
+    const group = within(canvasElement).getByRole('group', { name: 'Idioma' })
+
+    await step('all three are on screen, the current one pressed', async () => {
+      await expect(within(group).getByRole('button', { name: 'PT (Português)' })).toHaveAttribute('aria-pressed', 'true')
+      await expect(within(group).getByRole('button', { name: 'EN (English)' })).toHaveAttribute('aria-pressed', 'false')
+      await expect(within(group).getByRole('button', { name: 'ES (Español)' })).toHaveAttribute('aria-pressed', 'false')
+    })
+
+    await step('choosing one switches the language and the document', async () => {
+      await userEvent.click(within(group).getByRole('button', { name: 'EN (English)' }))
+      // The group's own name is translated too, so it is found again in English.
+      await waitFor(() =>
+        expect(
+          within(within(canvasElement).getByRole('group', { name: 'Language' })).getByRole('button', { name: 'EN (English)' }),
+        ).toHaveAttribute('aria-pressed', 'true'),
+      )
+      await expect(document.documentElement).toHaveAttribute('lang', 'en')
+    })
+  },
+}
+
+/**
+ * The settings form keeps the menu, and the menu is the only state where the
+ * three languages and the checked row are on screen, so it gets a `play`.
  *
  * It ends by committing a choice, which is not just extra coverage: while a
  * Radix Select is open it marks the rest of the page — its own trigger
@@ -72,9 +115,9 @@ export const Field: Story = {
  * that leaves the menu open fails on the primitive's own behaviour. Closing it
  * by selecting is the pattern `select.stories.tsx` already uses.
  */
-export const SwitchingLanguage: Story = {
-  name: 'Interaction — switching language',
-  args: { variant: 'compact' },
+export const SwitchingLanguageInSettings: Story = {
+  name: 'Interaction — switching language in settings',
+  args: { variant: 'field' },
   play: async ({ canvasElement, step }) => {
     const trigger = within(canvasElement).getByRole('combobox')
     const screen = within(document.body)

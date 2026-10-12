@@ -19,7 +19,8 @@
       "light": "Light",
       "dark": "Dark",
       "system": "System",
-      "switchAria": "Theme: {{current}}. Tap to switch."
+      "switchToDark": "Switch to dark theme",
+      "switchToLight": "Switch to light theme"
     },
     "offline": {
       "message": "You're offline. Some actions may not work until the connection comes back."
