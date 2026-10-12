@@ -35,7 +35,7 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
     .slice(0, MAX_ITEMS)
 
   return (
-    <div className="flex flex-col rounded-2xl border border-border bg-card p-5 sm:p-6">
+    <div className="card-lift flex flex-col rounded-2xl border border-border bg-card p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">

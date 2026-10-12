@@ -121,6 +121,31 @@
   }
 }
 
+/* Cards that answer the mouse (option 39 of the 2026-10-12 redesign): on a
+   device that hovers, a card rises 3px, gains a soft shadow and a green edge.
+   `hover: hover` keeps it off touch screens, where a "hover" is a tap that
+   sticks; the rise also waits for a no-preference motion setting, while the
+   colour cue, which does not move, applies either way. */
+@media (hover: hover) {
+  .card-lift {
+    transition:
+      translate 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+
+  .card-lift:hover {
+    border-color: color-mix(in srgb, var(--primary) 40%, var(--border));
+    box-shadow: 0 18px 36px -24px rgb(26 46 37 / 0.5);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card-lift:hover {
+    translate: 0 -3px;
+  }
+}
+
 @layer utilities {
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);

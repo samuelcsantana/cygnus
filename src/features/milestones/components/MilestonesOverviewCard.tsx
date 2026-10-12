@@ -34,7 +34,7 @@ export function MilestonesOverviewCard({
     .slice(0, MAX_ITEMS)
 
   return (
-    <div className="flex flex-col rounded-2xl border border-border bg-card p-5 sm:p-6">
+    <div className="card-lift flex flex-col rounded-2xl border border-border bg-card p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-300">

@@ -237,7 +237,7 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
                 data-reveal-column
                 // Its column on the three-wide grid, so the cascade runs left to right.
                 style={{ '--column': index % 3 } as CSSProperties}
-                className="rounded-2xl border border-border bg-card p-[18px]"
+                className="card-lift rounded-2xl border border-border bg-card p-[18px]"
               >
                 <span className={cn('mb-3 flex size-9 items-center justify-center rounded-xl', tone)}>
                   <Icon className="size-[18px]" />

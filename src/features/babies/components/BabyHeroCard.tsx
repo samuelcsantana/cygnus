@@ -79,7 +79,7 @@ export function BabyHeroCard({
 
   if (compact)
     return (
-      <article className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4">
+      <article className="card-lift flex items-center gap-3 rounded-2xl border border-border bg-card p-4">
         <span
           aria-hidden
           className={cn(
