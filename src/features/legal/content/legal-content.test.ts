@@ -49,7 +49,7 @@ describe('legal documents', () => {
 
   it.each(IDS)('%s is active with the approved version and no editorial placeholders', (id) => {
     expect(LEGAL_DOCUMENTS[id].status).toBe('in-force')
-    expect(LEGAL_DOCUMENTS[id].version).toBe('1.0.0')
+    expect(LEGAL_DOCUMENTS[id].version).toBe('1.1.0')
     expect(sectionsAwaitingReview(id)).toEqual([])
     const body = JSON.stringify(legalContent(id))
     expect(body).not.toMatch(/\bminuta\b|\bpendente\b|versão revisada/i)
