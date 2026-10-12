@@ -114,6 +114,7 @@ describe('ApplyVaccineDialog', () => {
     )
     await user.click(screen.getByRole('button', { name: 'Salvar Registro' }))
     await waitFor(() => expect(onApplied).toHaveBeenCalledTimes(1))
+    expect(onApplied).toHaveBeenCalledWith(expect.objectContaining({ status: 'APPLIED', applicationDate: '2026-01-01' }))
     unmount()
 
     succeed = false
