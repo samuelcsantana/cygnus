@@ -176,6 +176,39 @@
   }
 }
 
+/* The mark folds itself (option 35): each paper face of the swan opens from a
+   small, turned piece into place, back faces first (`--k`), and the three
+   stars light last. BrandSignature asks for it once per visit, so it greets
+   the first screen and never repeats on every page. */
+@keyframes mark-fold {
+  from {
+    opacity: 0;
+    transform: scale(0.25) rotate(-35deg);
+  }
+}
+
+@keyframes mark-star {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-mark-fold] polygon {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: mark-fold 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(0.15s + var(--k, 0) * 70ms);
+  }
+
+  [data-mark-fold] path {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: mark-star 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.95s both;
+  }
+}
+
 /* Page changes as a view transition (option 37). The sidebar links set
    `viewTransition`, the content area is named `cy-page` and the active menu
    item `cy-nav`. The rest of the page (root) does not cross-fade, so the
