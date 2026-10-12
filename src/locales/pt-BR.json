@@ -19,7 +19,8 @@
       "light": "Claro",
       "dark": "Escuro",
       "system": "Sistema",
-      "switchAria": "Tema: {{current}}. Toque para alternar."
+      "switchToDark": "Mudar para o tema escuro",
+      "switchToLight": "Mudar para o tema claro"
     },
     "offline": {
       "message": "Você está offline. Algumas ações podem não funcionar até a conexão voltar."
@@ -1485,5 +1486,83 @@
     "tooLong": "Valor muito longo.",
     "invalidFormat": "Formato inválido.",
     "invalid": "Valor inválido."
+  },
+  "landing": {
+    "newTab": "(abre em nova aba)",
+    "strip": {
+      "regionLabel": "Sobre este projeto",
+      "label": "Projeto de portfólio",
+      "author": "de Samuel Santana",
+      "stack": "React 19, Fastify 5, Prisma 7",
+      "code": "Código",
+      "designSystem": "Design system"
+    },
+    "nav": {
+      "home": "Cygnus, página inicial",
+      "signIn": "Entrar",
+      "createAccount": "Criar conta"
+    },
+    "hero": {
+      "eyebrow": "Saúde da criança, organizada",
+      "titleLead": "Vacinas, consultas e crescimento dos seus filhos,",
+      "titleEmphasis": "num lugar só.",
+      "subtitle": "O calendário do PNI com o que foi tomado e o que atrasou, as consultas, o peso e a altura nas curvas da OMS, os marcos e os remédios. Para a família inteira, com quem cuida junto.",
+      "createAccount": "Criar conta grátis",
+      "signIn": "Entrar",
+      "trust": "Gratuito · Seguro · Sem anúncios"
+    },
+    "preview": {
+      "label": "Prévia do app: a caderneta de vacinação da Helena, de 6 meses, com 14 de 31 doses em dia, uma consulta em 2 dias e a 3ª dose da VIP atrasada.",
+      "age": "6 meses",
+      "tag": "Vacinas",
+      "schedule": "Calendário do PNI",
+      "progress": "{{done}} de {{total}}",
+      "pentaDetail": "3ª dose · 6 meses",
+      "covidFirstDetail": "1ª dose · 6 meses",
+      "covidSecondDetail": "2ª dose · 7 meses",
+      "applied": "Aplicada",
+      "pending": "Pendente",
+      "appointmentWhen": "em 2 dias",
+      "overdueTitle": "VIP atrasada",
+      "overdueDetail": "Helena · 3ª dose · prevista aos 6 meses"
+    },
+    "schedule": {
+      "eyebrow": "Calendário vacinal, aberto",
+      "title": "O calendário do PNI, em qualquer site",
+      "body": "Este quadro é o widget público do Cygnus. Ele lê as doses do Programa Nacional de Imunizações e funciona sem conta. Um posto de saúde, uma escola ou um blog colam uma linha de HTML e ele aparece no site deles.",
+      "codeLabel": "O HTML que um site cola para mostrar o widget",
+      "note": "Também existe a versão em iframe, para quem não quer rodar script de terceiros."
+    },
+    "features": {
+      "eyebrow": "O que dá para fazer",
+      "title": "Tudo o que a caderneta guarda, e o que ela esquece",
+      "vaccinesTitle": "Vacinas",
+      "vaccinesBody": "O calendário do PNI, do nascimento ao HPV aos 9 anos, com o que foi tomado e o que atrasou.",
+      "appointmentsTitle": "Consultas",
+      "appointmentsBody": "Agenda e histórico, com o peso e a altura medidos em cada visita.",
+      "growthTitle": "Crescimento",
+      "growthBody": "Peso e altura nas curvas de percentis da OMS, até os 5 anos.",
+      "milestonesTitle": "Marcos",
+      "milestonesBody": "Primeiro sorriso, primeiros passos: com data, foto e a história de cada um.",
+      "medicationsTitle": "Medicamentos",
+      "medicationsBody": "O que cada criança toma, a dose e desde quando.",
+      "familyTitle": "Família",
+      "familyBody": "Convide outro responsável para acompanhar e registrar junto."
+    },
+    "inside": {
+      "eyebrow": "Por dentro",
+      "title": "Um projeto de portfólio, feito como produto",
+      "a11yTitle": "Acessibilidade como portão de build",
+      "a11yBody": "Cada story do Storybook roda o axe nos temas claro e escuro, e uma violação reprova o CI.",
+      "contractTitle": "Contrato checado em todo PR",
+      "contractBody": "Toda resposta da API passa por Zod, e os esquemas do front são comparados com o openapi.json que a API publica.",
+      "sessionTitle": "Sessão sem token no JavaScript",
+      "sessionBody": "Cookies HttpOnly, refresh silencioso e CSRF double-submit. API em Fastify 5, Prisma 7, PostgreSQL, Redis e BullMQ.",
+      "widgetTitle": "Widget e microfrontend",
+      "widgetBody": "O calendário acima é um widget sem dependências, e o app também é um remote de Module Federation que outro app React carrega.",
+      "appCode": "Código do app",
+      "apiCode": "Código da API",
+      "designSystem": "Design system"
+    }
   }
 }

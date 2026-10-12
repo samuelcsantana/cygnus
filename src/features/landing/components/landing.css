@@ -1,0 +1,99 @@
+/*
+ * Motion on the landing page, and only there: imported by LandingPage, so it
+ * ships in the page's lazy chunk and not in the app's entry.
+ *
+ * Three effects, each decoration on a page that is complete without it:
+ *
+ * - The header settles as the page moves. It sticks to the top always; at the
+ *   top it is transparent over the page, and over the first 120px of scroll
+ *   it gains its background, blur and shadow.
+ * - Sections rise as they enter the viewport, and the six feature cards
+ *   cascade by column.
+ * - The product preview comes alive when the page opens: the progress bar
+ *   fills, the three doses arrive one by one, the next visit after them, and
+ *   the overdue-dose alert last. That is the app's whole job, keeping track
+ *   and warning, shown in two seconds.
+ *
+ * Two guards, both needed:
+ *
+ * - `prefers-reduced-motion: no-preference`. index.css's global reduce rule
+ *   shortens `animation-duration`, and a scroll-driven animation has none, so
+ *   that rule alone would leave the reveals running for exactly the people
+ *   who asked for less movement.
+ * - `@supports (animation-timeline: view())` around the scroll-driven ones.
+ *   A browser without scroll timelines (Firefox, today) never sees them, and
+ *   shows the still, complete page. Without the guard it would parse the
+ *   `animation` shorthand, drop the timeline, and run a zero-length animation
+ *   whose fill happens to end on the visible state — correct by accident.
+ *
+ * axe reads half-transparent text as low contrast, so every axe pass over
+ * this page runs with reduced motion (e2e/landing.spec.ts) or with animations
+ * off (the stories).
+ */
+
+@keyframes landing-rise {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+  }
+}
+
+@keyframes landing-settle {
+  from {
+    background-color: transparent;
+    box-shadow: none;
+    border-bottom-color: transparent;
+  }
+}
+
+@keyframes landing-grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes landing-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .landing-header {
+      animation: landing-settle linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 120px;
+    }
+
+    .landing [data-reveal] {
+      animation: landing-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 180px;
+    }
+
+    /* Each card starts 40px of scroll after the one to its left. */
+    .landing [data-reveal][data-reveal-column] {
+      animation-range: entry calc(var(--column, 0) * 40px) entry calc(180px + var(--column, 0) * 40px);
+    }
+  }
+
+  .landing [data-preview-bar] {
+    transform-origin: left;
+    animation: landing-grow-x 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s both;
+  }
+
+  .landing [data-preview-item] {
+    animation: landing-pop 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(0.5s + var(--i, 0) * 0.14s);
+  }
+
+  .landing [data-preview-appointment] {
+    animation: landing-pop 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 0.95s both;
+  }
+
+  .landing [data-preview-alert] {
+    animation: landing-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 1.35s both;
+  }
+}

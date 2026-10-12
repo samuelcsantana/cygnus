@@ -19,7 +19,8 @@
       "light": "Light",
       "dark": "Dark",
       "system": "System",
-      "switchAria": "Theme: {{current}}. Tap to switch."
+      "switchToDark": "Switch to dark theme",
+      "switchToLight": "Switch to light theme"
     },
     "offline": {
       "message": "You're offline. Some actions may not work until the connection comes back."
@@ -1480,5 +1481,83 @@
     "tooLong": "Value is too long.",
     "invalidFormat": "Invalid format.",
     "invalid": "Invalid value."
+  },
+  "landing": {
+    "newTab": "(opens in a new tab)",
+    "strip": {
+      "regionLabel": "About this project",
+      "label": "Portfolio project",
+      "author": "by Samuel Santana",
+      "stack": "React 19, Fastify 5, Prisma 7",
+      "code": "Code",
+      "designSystem": "Design system"
+    },
+    "nav": {
+      "home": "Cygnus, home page",
+      "signIn": "Sign in",
+      "createAccount": "Create account"
+    },
+    "hero": {
+      "eyebrow": "Children's health, organized",
+      "titleLead": "Your children's vaccines, checkups and growth,",
+      "titleEmphasis": "all in one place.",
+      "subtitle": "Brazil's national immunization schedule with what was given and what is overdue, doctor visits, weight and height on the WHO growth charts, milestones and medications. For the whole family, shared with whoever helps care.",
+      "createAccount": "Create a free account",
+      "signIn": "Sign in",
+      "trust": "Free · Secure · No ads"
+    },
+    "preview": {
+      "label": "App preview: the vaccine card of Helena, 6 months old, with 14 of 31 doses up to date, a checkup in 2 days and the third polio (VIP) dose overdue.",
+      "age": "6 months",
+      "tag": "Vaccines",
+      "schedule": "PNI schedule",
+      "progress": "{{done}} of {{total}}",
+      "pentaDetail": "Dose 3 · 6 months",
+      "covidFirstDetail": "Dose 1 · 6 months",
+      "covidSecondDetail": "Dose 2 · 7 months",
+      "applied": "Given",
+      "pending": "Pending",
+      "appointmentWhen": "in 2 days",
+      "overdueTitle": "VIP overdue",
+      "overdueDetail": "Helena · dose 3 · due at 6 months"
+    },
+    "schedule": {
+      "eyebrow": "Open vaccine schedule",
+      "title": "Brazil's vaccine schedule, on any website",
+      "body": "This card is Cygnus's public widget. It reads the doses of Brazil's National Immunization Program and needs no account. A clinic, a school or a blog pastes one line of HTML and it shows up on their site.",
+      "codeLabel": "The HTML a site pastes to show the widget",
+      "note": "There is also an iframe version, for sites that won't run third-party scripts."
+    },
+    "features": {
+      "eyebrow": "What it does",
+      "title": "Everything the paper booklet keeps, and what it forgets",
+      "vaccinesTitle": "Vaccines",
+      "vaccinesBody": "Brazil's schedule, from birth to HPV at age 9, with what was given and what is overdue.",
+      "appointmentsTitle": "Checkups",
+      "appointmentsBody": "Schedule and history, with the weight and height measured at each visit.",
+      "growthTitle": "Growth",
+      "growthBody": "Weight and height on the WHO percentile charts, up to age 5.",
+      "milestonesTitle": "Milestones",
+      "milestonesBody": "First smile, first steps: with the date, a photo and the story behind each one.",
+      "medicationsTitle": "Medications",
+      "medicationsBody": "What each child takes, the dose and since when.",
+      "familyTitle": "Family",
+      "familyBody": "Invite another caregiver to follow along and record with you."
+    },
+    "inside": {
+      "eyebrow": "Under the hood",
+      "title": "A portfolio project, built like a product",
+      "a11yTitle": "Accessibility as a build gate",
+      "a11yBody": "Every Storybook story runs axe in the light and dark themes, and a violation fails CI.",
+      "contractTitle": "Contract checked on every PR",
+      "contractBody": "Every API response is parsed with Zod, and the frontend schemas are checked against the openapi.json the API publishes.",
+      "sessionTitle": "No tokens in JavaScript",
+      "sessionBody": "HttpOnly cookies, silent refresh and double-submit CSRF. The API runs on Fastify 5, Prisma 7, PostgreSQL, Redis and BullMQ.",
+      "widgetTitle": "Widget and micro-frontend",
+      "widgetBody": "The schedule above is a dependency-free widget, and the app is also a Module Federation remote that another React app can load.",
+      "appCode": "App code",
+      "apiCode": "API code",
+      "designSystem": "Design system"
+    }
   }
 }
