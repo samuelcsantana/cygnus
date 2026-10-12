@@ -52,8 +52,9 @@ test("the widget's own link leads to sign-up, because the page is the widget's h
   await page.goto('/')
   const widget = page.locator('cygnus-vaccine-schedule')
   // `ready` is the widget saying it painted the schedule (embed/protocol.ts).
+  // A string, like the other specs' evaluate calls: e2e/ is typed without the DOM library.
   const ready = page.evaluate(
-    () => new Promise((resolve) => document.addEventListener('cygnus:ready', resolve, { once: true })),
+    "new Promise((resolve) => document.addEventListener('cygnus:ready', resolve, { once: true }))",
   )
   await widget.scrollIntoViewIfNeeded()
   await ready
