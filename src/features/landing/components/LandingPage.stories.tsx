@@ -23,8 +23,12 @@ const meta = {
   },
   decorators: [
     // The header's theme button reads ThemeProvider, which the global decorators do not supply.
+    // The style turns the page's motion off (landing.css): the a11y gate runs axe right after
+    // render, and text caught mid-rise is half-transparent, which axe reports as low contrast —
+    // the same reason e2e/landing.spec.ts emulates reduced motion. Scoped to this page, not global.
     (Story) => (
       <ThemeProvider>
+        <style>{'.landing, .landing * { animation: none !important; }'}</style>
         <Story />
       </ThemeProvider>
     ),

@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react'
+import type { ComponentType, CSSProperties, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
@@ -21,6 +21,7 @@ import { UsersIcon } from '@/shared/icons/users-icon'
 import { API_SOURCE_URL, DESIGN_SYSTEM_URL, SOURCE_URL } from '@/shared/portfolio-links'
 
 import { ScheduleWidgetShowcase } from './ScheduleWidgetShowcase'
+import './landing.css'
 
 const CONTAINER = 'mx-auto w-full max-w-6xl px-5 md:px-8'
 const EYEBROW = 'mb-3.5 text-xs font-semibold tracking-[0.1em] text-auth-action uppercase'
@@ -81,10 +82,12 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
   const { t } = useTranslation()
 
   return (
-    <div className="flex min-h-dvh flex-col bg-auth-surface">
+    <div className="landing flex min-h-dvh flex-col bg-auth-surface">
       <PortfolioStrip />
 
-      <header className="border-b border-border/70">
+      {/* Sticky and settled by default; landing.css makes it transparent at the
+          top and settle as the page scrolls, where the browser supports that. */}
+      <header className="landing-header sticky top-0 z-20 border-b border-border/70 bg-auth-surface/85 shadow-[0_10px_28px_-18px_rgba(26,46,37,0.45)] backdrop-blur-[10px]">
         <div className={cn(CONTAINER, 'flex h-[72px] items-center gap-3')}>
           <Link
             to="/"
@@ -141,7 +144,7 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
         </section>
 
         <Section id="calendario" labelledBy="landing-schedule-title">
-          <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-14">
+          <div data-reveal className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-14">
             {/* min-w-0: a grid item will not shrink below its content, and the
                 snippet's longest line is wider than a phone. Without it the
                 whole column grew to 490px at 360px and the page scrolled
@@ -182,13 +185,22 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
         </Section>
 
         <Section labelledBy="landing-features-title">
-          <p className={EYEBROW}>{t('landing.features.eyebrow')}</p>
-          <h2 id="landing-features-title" className={SECTION_TITLE}>
-            {t('landing.features.title')}
-          </h2>
+          <div data-reveal>
+            <p className={EYEBROW}>{t('landing.features.eyebrow')}</p>
+            <h2 id="landing-features-title" className={SECTION_TITLE}>
+              {t('landing.features.title')}
+            </h2>
+          </div>
           <ul className="mt-8 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map(({ key, Icon, tone }) => (
-              <li key={key} className="rounded-2xl border border-border bg-card p-[18px]">
+            {FEATURES.map(({ key, Icon, tone }, index) => (
+              <li
+                key={key}
+                data-reveal
+                data-reveal-column
+                // Its column on the three-wide grid, so the cascade runs left to right.
+                style={{ '--column': index % 3 } as CSSProperties}
+                className="rounded-2xl border border-border bg-card p-[18px]"
+              >
                 <span className={cn('mb-3 flex size-9 items-center justify-center rounded-xl', tone)}>
                   <Icon className="size-[18px]" />
                 </span>
@@ -200,7 +212,7 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
         </Section>
 
         <section aria-labelledby="landing-inside-title" className="bg-auth-panel text-emerald-50">
-          <div className={cn(CONTAINER, 'py-12 md:py-[72px]')}>
+          <div data-reveal className={cn(CONTAINER, 'py-12 md:py-[72px]')}>
             <p className="mb-3.5 text-xs font-semibold tracking-[0.1em] text-emerald-300 uppercase">{t('landing.inside.eyebrow')}</p>
             <h2
               id="landing-inside-title"
