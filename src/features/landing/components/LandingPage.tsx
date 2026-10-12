@@ -108,23 +108,27 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
           >
             <BrandSignature compact />
           </Link>
+          {/* The theme and language controls sit at the right edge, after the
+              actions. Placed before them, they moved 30–35px every time the
+              language changed, because "Entrar" and "Ver demonstração" change
+              width with it, and the next click landed on the wrong code. At the
+              edge, with a fixed width, they stay under the pointer. */}
           <div className="ml-auto flex items-center gap-1.5">
-            <ThemeToggle />
-            <LanguageSwitcher />
             <Link
               to="/login"
-              className="ml-1 hidden h-10 items-center rounded-[10px] px-3.5 text-sm font-semibold text-ink transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none sm:inline-flex"
+              className="hidden h-10 items-center rounded-[10px] px-3.5 text-sm font-semibold text-ink transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none sm:inline-flex"
             >
               {t('landing.nav.signIn')}
             </Link>
-            {/* Off below 480px: the header would not hold it beside the brand
-                and both controls, and the hero repeats it a few pixels lower. */}
+            {/* Off below sm (640px), like "Entrar". From 480px it fit in Portuguese,
+                but "Ver demostración" squeezed the row and the language switcher
+                moved again; the hero repeats the button a few pixels lower. */}
             <button
               type="button"
               onClick={openDemo}
               disabled={demo.isPending}
               aria-busy={demo.isPending}
-              className="hidden h-10 items-center gap-2 rounded-[10px] bg-auth-button px-4 text-sm font-semibold whitespace-nowrap text-white transition-colors hover:bg-auth-button-hover focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none min-[480px]:inline-flex"
+              className="hidden h-10 items-center gap-2 rounded-[10px] bg-auth-button px-4 text-sm font-semibold whitespace-nowrap text-white transition-colors hover:bg-auth-button-hover focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none sm:inline-flex"
             >
               {demo.isPending ? (
                 <>
@@ -135,6 +139,9 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
                 t('demo.start')
               )}
             </button>
+            <span aria-hidden className="mx-1 hidden h-6 w-px bg-border sm:block" />
+            <ThemeToggle />
+            <LanguageSwitcher />
           </div>
         </div>
       </header>
@@ -201,15 +208,20 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
                 role="region"
                 tabIndex={0}
                 aria-label={t('landing.schedule.codeLabel')}
-                className="mt-5 overflow-x-auto rounded-xl bg-slate-900 px-4 py-3.5 font-mono text-[12.5px] leading-relaxed text-slate-100 focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none"
+                // A light card in the light theme, beside the widget's own white
+                // card. It was a near-black slab, and on the cream page it was
+                // the heaviest thing on screen. The token colours are the 700
+                // steps here (4.8:1 and up on the card) and the 300 steps on the
+                // dark card.
+                className="mt-5 overflow-x-auto rounded-xl border border-border bg-card px-4 py-3.5 font-mono text-[12.5px] leading-relaxed text-ink focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none"
               >
                 <code>
                   {EMBED_SNIPPET_LINES.map(([tag, attribute, value, rest], index) => (
                     <span key={index} className="block">
-                      <span className="text-emerald-300">{tag}</span>
+                      <span className="text-emerald-700 dark:text-emerald-300">{tag}</span>
                       {attribute}
-                      <span className="text-amber-300">{value}</span>
-                      <span className="text-emerald-300">{rest}</span>
+                      <span className="text-amber-700 dark:text-amber-300">{value}</span>
+                      <span className="text-emerald-700 dark:text-emerald-300">{rest}</span>
                     </span>
                   ))}
                 </code>

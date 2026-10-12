@@ -15,6 +15,12 @@ export interface WidgetOptions {
  * Styles live in a template string rather than a stylesheet because the whole point is that they
  * never leave the shadow root. There is no build step that could accidentally extract them into a
  * global CSS file the host also loads, and no class name that could collide with the host's.
+ *
+ * The dark theme sets its own teal and grey for the title, link and secondary text. It used to
+ * inherit the light theme's: #186560 measured 2.46:1 on the dark card and #6b7280 3.48:1, where
+ * 11–15px text needs 4.5:1. axe never saw it, because the shadow root is closed. Now 9.63:1 and
+ * 6.63:1. The age pills keep their light fill, where the teal is 6.12:1. (Comments stay out of
+ * the string below: everything in it ships to every host.)
  */
 const STYLES = `
   :host {
@@ -62,6 +68,9 @@ const STYLES = `
     .name { color: #e6edf3; }
     li { border-color: #1b3331; }
     .footer { border-color: #1b3331; }
+    .title, a { color: #7dd3c8; }
+    a:focus-visible { outline-color: #7dd3c8; }
+    .subtitle, .dose, .state { color: #9ca3af; }
   }
 `;
 
