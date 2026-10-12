@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useCurrentUser } from '@/features/auth/api/auth.hooks'
 import { useUpdateProfile } from '@/features/profile/api/profile.hooks'
-import { LogoIcon } from '@/shared/icons/logo-icon'
+import { BrandMark } from '@/shared/components/BrandMark'
 
 const nameFormSchema = z.object({ name: z.string().trim().min(1) })
 type NameFormInput = z.infer<typeof nameFormSchema>
@@ -63,9 +63,7 @@ export function NameGate({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-surface p-5">
       <div className="w-full max-w-md rounded-2xl bg-card p-6 shadow-sm sm:p-8">
-        <span className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-          <LogoIcon className="h-5 w-5" />
-        </span>
+        <BrandMark className="mb-5 size-11" />
 
         <h1 className="font-display text-2xl font-extrabold text-ink">{t('auth.nameGate.title')}</h1>
         <p className="mt-1 mb-6 text-ink-muted">{t('auth.nameGate.description')}</p>
