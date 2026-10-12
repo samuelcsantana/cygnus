@@ -3,6 +3,7 @@ import { Link, Outlet } from 'react-router-dom'
 import authHeroUrl from '@/assets/auth-hero.avif'
 import { BrandSignature } from '@/shared/components/BrandSignature'
 import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
+import { PortfolioStrip } from '@/shared/components/PortfolioStrip'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
 import { BellIcon } from '@/shared/icons/bell-icon'
 import { CalendarIcon } from '@/shared/icons/calendar-icon'
@@ -22,6 +23,7 @@ export function AuthLayout() {
   return (
     <div className="relative flex min-h-dvh flex-col bg-auth-surface">
       <AuthBackdrop />
+      <div className="relative z-10"><PortfolioStrip /></div>
       <div className="relative z-10 flex flex-1 flex-col px-4 pb-6 pt-4 sm:px-6 lg:px-8 lg:pt-8">
         <header className="flex items-center justify-end gap-1.5">
           <ThemeToggle />

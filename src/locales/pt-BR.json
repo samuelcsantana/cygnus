@@ -1486,5 +1486,16 @@
     "tooLong": "Valor muito longo.",
     "invalidFormat": "Formato inválido.",
     "invalid": "Valor inválido."
+  },
+  "landing": {
+    "newTab": "(abre em nova aba)",
+    "strip": {
+      "regionLabel": "Sobre este projeto",
+      "label": "Projeto de portfólio",
+      "author": "de Samuel Santana",
+      "stack": "React 19, Fastify 5, Prisma 7",
+      "code": "Código",
+      "designSystem": "Design system"
+    }
   }
 }
