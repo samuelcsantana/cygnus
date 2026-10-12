@@ -48,6 +48,7 @@ export function AccountMenu({
   onLogout,
   pending,
   onNavigate,
+  compact = false,
 }: {
   avatarUrl?: string | null
   name: string
@@ -55,6 +56,13 @@ export function AccountMenu({
   onLogout: () => void
   pending?: boolean
   onNavigate?: () => void
+  /**
+   * The header's form: the name alone, on one line. Under it, "Conta e
+   * preferências" wrapped onto two lines in the header and made the bar look
+   * broken. It is still the button's accessible name; the drawer, with room
+   * to spare, keeps it visible.
+   */
+  compact?: boolean
 }) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -70,8 +78,8 @@ export function AccountMenu({
         >
           <AccountAvatar name={name} url={avatarUrl} />
           <span className="min-w-0">
-            <span className="block max-w-40 truncate text-sm font-semibold text-ink">{name}</span>
-            <span className="block text-xs text-ink-muted">{t('nav.shell.account')}</span>
+            <span className="block max-w-40 truncate text-sm font-semibold whitespace-nowrap text-ink">{name}</span>
+            {!compact && <span className="block text-xs text-ink-muted">{t('nav.shell.account')}</span>}
           </span>
           <ChevronDown
             aria-hidden="true"

@@ -70,6 +70,7 @@ export function AppHeader(props: Props) {
       </Link>
       <div className="hidden max-w-56 border-l border-border pl-3 lg:block">
         <AccountMenu
+          compact
           avatarUrl={props.accountAvatarUrl}
           name={props.accountName}
           email={props.accountEmail}
