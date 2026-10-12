@@ -28,6 +28,19 @@ void i18next
     fallbackLng: 'pt-BR',
     supportedLngs: ['pt-BR', 'en', 'es'],
     interpolation: { escapeValue: false },
+    detection: {
+      // `htmlTag` is left out on purpose, and its absence is the fix for every
+      // English or Spanish browser opening in Portuguese. The detector's
+      // default order ends with it, and index.html declares "pt-BR": i18next
+      // takes the first *exact* match among everything detected, so "pt-BR"
+      // from the HTML beat "en-US" from the browser before the fallback to
+      // plain "en" was ever tried. Only browsers reporting exactly "en" or
+      // "es" got their language. `<html lang>` is an output here (see the
+      // listener above), never an input. The cookie lookup goes too: nothing
+      // writes one.
+      order: ['querystring', 'localStorage', 'navigator'],
+      caches: ['localStorage'],
+    },
   })
 
 export default i18next
