@@ -36,6 +36,10 @@
     "noSearchResults": {
       "title": "Nenhum resultado encontrado",
       "description": "Tente buscar por outro termo."
+    },
+    "serverWaking": {
+      "title": "Acordando o servidor",
+      "body": "Ele dorme quando ninguém usa (plano gratuito) e leva até 1 minuto para voltar. Pode esperar nesta tela."
     }
   },
   "nav": {

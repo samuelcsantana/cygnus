@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet } from 'react-router-dom'
 import authHeroUrl from '@/assets/auth-hero.avif'
+import { useWakeApi } from '@/hooks/useWakeApi'
 import { BrandSignature } from '@/shared/components/BrandSignature'
 import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { PortfolioStrip } from '@/shared/components/PortfolioStrip'
@@ -20,6 +21,7 @@ const FEATURES = [
 /** Shared across auth routes so the brand panel stays mounted during navigation. */
 export function AuthLayout() {
   const { t } = useTranslation()
+  useWakeApi()
   return (
     <div className="relative flex min-h-dvh flex-col bg-auth-surface">
       <AuthBackdrop />

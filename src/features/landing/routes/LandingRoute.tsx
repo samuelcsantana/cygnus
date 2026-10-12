@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Navigate } from 'react-router-dom'
 
 import { useCurrentUser } from '@/features/auth/api/auth.hooks'
+import { useWakeApi } from '@/hooks/useWakeApi'
 import { readCookie } from '@/lib/cookies'
 
 import { LandingPage } from '../components/LandingPage'
@@ -29,7 +30,14 @@ const SESSION_HINT_COOKIE = 'csrf_token'
 export function LandingRoute() {
   const [hasSessionHint] = useState(() => readCookie(SESSION_HINT_COOKIE) !== null)
 
-  return hasSessionHint ? <SessionAwareLanding /> : <LandingPage />
+  return hasSessionHint ? <SessionAwareLanding /> : <VisitorLanding />
+}
+
+function VisitorLanding() {
+  // Nothing on this page needs the API, but the demo button and sign-in will,
+  // so the sleeping instance starts waking while the visitor reads.
+  useWakeApi()
+  return <LandingPage />
 }
 
 function SessionAwareLanding() {

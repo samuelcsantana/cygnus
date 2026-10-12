@@ -36,6 +36,10 @@
     "noSearchResults": {
       "title": "No results found",
       "description": "Try searching for something else."
+    },
+    "serverWaking": {
+      "title": "Waking up the server",
+      "body": "It sleeps when nobody is using it (free plan) and takes up to a minute to come back. You can wait on this screen."
     }
   },
   "nav": {
