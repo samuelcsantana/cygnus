@@ -1,4 +1,4 @@
-# Ninho
+# Cygnus
 
 [![Latest release](https://img.shields.io/github/v/release/samuelcsantana/cygnus?label=release)](https://github.com/samuelcsantana/cygnus/releases/latest)
 [![CI](https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml)
@@ -11,7 +11,7 @@
 ![Vite 8](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
 ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
 
-A mobile-first web application for families to track their children's health and development. **Ninho** is the product name; **Cygnus** identifies this repository and its integrations.
+A mobile-first web application for families to track their children's health and development.
 
 [Live application](https://cygnus.samuelsantana.dev) · [Design system](https://samuelcsantana.github.io/cygnus/) · [Backend](https://github.com/samuelcsantana/cygnus-api) · [MIT License](LICENSE)
 
@@ -25,7 +25,7 @@ A mobile-first web application for families to track their children's health and
 - Terms of Use, Privacy Policy, and versioned acceptance records.
 - Portuguese, English, and Spanish interfaces; light and dark themes.
 
-Ninho organizes information and does not replace advice from healthcare professionals. The web application relies on the API for family records. Its cache does not provide complete offline storage of those records.
+Cygnus organizes information and does not replace advice from healthcare professionals. The web application relies on the API for family records. Its cache does not provide complete offline storage of those records.
 
 ## Stack
 

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Ninho",
+    "appName": "Cygnus",
     "loading": "Cargando...",
     "myAccount": "Mi cuenta",
     "back": "Volver",
@@ -118,7 +118,7 @@
       "featureAlertsTitle": "Alertas inteligentes",
       "featureAlertsHint": "Recordatorios de consultas y vacunas",
       "trust": "Gratis · Seguro · Sin anuncios",
-      "copyright": "© {{year}} Ninho",
+      "copyright": "© {{year}} Cygnus",
       "footerNote": "Hecho con cariño para las familias"
     },
     "social": {
@@ -233,7 +233,7 @@
       "previewName": "Nombre del niño",
       "previewHint": "Una nueva historia empieza aquí",
       "identityTitle": "A su manera",
-      "identityHint": "Elige una foto y un color para reconocer este perfil en todo Ninho.",
+      "identityHint": "Elige una foto y un color para reconocer este perfil en todo Cygnus.",
       "measurements": "Medidas • opcional",
       "weightKg": "Peso (kg)",
       "heightCm": "Altura (cm)",
@@ -283,7 +283,7 @@
     },
     "dashboard": {
       "loadError": "No se pudieron cargar los datos de la familia.",
-      "welcomeHeading": "¡Bienvenido(a) a Ninho!",
+      "welcomeHeading": "¡Bienvenido(a) a Cygnus!",
       "welcomeDescription": "Sigue las vacunas, consultas y los hitos más especiales del crecimiento de tus hijos — todo organizado en un solo lugar, para que nunca pierdas un momento importante.",
       "welcomeCta": "Registrar Primer Hijo",
       "previewSectionTitle": "Lo que podrás hacer ✨",
@@ -719,7 +719,7 @@
       "noApplied": "Todavía no hay dosis aplicadas registradas.",
       "upcoming": "Calendario a seguir",
       "noUpcoming": "No hay dosis ni orientaciones a seguir en este calendario.",
-      "recordNote": "Este documento reúne los registros introducidos en Ninho.",
+      "recordNote": "Este documento reúne los registros introducidos en Cygnus.",
       "noDate": "Sin fecha",
       "sourceCATALOG": "Calendario",
       "sourceCAMPAIGN": "Campaña",

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { BINDING_LOCALE, legalContent } from '@/features/legal/content'
 import { AlertCircleIcon } from '@/shared/icons/alert-circle-icon'
-import { LogoIcon } from '@/shared/icons/logo-icon'
+import { BrandMark } from '@/shared/components/BrandMark'
 import { LEGAL_DOCUMENTS, type LegalDocumentId } from '@/shared/legal'
 import { formatDateDisplay } from '@/lib/date'
 
@@ -26,9 +26,7 @@ export function LegalDocumentRoute({ documentId }: LegalDocumentRouteProps) {
        documento — que é a única coisa que a página tem. */
     <main className="mx-auto min-h-screen max-w-3xl px-5 py-10 sm:px-8">
       <Link to="/" className="text-ink-muted hover:text-ink inline-flex items-center gap-2 text-sm font-semibold">
-        <span className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-lg">
-          <LogoIcon className="h-4 w-4" />
-        </span>
+        <BrandMark className="size-8" />
         {t('common.appName')}
       </Link>
 
