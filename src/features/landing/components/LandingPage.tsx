@@ -139,7 +139,7 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
             </p>
           </div>
           <div className="flex justify-center pt-3">
-            <ProductPreviewCard />
+            <ProductPreviewCard animated />
           </div>
         </section>
 
