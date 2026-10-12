@@ -1,6 +1,9 @@
 import type { LegalContent } from './types'
 
-/** Web legal text approved by the service owner on 2026-09-08. */
+/**
+ * Web legal text approved by the service owner on 2026-09-08. On 2026-10-12 the service was renamed
+ * from Ninho to Cygnus; the name is the only wording that changed, and the version rose with it.
+ */
 export const termsPtBR: LegalContent = {
   "locale": "pt-BR",
   "sections": [
@@ -8,16 +11,16 @@ export const termsPtBR: LegalContent = {
       "id": "responsavel",
       "heading": "Serviço e responsável",
       "body": [
-        "O Ninho Web é disponibilizado por Samuel Santana, responsável pelo serviço, acessível em https://cygnus.samuelsantana.dev. O contato para suporte, dúvidas sobre estes termos e privacidade é samuel.ssa89@gmail.com.",
+        "O Cygnus Web é disponibilizado por Samuel Santana, responsável pelo serviço, acessível em https://cygnus.samuelsantana.dev. O contato para suporte, dúvidas sobre estes termos e privacidade é samuel.ssa89@gmail.com.",
         "Estes termos tratam exclusivamente da versão web e dos serviços que a atendem. Não abrangem um futuro aplicativo Android, compra na Play Store ou plano pago de nuvem, que terão condições próprias quando oferecidos."
       ]
     },
     {
       "id": "o-que-o-servico-e",
-      "heading": "Finalidade do Ninho",
+      "heading": "Finalidade do Cygnus",
       "body": [
-        "O Ninho organiza informações registradas pelos responsáveis sobre crianças: perfil, vacinas e comprovantes, consultas, medidas de crescimento, medicamentos, marcos de desenvolvimento, profissionais e dados do plano de saúde. Também oferece referências informativas, compartilhamento autorizado e notificações.",
-        "O Ninho não presta consulta médica, não diagnostica, não prescreve medicamentos e não calcula tratamentos. O calendário vacinal e as curvas de crescimento são referências informativas, sujeitas a limites de aplicação e atualização. Não substituem a caderneta oficial, documentos emitidos por serviços de saúde ou avaliação profissional.",
+        "O Cygnus organiza informações registradas pelos responsáveis sobre crianças: perfil, vacinas e comprovantes, consultas, medidas de crescimento, medicamentos, marcos de desenvolvimento, profissionais e dados do plano de saúde. Também oferece referências informativas, compartilhamento autorizado e notificações.",
+        "O Cygnus não presta consulta médica, não diagnostica, não prescreve medicamentos e não calcula tratamentos. O calendário vacinal e as curvas de crescimento são referências informativas, sujeitas a limites de aplicação e atualização. Não substituem a caderneta oficial, documentos emitidos por serviços de saúde ou avaliação profissional.",
         "Lembretes podem atrasar ou não chegar. O responsável deve acompanhar datas e orientações do profissional de saúde independentemente das notificações. Ausência de alerta não significa ausência de cuidado necessário. O serviço não é destinado a emergências."
       ]
     },
@@ -26,14 +29,14 @@ export const termsPtBR: LegalContent = {
       "heading": "Quem pode utilizar",
       "body": [
         "O serviço é destinado a pessoas adultas que sejam pais, responsáveis legais ou pessoas por eles autorizadas a acompanhar a criança. Quem cadastra informações deve ter legitimidade para fazê-lo e respeitar os direitos e o melhor interesse da criança.",
-        "O convite para colaborar no Ninho concede acesso ao sistema; não constitui guarda, representação legal ou decisão sobre direitos familiares. Em caso de disputa sobre acesso, entre em contato. A situação deverá ser examinada considerando a segurança dos dados, os direitos envolvidos e eventuais determinações competentes."
+        "O convite para colaborar no Cygnus concede acesso ao sistema; não constitui guarda, representação legal ou decisão sobre direitos familiares. Em caso de disputa sobre acesso, entre em contato. A situação deverá ser examinada considerando a segurança dos dados, os direitos envolvidos e eventuais determinações competentes."
       ]
     },
     {
       "id": "sua-conta",
       "heading": "Conta e acesso",
       "body": [
-        "Informe dados de conta corretos e utilize um endereço de e-mail ao qual tenha acesso. O Ninho oferece acesso por senha, código enviado por e-mail e Google, conforme a disponibilidade de cada modalidade.",
+        "Informe dados de conta corretos e utilize um endereço de e-mail ao qual tenha acesso. O Cygnus oferece acesso por senha, código enviado por e-mail e Google, conforme a disponibilidade de cada modalidade.",
         "Proteja sua senha, seus códigos e o acesso ao e-mail. Não forneça essas credenciais a terceiros; utilize os convites de compartilhamento quando apropriado. O suporte não precisa de sua senha ou de um código de acesso para receber uma solicitação.",
         "Ao suspeitar de acesso indevido, proteja o e-mail e a conta Google, quando utilizados, altere a senha quando aplicável e informe o contato de suporte. A apuração de acesso não autorizado não implica atribuição automática de responsabilidade ao usuário."
       ]
@@ -52,8 +55,8 @@ export const termsPtBR: LegalContent = {
       "id": "seu-conteudo",
       "heading": "Uso permitido e conteúdo",
       "body": [
-        "Não utilize o Ninho para registrar dados de terceiros sem autorização, publicar conteúdo ilícito, violar direitos de imagem, tentar acessar dados de outras famílias, comprometer a segurança ou prejudicar a disponibilidade do sistema.",
-        "O envio de conteúdo não transfere ao Ninho sua titularidade nem concede autorização publicitária. O serviço utiliza o conteúdo para as funcionalidades solicitadas, incluindo armazenamento, apresentação aos usuários autorizados e comunicações relacionadas ao acompanhamento, conforme a Política de Privacidade. Essa cláusula não substitui a definição da base legal para dados pessoais.",
+        "Não utilize o Cygnus para registrar dados de terceiros sem autorização, publicar conteúdo ilícito, violar direitos de imagem, tentar acessar dados de outras famílias, comprometer a segurança ou prejudicar a disponibilidade do sistema.",
+        "O envio de conteúdo não transfere ao Cygnus sua titularidade nem concede autorização publicitária. O serviço utiliza o conteúdo para as funcionalidades solicitadas, incluindo armazenamento, apresentação aos usuários autorizados e comunicações relacionadas ao acompanhamento, conforme a Política de Privacidade. Essa cláusula não substitui a definição da base legal para dados pessoais.",
         "A identidade visual, o software e materiais próprios do serviço continuam sujeitos aos direitos aplicáveis. Referências e materiais de terceiros permanecem sujeitos aos direitos de seus titulares."
       ]
     },
@@ -70,7 +73,7 @@ export const termsPtBR: LegalContent = {
       "heading": "Disponibilidade e evolução",
       "body": [
         "O funcionamento depende de internet, navegador, equipamentos e provedores externos. Podem ocorrer manutenção, falhas ou interrupções. Não há compromisso contratual de disponibilidade contínua ou entrega de lembretes em horário exato nesta versão.",
-        "A implementação atual não oferece backup completo restaurável pelo usuário. A infraestrutura de arquivos apresenta limitações de durabilidade descritas na Política de Privacidade. O Ninho não deve ser usado como única cópia de documentos essenciais.",
+        "A implementação atual não oferece backup completo restaurável pelo usuário. A infraestrutura de arquivos apresenta limitações de durabilidade descritas na Política de Privacidade. O Cygnus não deve ser usado como única cópia de documentos essenciais.",
         "Funcionalidades podem evoluir. Mudanças relevantes nas condições de uso ou eventual encerramento deverão ser comunicados de forma adequada, com orientação sobre acesso aos registros e exercício de direitos. Medidas urgentes de segurança ou exigidas por autoridade podem demandar atuação imediata."
       ]
     },

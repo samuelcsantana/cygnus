@@ -1,6 +1,9 @@
 import type { LegalContent } from './types'
 
-/** Web legal text approved by the service owner on 2026-09-08. */
+/**
+ * Web legal text approved by the service owner on 2026-09-08. On 2026-10-12 the service was renamed
+ * from Ninho to Cygnus; the name is the only wording that changed, and the version rose with it.
+ */
 export const privacyPtBR: LegalContent = {
   "locale": "pt-BR",
   "sections": [
@@ -8,7 +11,7 @@ export const privacyPtBR: LegalContent = {
       "id": "controlador",
       "heading": "Responsável e alcance",
       "body": [
-        "Samuel Santana é o responsável pelas decisões de tratamento de dados do Ninho Web, disponível em https://cygnus.samuelsantana.dev. O contato para privacidade, suporte e exercício de direitos é samuel.ssa89@gmail.com.",
+        "Samuel Santana é o responsável pelas decisões de tratamento de dados do Cygnus Web, disponível em https://cygnus.samuelsantana.dev. O contato para privacidade, suporte e exercício de direitos é samuel.ssa89@gmail.com.",
         "Esta política abrange o site e o backend que o atende. A versão web armazena registros em servidores; não é um aplicativo exclusivamente local. Este documento não abrange o futuro aplicativo Android nem um futuro serviço pago de nuvem."
       ]
     },
@@ -36,7 +39,7 @@ export const privacyPtBR: LegalContent = {
       "heading": "Finalidades",
       "body": [
         "Utilizamos os dados para manter a conta e o acesso; organizar e apresentar o histórico; permitir alterações e compartilhamentos solicitados; exibir referências vacinais e de crescimento; gerar avisos; enviar códigos, convites e lembretes; investigar falhas; proteger o serviço; atender solicitações e cumprir obrigações aplicáveis.",
-        "Não há funcionalidades de publicidade comportamental ou venda de dados implementadas no Ninho. O diagnóstico técnico de falhas e desempenho por serviço externo é descrito abaixo e não deve ser confundido com ausência de qualquer transmissão a terceiros."
+        "Não há funcionalidades de publicidade comportamental ou venda de dados implementadas no Cygnus. O diagnóstico técnico de falhas e desempenho por serviço externo é descrito abaixo e não deve ser confundido com ausência de qualquer transmissão a terceiros."
       ]
     },
     {
@@ -54,9 +57,9 @@ export const privacyPtBR: LegalContent = {
       "heading": "Autenticação, navegador e armazenamento local",
       "body": [
         "No acesso com senha, o servidor utiliza a senha para autenticação e mantém um hash, não uma cópia recuperável da senha. Códigos por e-mail permitem fluxos assistidos de acesso, recuperação e confirmação de exclusão.",
-        "O login Google é opcional. O Ninho não recebe a senha da sua conta Google e não solicita acesso a mensagens do Gmail, arquivos do Drive ou agenda nesse fluxo. A autenticação relaciona a identidade Google à conta Ninho conforme as verificações do serviço. O Google também trata dados necessários ao seu próprio serviço, segundo suas condições.",
+        "O login Google é opcional. O Cygnus não recebe a senha da sua conta Google e não solicita acesso a mensagens do Gmail, arquivos do Drive ou agenda nesse fluxo. A autenticação relaciona a identidade Google à conta Cygnus conforme as verificações do serviço. O Google também trata dados necessários ao seu próprio serviço, segundo suas condições.",
         "O navegador utiliza cookies de sessão, proteção contra requisições indevidas e transação temporária do login Google. Preferências como tema, idioma e identificação da criança selecionada podem ficar no armazenamento do navegador.",
-        "Quando instalado como PWA, o Ninho pode guardar arquivos da interface para carregamento. Seu service worker não mantém o histórico autenticado da API e os uploads nesse cache persistente. Isso não impede cópias feitas por download, recursos do navegador ou ações do próprio usuário. Limpar os dados do navegador não apaga os registros armazenados nos servidores."
+        "Quando instalado como PWA, o Cygnus pode guardar arquivos da interface para carregamento. Seu service worker não mantém o histórico autenticado da API e os uploads nesse cache persistente. Isso não impede cópias feitas por download, recursos do navegador ou ações do próprio usuário. Limpar os dados do navegador não apaga os registros armazenados nos servidores."
       ]
     },
     {
@@ -89,7 +92,7 @@ export const privacyPtBR: LegalContent = {
       "id": "seguranca",
       "heading": "Segurança e limitação atual das imagens",
       "body": [
-        "O Ninho utiliza conexão HTTPS em produção, senhas protegidas por hash, cookies de sessão HttpOnly, proteção contra requisições indevidas e verificação de acesso para os registros autenticados. Essas medidas reduzem riscos, mas não garantem segurança absoluta.",
+        "O Cygnus utiliza conexão HTTPS em produção, senhas protegidas por hash, cookies de sessão HttpOnly, proteção contra requisições indevidas e verificação de acesso para os registros autenticados. Essas medidas reduzem riscos, mas não garantem segurança absoluta.",
         "As imagens enviadas têm uma limitação importante: seus endereços atualmente permitem leitura sem autenticação. Quem obtiver uma URL pode abrir a imagem, mesmo sem ser responsável autorizado na conta. Um endereço difícil de adivinhar não equivale a controle de acesso. Esta política não considera o envio uma autorização para exposição pública.",
         "O armazenamento atual de uploads também não oferece a durabilidade necessária para ser a única cópia dos documentos: os arquivos ficam no sistema de arquivos da API, sujeito a perda com reinicializações e mudanças da infraestrutura. Guarde os originais. O contato informado recebe pedidos relativos à exposição ou remoção de imagens.",
         "Essas limitações devem ser corrigidas tecnicamente; descrevê-las não elimina as obrigações de proteção. Incidentes serão avaliados e comunicados aos titulares e à ANPD quando exigido pelas regras aplicáveis."
