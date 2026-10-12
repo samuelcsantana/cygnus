@@ -9,6 +9,15 @@
 
 @theme {
   --animate-fade-in-up: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* Progress bars fill from empty when they first appear (option 36). */
+  --animate-grow-x: grow-x 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s both;
+
+  @keyframes grow-x {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
   /* ServerWakingNotice: the bar fills over the minute a sleeping Render instance takes. */
   --animate-server-wake: server-wake 60s linear forwards;
 

@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
+import { useCountUp } from '@/hooks/useCountUp'
+
 import type { VaccineProgress } from './vaccine-progress'
 
 interface VaccineProgressCardProps {
@@ -28,6 +30,10 @@ interface VaccineProgressCardProps {
  */
 export function VaccineProgressCard({ progress }: VaccineProgressCardProps) {
   const { t } = useTranslation()
+  // The count and the percentage climb to their values, and climb again when a
+  // dose is registered (useCountUp); the bar fills from empty as it appears.
+  const shownApplied = useCountUp(progress.applied)
+  const shownPercent = useCountUp(progress.percent)
 
   // As três chaves escritas por extenso, e não montadas com
   // `` t(`…legend.${key}`) ``: o `audit-locale-parity.mjs` lê `t('…')`
@@ -50,15 +56,15 @@ export function VaccineProgressCard({ progress }: VaccineProgressCardProps) {
               separados por um "·". Como irmãos soltos, "26 de 42" não é o texto
               de elemento nenhum — o pai contém "26 de 42 · 62%" — e nem teste
               nem leitor de tela conseguem tratar os dois como unidades. */}
-          <span>{t('vaccines.progressCount', { applied: progress.applied, total: progress.total })}</span>
+          <span>{t('vaccines.progressCount', { applied: shownApplied, total: progress.total })}</span>
           {' · '}
-          <span className="text-primary">{progress.percent}%</span>
+          <span className="text-primary">{shownPercent}%</span>
         </span>
       </div>
 
       <div aria-hidden className="h-3 overflow-hidden rounded-full bg-muted">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
+          className="h-full origin-left animate-grow-x rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
           style={{ width: `${progress.percent}%` }}
         />
       </div>

@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 import type { Baby } from '@/features/babies/api/babies.schemas'
+import { useCountUp } from '@/hooks/useCountUp'
 import { cn } from '@/lib/utils'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
@@ -25,6 +26,8 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
   const babyById = new Map(babies.map((baby) => [baby.id, baby]))
 
   const progress = vaccineProgress(items)
+  // Counts up to the value, and the bar fills from empty (option 36).
+  const shownPercent = useCountUp(progress.percent)
 
   const urgentItems = [...items]
     .filter((item) => item.status !== 'APPLIED' && item.status !== 'GUIDANCE')
@@ -52,11 +55,11 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
         <div className="mb-4">
           <div className="mb-1.5 flex items-center justify-between text-[13px]">
             <span className="font-semibold text-ink">{t('vaccines.progressLabel')}</span>
-            <span className="font-sans tabular-nums text-primary">{progress.percent}%</span>
+            <span className="font-sans tabular-nums text-primary">{shownPercent}%</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
+              className="h-full origin-left animate-grow-x rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
               style={{ width: `${progress.percent}%` }}
             />
           </div>
