@@ -4,20 +4,6 @@
 @import '@fontsource-variable/inter';
 @import '@fontsource-variable/fraunces';
 @import '@fontsource-variable/fraunces/wght-italic.css';
-/* Terceira voz tipográfica, e só para dado factual — data, hora, contagem,
-   percentual. Ver `--font-mono` no `@theme inline` abaixo para o que isso
-   quer dizer e onde vale aplicar.
-
-   O pacote **não variável** é deliberado, e a diferença é grande: o
-   `@fontsource/dm-mono` traz um peso só (400) em 14.820 bytes de woff2 latin,
-   contra 40.404 do `@fontsource-variable/jetbrains-mono` — 2,7×, medido em
-   03/09/2026. Uma família variável paga por um eixo de peso que dado factual
-   não usa: aqui não há hierarquia de ênfase, há um registro. Comparação de
-   escala: Inter latin custa 48.256 e Fraunces 36.620.
-
-   O `latin-ext` declarado ao lado do `latin` praticamente nunca baixa em
-   pt-BR — `ã`, `ç` e `é` estão todos abaixo de U+00FF. */
-@import '@fontsource/dm-mono';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -76,16 +62,15 @@
   --color-violet-400: #8b80f9;
   --color-violet-500: #6c63ff;
 
-  /* Quiet auth surfaces and domain overview fills, with dark equivalents below. */
+  /* Quiet auth surfaces, with dark equivalents below. The dashboard's four
+     tinted card fills (`--color-overview-*`) were removed on 2026-10-12: the
+     cards are white, and each area's colour lives in its icon, date pill and
+     badge, so the screen no longer reads as a patchwork. */
   --color-auth-surface: #f7f4ef;
   --color-auth-button: #2d6a4f;
   --color-auth-button-hover: #245540;
   --color-auth-action: #2d6a4f;
   --color-auth-panel: #1a2e25;
-  --color-overview-sage: #eef5f0;
-  --color-overview-violet: #f4f1fa;
-  --color-overview-sky: #eef6f7;
-  --color-overview-amber: #fcf6ed;
   --color-surface: #f6f7f4;
   --color-ink: #1a2332;
   --color-ink-muted: #5a6478;
@@ -182,32 +167,18 @@
      aqui antes. */
   --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
   --font-sans: 'Inter Variable', system-ui, 'Segoe UI', Roboto, sans-serif;
-  /* Sobrescreve o `--font-mono` que o Tailwind já define, então `font-mono`
-     passa a valer isto sem utility nova.
+  /* Monospace is for code only (the landing page's embed snippet), and it is
+     the system's own: nothing is downloaded for it.
 
-     **Regra de uso: dado factual isolado, nunca prosa.** Uma data, uma hora,
-     uma contagem, um percentual, um travessão que ocupa o lugar de um deles.
-     A voz existe para dizer "isto é um registro, não é texto" — e é por isso
-     que ela para na fronteira da frase: `Aplicada em 12/03/2024` é prosa com
-     um número dentro, e trocar a família no meio da linha faria a frase saltar
-     em vez de destacar o dado.
-
-     **Só o peso 400 está carregado, então não se declara peso junto.** Os dois
-     jeitos de errar falham de formas diferentes, e nenhum avisa:
-
-     - `font-bold` (700) ou `font-extrabold` (800) fazem o navegador
-       **sintetizar** o negrito — ele engorda o desenho por conta própria, e
-       numa mono, cujo espaçamento é fixo, o resultado borra.
-     - `font-medium` (500) **não** sintetiza: o algoritmo de casamento do CSS
-       procura 500, não acha, desce para o 400 e usa. Renderiza certo e mente
-       no código — a classe promete um peso que a família não tem.
-
-     Por isso, onde esta voz entrou num texto que era bold, o peso não foi
-     rebaixado: foi **removido**. A mono já carrega destaque pela forma, e o
-     código passa a dizer o que de fato acontece. Se algum dia um caso precisar
-     mesmo de dois pesos, `@fontsource/dm-mono/500.css` custa outros 14.988
-     bytes — medir e escrever aqui antes de somar. */
-  --font-mono: 'DM Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+     Until 2026-10-12 this was DM Mono, the "record voice" for every date,
+     time, count and percentage, a deliberate third family measured at 14,820
+     bytes. Option 8 of the portfolio redesign reversed it, and Samuel chose
+     it knowing the rule it undid: three families on one screen read as noise
+     more than as a record. Factual data now uses the body font with tabular
+     figures, `font-sans tabular-nums`, so digits still line up in columns
+     and do not jitter as values change, which was the useful half of the
+     old rule. */
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -315,10 +286,6 @@
      the darkest surface these are painted on. */
   --color-auth-surface: #171e1b;
   --color-auth-action: #9dceb4;
-  --color-overview-sage: #1d2a23;
-  --color-overview-violet: #25222e;
-  --color-overview-sky: #1d282c;
-  --color-overview-amber: #2c261e;
   --color-surface: oklch(0.185 0 0);
   --color-ink: #f2f5f9; /* 16.4:1 */
   --color-ink-muted: #aab4c4; /* 8.6:1 */

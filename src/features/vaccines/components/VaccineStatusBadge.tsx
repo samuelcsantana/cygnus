@@ -28,7 +28,7 @@ export function VaccineStatusBadge({ item }: { item: VaccineItem }) {
 
   if (item.status === 'GUIDANCE') {
     return (
-      <Badge variant="outline" className="border-sky-100 bg-sky-50 text-sky-700">
+      <Badge variant="outline" className="border-sky-100 bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300">
         {t('vaccines.status.guidance')}
       </Badge>
     )

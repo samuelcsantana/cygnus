@@ -148,7 +148,7 @@ function HealthPlanCard({ baby }: { baby: Baby }) {
           <Label htmlFor={`plan-number-${baby.id}`}>{t('babies.form.healthPlanNumberLabel')}</Label>
           <Input
             id={`plan-number-${baby.id}`}
-            className="mt-2 font-mono"
+            className="mt-2 font-sans tabular-nums"
             placeholder={t('babies.form.healthPlanNumberPlaceholder')}
             value={planNumber}
             onChange={(event) => setPlanNumber(event.target.value)}

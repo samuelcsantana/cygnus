@@ -151,9 +151,9 @@ not pinned in `@theme`, so it resolves to stock Tailwind. Its 700/800/900 steps 
 
 ## Typography
 
-Three self-hosted faces, loaded through `@fontsource` rather than a CDN — no third-party request on
+Two self-hosted faces, loaded through `@fontsource` rather than a CDN — no third-party request on
 first paint, and no layout shift when it fails. Each one has a job: a serif for headings, a sans for
-prose, a monospace for factual data.
+prose and for factual data, the latter with tabular figures.
 
 > **Check the family name against the package before changing it.** Until 03/09/2026 the tokens asked
 > for `'NunitoVariable'` and `'InterVariable'` while `@fontsource` registers `'Nunito Variable'` and
@@ -179,16 +179,14 @@ the browser would slant the roman instead, and a slanted serif is not the same l
 
 **Body** — Inter Variable, exposed as `font-sans` and applied to `<body>`.
 
-<Typeset
-  fontFamily="'DM Mono', ui-monospace, monospace"
-  fontSizes={[18, 16, 13, 11]}
-  sampleText="12/03/2024 · 17:33 · 40 de 92"
-/>
+**Factual data** — the body face with tabular figures, `font-sans tabular-nums`. Dates, times,
+counts, percentages: digits take equal widths, so columns line up and a value does not jitter as it
+changes. Until 2026-10-12 this was a third face, DM Mono; it was dropped because three families on
+one screen read as noise more than as a record. A member number someone reads aloud also gets
+`slashed-zero`, so 0 and O cannot be confused.
 
-**Factual data** — DM Mono, weight 400 only, exposed as `font-mono`. Dates, times, counts,
-percentages: anything that is a record rather than prose. It stops at the sentence boundary — a
-number inside a phrase keeps the body face. Since only one weight ships, never pair it with a weight
-class: 700 gets a synthesised bold that smears, and 500 silently resolves back to 400.
+**Code** — `font-mono` is the system's own monospace, nothing downloaded, and it is for code only
+(the embed snippet on the landing page).
 
 ## Radius
 

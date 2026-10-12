@@ -117,7 +117,7 @@ export function SpecialistEditor(props: SpecialistEditorProps) {
               {specialty || t('specialists.editor.specialtyPreview')}
             </p>
             {phone && (
-              <p className="mt-3 hidden break-words font-mono text-sm text-white/80 md:block">
+              <p className="mt-3 hidden break-words font-sans tabular-nums text-sm text-white/80 md:block">
                 {phone}
               </p>
             )}
@@ -218,7 +218,7 @@ export function SpecialistEditor(props: SpecialistEditorProps) {
                         <Input
                           id="specialist-phone"
                           type="tel"
-                          className="mt-2 font-mono"
+                          className="mt-2 font-sans tabular-nums"
                           placeholder={t('specialists.phonePlaceholder')}
                           {...register('phone')}
                         />

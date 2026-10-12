@@ -57,7 +57,7 @@ export function VaccinationCardDocument({
             <h2 className="break-words text-lg font-bold text-ink">{baby.name}</h2>
             <p className="mt-1 text-sm text-ink-muted">
               {t('vaccines.card.birthDateLabel')}{' '}
-              <span className="font-mono">{formatDateDisplay(baby.birthDate, i18n.language)}</span>
+              <span className="font-sans tabular-nums">{formatDateDisplay(baby.birthDate, i18n.language)}</span>
             </p>
           </div>
         </div>
@@ -206,7 +206,7 @@ function RecordRows({ row, locale }: { row: VaccinationCardRow; locale: string }
           <span className="mb-1 block text-xs sm:hidden print:hidden">
             {t('vaccines.card.columnDate')}
           </span>
-          <span className="whitespace-nowrap font-mono">
+          <span className="whitespace-nowrap font-sans tabular-nums">
             {row.date ? formatDateDisplay(row.date, locale) : t('vaccines.document.noDate')}
           </span>
         </td>

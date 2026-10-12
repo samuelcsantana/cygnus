@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ComponentType } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Baby } from '@/features/babies/api/babies.schemas'
@@ -8,6 +8,11 @@ import { cn } from '@/lib/utils'
 import { LoadMoreButton } from '@/shared/components/LoadMoreButton'
 import { NoSearchResults } from '@/shared/components/NoSearchResults'
 import { SearchInput } from '@/shared/components/SearchInput'
+import { AlertCircleIcon } from '@/shared/icons/alert-circle-icon'
+import { CheckIcon } from '@/shared/icons/check-icon'
+import { ClockIcon } from '@/shared/icons/clock-icon'
+import type { IconProps } from '@/shared/icons/icon-base'
+import { InfoIcon } from '@/shared/icons/info-icon'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
 
 import type { VaccineItemWithBaby } from '../api/vaccines.hooks'
@@ -20,20 +25,26 @@ interface VaccineCalendarListProps {
   filterKey?: string
 }
 
-// The glyphs below are text, not SVG, so these pairs owe the full 4.5:1 — the
-// 500/600 steps land between 2.45:1 and 4.09:1 on their own 50 tint.
+// The 700 steps on their own 50 tint (300 on the dark tint), as when these
+// squares held text glyphs and owed 4.5:1. Icons owe 3:1, so the old pairs
+// clear it with room. GUIDANCE had no dark pair at all and stayed a pale
+// square on the dark card; it has one now.
 const STATUS_ICON_CLASS: Record<VaccineItemWithBaby['status'], string> = {
   APPLIED: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300',
   DELAYED: 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300',
   PENDING: 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300',
-  GUIDANCE: 'bg-sky-50 text-sky-700',
+  GUIDANCE: 'bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300',
 }
 
-const STATUS_ICON_GLYPH: Record<VaccineItemWithBaby['status'], string> = {
-  APPLIED: '✓',
-  DELAYED: '!',
-  PENDING: '○',
-  GUIDANCE: '?',
+// Icons, not the ✓ ○ ! ? characters they replace: a "?" in a box read as an
+// image that failed to load, and each character drew differently per system
+// font. The status itself is spoken by the badge beside it, so the icon is
+// decoration (IconBase sets aria-hidden).
+const STATUS_ICON: Record<VaccineItemWithBaby['status'], ComponentType<IconProps>> = {
+  APPLIED: CheckIcon,
+  DELAYED: AlertCircleIcon,
+  PENDING: ClockIcon,
+  GUIDANCE: InfoIcon,
 }
 
 // Renders a single, merged, household-wide list — each row tagged with which
@@ -146,16 +157,17 @@ interface VaccineRowProps {
 function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
   const { t } = useTranslation()
   const avatarAppearance = baby ? babyAvatarAppearance(baby.id, baby.avatarColor) : null
+  const StatusIcon = STATUS_ICON[item.status]
 
   const content = (
     <>
       <span
         className={cn(
-          'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] text-sm font-extrabold',
+          'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px]',
           STATUS_ICON_CLASS[item.status],
         )}
       >
-        {STATUS_ICON_GLYPH[item.status]}
+        <StatusIcon className="size-[18px]" />
       </span>
       {baby && (
         <span

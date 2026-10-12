@@ -35,7 +35,7 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
     .slice(0, MAX_ITEMS)
 
   return (
-    <div className="flex flex-col rounded-2xl border border-border/60 bg-overview-sage p-5 sm:p-6">
+    <div className="flex flex-col rounded-2xl border border-border bg-card p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
@@ -52,10 +52,7 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
         <div className="mb-4">
           <div className="mb-1.5 flex items-center justify-between text-[13px]">
             <span className="font-semibold text-ink">{t('vaccines.progressLabel')}</span>
-            {/* Sem classe de peso, pelo motivo em `--font-mono`: a família tem
-                um peso só, e o `font-bold` que estava aqui viraria negrito
-                sintetizado. */}
-            <span className="font-mono text-primary">{progress.percent}%</span>
+            <span className="font-sans tabular-nums text-primary">{progress.percent}%</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div

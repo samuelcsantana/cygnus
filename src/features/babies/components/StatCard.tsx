@@ -17,15 +17,10 @@ export function StatCard({ icon, label, value, sub, iconClassName }: StatCardPro
       <div>
         <p className="mb-0.5 text-[11px] font-semibold tracking-wide text-ink-muted uppercase">{label}</p>
         {/* O valor é sempre dado — uma contagem, uma data, ou o travessão que
-            substitui um deles quando a consulta falhou. Saiu do `font-display`
-            para a mono, e de `font-extrabold` para o peso 400 que está
-            carregado: a 18px numa mono, o desenho já tem presença suficiente,
-            e um 800 aqui seria sintetizado.
-
-            Efeito colateral desejado: as quatro datas dos cartões da linha
-            passam a ter a mesma largura, então os quatro valores alinham entre
-            si em vez de cada um começar onde a proporcional o deixou. */}
-        <p className="font-mono mb-0.5 text-lg text-ink">{value}</p>
+            substitui um deles quando a consulta falhou. Algarismos tabulares:
+            as quatro datas dos cartões da linha têm a mesma largura e alinham
+            entre si, em vez de cada uma começar onde a proporcional a deixou. */}
+        <p className="font-sans tabular-nums mb-0.5 text-lg text-ink">{value}</p>
         <p className="text-xs text-ink-muted">{sub}</p>
       </div>
     </div>

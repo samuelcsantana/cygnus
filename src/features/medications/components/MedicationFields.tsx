@@ -64,7 +64,7 @@ export function MedicationFields({
               <Input
                 id="medication-dosage"
                 placeholder={t('medications.form.dosagePlaceholder')}
-                className="mt-2 font-mono"
+                className="mt-2 font-sans tabular-nums"
                 {...register('dosage')}
               />
             </div>
@@ -73,7 +73,7 @@ export function MedicationFields({
               <Input
                 id="medication-frequency"
                 placeholder={t('medications.form.frequencyPlaceholder')}
-                className="mt-2 font-mono"
+                className="mt-2 font-sans tabular-nums"
                 {...register('frequency')}
               />
             </div>

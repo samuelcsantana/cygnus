@@ -141,7 +141,7 @@ export function MilestoneDialogLayout({
                 </p>
               )}
               {date && (
-                <p className="mt-3 hidden break-words font-mono text-sm text-white/80 md:block">
+                <p className="mt-3 hidden break-words font-sans tabular-nums text-sm text-white/80 md:block">
                   {date}
                 </p>
               )}
