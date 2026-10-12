@@ -163,15 +163,13 @@ export function BabyHeroCard({
           {/* Branco puro: 5.48:1 sobre emerald-700. */}
           <h3 className="font-display truncate text-lg font-extrabold text-white">{baby.name}</h3>
 
-          {/* emerald-50: 5.21:1 sobre emerald-700. O tipo sanguíneo vai em mono
-              porque é código, não prosa — mesma regra de `--font-mono`. A idade
-              fica proporcional: "2 meses" é frase. */}
+          {/* emerald-50: 5.21:1 sobre emerald-700. */}
           <p className="mt-0.5 text-[13px] text-emerald-50">
             {ageLabel(baby.birthDate)}
             {baby.bloodType && (
               <>
                 {' · '}
-                <span className="font-mono">
+                <span className="font-sans tabular-nums">
                   {t('babies.hero.bloodType', { value: baby.bloodType })}
                 </span>
               </>
@@ -204,9 +202,9 @@ export function BabyHeroCard({
               propósito — com seis filhos ele multiplica por seis — então quem não preenche o
               plano não paga a linha.
 
-              emerald-50: 5.21:1 sobre emerald-700, a parada mais clara do gradiente. O número vai
-              em mono porque é código a ser lido em voz alta ou digitado por um terceiro, e é
-              exatamente o caso em que 0/O e 1/l não podem se confundir. */}
+              emerald-50: 5.21:1 sobre emerald-700, a parada mais clara do gradiente. O número é
+              código a ser lido em voz alta ou digitado por um terceiro, o caso em que 0 e O não
+              podem se confundir — daí o zero cortado (`slashed-zero`). */}
           {/* Mesma regra do plano: sem dado, a linha some. A diferença é a data — ela não é
               enfeite, é o que impede "15,8 kg" de ser lido como o peso de hoje quando foi o de
               março. emerald-50: 5.21:1 sobre a parada mais clara do gradiente. */}
@@ -216,7 +214,7 @@ export function BabyHeroCard({
                 <span>
                   <span aria-hidden>⚖️ </span>
                   <span className="sr-only">{t('common.weight')} </span>
-                  <span className="font-mono">
+                  <span className="font-sans tabular-nums">
                     {formatKilograms(latestMeasuredVisit.weightGrams, i18n.language)}
                   </span>
                 </span>
@@ -225,7 +223,7 @@ export function BabyHeroCard({
                 <span>
                   <span aria-hidden>📏 </span>
                   <span className="sr-only">{t('common.height')} </span>
-                  <span className="font-mono">
+                  <span className="font-sans tabular-nums">
                     {formatCentimeters(latestMeasuredVisit.heightMillimeters, i18n.language)}
                   </span>
                 </span>
@@ -236,7 +234,7 @@ export function BabyHeroCard({
                     o rótulo abaixo já faz a separação. */}
                 <span aria-hidden>· </span>
                 <span className="sr-only">{t('babies.hero.measuredOn')} </span>
-                <span className="font-mono">
+                <span className="font-sans tabular-nums">
                   {formatDateDisplay(
                     splitScheduledAt(latestMeasuredVisit.scheduledAt).date,
                     i18n.language,
@@ -262,7 +260,7 @@ export function BabyHeroCard({
                     <span className={baby.healthPlanName ? 'sr-only' : undefined}>
                       {t('babies.hero.healthPlanNumberLabel')}{' '}
                     </span>
-                    <span className="font-mono">{baby.healthPlanNumber}</span>
+                    <span className="font-sans tabular-nums slashed-zero">{baby.healthPlanNumber}</span>
                   </>
                 )}
               </span>

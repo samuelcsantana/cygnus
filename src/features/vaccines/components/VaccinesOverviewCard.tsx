@@ -52,10 +52,7 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
         <div className="mb-4">
           <div className="mb-1.5 flex items-center justify-between text-[13px]">
             <span className="font-semibold text-ink">{t('vaccines.progressLabel')}</span>
-            {/* Sem classe de peso, pelo motivo em `--font-mono`: a família tem
-                um peso só, e o `font-bold` que estava aqui viraria negrito
-                sintetizado. */}
-            <span className="font-mono text-primary">{progress.percent}%</span>
+            <span className="font-sans tabular-nums text-primary">{progress.percent}%</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div

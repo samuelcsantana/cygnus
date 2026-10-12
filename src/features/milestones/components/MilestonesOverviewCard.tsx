@@ -111,7 +111,7 @@ export function MilestonesOverviewCard({
                       </span>
                     )}
                     <span className="text-[11px] text-ink-faint">·</span>
-                    <span className="font-mono text-[11px] text-ink-muted">
+                    <span className="font-sans tabular-nums text-[11px] text-ink-muted">
                       {formatDateDisplay(milestone.achievedAt, i18n.language)}
                     </span>
                   </div>

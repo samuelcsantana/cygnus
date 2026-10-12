@@ -79,7 +79,7 @@ export function MedicationsOverviewCard({
                       </span>
                     )}
                     {baby && <span className="text-[11px] text-ink-faint">·</span>}
-                    <span className="font-mono text-[11px] text-ink-muted">
+                    <span className="font-sans tabular-nums text-[11px] text-ink-muted">
                       {formatDateDisplay(medication.startedOn, i18n.language)}
                     </span>
                   </div>

@@ -116,7 +116,7 @@ export function MedicationDialogLayout({
               {frequency && (
                 <p className="mt-3 hidden break-words text-sm text-white/80 md:block">{frequency}</p>
               )}
-              {date && <p className="mt-3 hidden break-words font-mono text-sm text-white/80 md:block">{date}</p>}
+              {date && <p className="mt-3 hidden break-words font-sans tabular-nums text-sm text-white/80 md:block">{date}</p>}
             </div>
             <div className="mt-auto hidden border-t border-white/20 pt-6 md:block">
               <p className="font-semibold">{t('medications.editor.railTitle')}</p>

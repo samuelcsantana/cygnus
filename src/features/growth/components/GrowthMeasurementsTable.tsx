@@ -56,7 +56,7 @@ export function GrowthMeasurementsTable({ points }: GrowthMeasurementsTableProps
         <tbody>
           {points.map((point) => (
             <tr key={point.appointmentId} className="border-b border-border/60 last:border-0">
-              <td className="py-2 pr-3 font-mono text-[13px] text-ink">
+              <td className="py-2 pr-3 font-sans tabular-nums text-[13px] text-ink">
                 {formatDateDisplay(splitScheduledAt(point.scheduledAt).date, i18n.language)}
               </td>
               <td className="py-2 pr-3 text-[13px] text-ink-muted">
@@ -64,12 +64,12 @@ export function GrowthMeasurementsTable({ points }: GrowthMeasurementsTableProps
               </td>
               {/* An em dash, not a blank: an empty cell reads as "we lost it",
                   and this visit genuinely did not record that measure. */}
-              <td className="py-2 pr-3 font-mono text-[13px] text-ink">
+              <td className="py-2 pr-3 font-sans tabular-nums text-[13px] text-ink">
                 {point.weightGrams === null
                   ? t('growth.table.missing')
                   : formatKilograms(point.weightGrams, i18n.language)}
               </td>
-              <td className="py-2 font-mono text-[13px] text-ink">
+              <td className="py-2 font-sans tabular-nums text-[13px] text-ink">
                 {point.heightMillimeters === null
                   ? t('growth.table.missing')
                   : formatCentimeters(point.heightMillimeters, i18n.language)}

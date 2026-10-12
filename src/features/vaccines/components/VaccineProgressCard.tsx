@@ -43,9 +43,9 @@ export function VaccineProgressCard({ progress }: VaccineProgressCardProps) {
     <div className="rounded-2xl bg-card p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
       <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <span className="text-[13px] font-semibold text-ink">{t('vaccines.page.routineProgress')}</span>
-        {/* Contagem e porcentagem em mono, como todo dado factual. O "de N" é o
-            denominador que a nota do componente explica. */}
-        <span className="font-mono text-[13px] text-ink-muted">
+        {/* Contagem e porcentagem com algarismos tabulares, como todo dado
+            factual. O "de N" é o denominador que a nota do componente explica. */}
+        <span className="font-sans tabular-nums text-[13px] text-ink-muted">
           {/* Cada valor no seu próprio elemento, e não dois text nodes soltos
               separados por um "·". Como irmãos soltos, "26 de 42" não é o texto
               de elemento nenhum — o pai contém "26 de 42 · 62%" — e nem teste
@@ -72,7 +72,7 @@ export function VaccineProgressCard({ progress }: VaccineProgressCardProps) {
             <span aria-hidden className={`h-2 w-2 flex-shrink-0 rounded-full ${dotClass}`} />
             {label}
             {': '}
-            <span className="font-mono text-ink">{value}</span>
+            <span className="font-sans tabular-nums text-ink">{value}</span>
           </li>
         ))}
       </ul>

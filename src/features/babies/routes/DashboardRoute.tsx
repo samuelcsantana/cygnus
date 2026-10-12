@@ -230,7 +230,7 @@ export function DashboardRoute() {
                     <p className="text-sm text-ink-muted">{t('babies.home.measureUnavailable')}</p>
                   ) : measurement ? (
                     <>
-                      <p className="mt-1 font-mono text-sm text-ink">
+                      <p className="mt-1 font-sans tabular-nums text-sm text-ink">
                         {[
                           measurement.weightGrams !== null
                             ? formatKilograms(measurement.weightGrams, i18n.language)

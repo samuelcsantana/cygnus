@@ -41,7 +41,7 @@ export function AppointmentMeasurementFields({ register, errors }: AppointmentMe
           placeholder={t('appointments.form.weightPlaceholder')}
           aria-invalid={!!errors.weightKg}
           aria-describedby={weightErrorKey ? 'weightKg-error' : undefined}
-          className="mt-2 font-mono"
+          className="mt-2 font-sans tabular-nums"
           {...register('weightKg')}
         />
         {weightErrorKey && (
@@ -59,7 +59,7 @@ export function AppointmentMeasurementFields({ register, errors }: AppointmentMe
           placeholder={t('appointments.form.heightPlaceholder')}
           aria-invalid={!!errors.heightCm}
           aria-describedby={heightErrorKey ? 'heightCm-error' : undefined}
-          className="mt-2 font-mono"
+          className="mt-2 font-sans tabular-nums"
           {...register('heightCm')}
         />
         {heightErrorKey && (

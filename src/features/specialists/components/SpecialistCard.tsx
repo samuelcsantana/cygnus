@@ -58,7 +58,7 @@ export function SpecialistCard({
         {specialist.phone ? (
           <a
             href={`tel:${specialist.phone.replace(/\s/g, '')}`}
-            className="inline-flex min-h-11 max-w-full items-center gap-2 rounded-xl py-2 font-mono text-sm font-semibold text-primary underline-offset-4 hover:underline"
+            className="inline-flex min-h-11 max-w-full items-center gap-2 rounded-xl py-2 font-sans tabular-nums text-sm font-semibold text-primary underline-offset-4 hover:underline"
           >
             <Phone aria-hidden className="size-4 shrink-0" />
             <span className="break-all">{specialist.phone}</span>

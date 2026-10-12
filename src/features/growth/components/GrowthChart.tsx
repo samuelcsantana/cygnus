@@ -116,7 +116,7 @@ export function GrowthChart({ points, formatValue, label, indicator, band: table
         {valueScale.ticks.map((tick) => (
           <span
             key={tick}
-            className="absolute right-0 -translate-y-1/2 font-mono text-[10px] whitespace-nowrap text-ink-faint"
+            className="absolute right-0 -translate-y-1/2 font-sans tabular-nums text-[10px] whitespace-nowrap text-ink-faint"
             style={{ top: `${(1 - positionIn(valueScale, tick)) * 100}%` }}
           >
             {formatValue(tick)}
@@ -210,7 +210,7 @@ export function GrowthChart({ points, formatValue, label, indicator, band: table
                 transform: 'translate(-50%, calc(-100% - 10px))',
               }}
             >
-              <span className="font-mono">{formatValue(active.y)}</span>
+              <span className="font-sans tabular-nums">{formatValue(active.y)}</span>
               <span className="mx-1 opacity-50">·</span>
               {/* The local calendar date, like every other visit in the app —
                   `slice(0, 10)` is the UTC one, and for a visit late in the day
@@ -225,7 +225,7 @@ export function GrowthChart({ points, formatValue, label, indicator, band: table
           {ageScale.ticks.map((tick) => (
             <span
               key={tick}
-              className="absolute -translate-x-1/2 font-mono text-[10px] whitespace-nowrap text-ink-faint"
+              className="absolute -translate-x-1/2 font-sans tabular-nums text-[10px] whitespace-nowrap text-ink-faint"
               style={{ left: `${positionIn(ageScale, tick) * 100}%` }}
             >
               {tick}

@@ -34,7 +34,7 @@ export function AppointmentCard({
       )}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="mb-2 font-mono text-sm text-violet-800 dark:text-violet-200">
+          <p className="mb-2 font-sans tabular-nums text-sm text-violet-800 dark:text-violet-200">
             {formatDateDisplay(date, i18n.language)} · {time}
           </p>
           <h3 className="break-words text-lg font-bold text-ink">{appointment.doctorName}</h3>
@@ -67,7 +67,7 @@ export function AppointmentCard({
       </dl>
       {appointment.status === 'COMPLETED' &&
         (appointment.weightGrams !== null || appointment.heightMillimeters !== null) && (
-          <p className="mt-3 font-mono text-sm text-ink-muted">
+          <p className="mt-3 font-sans tabular-nums text-sm text-ink-muted">
             {[
               appointment.weightGrams !== null
                 ? formatKilograms(appointment.weightGrams, i18n.language)

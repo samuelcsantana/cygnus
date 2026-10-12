@@ -201,7 +201,7 @@ export function AppointmentDetailDialog({
                     inputMode="decimal"
                     placeholder={t('appointments.form.weightPlaceholder')}
                     aria-invalid={outOfRange(weightKg, WEIGHT_KG_MIN, WEIGHT_KG_MAX)}
-                    className="mt-2 font-mono"
+                    className="mt-2 font-sans tabular-nums"
                     disabled={busy}
                     value={weightKg}
                     onChange={(event) => setWeightKg(event.target.value)}
@@ -214,7 +214,7 @@ export function AppointmentDetailDialog({
                     inputMode="decimal"
                     placeholder={t('appointments.form.heightPlaceholder')}
                     aria-invalid={outOfRange(heightCm, HEIGHT_CM_MIN, HEIGHT_CM_MAX)}
-                    className="mt-2 font-mono"
+                    className="mt-2 font-sans tabular-nums"
                     disabled={busy}
                     value={heightCm}
                     onChange={(event) => setHeightCm(event.target.value)}

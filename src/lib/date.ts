@@ -45,7 +45,7 @@ export function formatDateDisplay(dateStr: string, locale: string): string {
 /**
  * O dia e o mês abreviado, separados, para o bloco de data das consultas.
  *
- * Separados de propósito: o dia é impresso grande e em mono e o mês pequeno
+ * Separados de propósito: o dia é impresso grande e o mês pequeno
  * embaixo, então não existe uma string única que sirva. Montar isso no
  * componente com `slice` sobre `formatDateDisplay` funcionaria em pt-BR e
  * quebraria em `en`, onde o mês vem antes do dia — daí o `Intl` decidir os dois
