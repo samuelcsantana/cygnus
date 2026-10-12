@@ -46,6 +46,28 @@ test('the landing page greets a visitor at /, readable and accessible at phone a
   await expect(page).toHaveURL(/\/register$/)
 })
 
+test("the widget's own link leads to sign-up, because the page is the widget's host", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  const widget = page.locator('cygnus-vaccine-schedule')
+  // `ready` is the widget saying it painted the schedule (embed/protocol.ts).
+  const ready = page.evaluate(
+    () => new Promise((resolve) => document.addEventListener('cygnus:ready', resolve, { once: true })),
+  )
+  await widget.scrollIntoViewIfNeeded()
+  await ready
+
+  // The widget's shadow root is closed by design — a host cannot reach inside,
+  // and neither can a locator — so its link is reached the way a keyboard user
+  // reaches it: Tab from the code snippet just before it, then Enter.
+  await page.getByRole('region', { name: 'O HTML que um site cola para mostrar o widget' }).focus()
+  await page.keyboard.press('Tab')
+  await page.keyboard.press('Enter')
+
+  await expect(page).toHaveURL(/\/register$/)
+})
+
 test('someone signed in who opens / lands on the dashboard, as before', async ({ page }) => {
   await registerAndLogin(page, uniqueTestUser('landing'))
 
