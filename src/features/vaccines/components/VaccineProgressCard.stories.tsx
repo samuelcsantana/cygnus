@@ -98,8 +98,11 @@ export const LegendMatchesTheBar: Story = {
     // denominador e a legenda somava 92 sob um total de 93. O filtro que
     // conserta isso está em `vaccine-progress.ts` e tem teste próprio; aqui
     // fica a garantia de que o cartão mostra os dois lados da conta juntos.
-    await expect(canvas.getByText('35 de 42')).toBeInTheDocument()
-    await expect(canvas.getByText('83%')).toBeInTheDocument()
+    // findBy, not getBy: the count and the percentage climb to their values
+    // over a second when motion is allowed (useCountUp), and the assertion is
+    // about where they land.
+    await expect(await canvas.findByText('35 de 42', {}, { timeout: 3000 })).toBeInTheDocument()
+    await expect(await canvas.findByText('83%', {}, { timeout: 3000 })).toBeInTheDocument()
     for (const value of ['35', '0', '7']) {
       await expect(canvas.getAllByText(value).length).toBeGreaterThan(0)
     }

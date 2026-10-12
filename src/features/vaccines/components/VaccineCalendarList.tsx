@@ -57,6 +57,13 @@ export function VaccineCalendarList({
 }: VaccineCalendarListProps) {
   const { t } = useTranslation()
   const [applyTarget, setApplyTarget] = useState<VaccineItemWithBaby | null>(null)
+  // The row whose dose was just registered, held where it was for the second
+  // its flash takes (option 38). The list orders and filters by status, so the
+  // moment a dose becomes "applied" its row would leave — to the end of the
+  // list, past "load more", or out of an "overdue" filter entirely — and the
+  // feedback would play somewhere nobody is looking. Held in place, it shows
+  // the new check and badge where the person clicked, then moves on.
+  const [held, setHeld] = useState<{ key: string; index: number; item: VaccineItemWithBaby } | null>(null)
   // The child filter is the menu's, not this page's: the choice outlives the page
   // it was made on. See selectedBaby.store.ts.
   const [search, setSearch] = useState('')
@@ -84,6 +91,20 @@ export function VaccineCalendarList({
     filteredItems,
     `${normalizedSearch}|${babies.map((baby) => baby.id).join()}|${filterKey}`,
   )
+
+  const holdInPlace = (target: VaccineItemWithBaby, applied: VaccineItemWithBaby) => {
+    const key = rowKey(target)
+    const index = Math.max(0, visibleItems.findIndex((item) => rowKey(item) === key))
+    setHeld({ key, index, item: applied })
+    window.setTimeout(() => setHeld((current) => (current?.key === key ? null : current)), 1200)
+  }
+
+  const displayedItems = held
+    ? (() => {
+        const rest = visibleItems.filter((item) => rowKey(item) !== held.key)
+        return [...rest.slice(0, held.index), held.item, ...rest.slice(held.index)]
+      })()
+    : visibleItems
 
   return (
     <div>
@@ -114,7 +135,7 @@ export function VaccineCalendarList({
           </>
         )}
       </p>
-      {filteredItems.length === 0 ? (
+      {displayedItems.length === 0 ? (
         normalizedSearch ? (
           <NoSearchResults />
         ) : (
@@ -125,12 +146,13 @@ export function VaccineCalendarList({
       ) : (
         <>
           <ul className="flex flex-col gap-2">
-            {visibleItems.map((item) => (
-              <li key={`${item.babyId}-${item.vaccineId}`}>
+            {displayedItems.map((item) => (
+              <li key={rowKey(item)}>
                 <VaccineRow
                   item={item}
                   baby={babies.length > 1 ? babyById.get(item.babyId) : undefined}
                   onApply={() => setApplyTarget(item)}
+                  justApplied={held?.key === rowKey(item)}
                 />
               </li>
             ))}
@@ -143,18 +165,25 @@ export function VaccineCalendarList({
         babyId={applyTarget?.babyId ?? ''}
         item={applyTarget}
         onOpenChange={(open) => !open && setApplyTarget(null)}
+        onApplied={(applied) => applyTarget && holdInPlace(applyTarget, { ...applyTarget, ...applied })}
       />
     </div>
   )
+}
+
+function rowKey(item: VaccineItemWithBaby): string {
+  return `${item.babyId}-${item.vaccineId}`
 }
 
 interface VaccineRowProps {
   item: VaccineItemWithBaby
   baby: Baby | undefined
   onApply: () => void
+  /** The dose was registered a moment ago: flash the row, pop the new check in. */
+  justApplied?: boolean
 }
 
-function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
+function VaccineRow({ item, baby, onApply, justApplied = false }: VaccineRowProps) {
   const { t } = useTranslation()
   const avatarAppearance = baby ? babyAvatarAppearance(baby.id, baby.avatarColor) : null
   const StatusIcon = STATUS_ICON[item.status]
@@ -165,6 +194,7 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
         className={cn(
           'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px]',
           STATUS_ICON_CLASS[item.status],
+          justApplied && 'animate-pop',
         )}
       >
         <StatusIcon className="size-[18px]" />
@@ -194,12 +224,12 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
   )
 
   const rowClass = cn(
-    'flex w-full items-center gap-3 rounded-2xl bg-card p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]',
+    'card-lift flex w-full items-center gap-3 rounded-2xl bg-card p-4 shadow-[0_1px_6px_rgba(0,0,0,0.03)]',
     item.status === 'DELAYED' ? 'border border-rose-100' : 'border border-transparent',
   )
 
   return (
-    <article className={cn(rowClass, 'flex-col items-stretch')}>
+    <article className={cn(rowClass, 'flex-col items-stretch', justApplied && 'animate-flash-ok')}>
       <div className="flex flex-wrap items-center gap-3">{content}</div>
       <div className="flex flex-wrap items-start justify-between gap-3 border-t border-border pt-2">
         <details className="min-w-0 flex-1 text-sm text-ink-muted">

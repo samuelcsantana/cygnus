@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 import type { Baby } from '@/features/babies/api/babies.schemas'
+import { useCountUp } from '@/hooks/useCountUp'
 import { cn } from '@/lib/utils'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { babyAvatarAppearance, babyInitials } from '@/shared/utils/babyAvatarColor'
@@ -25,6 +26,8 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
   const babyById = new Map(babies.map((baby) => [baby.id, baby]))
 
   const progress = vaccineProgress(items)
+  // Counts up to the value, and the bar fills from empty (option 36).
+  const shownPercent = useCountUp(progress.percent)
 
   const urgentItems = [...items]
     .filter((item) => item.status !== 'APPLIED' && item.status !== 'GUIDANCE')
@@ -35,7 +38,7 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
     .slice(0, MAX_ITEMS)
 
   return (
-    <div className="flex flex-col rounded-2xl border border-border bg-card p-5 sm:p-6">
+    <div className="card-lift flex flex-col rounded-2xl border border-border bg-card p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
@@ -52,11 +55,11 @@ export function VaccinesOverviewCard({ babies, items, isPending, isError }: Vacc
         <div className="mb-4">
           <div className="mb-1.5 flex items-center justify-between text-[13px]">
             <span className="font-semibold text-ink">{t('vaccines.progressLabel')}</span>
-            <span className="font-sans tabular-nums text-primary">{progress.percent}%</span>
+            <span className="font-sans tabular-nums text-primary">{shownPercent}%</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
+              className="h-full origin-left animate-grow-x rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
               style={{ width: `${progress.percent}%` }}
             />
           </div>

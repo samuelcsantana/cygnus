@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useId, type CSSProperties } from 'react'
 import { cn } from '@/lib/utils'
 import { BRAND_MARK_FACES, BRAND_MARK_SKY, BRAND_MARK_STAR_FILL, BRAND_MARK_STARS } from '@/shared/brand-mark'
 
@@ -24,10 +24,17 @@ import { BRAND_MARK_FACES, BRAND_MARK_SKY, BRAND_MARK_STAR_FILL, BRAND_MARK_STAR
  */
 interface BrandMarkProps {
   className?: string
+  /**
+   * Fold the paper into the swan as it appears: the faces arrive one by one
+   * and the stars light last (option 35; the motion is in index.css, under
+   * `[data-mark-fold]`). The caller decides when — BrandSignature does it once
+   * per visit, on the first screen.
+   */
+  fold?: boolean
 }
 
 /** Decorative: every place that shows the mark also shows the name, so it stays hidden from assistive tech. */
-export function BrandMark({ className }: BrandMarkProps) {
+export function BrandMark({ className, fold = false }: BrandMarkProps) {
   // The mark is drawn several times on one page (sidebar, dialogs), and a gradient referenced by a
   // duplicated id resolves to whichever copy comes first — which may sit inside a hidden subtree and
   // not paint. useId is unique per instance, but React 19 wraps it in characters that are not safe
@@ -35,7 +42,13 @@ export function BrandMark({ className }: BrandMarkProps) {
   const skyId = `brand-sky-${useId().replace(/[^A-Za-z0-9_-]/g, '')}`
   return (
     // block: an inline svg sits on a text baseline and leaves a few pixels of descender space below it.
-    <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" className={cn('block shrink-0', className)}>
+    <svg
+      viewBox="0 0 64 64"
+      aria-hidden="true"
+      focusable="false"
+      data-mark-fold={fold || undefined}
+      className={cn('block shrink-0', className)}
+    >
       <defs>
         <linearGradient id={skyId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor={BRAND_MARK_SKY[0]} />
@@ -43,8 +56,9 @@ export function BrandMark({ className }: BrandMarkProps) {
         </linearGradient>
       </defs>
       <rect width="64" height="64" rx="14.4" fill={`url(#${skyId})`} />
-      {BRAND_MARK_FACES.map((face) => (
-        <polygon key={face.points} points={face.points} fill={face.fill} />
+      {BRAND_MARK_FACES.map((face, index) => (
+        // `--k` orders the fold, back faces first, as the drawing is layered.
+        <polygon key={face.points} points={face.points} fill={face.fill} style={{ '--k': index } as CSSProperties} />
       ))}
       {BRAND_MARK_STARS.map((d) => (
         <path key={d} d={d} fill={BRAND_MARK_STAR_FILL} />

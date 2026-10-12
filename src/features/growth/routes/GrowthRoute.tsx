@@ -46,7 +46,7 @@ export function GrowthRoute() {
   const measurementCount = sections.reduce((total, section) => total + section.series.length, 0)
 
   return (
-    <div className="animate-fade-in-up">
+    <div>
       <div className="mb-8">
         <h2 className="font-display text-3xl font-extrabold text-ink">{t('growth.title')}</h2>
         {/* Nothing under the title on error: the message below already says the

@@ -9,6 +9,36 @@
 
 @theme {
   --animate-fade-in-up: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* A dose just registered (option 38): the row flashes green once and its
+     status icon pops in as a check. */
+  --animate-flash-ok: flash-ok 0.9s ease-out;
+  --animate-pop: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+
+  @keyframes flash-ok {
+    from {
+      box-shadow: 0 0 0 0 rgb(16 185 129 / 0.55);
+    }
+    to {
+      box-shadow: 0 0 0 12px rgb(16 185 129 / 0);
+    }
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.92);
+    }
+  }
+
+  /* Progress bars fill from empty when they first appear (option 36). */
+  --animate-grow-x: grow-x 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s both;
+
+  @keyframes grow-x {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
   /* ServerWakingNotice: the bar fills over the minute a sleeping Render instance takes. */
   --animate-server-wake: server-wake 60s linear forwards;
 
@@ -118,6 +148,113 @@
     animation: none;
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Cards that answer the mouse (option 39 of the 2026-10-12 redesign): on a
+   device that hovers, a card rises 3px, gains a soft shadow and a green edge.
+   `hover: hover` keeps it off touch screens, where a "hover" is a tap that
+   sticks; the rise also waits for a no-preference motion setting, while the
+   colour cue, which does not move, applies either way. */
+@media (hover: hover) {
+  .card-lift {
+    transition:
+      translate 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+
+  .card-lift:hover {
+    border-color: color-mix(in srgb, var(--primary) 40%, var(--border));
+    box-shadow: 0 18px 36px -24px rgb(26 46 37 / 0.5);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card-lift:hover {
+    translate: 0 -3px;
+  }
+}
+
+/* The mark folds itself (option 35): each paper face of the swan opens from a
+   small, turned piece into place, back faces first (`--k`), and the three
+   stars light last. BrandSignature asks for it once per visit, so it greets
+   the first screen and never repeats on every page. */
+@keyframes mark-fold {
+  from {
+    opacity: 0;
+    transform: scale(0.25) rotate(-35deg);
+  }
+}
+
+@keyframes mark-star {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-mark-fold] polygon {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: mark-fold 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(0.15s + var(--k, 0) * 70ms);
+  }
+
+  [data-mark-fold] path {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: mark-star 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.95s both;
+  }
+}
+
+/* Page changes as a view transition (option 37). The sidebar links set
+   `viewTransition`, the content area is named `cy-page` and the active menu
+   item `cy-nav`. The rest of the page (root) does not cross-fade, so the
+   sidebar and header stay still; the content steps out upward and the next
+   page rises in, and the active item's highlight slides to its new place.
+   These replaced the pages' own fade-in-up entrance, so nothing animates
+   twice. Under reduced motion the swap is instant. */
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
+  ::view-transition-old(cy-page) {
+    animation: page-out 0.18s ease-in both;
+  }
+
+  ::view-transition-new(cy-page) {
+    animation: page-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  ::view-transition-group(cy-nav) {
+    animation-duration: 0.3s;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
 

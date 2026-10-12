@@ -27,7 +27,11 @@ test('the landing page greets a visitor at /, readable and accessible at phone a
   ] as const) {
     await page.setViewportSize({ width, height })
     await page.emulateMedia({ colorScheme })
-    expect(await page.evaluate('document.documentElement.scrollWidth <= innerWidth')).toBe(true)
+    // Polled, not read once: on the first frame after a resize from desktop the
+    // preview's floating alert still sits at its desktop offset and overhangs
+    // by 6px, then settles (measured 8 times in 12 right after the resize, 0
+    // times 1.5s later). A real overflow persists, and still fails here.
+    await expect.poll(() => page.evaluate('document.documentElement.scrollWidth <= innerWidth')).toBe(true)
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
     await page.screenshot({ path: `docs/verification/landing-${width}-${colorScheme}.png`, fullPage: true })
   }

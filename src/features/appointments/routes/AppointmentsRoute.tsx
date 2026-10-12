@@ -53,7 +53,7 @@ export function AppointmentsRoute() {
   }
 
   return (
-    <div className="animate-fade-in-up">
+    <div>
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <h1 className="font-display text-3xl font-extrabold text-ink">

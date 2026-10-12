@@ -87,7 +87,7 @@ export function DashboardRoute() {
 
   if (babyList.length === 0) {
     return (
-      <div className="animate-fade-in-up">
+      <div>
         <WelcomeDashboard greetingKey={getGreetingKey()} />
       </div>
     )
@@ -157,7 +157,7 @@ export function DashboardRoute() {
     !visibleMedications.length &&
     !visibleVaccineItems.some((item) => item.status === 'APPLIED')
   return (
-    <div className="animate-fade-in-up">
+    <div>
       <div className="mb-6">
         <h1 className="font-display text-3xl font-medium text-ink">
           {t('babies.dashboard.greetingLine', { greeting: t(getGreetingKey()), name: parentName })}
@@ -214,7 +214,7 @@ export function DashboardRoute() {
         </div>
         <div className="min-w-0 space-y-5">
           <h2 className="font-display text-xl font-medium text-ink">{t('babies.home.growing')}</h2>
-          <section className="rounded-2xl border border-border bg-card p-5">
+          <section className="card-lift rounded-2xl border border-border bg-card p-5">
             {/* The area's colour lives in the icon, as on every other card. */}
             <div className="mb-4 flex items-center gap-2.5">
               <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">

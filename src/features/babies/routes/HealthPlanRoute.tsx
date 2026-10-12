@@ -46,7 +46,7 @@ export function HealthPlanRoute() {
   }
 
   return (
-    <div className="animate-fade-in-up">
+    <div>
       <div className="mb-6">
         <h2 className="font-display text-3xl font-extrabold text-ink">{t('healthPlan.title')}</h2>
         <p className="mt-1 text-lg text-ink-muted">{t('healthPlan.subtitle')}</p>

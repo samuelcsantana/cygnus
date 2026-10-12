@@ -96,4 +96,31 @@ describe('ApplyVaccineDialog', () => {
 
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
+
+  it('tells the list a dose was saved, so the row can show it, and not when saving fails', async () => {
+    let succeed = true
+    server.use(
+      http.patch(`${config.apiBaseUrl}/babies/:babyId/vaccines/:vaccineId/apply`, () =>
+        succeed
+          ? HttpResponse.json({ ...sampleItem, status: 'APPLIED', applicationDate: '2026-01-01' })
+          : HttpResponse.json({ status: 'error', message: 'Internal server error' }, { status: 500 }),
+      ),
+    )
+    const user = userEvent.setup()
+    const onApplied = vi.fn()
+
+    const { unmount } = renderWithProviders(
+      <ApplyVaccineDialog babyId="baby-1" item={sampleItem} onOpenChange={vi.fn()} onApplied={onApplied} />,
+    )
+    await user.click(screen.getByRole('button', { name: 'Salvar Registro' }))
+    await waitFor(() => expect(onApplied).toHaveBeenCalledTimes(1))
+    expect(onApplied).toHaveBeenCalledWith(expect.objectContaining({ status: 'APPLIED', applicationDate: '2026-01-01' }))
+    unmount()
+
+    succeed = false
+    renderWithProviders(<ApplyVaccineDialog babyId="baby-1" item={sampleItem} onOpenChange={vi.fn()} onApplied={onApplied} />)
+    await user.click(screen.getByRole('button', { name: 'Salvar Registro' }))
+    expect(await screen.findByRole('alert')).toBeInTheDocument()
+    expect(onApplied).toHaveBeenCalledTimes(1)
+  })
 })

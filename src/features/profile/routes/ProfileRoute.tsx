@@ -13,7 +13,7 @@ export function ProfileRoute() {
   const navigate = useNavigate()
   const currentUser = useCurrentUser()
   return (
-    <div className="mx-auto max-w-5xl animate-fade-in-up">
+    <div className="mx-auto max-w-5xl">
       <header className="mb-6">
         <h1 className="font-display text-3xl font-extrabold text-ink">{t('profile.page.title')}</h1>
         <p className="mt-2 text-sm text-ink-muted">{t('profile.subtitle')}</p>

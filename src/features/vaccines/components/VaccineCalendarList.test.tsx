@@ -1,6 +1,9 @@
 import userEvent from '@testing-library/user-event'
+import { HttpResponse, http } from 'msw'
 import { expect, it } from 'vitest'
-import { renderWithProviders, screen } from '@/test/test-utils'
+import { config } from '@/lib/config'
+import { server } from '@/test/msw/server'
+import { renderWithProviders, screen, within } from '@/test/test-utils'
 import { VaccineCalendarList } from './VaccineCalendarList'
 const item = {
   babyId: '11111111-1111-4111-8111-111111111111',
@@ -33,4 +36,23 @@ it('matches accents and repeated spaces, reports the status filter and restores 
   expect(search).toHaveFocus()
   expect(search).toHaveValue('')
   expect(await screen.findByText('Tríplice viral')).toBeVisible()
+})
+
+it('shows a registered dose where it was clicked, flashing, even when the filter no longer includes it', async () => {
+  server.use(
+    http.patch(`${config.apiBaseUrl}/babies/:babyId/vaccines/:vaccineId/apply`, () =>
+      HttpResponse.json({ ...item, babyId: undefined, status: 'APPLIED', applicationDate: '2026-10-12' }),
+    ),
+  )
+  const user = userEvent.setup()
+  // Under the 'pending' filter an applied dose leaves the list. The parent's
+  // items would drop it; here they never change, and the row must still show
+  // the dose as applied, in place, for the length of the flash.
+  renderWithProviders(<VaccineCalendarList items={[item]} babies={[]} filterKey="PENDING" />)
+  await user.click(screen.getByRole('button', { name: 'Registrar dose' }))
+  await user.click(await screen.findByRole('button', { name: 'Salvar Registro' }))
+
+  const row = (await screen.findByText(/Aplicada/)).closest('article')!
+  expect(within(row).getByText('Tríplice viral')).toBeVisible()
+  expect(row).toHaveClass('animate-flash-ok')
 })
