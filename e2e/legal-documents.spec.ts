@@ -6,7 +6,7 @@ test('active web legal documents are public and versioned acceptance survives re
   await page.emulateMedia({ reducedMotion: 'reduce' })
   for (const path of ['/termos', '/privacidade']) {
     await page.goto(path)
-    await expect(page.getByText('Versão 1.0.0 · em vigor a partir de 08/09/2026')).toBeVisible()
+    await expect(page.getByText('Versão 1.1.0 · em vigor a partir de 12/10/2026')).toBeVisible()
     await expect(page.getByRole('alert')).toHaveCount(0)
     await expect(page.getByRole('heading', { level: 2 })).toHaveCount(12)
     await expect(page.getByText(/samuel.ssa89@gmail.com/).first()).toBeVisible()
@@ -26,7 +26,7 @@ test('active web legal documents are public and versioned acceptance survives re
   const response = await page.request.get((process.env.E2E_API_BASE_URL ?? 'http://localhost:3005') + '/legal/acceptances')
   expect(response.ok()).toBe(true)
   expect(await response.json()).toEqual(expect.arrayContaining([
-    expect.objectContaining({ documentId: 'privacy', version: '1.0.0' }),
-    expect.objectContaining({ documentId: 'terms', version: '1.0.0' }),
+    expect.objectContaining({ documentId: 'privacy', version: '1.1.0' }),
+    expect.objectContaining({ documentId: 'terms', version: '1.1.0' }),
   ]))
 })
