@@ -12,6 +12,7 @@ import { MilestonesOverviewCard } from '@/features/milestones/components/Milesto
 import { useAllBabiesVaccineCalendars } from '@/features/vaccines/api/vaccines.hooks'
 import { VaccinesOverviewCard } from '@/features/vaccines/components/VaccinesOverviewCard'
 import { formatDateDisplay, splitScheduledAt } from '@/lib/date'
+import { GrowthIcon } from '@/shared/icons/growth-icon'
 import { formatCentimeters, formatKilograms } from '@/shared/utils/measurements'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
 import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
@@ -213,8 +214,14 @@ export function DashboardRoute() {
         </div>
         <div className="min-w-0 space-y-5">
           <h2 className="font-display text-xl font-medium text-ink">{t('babies.home.growing')}</h2>
-          <section className="rounded-2xl border border-border/60 bg-overview-sage p-5">
-            <h3 className="mb-4 font-display text-lg font-medium text-ink">{t('nav.growth')}</h3>
+          <section className="rounded-2xl border border-border bg-card p-5">
+            {/* The area's colour lives in the icon, as on every other card. */}
+            <div className="mb-4 flex items-center gap-2.5">
+              <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+                <GrowthIcon className="h-[18px] w-[18px]" />
+              </span>
+              <h3 className="font-display text-lg font-medium text-ink">{t('nav.growth')}</h3>
+            </div>
             <div className="space-y-4">
               {familyItems.map(({ baby, latestMeasuredVisit: measurement }) => (
                 <div key={baby.id}>
