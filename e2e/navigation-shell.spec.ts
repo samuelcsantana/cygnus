@@ -20,7 +20,7 @@ test('keeps family context visible across pages and provides an accessible mobil
   const header = page.getByRole('banner')
   await expect(page.getByRole('button', { name: /Selecionar criança/ })).toHaveCount(1)
   await expect(page.getByRole('button', { name: 'Conta e preferências' })).toHaveCount(1)
-  await expect(header.getByText('Ninho', { exact: true })).toHaveCount(0)
+  await expect(header.getByText('Cygnus', { exact: true })).toHaveCount(0)
   await header.getByRole('button', { name: /Selecionar criança/ }).click()
   await page.screenshot({ path: 'docs/verification/selector-desktop.png' })
   expect(

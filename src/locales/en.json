@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Ninho",
+    "appName": "Cygnus",
     "loading": "Loading...",
     "myAccount": "My account",
     "back": "Back",
@@ -118,7 +118,7 @@
       "featureAlertsTitle": "Smart alerts",
       "featureAlertsHint": "Appointment and vaccine reminders",
       "trust": "Free · Secure · No ads",
-      "copyright": "© {{year}} Ninho",
+      "copyright": "© {{year}} Cygnus",
       "footerNote": "Made with care for families"
     },
     "social": {
@@ -233,7 +233,7 @@
       "previewName": "Child's name",
       "previewHint": "A new story starts here",
       "identityTitle": "Make it yours",
-      "identityHint": "Choose a photo and a color to recognize this profile throughout Ninho.",
+      "identityHint": "Choose a photo and a color to recognize this profile throughout Cygnus.",
       "measurements": "Measurements • optional",
       "weightKg": "Weight (kg)",
       "heightCm": "Height (cm)",
@@ -283,7 +283,7 @@
     },
     "dashboard": {
       "loadError": "Could not load the family data.",
-      "welcomeHeading": "Welcome to Ninho!",
+      "welcomeHeading": "Welcome to Cygnus!",
       "welcomeDescription": "Track vaccines, appointments and the most special milestones of your children's growth — all organized in one place, so you never miss an important moment.",
       "welcomeCta": "Add Your First Child",
       "previewSectionTitle": "What you'll be able to do ✨",
@@ -719,7 +719,7 @@
       "noApplied": "No applied doses recorded yet.",
       "upcoming": "Calendar to follow",
       "noUpcoming": "No doses or guidance to follow in this calendar.",
-      "recordNote": "This document brings together the records entered in Ninho.",
+      "recordNote": "This document brings together the records entered in Cygnus.",
       "noDate": "No date",
       "sourceCATALOG": "Calendar",
       "sourceCAMPAIGN": "Campaign",

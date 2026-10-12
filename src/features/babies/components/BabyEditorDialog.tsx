@@ -134,7 +134,7 @@ export function BabyEditorDialog({
         >
           <aside className="relative flex min-w-0 flex-col bg-emerald-900 px-5 py-4 text-white md:px-7 md:py-8">
             <div className="mb-8 hidden items-center gap-2 text-sm font-bold text-white/80 md:flex">
-              <LogoIcon className="size-6" /> Ninho
+              <LogoIcon className="size-6" /> {t('common.appName')}
             </div>
             <AvatarUploadField
               id="avatarUrl"
