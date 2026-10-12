@@ -1492,15 +1492,13 @@
     },
     "nav": {
       "home": "Cygnus, página de inicio",
-      "signIn": "Entrar",
-      "createAccount": "Crear cuenta"
+      "signIn": "Entrar"
     },
     "hero": {
       "eyebrow": "Salud infantil, organizada",
       "titleLead": "Vacunas, consultas y crecimiento de tus hijos,",
       "titleEmphasis": "en un solo lugar.",
       "subtitle": "El calendario de vacunación de Brasil con lo aplicado y lo atrasado, las consultas, el peso y la altura en las curvas de la OMS, los hitos y los medicamentos. Para toda la familia, con quien cuida contigo.",
-      "createAccount": "Crear cuenta gratis",
       "signIn": "Entrar",
       "trust": "Gratis · Seguro · Sin anuncios"
     },
@@ -1556,6 +1554,23 @@
       "appCode": "Código de la app",
       "apiCode": "Código de la API",
       "designSystem": "Design system"
+    }
+  },
+  "demo": {
+    "start": "Ver demostración",
+    "noSignUp": "sin registro",
+    "opening": "Abriendo la demostración…",
+    "openingShort": "Abriendo…",
+    "note": "Una familia de ejemplo, con datos ficticios.",
+    "orSignIn": "o entra con tu cuenta",
+    "error": "No se pudo abrir la demostración. Inténtalo de nuevo.",
+    "rateLimited": "Demasiadas demostraciones abiertas desde aquí en la última hora. Inténtalo más tarde o crea una cuenta.",
+    "banner": {
+      "label": "Demostración",
+      "title": "Demostración.",
+      "body": "Una familia de ejemplo con datos ficticios. Todo se borra en 24 horas, incluido lo que cambies.",
+      "createAccount": "Crear mi cuenta",
+      "exit": "Salir"
     }
   }
 }

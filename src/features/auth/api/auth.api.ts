@@ -2,6 +2,7 @@ import { httpClient } from '@/lib/http-client'
 
 import {
   assistedRequestSchema,
+  demoSessionSchema,
   loginSchema,
   okResponseSchema,
   passwordResetVerifySchema,
@@ -26,6 +27,16 @@ export async function loginUser(input: LoginInput): Promise<void> {
   const body = loginSchema.parse(input)
   const response = await httpClient.post<unknown>('/auth/login', body)
   okResponseSchema.parse(response)
+}
+
+/**
+ * Starts a session in a new, disposable account the API fills with a sample
+ * family and deletes 24 hours later. One account per call, so visitors never
+ * see each other's changes.
+ */
+export async function startDemoSession(): Promise<void> {
+  const response = await httpClient.post<unknown>('/auth/demo')
+  demoSessionSchema.parse(response)
 }
 
 export async function logoutUser(): Promise<void> {

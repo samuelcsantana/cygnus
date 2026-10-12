@@ -1,8 +1,13 @@
 import type { ComponentType, CSSProperties, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
+import { demoStartErrorKey, useStartDemoSession } from '@/features/auth/api/auth.hooks'
 import { cn } from '@/lib/utils'
+import { ServerWakingNotice } from '@/shared/components/ServerWakingNotice'
+import { PlayIcon } from '@/shared/icons/play-icon'
+import { SpinnerIcon } from '@/shared/icons/spinner-icon'
 import { BrandSignature } from '@/shared/components/BrandSignature'
 import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { PortfolioStrip } from '@/shared/components/PortfolioStrip'
@@ -80,6 +85,13 @@ interface LandingPageProps {
  */
 export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+  const demo = useStartDemoSession()
+  const openDemo = () =>
+    demo.mutate(undefined, {
+      onSuccess: () => navigate('/dashboard', { replace: true }),
+      onError: (error) => toast.error(t(demoStartErrorKey(error))),
+    })
 
   return (
     <div className="landing flex min-h-dvh flex-col bg-auth-surface">
@@ -107,12 +119,22 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
             </Link>
             {/* Off below 480px: the header would not hold it beside the brand
                 and both controls, and the hero repeats it a few pixels lower. */}
-            <Link
-              to="/register"
-              className="hidden h-10 items-center rounded-[10px] bg-auth-button px-4 text-sm font-semibold whitespace-nowrap text-white transition-colors hover:bg-auth-button-hover focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none min-[480px]:inline-flex"
+            <button
+              type="button"
+              onClick={openDemo}
+              disabled={demo.isPending}
+              aria-busy={demo.isPending}
+              className="hidden h-10 items-center gap-2 rounded-[10px] bg-auth-button px-4 text-sm font-semibold whitespace-nowrap text-white transition-colors hover:bg-auth-button-hover focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none min-[480px]:inline-flex"
             >
-              {t('landing.nav.createAccount')}
-            </Link>
+              {demo.isPending ? (
+                <>
+                  <SpinnerIcon className="size-4 animate-spin" />
+                  {t('demo.openingShort')}
+                </>
+              ) : (
+                t('demo.start')
+              )}
+            </button>
           </div>
         </div>
       </header>
@@ -125,13 +147,29 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
               {t('landing.hero.titleLead')} <em className="text-auth-action">{t('landing.hero.titleEmphasis')}</em>
             </h1>
             <p className="mt-5 max-w-[34rem] text-base leading-relaxed text-ink-muted">{t('landing.hero.subtitle')}</p>
+            {/* The demo first: the person this page is for wants to see the app,
+                not to open an account. Sign-up stays one screen away, on the
+                sign-in page. */}
             <div className="mt-7 flex flex-wrap gap-2.5">
-              <Link to="/register" className={PRIMARY_ACTION}>
-                {t('landing.hero.createAccount')}
-              </Link>
+              <button type="button" onClick={openDemo} disabled={demo.isPending} aria-busy={demo.isPending} className={cn(PRIMARY_ACTION, 'gap-2')}>
+                {demo.isPending ? (
+                  <>
+                    <SpinnerIcon className="size-4 animate-spin" />
+                    {t('demo.opening')}
+                  </>
+                ) : (
+                  <>
+                    <PlayIcon className="size-4" />
+                    {t('demo.start')}
+                  </>
+                )}
+              </button>
               <Link to="/login" className={SECONDARY_ACTION}>
                 {t('landing.hero.signIn')}
               </Link>
+            </div>
+            <div className="max-w-[34rem]">
+              <ServerWakingNotice active={demo.isPending} />
             </div>
             <p className="mt-4 flex items-center gap-2 text-[12.5px] text-ink-muted">
               <CheckIcon className="size-3.5 shrink-0 text-auth-action" />

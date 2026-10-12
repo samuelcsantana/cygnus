@@ -34,17 +34,28 @@ export function ProtectedLayout() {
     )
   }
 
+  const content = (
+    // The name gate is inert for every account that has one, which today is
+    // all of them — see NameGate.
+    <NameGate>
+      <Outlet />
+    </NameGate>
+  )
+
+  // A demo account is not asked to accept the privacy policy and terms (decided
+  // 2026-10-12). Nobody signed up: the account is a sample family, made by one
+  // click and deleted in 24 hours, and a consent screen between the visitor and
+  // the product is the one thing the demo exists to remove. No acceptance is
+  // recorded on its behalf either — a consent record for a text nobody read
+  // would be a false record. The API says which accounts these are.
+  if (currentUser.data.demoExpiresAt) {
+    return content
+  }
+
   // Inside the session gate and outside everything else: consent is asked of a
   // known person, and it has to be asked before any screen that shows a child's
-  // data. Inert while both documents are drafts — see LegalAcceptanceGate.
-  return (
-    // Consent outermost: whether we may process this person's data is settled
-    // before we ask them anything else. The name gate is inert for every account
-    // that has one, which today is all of them — see NameGate.
-    <LegalAcceptanceGate>
-      <NameGate>
-        <Outlet />
-      </NameGate>
-    </LegalAcceptanceGate>
-  )
+  // data. Consent outermost: whether we may process this person's data is
+  // settled before we ask them anything else.
+  return <LegalAcceptanceGate>{content}</LegalAcceptanceGate>
+
 }

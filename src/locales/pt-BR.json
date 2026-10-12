@@ -1497,15 +1497,13 @@
     },
     "nav": {
       "home": "Cygnus, página inicial",
-      "signIn": "Entrar",
-      "createAccount": "Criar conta"
+      "signIn": "Entrar"
     },
     "hero": {
       "eyebrow": "Saúde da criança, organizada",
       "titleLead": "Vacinas, consultas e crescimento dos seus filhos,",
       "titleEmphasis": "num lugar só.",
       "subtitle": "O calendário do PNI com o que foi tomado e o que atrasou, as consultas, o peso e a altura nas curvas da OMS, os marcos e os remédios. Para a família inteira, com quem cuida junto.",
-      "createAccount": "Criar conta grátis",
       "signIn": "Entrar",
       "trust": "Gratuito · Seguro · Sem anúncios"
     },
@@ -1561,6 +1559,23 @@
       "appCode": "Código do app",
       "apiCode": "Código da API",
       "designSystem": "Design system"
+    }
+  },
+  "demo": {
+    "start": "Ver demonstração",
+    "noSignUp": "sem cadastro",
+    "opening": "Abrindo a demonstração…",
+    "openingShort": "Abrindo…",
+    "note": "Uma família de exemplo, com dados fictícios.",
+    "orSignIn": "ou entre com sua conta",
+    "error": "Não foi possível abrir a demonstração. Tente de novo.",
+    "rateLimited": "Muitas demonstrações abertas daqui na última hora. Tente mais tarde ou crie uma conta.",
+    "banner": {
+      "label": "Demonstração",
+      "title": "Demonstração.",
+      "body": "Família de exemplo com dados fictícios. Tudo é apagado em 24 horas, inclusive o que você mudar.",
+      "createAccount": "Criar minha conta",
+      "exit": "Sair"
     }
   }
 }

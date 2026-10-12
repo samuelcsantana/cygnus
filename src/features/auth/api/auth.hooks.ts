@@ -1,6 +1,7 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 
+import { ApiError } from '@/lib/http-client'
 import { useAuthIdentityStore } from '@/shared/stores/authIdentity.store'
 
 import {
@@ -10,6 +11,7 @@ import {
   registerUser,
   requestPasswordResetCode,
   requestPasswordlessCode,
+  startDemoSession,
   verifyPasswordReset,
   verifyPasswordlessCode,
 } from './auth.api'
@@ -90,6 +92,32 @@ export function useLogin() {
       setIdentity({ id: null, email: variables.email, name: null })
     },
   })
+}
+
+/**
+ * Opens the demo: a new disposable account, already signed in. Whatever was
+ * cached belongs to nobody now — a previous session's profile or children must
+ * not flash before the demo's arrive — so the cache and the remembered identity
+ * go here, and the caller then navigates to the dashboard, where the protected
+ * layout asks `/auth/me` who this is. Navigation stays with the caller, as it
+ * does for login and logout.
+ */
+export function useStartDemoSession() {
+  const queryClient = useQueryClient()
+  const clearIdentity = useAuthIdentityStore((state) => state.clearIdentity)
+
+  return useMutation({
+    mutationFn: startDemoSession,
+    onSuccess: () => {
+      queryClient.clear()
+      clearIdentity()
+    },
+  })
+}
+
+/** The message for a demo that did not open: the per-address limit has its own, everything else one generic. */
+export function demoStartErrorKey(error: unknown): string {
+  return error instanceof ApiError && error.status === 429 ? 'demo.rateLimited' : 'demo.error'
 }
 
 export function useLogout() {

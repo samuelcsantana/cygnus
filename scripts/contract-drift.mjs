@@ -72,6 +72,7 @@ const legal = await import('../src/features/legal/api/legal.schemas.ts')
 const ENDPOINTS = [
   { path: '/babies', method: 'get', schema: babies.babyListSchema },
   { path: '/auth/me', method: 'get', schema: auth.userSchema },
+  { path: '/auth/demo', method: 'post', schema: auth.demoSessionSchema },
   { path: '/auth/google/status', method: 'get', schema: googleAuth.googleStatusSchema },
   { path: '/auth/google/start', method: 'post', schema: googleAuth.googleStartSchema },
   { path: '/invites/{code}', method: 'get', schema: invites.invitePreviewSchema },
