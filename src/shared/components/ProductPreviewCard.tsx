@@ -7,6 +7,8 @@ import { CheckIcon } from '@/shared/icons/check-icon'
 import { ClockIcon } from '@/shared/icons/clock-icon'
 import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 
+import './product-preview-card.css'
+
 /**
  * A still of the vaccine card, drawn for the public screens: one child, the PNI
  * progress, three doses and the next visit, with the overdue dose floating
@@ -21,10 +23,11 @@ import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
  * list of doses: read out item by item, a picture of the product would sound
  * like real records.
  *
- * The `data-preview-*` attributes are hooks for the landing page's opening
- * animation; the card itself does not move.
+ * `animated` plays a two-second opening (product-preview-card.css): the bar
+ * fills, the doses arrive, the alert comes last. The `data-preview-*`
+ * attributes are its hooks.
  */
-export function ProductPreviewCard({ className }: { className?: string }) {
+export function ProductPreviewCard({ className, animated = false }: { className?: string; animated?: boolean }) {
   const { t } = useTranslation()
 
   const doses = [
@@ -34,7 +37,12 @@ export function ProductPreviewCard({ className }: { className?: string }) {
   ] as const
 
   return (
-    <div role="img" aria-label={t('landing.preview.label')} className={cn('relative w-full max-w-[22.5rem] pb-10', className)}>
+    <div
+      role="img"
+      aria-label={t('landing.preview.label')}
+      data-preview-animated={animated || undefined}
+      className={cn('relative w-full max-w-[22.5rem] pb-10', className)}
+    >
       <div className="rounded-[18px] border border-border bg-card p-4 text-ink shadow-[0_30px_60px_-28px_rgba(26,46,37,0.45)]">
         <div className="flex items-center gap-3">
           <span className="flex size-10 items-center justify-center rounded-xl bg-violet-600 text-[15px] font-semibold text-white">H</span>

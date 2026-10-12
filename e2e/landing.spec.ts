@@ -41,9 +41,41 @@ test('the landing page greets a visitor at /, readable and accessible at phone a
   )
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
   await page.getByRole('button', { name: 'PT (Português)' }).click()
+})
 
-  await page.getByRole('link', { name: 'Criar conta grátis' }).click()
-  await expect(page).toHaveURL(/\/register$/)
+test('the demo opens a sample family without sign-up or the terms gate, and leaving returns to the landing page', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+
+  await page.getByRole('button', { name: 'Ver demonstração' }).first().click()
+
+  await expect(page).toHaveURL(/\/dashboard$/, { timeout: 60_000 })
+  const banner = page.getByRole('region', { name: 'Demonstração' })
+  await expect(banner).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Antes de continuar' })).toHaveCount(0)
+  await expect(page.getByText('Helena').first()).toBeVisible()
+  await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important}' })
+  expect((await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual([])
+  await page.screenshot({ path: 'docs/verification/demo-dashboard.png', fullPage: true })
+
+  await banner.getByRole('button', { name: 'Sair' }).click()
+
+  await expect(page).toHaveURL(/\/$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'Vacinas, consultas e crescimento dos seus filhos, num lugar só.',
+  )
+})
+
+test('the sign-in screen offers the demo above the form', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/login')
+
+  await page.getByRole('button', { name: /Ver demonstração/ }).click()
+
+  await expect(page).toHaveURL(/\/dashboard$/, { timeout: 60_000 })
+  await expect(page.getByRole('region', { name: 'Demonstração' })).toBeVisible()
 })
 
 test("the widget's own link leads to sign-up, because the page is the widget's host", async ({ page }) => {

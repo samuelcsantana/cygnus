@@ -52,8 +52,8 @@ export const Default: Story = {
       await expect(canvas.getByRole('complementary', { name: 'Sobre este projeto' })).toBeVisible()
     })
 
-    await step('the ways in lead to sign-up and sign-in', async () => {
-      await expect(canvas.getByRole('link', { name: 'Criar conta grátis' })).toHaveAttribute('href', '/register')
+    await step('the ways in: the demo first, sign-in beside it', async () => {
+      await expect(canvas.getAllByRole('button', { name: 'Ver demonstração' }).length).toBeGreaterThan(0)
       await expect(canvas.getAllByRole('link', { name: 'Entrar' })[0]).toHaveAttribute('href', '/login')
     })
 

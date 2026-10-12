@@ -70,6 +70,33 @@ describe('application shell', () => {
     }
   })
 
+  it('marks a demo account, and its ways out sign out before going to sign-up or the landing page', async () => {
+    server.use(
+      http.get(api('/auth/me'), () => HttpResponse.json({
+        id: '00000000-0000-0000-0000-000000000001', email: 'demo-1@demo.cygnus.invalid', name: 'Marina Costa',
+        createdAt: '2026-10-12T15:00:00.000Z', demoExpiresAt: '2026-10-13T15:00:00.000Z',
+      })),
+      http.post(api('/auth/logout'), () => HttpResponse.json({ status: 'ok', message: 'Signed out' })),
+    )
+    const user = userEvent.setup()
+    localStorage.setItem('theme', 'light')
+    renderWithProviders(<ThemeProvider><MemoryRouter initialEntries={['/dashboard']}><Routes>
+      <Route element={<AppShellLayout />}><Route path="/dashboard" element={<h1>Family records</h1>} /></Route>
+      <Route path="/register" element={<h1>Create an account</h1>} />
+    </Routes></MemoryRouter></ThemeProvider>)
+
+    const banner = await screen.findByRole('region', { name: t('demo.banner.label') })
+    await user.click(within(banner).getByRole('button', { name: t('demo.banner.createAccount') }))
+
+    expect(await screen.findByRole('heading', { name: 'Create an account' })).toBeVisible()
+  })
+
+  it('shows no demo banner to a real account', async () => {
+    renderShell()
+    expect(await screen.findByRole('heading', { name: 'Family records' })).toBeVisible()
+    expect(screen.queryByRole('region', { name: t('demo.banner.label') })).not.toBeInTheDocument()
+  })
+
   it('opens and closes global search without leaving the current page', async () => {
     const user = userEvent.setup()
     renderShell()

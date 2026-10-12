@@ -1,0 +1,45 @@
+/*
+ * ProductPreviewCard's opening animation, for the cards that ask for it
+ * (`animated`): the landing page's hero and the sign-in panel. The progress bar
+ * fills, the three doses arrive one by one, the next visit after them, and the
+ * overdue-dose alert last — the app's whole job, keeping track and warning,
+ * shown in two seconds.
+ *
+ * Only when the visitor has not asked for less movement; otherwise the card is
+ * simply there. axe reads a dose caught mid-entrance as low-contrast text, so
+ * every axe pass over a screen with this card runs with reduced motion or with
+ * animations off.
+ */
+
+@keyframes preview-grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes preview-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-preview-animated] [data-preview-bar] {
+    transform-origin: left;
+    animation: preview-grow-x 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s both;
+  }
+
+  [data-preview-animated] [data-preview-item] {
+    animation: preview-pop 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(0.5s + var(--i, 0) * 0.14s);
+  }
+
+  [data-preview-animated] [data-preview-appointment] {
+    animation: preview-pop 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 0.95s both;
+  }
+
+  [data-preview-animated] [data-preview-alert] {
+    animation: preview-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 1.35s both;
+  }
+}

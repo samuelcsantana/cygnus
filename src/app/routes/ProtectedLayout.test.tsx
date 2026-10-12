@@ -34,6 +34,29 @@ describe('protected route session verification', () => {
     expect(await screen.findByRole('heading', { name: 'Sign in required' })).toBeVisible()
     expect(screen.queryByText('Private family records')).not.toBeInTheDocument()
   })
+  it('lets a demo account straight in: no terms gate, and no acceptance read or written for it', async () => {
+    const legalRequests: string[] = []
+    server.use(
+      http.get(api('/auth/me'), () => HttpResponse.json({
+        id: '00000000-0000-0000-0000-000000000001', email: 'demo-1@demo.cygnus.invalid', name: 'Marina Costa',
+        createdAt: '2026-10-12T15:00:00.000Z', demoExpiresAt: '2026-10-13T15:00:00.000Z',
+      })),
+      http.all(api('/legal/acceptances'), ({ request }) => {
+        legalRequests.push(request.method)
+        return HttpResponse.json([])
+      }),
+    )
+    renderRoute()
+    expect(await screen.findByRole('heading', { name: 'Private family records' })).toBeVisible()
+    expect(screen.queryByRole('heading', { name: 'Antes de continuar' })).not.toBeInTheDocument()
+    expect(legalRequests).toEqual([])
+  })
+  it('still asks a real account to accept the documents', async () => {
+    server.use(http.get(api('/legal/acceptances'), () => HttpResponse.json([])))
+    renderRoute()
+    expect(await screen.findByRole('heading', { name: 'Antes de continuar' })).toBeVisible()
+    expect(screen.queryByText('Private family records')).not.toBeInTheDocument()
+  })
   it('shows a service failure without treating it as an anonymous session', async () => {
     server.use(http.get(api('/auth/me'), () => HttpResponse.json({ status: 'error', message: 'Service unavailable' }, { status: 503 })))
     renderRoute()

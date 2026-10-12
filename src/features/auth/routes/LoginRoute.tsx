@@ -6,6 +6,7 @@ import { queryClient } from '@/lib/query-client'
 
 import type { AssistedMode } from '../api/auth.hooks'
 import { AuthAssistedFlow } from '../components/AuthAssistedFlow'
+import { DemoEntry } from '../components/DemoEntry'
 import { LoginForm } from '../components/LoginForm'
 
 export function LoginRoute() {
@@ -47,6 +48,8 @@ export function LoginRoute() {
         </h1>
         <p className="mt-1.5 text-[13.5px] text-ink-muted">{t('auth.login.subtitle')}</p>
       </div>
+
+      <DemoEntry />
 
       <LoginForm
         defaultEmail={email}

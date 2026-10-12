@@ -36,6 +36,10 @@
     "noSearchResults": {
       "title": "No results found",
       "description": "Try searching for something else."
+    },
+    "serverWaking": {
+      "title": "Waking up the server",
+      "body": "It sleeps when nobody is using it (free plan) and takes up to a minute to come back. You can wait on this screen."
     }
   },
   "nav": {
@@ -112,12 +116,6 @@
       "headlineEmphasis": "matters.",
       "headline": "Every moment matters.",
       "tagline": "The complete dashboard for your family's health and memories.",
-      "featureVaccinesTitle": "Complete vaccine calendar",
-      "featureVaccinesHint": "Never miss an important vaccine",
-      "featureMilestonesTitle": "Developmental milestones",
-      "featureMilestonesHint": "Record every one of your baby's wins",
-      "featureAlertsTitle": "Smart alerts",
-      "featureAlertsHint": "Appointment and vaccine reminders",
       "trust": "Free · Secure · No ads",
       "copyright": "© {{year}} Cygnus",
       "footerNote": "Made with care for families"
@@ -1494,15 +1492,13 @@
     },
     "nav": {
       "home": "Cygnus, home page",
-      "signIn": "Sign in",
-      "createAccount": "Create account"
+      "signIn": "Sign in"
     },
     "hero": {
       "eyebrow": "Children's health, organized",
       "titleLead": "Your children's vaccines, checkups and growth,",
       "titleEmphasis": "all in one place.",
       "subtitle": "Brazil's national immunization schedule with what was given and what is overdue, doctor visits, weight and height on the WHO growth charts, milestones and medications. For the whole family, shared with whoever helps care.",
-      "createAccount": "Create a free account",
       "signIn": "Sign in",
       "trust": "Free · Secure · No ads"
     },
@@ -1558,6 +1554,23 @@
       "appCode": "App code",
       "apiCode": "API code",
       "designSystem": "Design system"
+    }
+  },
+  "demo": {
+    "start": "Try the demo",
+    "noSignUp": "no sign-up",
+    "opening": "Opening the demo…",
+    "openingShort": "Opening…",
+    "note": "A sample family with made-up data.",
+    "orSignIn": "or sign in to your account",
+    "error": "The demo could not be opened. Please try again.",
+    "rateLimited": "Too many demos opened from here in the last hour. Try later, or create an account.",
+    "banner": {
+      "label": "Demo",
+      "title": "Demo.",
+      "body": "A sample family with made-up data. Everything is deleted in 24 hours, including your changes.",
+      "createAccount": "Create my account",
+      "exit": "Leave"
     }
   }
 }

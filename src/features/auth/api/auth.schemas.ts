@@ -19,8 +19,18 @@ export const userSchema = z.object({
   name: z.string(),
   createdAt: z.string(),
   avatarUrl: z.string().nullable().optional(),
+  // When a disposable demo account is deleted; null for every real account.
+  // Optional as well as nullable so a response from before API #42 still parses.
+  demoExpiresAt: z.string().nullable().optional(),
 })
 export type User = z.infer<typeof userSchema>
+
+/** POST /auth/demo: the session cookies come with it; the body says when the account ends. */
+export const demoSessionSchema = z.object({
+  status: z.literal('ok'),
+  message: z.string(),
+  expiresAt: z.string(),
+})
 
 export const okResponseSchema = z.object({
   status: z.literal('ok'),

@@ -9,6 +9,8 @@ const api = (path: string) => `${config.apiBaseUrl}${path}`
  * Individual tests override the endpoint they care about via `server.use()`.
  */
 export const handlers = [
+  // The public screens ping it on arrival to wake the API (useWakeApi).
+  http.get(api('/health'), () => HttpResponse.json({ status: 'ok' })),
   http.get(api('/auth/google/status'), () => HttpResponse.json({ enabled: false })),
   http.get(api('/babies/:babyId/appointments'), () => HttpResponse.json([])),
   http.get(api('/babies'), () => HttpResponse.json([])),

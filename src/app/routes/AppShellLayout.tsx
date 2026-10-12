@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
-import { useLogout } from '@/features/auth/api/auth.hooks'
+import { useCurrentUser, useLogout } from '@/features/auth/api/auth.hooks'
 import { useBabies } from '@/features/babies/api/babies.hooks'
 import { AddBabyDialog } from '@/features/babies/components/AddBabyDialog'
 import { useNotifications } from '@/features/notifications/api/notifications.hooks'
@@ -20,6 +20,7 @@ import { UsersIcon } from '@/shared/icons/users-icon'
 import { AppHeader } from '@/shared/components/AppHeader'
 import { CloseIcon } from '@/shared/icons/close-icon'
 import { AppSidebar } from '@/shared/components/AppSidebar'
+import { DemoBanner } from '@/shared/components/DemoBanner'
 import { OfflineBanner } from '@/shared/components/OfflineBanner'
 import { useAddBabyDialogStore } from '@/shared/stores/addBabyDialog.store'
 import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
@@ -49,6 +50,8 @@ export function AppShellLayout() {
   const babies = useBabies()
   const notifications = useNotifications()
   const identity = useAuthIdentityStore((state) => state.identity)
+  // Already loaded by ProtectedLayout; read here only to know whether this is a demo.
+  const isDemo = Boolean(useCurrentUser().data?.demoExpiresAt)
   const logout = useLogout()
   const isAddBabyDialogOpen = useAddBabyDialogStore((state) => state.isOpen)
   const openAddBabyDialog = useAddBabyDialogStore((state) => state.open)
@@ -127,7 +130,7 @@ export function AppShellLayout() {
     disabled: !hasBabies && !['/dashboard', '/profissionais'].includes(item.to),
   }))
 
-  const handleLogout = async () => {
+  const signOut = async (destination: string) => {
     try {
       await logout.mutateAsync()
     } catch {
@@ -144,8 +147,12 @@ export function AppShellLayout() {
       toast.error(t('nav.logoutError'))
       return
     }
-    navigate('/login', { replace: true })
+    navigate(destination, { replace: true })
   }
+
+  // A demo visitor has no account to sign back into, so leaving goes to the
+  // landing page rather than to a sign-in form.
+  const handleLogout = () => signOut(isDemo ? '/' : '/login')
 
   const accountLabel = identity?.name ?? identity?.email ?? t('common.myAccount')
 
@@ -202,6 +209,15 @@ export function AppShellLayout() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
+        {isDemo && (
+          <DemoBanner
+            pending={logout.isPending}
+            // Out of the demo first: signing up while signed into it would
+            // leave the visitor in the sample family after creating an account.
+            onCreateAccount={() => void signOut('/register')}
+            onExit={() => void signOut('/')}
+          />
+        )}
         <AppHeader
           menuOpen={isMenuOpen}
           onOpenMenu={() => setIsMenuOpen(true)}

@@ -1,25 +1,19 @@
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet } from 'react-router-dom'
 import authHeroUrl from '@/assets/auth-hero.avif'
+import { useWakeApi } from '@/hooks/useWakeApi'
 import { BrandSignature } from '@/shared/components/BrandSignature'
 import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { PortfolioStrip } from '@/shared/components/PortfolioStrip'
+import { ProductPreviewCard } from '@/shared/components/ProductPreviewCard'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
-import { BellIcon } from '@/shared/icons/bell-icon'
-import { CalendarIcon } from '@/shared/icons/calendar-icon'
 import { CheckIcon } from '@/shared/icons/check-icon'
-import { SparkleIcon } from '@/shared/icons/sparkle-icon'
 import { AuthBackdrop } from './AuthBackdrop'
-
-const FEATURES = [
-  { Icon: CalendarIcon, title: 'auth.brand.featureVaccinesTitle', hint: 'auth.brand.featureVaccinesHint' },
-  { Icon: SparkleIcon, title: 'auth.brand.featureMilestonesTitle', hint: 'auth.brand.featureMilestonesHint' },
-  { Icon: BellIcon, title: 'auth.brand.featureAlertsTitle', hint: 'auth.brand.featureAlertsHint' },
-] as const
 
 /** Shared across auth routes so the brand panel stays mounted during navigation. */
 export function AuthLayout() {
   const { t } = useTranslation()
+  useWakeApi()
   return (
     <div className="relative flex min-h-dvh flex-col bg-auth-surface">
       <AuthBackdrop />
@@ -40,17 +34,13 @@ export function AuthLayout() {
                   {t('auth.brand.headlineLead')}<br /><em>{t('auth.brand.headlineEmphasis')}</em></p>
                 <p className="mt-4 max-w-[19rem] text-sm leading-relaxed text-emerald-50">{t('auth.brand.tagline')}</p>
               </div>
-              <ul className="relative z-10 mb-8 mt-8 flex flex-col gap-4">
-                {FEATURES.map(({ Icon, title, hint }) => (
-                  <li key={title} className="flex items-start gap-3">
-                    <span className="mt-px flex size-8 shrink-0 items-center justify-center rounded-[10px] bg-white/10 text-white ring-1 ring-white/15"><Icon className="size-4" /></span>
-                    <span className="flex flex-col">
-                      <span className="text-[13px] font-semibold leading-5 text-white">{t(title)}</span>
-                      <span className="text-xs leading-4 text-emerald-50">{t(hint)}</span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              {/* A piece of the product instead of three bullet points about it.
+                  The template look of a sign-in screen came from exactly that
+                  composition — green panel, photo, three features — and the
+                  panel now shows what it used to describe. */}
+              <div className="relative z-10 mt-8 mb-8 flex justify-center">
+                <ProductPreviewCard animated />
+              </div>
               <p className="relative z-10 mt-auto flex items-center gap-2 border-t border-white/15 pt-6 text-xs text-emerald-50">
                 <CheckIcon className="size-3.5 shrink-0" />{t('auth.brand.trust')}
               </p>
