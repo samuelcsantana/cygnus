@@ -87,7 +87,7 @@ export function DashboardRoute() {
 
   if (babyList.length === 0) {
     return (
-      <div className="animate-fade-in-up">
+      <div>
         <WelcomeDashboard greetingKey={getGreetingKey()} />
       </div>
     )
@@ -157,7 +157,7 @@ export function DashboardRoute() {
     !visibleMedications.length &&
     !visibleVaccineItems.some((item) => item.status === 'APPLIED')
   return (
-    <div className="animate-fade-in-up">
+    <div>
       <div className="mb-6">
         <h1 className="font-display text-3xl font-medium text-ink">
           {t('babies.dashboard.greetingLine', { greeting: t(getGreetingKey()), name: parentName })}

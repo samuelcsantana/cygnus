@@ -176,6 +176,55 @@
   }
 }
 
+/* Page changes as a view transition (option 37). The sidebar links set
+   `viewTransition`, the content area is named `cy-page` and the active menu
+   item `cy-nav`. The rest of the page (root) does not cross-fade, so the
+   sidebar and header stay still; the content steps out upward and the next
+   page rises in, and the active item's highlight slides to its new place.
+   These replaced the pages' own fade-in-up entrance, so nothing animates
+   twice. Under reduced motion the swap is instant. */
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
+  ::view-transition-old(cy-page) {
+    animation: page-out 0.18s ease-in both;
+  }
+
+  ::view-transition-new(cy-page) {
+    animation: page-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  ::view-transition-group(cy-nav) {
+    animation-duration: 0.3s;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 @layer utilities {
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);

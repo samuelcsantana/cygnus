@@ -71,7 +71,7 @@ export function NotificationsRoute() {
   }
 
   return (
-    <div className="animate-fade-in-up">
+    <div>
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="font-display text-3xl font-extrabold text-ink">

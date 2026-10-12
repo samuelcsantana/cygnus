@@ -242,7 +242,10 @@ export function AppShellLayout() {
           <OfflineBanner />
         </div>
 
-        <main id="conteudo" tabIndex={-1} className="flex-1 p-5 md:p-10 lg:p-12 print:p-0">
+        {/* `cy-page`: what a page change animates (see the view-transition
+            rules in index.css). Everything outside it — sidebar, header —
+            stays put. */}
+        <main id="conteudo" tabIndex={-1} className="flex-1 p-5 [view-transition-name:cy-page] md:p-10 lg:p-12 print:p-0">
           <SearchDestinationBanner />
           <Outlet key={searchTarget ? searchRevision : 'default'} />
         </main>
