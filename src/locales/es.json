@@ -1491,6 +1491,73 @@
       "stack": "React 19, Fastify 5, Prisma 7",
       "code": "Código",
       "designSystem": "Design system"
+    },
+    "nav": {
+      "home": "Cygnus, página de inicio",
+      "signIn": "Entrar",
+      "createAccount": "Crear cuenta"
+    },
+    "hero": {
+      "eyebrow": "Salud infantil, organizada",
+      "titleLead": "Vacunas, consultas y crecimiento de tus hijos,",
+      "titleEmphasis": "en un solo lugar.",
+      "subtitle": "El calendario de vacunación de Brasil con lo aplicado y lo atrasado, las consultas, el peso y la altura en las curvas de la OMS, los hitos y los medicamentos. Para toda la familia, con quien cuida contigo.",
+      "createAccount": "Crear cuenta gratis",
+      "signIn": "Entrar",
+      "trust": "Gratis · Seguro · Sin anuncios"
+    },
+    "preview": {
+      "label": "Vista previa de la app: la cartilla de vacunación de Helena, de 6 meses, con 14 de 31 dosis al día, una consulta en 2 días y la 3.ª dosis de la VIP atrasada.",
+      "age": "6 meses",
+      "tag": "Vacunas",
+      "schedule": "Calendario del PNI",
+      "progress": "{{done}} de {{total}}",
+      "pentaDetail": "3.ª dosis · 6 meses",
+      "covidFirstDetail": "1.ª dosis · 6 meses",
+      "covidSecondDetail": "2.ª dosis · 7 meses",
+      "applied": "Aplicada",
+      "pending": "Pendiente",
+      "appointmentWhen": "en 2 días",
+      "overdueTitle": "VIP atrasada",
+      "overdueDetail": "Helena · 3.ª dosis · prevista a los 6 meses"
+    },
+    "schedule": {
+      "eyebrow": "Calendario de vacunación, abierto",
+      "title": "El calendario de vacunación de Brasil, en cualquier sitio",
+      "body": "Este cuadro es el widget público de Cygnus. Lee las dosis del Programa Nacional de Inmunizaciones de Brasil y funciona sin cuenta. Un centro de salud, una escuela o un blog pegan una línea de HTML y aparece en su sitio.",
+      "codeLabel": "El HTML que un sitio pega para mostrar el widget",
+      "note": "También hay una versión en iframe, para quien no quiere ejecutar scripts de terceros."
+    },
+    "features": {
+      "eyebrow": "Qué puedes hacer",
+      "title": "Todo lo que guarda la cartilla, y lo que olvida",
+      "vaccinesTitle": "Vacunas",
+      "vaccinesBody": "El calendario de Brasil, del nacimiento al VPH a los 9 años, con lo aplicado y lo atrasado.",
+      "appointmentsTitle": "Consultas",
+      "appointmentsBody": "Agenda e historial, con el peso y la altura medidos en cada visita.",
+      "growthTitle": "Crecimiento",
+      "growthBody": "Peso y altura en las curvas de percentiles de la OMS, hasta los 5 años.",
+      "milestonesTitle": "Hitos",
+      "milestonesBody": "Primera sonrisa, primeros pasos: con fecha, foto y la historia de cada uno.",
+      "medicationsTitle": "Medicamentos",
+      "medicationsBody": "Lo que toma cada niño, la dosis y desde cuándo.",
+      "familyTitle": "Familia",
+      "familyBody": "Invita a otro responsable a seguir y registrar contigo."
+    },
+    "inside": {
+      "eyebrow": "Por dentro",
+      "title": "Un proyecto de portafolio, hecho como producto",
+      "a11yTitle": "Accesibilidad como requisito del build",
+      "a11yBody": "Cada story de Storybook ejecuta axe en tema claro y oscuro, y una infracción hace fallar el CI.",
+      "contractTitle": "Contrato verificado en cada PR",
+      "contractBody": "Cada respuesta de la API pasa por Zod, y los esquemas del front se comparan con el openapi.json que publica la API.",
+      "sessionTitle": "Sesión sin token en JavaScript",
+      "sessionBody": "Cookies HttpOnly, refresh silencioso y CSRF double-submit. API en Fastify 5, Prisma 7, PostgreSQL, Redis y BullMQ.",
+      "widgetTitle": "Widget y microfrontend",
+      "widgetBody": "El calendario de arriba es un widget sin dependencias, y la app también es un remote de Module Federation que otra app React carga.",
+      "appCode": "Código de la app",
+      "apiCode": "Código de la API",
+      "designSystem": "Design system"
     }
   }
 }
