@@ -9,6 +9,27 @@
 
 @theme {
   --animate-fade-in-up: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* A dose just registered (option 38): the row flashes green once and its
+     status icon pops in as a check. */
+  --animate-flash-ok: flash-ok 0.9s ease-out;
+  --animate-pop: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+
+  @keyframes flash-ok {
+    from {
+      box-shadow: 0 0 0 0 rgb(16 185 129 / 0.55);
+    }
+    to {
+      box-shadow: 0 0 0 12px rgb(16 185 129 / 0);
+    }
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.92);
+    }
+  }
+
   /* Progress bars fill from empty when they first appear (option 36). */
   --animate-grow-x: grow-x 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s both;
 

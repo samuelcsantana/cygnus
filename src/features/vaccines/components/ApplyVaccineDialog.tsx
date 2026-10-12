@@ -22,9 +22,11 @@ interface ApplyVaccineDialogProps {
   babyId: string
   item: VaccineItem | null
   onOpenChange: (open: boolean) => void
+  /** Called once the dose is saved, before the dialog closes, so the list can mark the row. */
+  onApplied?: () => void
 }
 
-export function ApplyVaccineDialog({ babyId, item, onOpenChange }: ApplyVaccineDialogProps) {
+export function ApplyVaccineDialog({ babyId, item, onOpenChange, onApplied }: ApplyVaccineDialogProps) {
   const { t, i18n } = useTranslation()
   const babies = useBabies()
   const baby = babies.data?.find((value) => value.id === babyId)
@@ -65,6 +67,7 @@ export function ApplyVaccineDialog({ babyId, item, onOpenChange }: ApplyVaccineD
     try {
       await applyVaccine.mutateAsync({ vaccineId: item.vaccineId, input: values })
       toast.success(t('vaccines.apply.successToast'))
+      onApplied?.()
       onOpenChange(false)
     } catch {
       // surfaced below via applyVaccine.error

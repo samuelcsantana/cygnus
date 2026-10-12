@@ -57,6 +57,14 @@ export function VaccineCalendarList({
 }: VaccineCalendarListProps) {
   const { t } = useTranslation()
   const [applyTarget, setApplyTarget] = useState<VaccineItemWithBaby | null>(null)
+  // The row whose dose was just registered, marked for the second its flash
+  // takes (option 38). Until this, the dialog closed and the list was simply
+  // different, and the eye had to find what changed.
+  const [justApplied, setJustApplied] = useState<string | null>(null)
+  const markJustApplied = (key: string) => {
+    setJustApplied(key)
+    window.setTimeout(() => setJustApplied((current) => (current === key ? null : current)), 1200)
+  }
   // The child filter is the menu's, not this page's: the choice outlives the page
   // it was made on. See selectedBaby.store.ts.
   const [search, setSearch] = useState('')
@@ -126,11 +134,12 @@ export function VaccineCalendarList({
         <>
           <ul className="flex flex-col gap-2">
             {visibleItems.map((item) => (
-              <li key={`${item.babyId}-${item.vaccineId}`}>
+              <li key={rowKey(item)}>
                 <VaccineRow
                   item={item}
                   baby={babies.length > 1 ? babyById.get(item.babyId) : undefined}
                   onApply={() => setApplyTarget(item)}
+                  justApplied={justApplied === rowKey(item)}
                 />
               </li>
             ))}
@@ -143,18 +152,25 @@ export function VaccineCalendarList({
         babyId={applyTarget?.babyId ?? ''}
         item={applyTarget}
         onOpenChange={(open) => !open && setApplyTarget(null)}
+        onApplied={() => applyTarget && markJustApplied(rowKey(applyTarget))}
       />
     </div>
   )
+}
+
+function rowKey(item: VaccineItemWithBaby): string {
+  return `${item.babyId}-${item.vaccineId}`
 }
 
 interface VaccineRowProps {
   item: VaccineItemWithBaby
   baby: Baby | undefined
   onApply: () => void
+  /** The dose was registered a moment ago: flash the row, pop the new check in. */
+  justApplied?: boolean
 }
 
-function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
+function VaccineRow({ item, baby, onApply, justApplied = false }: VaccineRowProps) {
   const { t } = useTranslation()
   const avatarAppearance = baby ? babyAvatarAppearance(baby.id, baby.avatarColor) : null
   const StatusIcon = STATUS_ICON[item.status]
@@ -165,6 +181,7 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
         className={cn(
           'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px]',
           STATUS_ICON_CLASS[item.status],
+          justApplied && 'animate-pop',
         )}
       >
         <StatusIcon className="size-[18px]" />
@@ -199,7 +216,7 @@ function VaccineRow({ item, baby, onApply }: VaccineRowProps) {
   )
 
   return (
-    <article className={cn(rowClass, 'flex-col items-stretch')}>
+    <article className={cn(rowClass, 'flex-col items-stretch', justApplied && 'animate-flash-ok')}>
       <div className="flex flex-wrap items-center gap-3">{content}</div>
       <div className="flex flex-wrap items-start justify-between gap-3 border-t border-border pt-2">
         <details className="min-w-0 flex-1 text-sm text-ink-muted">
