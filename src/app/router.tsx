@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
 
 
 import { AppShellLayout } from './routes/AppShellLayout'
@@ -19,6 +19,15 @@ export const router = createBrowserRouter([
     // erro de rota é tratado pelo roteador antes de subir para o React.
     errorElement: <RouteErrorRoute />,
     children: [
+      {
+        // The landing page for a visitor, the dashboard for someone signed in
+        // (the route itself decides, without a request when there is no
+        // session — see LandingRoute). Until 2026-10 `/` belonged to the
+        // session layout and sent every visitor to /login, so nothing of the
+        // app could be seen without an account.
+        index: true,
+        lazy: () => import('@/features/landing/routes/LandingRoute').then((m) => ({ Component: m.LandingRoute })),
+      },
       {
         // Keep the shared shell mounted when switching between public routes.
         // Lazy loading keeps the photograph and auth UI out of the app entry.
@@ -65,13 +74,13 @@ export const router = createBrowserRouter([
           })),
       },
       {
-        path: '/',
+        // Pathless: `/` is the landing route above, and a layout with its own
+        // index child would match `/` a second time.
         element: <ProtectedLayout />,
         children: [
           {
             element: <AppShellLayout />,
             children: [
-              { index: true, element: <Navigate to="/dashboard" replace /> },
               {
                 path: 'dashboard',
                 lazy: () =>

@@ -18,17 +18,18 @@ const THEME_ICON: Record<ThemeMode, typeof SunIcon> = {
 
 interface ThemeToggleProps {
   /**
-   * `compact` (the default) is the header treatment: a 36px icon button that
-   * cycles the three modes, paired with LanguageSwitcher's compact variant.
-   * `field` is the settings treatment — a 44px labelled select, the same shape
-   * as LanguageSwitcher's `field`.
+   * `compact` (the default) is the header treatment on the public screens: one
+   * 36px button that flips between light and dark — a moon while the page is
+   * light, a sun while it is dark. `field` is the settings treatment — a 44px
+   * labelled select with all three modes, the same shape as LanguageSwitcher's
+   * `field`.
    *
-   * The two exist for the same reason the language control has two, and the
-   * argument is stronger here: cycling is fine in a header, where the control
-   * is an afterthought and one tap gets you somewhere. On a settings page it
-   * is the wrong affordance — the person came specifically to set this, and an
-   * icon that cycles neither shows what the options are nor what the current
-   * one means without decoding a glyph.
+   * The header used to cycle light → dark → system, showing only the icon of
+   * the current mode, so nobody could tell what the next click would do, and
+   * "system" looked exactly like a click that did nothing. Two states with the
+   * icon of the destination is the form most people already know. "System"
+   * still exists: it is the default until the first click, and the profile page
+   * offers it back, where a person goes on purpose to choose.
    */
   variant?: 'compact' | 'field'
   className?: string
@@ -36,7 +37,7 @@ interface ThemeToggleProps {
 
 export function ThemeToggle({ variant = 'compact', className }: ThemeToggleProps) {
   const { t } = useTranslation()
-  const { theme, setTheme } = useTheme()
+  const { theme, resolvedTheme, setTheme } = useTheme()
   const Icon = THEME_ICON[theme]
 
   if (variant === 'field') {
@@ -83,23 +84,25 @@ export function ThemeToggle({ variant = 'compact', className }: ThemeToggleProps
     )
   }
 
-  const handleClick = () => {
-    const nextIndex = (THEME_ORDER.indexOf(theme) + 1) % THEME_ORDER.length
-    setTheme(THEME_ORDER[nextIndex]!)
-  }
+  // Driven by what is on screen, not by the stored mode: under "system" the
+  // page is still light or dark, and the button has to offer the other one.
+  const isDark = resolvedTheme === 'dark'
+  const DestinationIcon = isDark ? SunIcon : MoonIcon
+  const label = t(isDark ? 'common.theme.switchToLight' : 'common.theme.switchToDark')
 
   return (
     <button
       type="button"
-      onClick={handleClick}
-      aria-label={t('common.theme.switchAria', { current: t(`common.theme.${theme}`) })}
-      title={t(`common.theme.${theme}`)}
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      aria-label={label}
+      title={label}
       className={cn(
-        'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-ink-faint transition-colors hover:bg-muted hover:text-ink',
+        'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-muted hover:text-ink',
+        'focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none',
         className,
       )}
     >
-      <Icon className="h-4 w-4" />
+      <DestinationIcon className="h-4 w-4" />
     </button>
   )
 }

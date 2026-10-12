@@ -3,7 +3,7 @@ import { useRouteError } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { useOnlineStatus } from '@/hooks/useOnlineStatus'
-import { LogoIcon } from '@/shared/icons/logo-icon'
+import { BrandMark } from '@/shared/components/BrandMark'
 
 /**
  * Detecta a falha de import dinâmico de um chunk de rota.
@@ -49,9 +49,7 @@ export function RouteErrorRoute() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-8 text-center">
-      <div className="bg-primary/10 text-primary mb-2 inline-flex h-16 w-16 items-center justify-center rounded-2xl">
-        <LogoIcon className="h-8 w-8" />
-      </div>
+      <BrandMark className="mb-2 size-16" />
       <h1 className="text-2xl font-bold text-ink">
         {t(`errors.${chave}.title`)}
       </h1>

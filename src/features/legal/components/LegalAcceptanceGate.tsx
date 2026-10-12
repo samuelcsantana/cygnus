@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import type { ReactNode } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { LogoIcon } from '@/shared/icons/logo-icon'
+import { BrandMark } from '@/shared/components/BrandMark'
 
 import { documentsAwaitingAcceptance, useLegalAcceptances, useRecordLegalAcceptance } from '../api/legal.hooks'
 
@@ -26,9 +26,7 @@ export function LegalAcceptanceGate({ children }: { children: ReactNode }) {
   return (
     <main className="bg-surface flex min-h-dvh flex-col items-center justify-center px-5 py-10">
       <div className="bg-card border-border/70 w-full max-w-lg rounded-3xl border p-8 shadow-xl">
-        <span className="bg-primary text-primary-foreground flex h-11 w-11 items-center justify-center rounded-xl">
-          <LogoIcon className="h-6 w-6" />
-        </span>
+        <BrandMark className="size-11" />
 
         <h1 className="font-display text-ink mt-6 text-2xl font-extrabold">{t('legal.gate.title')}</h1>
         <p className="text-ink-muted mt-2 text-sm leading-relaxed">{t('legal.gate.description')}</p>

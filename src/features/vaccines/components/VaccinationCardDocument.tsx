@@ -37,7 +37,7 @@ export function VaccinationCardDocument({
   return (
     <article className="vaccination-document overflow-hidden rounded-3xl border border-border bg-card shadow-sm print:overflow-visible print:rounded-none print:border-0 print:shadow-none">
       <header className="border-b border-border bg-primary/5 p-5 sm:p-8 print:bg-white print:p-0 print:pb-5">
-        <p className="mb-3 text-sm font-semibold text-primary">Ninho</p>
+        <p className="mb-3 text-sm font-semibold text-primary">{t('common.appName')}</p>
         <h1 className="font-display text-2xl font-black text-ink sm:text-3xl">
           {t('vaccines.card.title')}
         </h1>
