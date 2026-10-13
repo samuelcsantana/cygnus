@@ -218,7 +218,8 @@ of endpoints, and axe does not replace a manual accessibility review.
 
 The [coverage report](https://samuelcsantana.github.io/cygnus/coverage/) counts every TypeScript
 module in `src/`, `embed/` and `mf/`, imported by a test or not, and excludes declarations, tests,
-stories and test infrastructure. Storybook and E2E runs do not add to it. No minimum is enforced.
+stories and test infrastructure. Storybook and E2E runs do not add to it. CI fails below a floor set
+in `vitest.config.ts`: 89% of lines, 87% of statements, 83% of functions and 80% of branches.
 
 ## Project layout
 

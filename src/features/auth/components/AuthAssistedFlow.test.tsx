@@ -1,7 +1,8 @@
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
-import { MemoryRouter } from 'react-router-dom'
-import { describe, expect, it } from 'vitest'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { toast } from 'sonner'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
 import { server } from '@/test/msw/server'
@@ -75,5 +76,93 @@ describe('AuthAssistedFlow error mapping', () => {
     await waitFor(() => {
       expect(screen.getByText('Não foi possível continuar. Tente novamente.')).toBeInTheDocument()
     })
+  })
+})
+
+const resetRequestUrl = `${config.apiBaseUrl}/auth/password-reset/request`
+const resetVerifyUrl = `${config.apiBaseUrl}/auth/password-reset/verify`
+
+function renderReset(onExit: (email: string) => void = () => {}) {
+  return renderWithProviders(
+    <MemoryRouter initialEntries={['/login']}>
+      <Routes>
+        <Route path="/login" element={<AuthAssistedFlow mode="reset" initialEmail="" onExit={onExit} />} />
+        <Route path="/dashboard" element={<p>Painel</p>} />
+      </Routes>
+    </MemoryRouter>,
+  )
+}
+
+describe('AuthAssistedFlow password reset', () => {
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.restoreAllMocks()
+  })
+
+  // The code and the new password travel in one request, so the code step only collects the code
+  // and the password step sends both. Sending the code alone would spend it with no password set.
+  it('collects the code, then the new password, and sends them together before signing in', async () => {
+    let sent: unknown
+    server.use(
+      http.post(resetRequestUrl, () => HttpResponse.json({ status: 'ok', message: 'sent' })),
+      http.post(resetVerifyUrl, async ({ request }) => {
+        sent = await request.json()
+        return HttpResponse.json({ status: 'ok', message: 'reset' })
+      }),
+    )
+    const user = userEvent.setup()
+    renderReset()
+
+    await submitEmail(user)
+    await user.type(await screen.findByLabelText('Código de 6 dígitos'), '482913')
+    await user.click(screen.getByRole('button', { name: 'Confirmar' }))
+    expect(sent).toBeUndefined()
+
+    await user.type(await screen.findByLabelText('Nova senha'), 'An0ther-Password')
+    await user.type(screen.getByLabelText('Confirme a nova senha'), 'An0ther-Password')
+    await user.click(screen.getByRole('button', { name: 'Salvar e entrar' }))
+
+    expect(await screen.findByText('Painel')).toBeInTheDocument()
+    expect(sent).toEqual({ email: 'parent@example.com', code: '482913', password: 'An0ther-Password' })
+  })
+
+  it('offers another code only after the cooldown, and says one was sent', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    const info = vi.spyOn(toast, 'info')
+    let requests = 0
+    server.use(http.post(resetRequestUrl, () => { requests += 1; return HttpResponse.json({ status: 'ok', message: 'sent' }) }))
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
+    renderReset()
+
+    await submitEmail(user)
+    expect(await screen.findByRole('button', { name: /Reenviar em \d+s/ })).toBeDisabled()
+
+    await vi.advanceTimersByTimeAsync(60_000)
+    await user.click(await screen.findByRole('button', { name: 'Reenviar código' }))
+
+    await waitFor(() => expect(info).toHaveBeenCalledWith('Enviamos outro código.'))
+    expect(requests).toBe(2)
+  })
+
+  // The URL does not change between steps, so the browser's back button would leave the site; the
+  // flow's own "Voltar" steps back one screen at a time and, from the first, hands the e-mail back.
+  it('steps back one screen at a time, and leaves with the e-mail already typed', async () => {
+    server.use(http.post(resetRequestUrl, () => HttpResponse.json({ status: 'ok', message: 'sent' })))
+    const onExit = vi.fn()
+    const user = userEvent.setup()
+    renderReset(onExit)
+
+    await submitEmail(user)
+    await user.type(await screen.findByLabelText('Código de 6 dígitos'), '482913')
+    await user.click(screen.getByRole('button', { name: 'Confirmar' }))
+    await screen.findByLabelText('Nova senha')
+
+    await user.click(screen.getByRole('button', { name: 'Voltar' }))
+    expect(await screen.findByLabelText('Código de 6 dígitos')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Voltar' }))
+    expect(await screen.findByLabelText('E-mail')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Voltar' }))
+
+    expect(onExit).toHaveBeenCalledWith('parent@example.com')
   })
 })

@@ -28,6 +28,11 @@ export default mergeConfig(
           '**/__tests__/**',
           'src/test/**',
         ],
+        // A floor, one point under what the suite measured when it was set (lines 90.2, statements
+        // 88.5, functions 84.2, branches 81.2), so a change that drops coverage fails CI. The gap is
+        // mostly design-system primitives the app does not use yet (their stories test them in
+        // Storybook, which this report does not count) and branches of conditional rendering.
+        thresholds: { lines: 89, statements: 87, functions: 83, branches: 80 },
       },
       // e2e/ holds Playwright specs (a different test runner, real browser,
       // no jsdom) — Vitest's default glob would otherwise also pick them up.

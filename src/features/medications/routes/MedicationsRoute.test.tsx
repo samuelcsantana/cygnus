@@ -1,11 +1,13 @@
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { toast } from 'sonner'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
 import { buildBaby } from '@/test/fixtures/baby'
 import { server } from '@/test/msw/server'
-import { renderWithProviders, screen, waitFor } from '@/test/test-utils'
+import { renderWithProviders, screen, waitFor, within } from '@/test/test-utils'
 
 import { MedicationsRoute } from './MedicationsRoute'
 
@@ -148,5 +150,80 @@ describe('MedicationsRoute', () => {
       expect(screen.getByText('Encerrado')).toBeInTheDocument()
     })
     expect(screen.queryByRole('button', { name: 'Registrar término' })).not.toBeInTheDocument()
+  })
+})
+
+describe('MedicationsRoute, editing and failures', () => {
+  const medicationsUrl = `${config.apiBaseUrl}/babies/:babyId/medications`
+
+  afterEach(() => vi.restoreAllMocks())
+
+  it('opens the editor already filled for the course chosen', async () => {
+    server.use(http.get(medicationsUrl, () => HttpResponse.json([medication()])))
+    const user = userEvent.setup()
+    renderWithProviders(<MedicationsRoute />)
+
+    await user.click(await screen.findByRole('button', { name: 'Editar' }))
+
+    const dialog = await screen.findByRole('dialog')
+    expect(within(dialog).getByText('Editar Medicamento')).toBeInTheDocument()
+    expect(within(dialog).getByDisplayValue('Vitamina D')).toBeInTheDocument()
+  })
+
+  it('opens an empty form to record a new course', async () => {
+    server.use(http.get(medicationsUrl, () => HttpResponse.json([medication()])))
+    const user = userEvent.setup()
+    renderWithProviders(<MedicationsRoute />)
+
+    await user.click(await screen.findByRole('button', { name: 'Registrar Medicamento' }))
+
+    expect(await screen.findByRole('dialog')).toBeInTheDocument()
+  })
+
+  // The confirmation stays open on failure: closing it would look exactly like success.
+  it('keeps the course open and says so when ending it fails', async () => {
+    const error = vi.spyOn(toast, 'error')
+    server.use(
+      http.get(medicationsUrl, () => HttpResponse.json([medication()])),
+      http.patch(`${medicationsUrl}/:medicationId`, () => HttpResponse.json({ status: 'error' }, { status: 500 })),
+    )
+    const user = userEvent.setup()
+    renderWithProviders(<MedicationsRoute />)
+
+    await user.click(await screen.findByRole('button', { name: 'Registrar término' }))
+    await user.click(screen.getByRole('button', { name: 'Confirmar término hoje' }))
+
+    await waitFor(() => expect(error).toHaveBeenCalledWith('Não foi possível salvar. Tente de novo.'))
+    expect(screen.getByRole('alertdialog')).toBeInTheDocument()
+  })
+
+  it("names the child whose medications did not load, and loads them on retry", async () => {
+    let fail = true
+    server.use(
+      http.get(medicationsUrl, () => (fail ? HttpResponse.json({ status: 'error' }, { status: 500 }) : HttpResponse.json([medication()]))),
+    )
+    const user = userEvent.setup()
+    renderWithProviders(<MedicationsRoute />)
+
+    const alert = await screen.findByRole('alert')
+    expect(alert).toHaveTextContent('Não foi possível carregar os medicamentos. Elis')
+    fail = false
+    await user.click(within(alert).getByRole('button'))
+
+    expect(await screen.findByText('Vitamina D')).toBeInTheDocument()
+  })
+
+  it('sends a family with no child yet to the dashboard, where a child is added', async () => {
+    server.use(http.get(`${config.apiBaseUrl}/babies`, () => HttpResponse.json([])))
+    renderWithProviders(
+      <MemoryRouter initialEntries={['/medications']}>
+        <Routes>
+          <Route path="/medications" element={<MedicationsRoute />} />
+          <Route path="/dashboard" element={<p>Painel</p>} />
+        </Routes>
+      </MemoryRouter>,
+    )
+
+    expect(await screen.findByText('Painel')).toBeInTheDocument()
   })
 })

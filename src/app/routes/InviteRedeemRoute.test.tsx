@@ -2,9 +2,12 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { render } from '@testing-library/react'
 import { HttpResponse, http } from 'msw'
 import { I18nextProvider } from 'react-i18next'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import userEvent from '@testing-library/user-event'
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { toast } from 'sonner'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { currentUserQueryKey } from '@/features/auth/api/auth.hooks'
 import { config } from '@/lib/config'
 import i18n from '@/lib/i18n'
 import { queryClient, setUnauthorizedHandler } from '@/lib/query-client'
@@ -41,6 +44,7 @@ function renderWithRealClient() {
 }
 
 afterEach(() => {
+  vi.restoreAllMocks()
   // O cliente é compartilhado entre os testes deste arquivo: sem isso o
   // `/auth/me` de um teste fica em cache e o seguinte nunca chega a falhar.
   queryClient.clear()
@@ -109,5 +113,87 @@ describe('InviteRedeemRoute para visitante deslogado', () => {
       .catch(() => null)
 
     expect(onUnauthorized).toHaveBeenCalled()
+  })
+})
+
+function LocationProbe() {
+  const location = useLocation()
+  return <p data-testid="location">{`${location.pathname}${location.search}`}</p>
+}
+
+function renderWithDestinations() {
+  void i18n.changeLanguage('pt-BR')
+  return render(
+    <I18nextProvider i18n={i18n}>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={[`/invites/${CODE}`]}>
+          <Routes>
+            <Route path="/invites/:code" element={<InviteRedeemRoute />} />
+            <Route path="/login" element={<LocationProbe />} />
+            <Route path="/dashboard" element={<LocationProbe />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>
+    </I18nextProvider>,
+  )
+}
+
+const previewOfAna = () =>
+  http.get(`${config.apiBaseUrl}/invites/${CODE}`, () =>
+    HttpResponse.json({ babyName: 'Ana', babyAvatarUrl: null, expired: false, alreadyUsed: false }),
+  )
+
+// The accept button acts on whether /auth/me has answered, so each test waits for that answer
+// before clicking, as a person reading the invite would.
+async function acceptOnceTheSessionIsKnown(status: 'success' | 'error') {
+  await waitFor(() => expect(queryClient.getQueryState(currentUserQueryKey)?.status).toBe(status))
+  await userEvent.setup().click(await screen.findByRole('button', { name: 'Aceitar convite' }))
+}
+
+describe('accepting an invite', () => {
+  it('sends a visitor without a session to sign in, with the way back to this invite', async () => {
+    server.use(
+      http.get(`${config.apiBaseUrl}/auth/me`, () => HttpResponse.json({ status: 'error' }, { status: 401 })),
+      previewOfAna(),
+    )
+    renderWithDestinations()
+
+    await acceptOnceTheSessionIsKnown('error')
+
+    expect(await screen.findByTestId('location')).toHaveTextContent(`/login?redirectTo=${encodeURIComponent(`/invites/${CODE}`)}`)
+  })
+
+  it('makes a signed-in parent a guardian, says so, and opens the dashboard', async () => {
+    const success = vi.spyOn(toast, 'success')
+    server.use(
+      previewOfAna(),
+      http.post(`${config.apiBaseUrl}/invites/${CODE}/redeem`, () =>
+        HttpResponse.json({ babyId: '11111111-1111-4111-8111-111111111111', babyName: 'Ana' }),
+      ),
+    )
+    renderWithDestinations()
+
+    await acceptOnceTheSessionIsKnown('success')
+
+    expect(await screen.findByTestId('location')).toHaveTextContent('/dashboard')
+    expect(success).toHaveBeenCalledWith('Você agora ajuda a cuidar de Ana!')
+  })
+
+  it.each([
+    [409, 'Você já é responsável por este perfil.'],
+    [410, 'Este convite expirou ou já foi usado.'],
+    [500, 'Não foi possível aceitar o convite. Tente novamente.'],
+  ])('explains a %i from the server and stays on the invite', async (status, message) => {
+    const error = vi.spyOn(toast, 'error')
+    server.use(
+      previewOfAna(),
+      http.post(`${config.apiBaseUrl}/invites/${CODE}/redeem`, () => HttpResponse.json({ status: 'error' }, { status })),
+    )
+    renderWithDestinations()
+
+    await acceptOnceTheSessionIsKnown('success')
+
+    await waitFor(() => expect(error).toHaveBeenCalledWith(message))
+    expect(screen.queryByTestId('location')).not.toBeInTheDocument()
   })
 })

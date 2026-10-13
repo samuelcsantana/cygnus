@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
-import { describe, expect, it, vi } from 'vitest'
+import { toast } from 'sonner'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
 import { buildAppointment } from '@/test/fixtures/appointment'
@@ -152,4 +153,85 @@ it('does not offer measurements for a cancelled appointment and shows its contex
   expect(screen.queryByLabelText(/Altura/)).not.toBeInTheDocument()
   expect(screen.getByText('Clínica Central')).toBeVisible()
   expect(screen.getByText('Checkup')).toBeVisible()
+})
+
+describe('saving what happened at a visit', () => {
+  const patchUrl = `${config.apiBaseUrl}/babies/:babyId/appointments/:appointmentId`
+
+  afterEach(() => vi.restoreAllMocks())
+
+  function capturePatch() {
+    const bodies: Record<string, unknown>[] = []
+    server.use(
+      http.patch(patchUrl, async ({ request }) => {
+        const body = (await request.json()) as Record<string, unknown>
+        bodies.push(body)
+        return HttpResponse.json({ ...sampleAppointment, status: 'COMPLETED', ...body })
+      }),
+    )
+    return bodies
+  }
+
+  // The form speaks kilograms and centimetres with a decimal comma; the API stores grams and
+  // millimetres as integers, the raw material of a growth curve.
+  it('saves the notes and the measurements of a visit that happened, in grams and millimetres', async () => {
+    const bodies = capturePatch()
+    const success = vi.spyOn(toast, 'success')
+    const user = userEvent.setup()
+    renderWithProviders(<AppointmentDetailDialog appointment={{ ...sampleAppointment, status: 'COMPLETED' }} onOpenChange={vi.fn()} />)
+
+    await user.type(screen.getByLabelText('Anotações'), 'Tudo bem, volta em 2 meses')
+    await user.type(screen.getByLabelText('Peso (kg)'), '7,3')
+    await user.type(screen.getByLabelText('Altura (cm)'), '65,7')
+    await user.click(screen.getByRole('button', { name: 'Salvar Anotações' }))
+
+    await waitFor(() => expect(success).toHaveBeenCalledWith('Anotações salvas.'))
+    expect(bodies).toEqual([{ notes: 'Tudo bem, volta em 2 meses', weightGrams: 7300, heightMillimeters: 657 }])
+  })
+
+  // Emptying a field is a correction and goes as null; leaving it out would mean "unchanged".
+  it('sends null for a measurement that was cleared', async () => {
+    const bodies = capturePatch()
+    const user = userEvent.setup()
+    renderWithProviders(
+      <AppointmentDetailDialog
+        appointment={{ ...sampleAppointment, status: 'COMPLETED', weightGrams: 7300, heightMillimeters: 657 }}
+        onOpenChange={vi.fn()}
+      />,
+    )
+
+    await user.clear(screen.getByLabelText('Peso (kg)'))
+    await user.click(screen.getByRole('button', { name: 'Salvar Anotações' }))
+
+    await waitFor(() => expect(bodies).toHaveLength(1))
+    expect(bodies[0]).toMatchObject({ weightGrams: null, heightMillimeters: 657 })
+  })
+
+  it('refuses a weight outside 0.1 to 150 kg without sending anything', async () => {
+    const bodies = capturePatch()
+    const user = userEvent.setup()
+    renderWithProviders(<AppointmentDetailDialog appointment={{ ...sampleAppointment, status: 'COMPLETED' }} onOpenChange={vi.fn()} />)
+
+    await user.type(screen.getByLabelText('Peso (kg)'), '200')
+    await user.click(screen.getByRole('button', { name: 'Salvar Anotações' }))
+
+    expect(screen.getByText('Informe um peso entre 0,1 e 150 kg.')).toBeInTheDocument()
+    expect(screen.getByLabelText('Peso (kg)')).toHaveAttribute('aria-invalid', 'true')
+    expect(bodies).toEqual([])
+  })
+
+  it('marks a scheduled visit as completed, keeps the notes typed, and closes', async () => {
+    const bodies = capturePatch()
+    const success = vi.spyOn(toast, 'success')
+    const onOpenChange = vi.fn()
+    const user = userEvent.setup()
+    renderWithProviders(<AppointmentDetailDialog appointment={sampleAppointment} onOpenChange={onOpenChange} />)
+
+    await user.type(screen.getByLabelText('Anotações'), 'Vacinas em dia')
+    await user.click(screen.getByRole('button', { name: 'Marcar como Concluída' }))
+
+    await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
+    expect(bodies).toEqual([{ status: 'COMPLETED', notes: 'Vacinas em dia' }])
+    expect(success).toHaveBeenCalledWith('Consulta marcada como concluída.')
+  })
 })

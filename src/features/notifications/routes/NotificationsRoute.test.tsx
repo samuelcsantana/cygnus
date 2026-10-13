@@ -128,3 +128,45 @@ it('offers retry when loading fails instead of showing an empty state', async ()
   expect(screen.getByRole('button', { name: 'Tentar novamente' })).toBeVisible()
   expect(screen.queryByText('Tudo em dia por aqui')).not.toBeInTheDocument()
 })
+
+it('marks a single notification read from its own button', async () => {
+  const requests = setup()
+  const user = userEvent.setup()
+  await screen.findByText('Consulta da Ana')
+
+  await user.click(screen.getAllByRole('button', { name: 'Marcar como lida' })[0]!)
+
+  expect(await screen.findByText('Notificação marcada como lida.')).toBeInTheDocument()
+  expect(requests).toEqual([first.id])
+})
+
+// The updates go one at a time to stay under the API's rate limit. Once it answers 429, every
+// request after it would be refused too, so the loop stops and reports the rest as not marked.
+it('stops at the rate limit instead of sending the rest, and counts them as not marked', async () => {
+  setup()
+  const requests: string[] = []
+  server.use(
+    http.patch(`${config.apiBaseUrl}/notifications/:id/read`, ({ params }) => {
+      requests.push(String(params.id))
+      return HttpResponse.json({ status: 'error' }, { status: 429 })
+    }),
+  )
+  const user = userEvent.setup()
+  await screen.findByText('Consulta da Ana')
+
+  await user.click(screen.getByRole('button', { name: 'Marcar todas desta lista como lidas' }))
+
+  expect(await screen.findByRole('alert')).toHaveTextContent('Não foi possível marcar 2 notificações')
+  expect(requests).toHaveLength(1)
+})
+
+it('reports every selected notification as not marked when the session ends midway', async () => {
+  setup()
+  server.use(http.patch(`${config.apiBaseUrl}/notifications/:id/read`, () => HttpResponse.json({ status: 'error' }, { status: 401 })))
+  const user = userEvent.setup()
+  await screen.findByText('Consulta da Ana')
+
+  await user.click(screen.getByRole('button', { name: 'Marcar todas desta lista como lidas' }))
+
+  expect(await screen.findByRole('alert')).toHaveTextContent('Não foi possível marcar 2 notificações')
+})

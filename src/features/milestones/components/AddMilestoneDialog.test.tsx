@@ -1,11 +1,11 @@
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { config } from '@/lib/config'
 import { server } from '@/test/msw/server'
 import { buildBaby } from '@/test/fixtures/baby'
-import { fireEvent, renderWithProviders, screen, waitFor } from '@/test/test-utils'
+import { fireEvent, renderWithProviders, screen, waitFor, within } from '@/test/test-utils'
 
 import { AddMilestoneDialog } from './AddMilestoneDialog'
 
@@ -174,5 +174,113 @@ describe('AddMilestoneDialog', () => {
     expect(
       screen.getAllByRole('radio').every((radio) => radio.getAttribute('aria-checked') === 'false'),
     ).toBe(true)
+  })
+})
+
+describe('AddMilestoneDialog suggestions and photo', () => {
+  const created = {
+    id: '22222222-2222-4222-8222-222222222222',
+    babyId,
+    title: 'Primeiro sorriso',
+    description: null,
+    achievedAt: '2024-06-01',
+    category: 'SOCIAL',
+    photoUrl: 'https://cygnus.example/uploads/smile.png',
+    createdAt: '2024-06-01T00:00:00.000Z',
+  }
+
+  afterEach(() => vi.restoreAllMocks())
+
+  async function fillCoreAndContinue(user: ReturnType<typeof userEvent.setup>) {
+    await user.click(await screen.findByRole('button', { name: 'Primeiro sorriso' }))
+    fireEvent.change(screen.getByLabelText('Data'), { target: { value: '2024-06-01' } })
+    await user.click(screen.getByRole('button', { name: 'Continuar' }))
+    await screen.findByRole('button', { name: 'Guardar lembrança' })
+  }
+
+  it('fills an empty title and its category from a suggestion at once', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<AddMilestoneDialog open onOpenChange={vi.fn()} />)
+
+    await user.click(await screen.findByRole('button', { name: 'Primeira palavra' }))
+
+    expect(screen.getByLabelText('O que aconteceu?')).toHaveValue('Primeira palavra')
+    expect(screen.getAllByRole('radio', { name: /Linguagem/ })[0]).toBeChecked()
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+  })
+
+  // A parent who already wrote their own title should not lose it to a stray tap on an idea.
+  it('asks before a suggestion replaces a title already typed, and keeps it on cancel', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<AddMilestoneDialog open onOpenChange={vi.fn()} />)
+    const title = await screen.findByLabelText('O que aconteceu?')
+
+    await user.type(title, 'Riu do cachorro')
+    await user.click(screen.getByRole('button', { name: 'Primeiro sorriso' }))
+    await user.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Cancelar' }))
+    expect(title).toHaveValue('Riu do cachorro')
+
+    await user.click(screen.getByRole('button', { name: 'Primeiro sorriso' }))
+    await user.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Usar ideia' }))
+    expect(title).toHaveValue('Primeiro sorriso')
+  })
+
+  it('says the photo could not be sent, and saves nothing', async () => {
+    vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:preview')
+    vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {})
+    let posts = 0
+    server.use(
+      http.post(`${config.apiBaseUrl}/uploads/milestone-photos`, () => HttpResponse.json({ status: 'error' }, { status: 500 })),
+      http.post(`${config.apiBaseUrl}/babies/:babyId/milestones`, () => {
+        posts += 1
+        return HttpResponse.json(created, { status: 201 })
+      }),
+    )
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(<AddMilestoneDialog open onOpenChange={vi.fn()} />)
+
+    await fillCoreAndContinue(user)
+    fireEvent.change(container.ownerDocument.querySelector('input[type="file"]')!, {
+      target: { files: [new File(['photo'], 'smile.png', { type: 'image/png' })] },
+    })
+    await user.click(screen.getByRole('button', { name: 'Guardar lembrança' }))
+
+    expect(await screen.findByText('Não foi possível enviar a foto. Tente novamente.')).toBeInTheDocument()
+    expect(posts).toBe(0)
+  })
+
+  // When the photo went up but the milestone did not save, trying again must not upload the same
+  // photo a second time: the first upload's address is reused.
+  it('reuses a photo already uploaded when saving is retried', async () => {
+    vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:preview')
+    vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {})
+    let uploads = 0
+    let posts = 0
+    server.use(
+      http.post(`${config.apiBaseUrl}/uploads/milestone-photos`, () => {
+        uploads += 1
+        return HttpResponse.json({ url: created.photoUrl }, { status: 201 })
+      }),
+      http.post(`${config.apiBaseUrl}/babies/:babyId/milestones`, () => {
+        posts += 1
+        return posts === 1 ? HttpResponse.json({ status: 'error' }, { status: 500 }) : HttpResponse.json(created, { status: 201 })
+      }),
+    )
+    const onOpenChange = vi.fn()
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(<AddMilestoneDialog open onOpenChange={onOpenChange} />)
+
+    await fillCoreAndContinue(user)
+    fireEvent.change(container.ownerDocument.querySelector('input[type="file"]')!, {
+      target: { files: [new File(['photo'], 'smile.png', { type: 'image/png' })] },
+    })
+    await user.click(screen.getByRole('button', { name: 'Guardar lembrança' }))
+    expect(await screen.findByRole('alert')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Guardar lembrança' }))
+
+    await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
+    expect(uploads).toBe(1)
+    expect(posts).toBe(2)
   })
 })
