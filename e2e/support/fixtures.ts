@@ -16,6 +16,9 @@ export function uniqueTestUser(label: string): TestUser {
   }
 }
 
+// Sign-up and sign-in each hash a password with bcrypt in the API container.
+const AUTH_RESPONSE_TIMEOUT = 20_000
+
 /**
  * POST /auth/register never authenticates the user — it creates the account
  * and returns no session — so this always goes through both screens: register, then
@@ -31,13 +34,16 @@ export async function registerAndLogin(page: Page, user: TestUser): Promise<void
   await page.getByLabel('Senha', { exact: true }).fill(user.password)
   await page.getByRole('button', { name: 'Criar conta gratuitamente' }).click()
 
-  await expect(page).toHaveURL(/\/login$/)
+  // Sign-up and sign-in each run bcrypt in the API container, and a full parallel run keeps every
+  // core busy: on 2026-10-13 sign-up answered in 0.6 s at the median and 7.8 s at worst, past the
+  // 5 s default. The wait is for the server, not for the page, so it gets its own budget.
+  await expect(page).toHaveURL(/\/login$/, { timeout: AUTH_RESPONSE_TIMEOUT })
 
   await page.getByLabel('E-mail').fill(user.email)
   await page.getByLabel('Senha', { exact: true }).fill(user.password)
   await page.getByRole('button', { name: 'Entrar na Conta' }).click()
 
-  await expect(page).toHaveURL(/\/dashboard$/)
+  await expect(page).toHaveURL(/\/dashboard$/, { timeout: AUTH_RESPONSE_TIMEOUT })
   await expect(page.getByRole('heading', { name: 'Antes de continuar' })).toBeVisible()
   await page.getByRole('button', { name: 'Aceitar termos e confirmar ciência' }).click()
   await expect(page.getByRole('heading', { name: 'Antes de continuar' })).toHaveCount(0)
