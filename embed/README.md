@@ -26,7 +26,7 @@ the host's CSS cannot reach in and the widget's cannot leak out. The choice is a
 | JavaScript isolation | none — runs on the host's origin, with access to its DOM | full — separate origin and JS context |
 | Trust required from the host | the host is trusting this code | none |
 | Layout | reflows with the host for free | host must size the frame; the frame reports its height by `postMessage` |
-| Cost | one ~2.7 kB gzip request | a second document |
+| Cost | one ~2.8 kB gzip request | a second document |
 
 **Pick the iframe if you do not control the widget's source.** Pick the script tag if you do, and
 want it to lay out like the rest of the page.
