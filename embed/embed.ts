@@ -68,6 +68,9 @@ function autoMount(): void {
   const element = document.createElement(ELEMENT_NAME);
   if (script?.dataset.apiOrigin) element.setAttribute('api-origin', script.dataset.apiOrigin);
   if (script?.dataset.limit) element.setAttribute('limit', script.dataset.limit);
+  // Read by the stylesheet alone (`:host([theme])`), so the element needs no code for it, and a host
+  // that changes the attribute later restyles the widget without re-rendering it.
+  if (script?.dataset.theme) element.setAttribute('theme', script.dataset.theme);
 
   container.appendChild(element);
 }
