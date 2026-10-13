@@ -15,8 +15,13 @@ const apiOrigin = params.get('apiOrigin') ?? import.meta.env.VITE_API_BASE_URL ?
 const limit = Number.parseInt(params.get('limit') ?? '', 10);
 
 const mount = document.getElementById('root');
+const theme = params.get('theme');
 
 if (mount) {
+  // `?theme=light|dark` pins the palette; without it the frame follows the visitor's OS, as the
+  // script-tag variant does. The stylesheet reads the attribute from the shadow host, which here is
+  // the mount.
+  if (theme) mount.setAttribute('theme', theme);
   const widget = new VaccineScheduleWidget(mount, {
     apiOrigin,
     limit: Number.isNaN(limit) ? undefined : limit,

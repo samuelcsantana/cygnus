@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { useTheme } from '@/hooks/useTheme'
 import { config } from '@/lib/config'
 
 declare module 'react' {
@@ -9,6 +10,7 @@ declare module 'react' {
       'cygnus-vaccine-schedule': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement> & {
         limit?: number
         'api-origin'?: string
+        theme?: 'light' | 'dark'
       }
     }
   }
@@ -45,12 +47,16 @@ interface ScheduleWidgetShowcaseProps {
  *   already on the app, so the link goes to sign-up.
  * - **The API origin.** The widget defaults to production; the app passes its
  *   own (`/api` behind the Vercel rewrite, `localhost:3005` locally).
+ * - **The theme.** Left alone, the widget follows the OS, and the page has a
+ *   theme switch of its own: light page, dark-mode OS, dark card. It gets the
+ *   theme on screen, and flips with the switch without re-rendering.
  *
  * The request also wakes the free Render instance while the visitor is still
  * reading, which the sign-in a minute later benefits from.
  */
 export function ScheduleWidgetShowcase({ scriptSrc = EMBED_SCRIPT_SRC }: ScheduleWidgetShowcaseProps) {
   const navigate = useNavigate()
+  const { resolvedTheme } = useTheme()
   const elementRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -74,5 +80,5 @@ export function ScheduleWidgetShowcase({ scriptSrc = EMBED_SCRIPT_SRC }: Schedul
     return () => element.removeEventListener(NAVIGATE_EVENT, goToSignUp)
   }, [navigate])
 
-  return <cygnus-vaccine-schedule ref={elementRef} limit={8} api-origin={config.apiBaseUrl} />
+  return <cygnus-vaccine-schedule ref={elementRef} limit={8} api-origin={config.apiBaseUrl} theme={resolvedTheme} />
 }

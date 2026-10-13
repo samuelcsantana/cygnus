@@ -8,8 +8,8 @@ this project does not control. Two distribution variants, one widget.
 <div id="vacinas"></div>
 <script src="https://cygnus.samuelsantana.dev/embed/embed.js" data-target="#vacinas" defer></script>
 
-<!-- or the element directly -->
-<cygnus-vaccine-schedule limit="6"></cygnus-vaccine-schedule>
+<!-- or the element directly; theme="light" | "dark" pins the palette (default: the visitor's OS) -->
+<cygnus-vaccine-schedule limit="6" theme="light"></cygnus-vaccine-schedule>
 
 <!-- iframe: isolates the host from this code entirely -->
 <iframe src="https://cygnus.samuelsantana.dev/embed/iframe.html?limit=6"
@@ -85,9 +85,13 @@ only be excluded from it. `frame-ancestors *` in the CSP is what expresses "anyo
 here because the widget shows public policy data and holds no session: there is nothing for a
 hostile framer to obtain.
 
-**No theming yet.** It follows `prefers-color-scheme` and nothing else. A host wanting brand colors
-has no supported way to ask, and adding one means CSS custom properties pierced through the shadow
-boundary — deliberate, on a version bump, not by loosening isolation.
+**Light or dark, and nothing else.** Without a choice it follows the visitor's
+`prefers-color-scheme`. That is the OS setting, not the page's: a light page seen from a dark-mode
+OS got a dark widget, so a host with its own theme can pin one, with `theme="light"` or
+`theme="dark"` on the element, `data-theme` on the script tag, or `?theme=` on the iframe. The
+attribute is read by the widget's stylesheet alone, so changing it later restyles the widget in
+place. Anything else (brand colours) still has no supported way in: it would mean custom
+properties pierced through the shadow boundary, deliberately, not by loosening isolation.
 
 ## Build
 

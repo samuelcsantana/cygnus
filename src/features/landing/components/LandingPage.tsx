@@ -8,11 +8,9 @@ import { cn } from '@/lib/utils'
 import { ServerWakingNotice } from '@/shared/components/ServerWakingNotice'
 import { PlayIcon } from '@/shared/icons/play-icon'
 import { SpinnerIcon } from '@/shared/icons/spinner-icon'
-import { BrandSignature } from '@/shared/components/BrandSignature'
-import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { PortfolioStrip } from '@/shared/components/PortfolioStrip'
 import { ProductPreviewCard } from '@/shared/components/ProductPreviewCard'
-import { ThemeToggle } from '@/shared/components/ThemeToggle'
+import { PublicHeaderBar } from '@/shared/components/PublicHeaderBar'
 import { BookIcon } from '@/shared/icons/book-icon'
 import { CheckIcon } from '@/shared/icons/check-icon'
 import { CodeIcon } from '@/shared/icons/code-icon'
@@ -24,11 +22,11 @@ import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { UsersIcon } from '@/shared/icons/users-icon'
 import { API_SOURCE_URL, DESIGN_SYSTEM_URL, SOURCE_URL } from '@/shared/portfolio-links'
+import { PUBLIC_CONTAINER as CONTAINER } from '@/shared/public-layout'
 
 import { ScheduleWidgetShowcase } from './ScheduleWidgetShowcase'
 import './landing.css'
 
-const CONTAINER = 'mx-auto w-full max-w-6xl px-5 md:px-8'
 const EYEBROW = 'mb-3.5 text-xs font-semibold tracking-[0.1em] text-auth-action uppercase'
 const SECTION_TITLE = 'font-display text-[30px] leading-[1.15] font-medium tracking-[-0.025em] text-balance text-ink md:text-4xl'
 const PRIMARY_ACTION =
@@ -66,6 +64,13 @@ const INSIDE_ITEMS = ['a11y', 'contract', 'session', 'widget'] as const
 interface LandingPageProps {
   /** Passed through to the widget; stories pass `null` (see ScheduleWidgetShowcase). */
   widgetScriptSrc?: string | null
+  /**
+   * The visitor is inside a demo already (LandingRoute shows this page to a
+   * demo session, so the browser's back button can return here). The demo
+   * buttons then go back to it: starting another would throw away what the
+   * visitor changed and spend one of the ten demos an address gets per hour.
+   */
+  demoActive?: boolean
 }
 
 /**
@@ -83,15 +88,22 @@ interface LandingPageProps {
  * reader can check; none is a count, because counts drift and nothing would
  * update this page when they do.
  */
-export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
+export function LandingPage({ widgetScriptSrc, demoActive = false }: LandingPageProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const demo = useStartDemoSession()
-  const openDemo = () =>
+  // Pushed, not replaced: this page stays in the history under the dashboard,
+  // so the browser's back button returns to it, as a visitor expects.
+  const openDemo = () => {
+    if (demoActive) {
+      navigate('/dashboard')
+      return
+    }
     demo.mutate(undefined, {
-      onSuccess: () => navigate('/dashboard', { replace: true }),
+      onSuccess: () => navigate('/dashboard'),
       onError: (error) => toast.error(t(demoStartErrorKey(error))),
     })
+  }
 
   return (
     <div className="landing flex min-h-dvh flex-col bg-auth-surface">
@@ -100,50 +112,33 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
       {/* Sticky and settled by default; landing.css makes it transparent at the
           top and settle as the page scrolls, where the browser supports that. */}
       <header className="landing-header sticky top-0 z-20 border-b border-border/70 bg-auth-surface/85 shadow-[0_10px_28px_-18px_rgba(26,46,37,0.45)] backdrop-blur-[10px]">
-        <div className={cn(CONTAINER, 'flex h-[72px] items-center gap-3')}>
+        <PublicHeaderBar>
           <Link
-            to="/"
-            aria-label={t('landing.nav.home')}
-            className="rounded-lg focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none"
+            to="/login"
+            className="hidden h-10 items-center rounded-[10px] px-3.5 text-sm font-semibold text-ink transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none sm:inline-flex"
           >
-            <BrandSignature compact />
+            {t('landing.nav.signIn')}
           </Link>
-          {/* The theme and language controls sit at the right edge, after the
-              actions. Placed before them, they moved 30–35px every time the
-              language changed, because "Entrar" and "Ver demonstração" change
-              width with it, and the next click landed on the wrong code. At the
-              edge, with a fixed width, they stay under the pointer. */}
-          <div className="ml-auto flex items-center gap-1.5">
-            <Link
-              to="/login"
-              className="hidden h-10 items-center rounded-[10px] px-3.5 text-sm font-semibold text-ink transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none sm:inline-flex"
-            >
-              {t('landing.nav.signIn')}
-            </Link>
-            {/* Off below sm (640px), like "Entrar". From 480px it fit in Portuguese,
-                but "Ver demostración" squeezed the row and the language switcher
-                moved again; the hero repeats the button a few pixels lower. */}
-            <button
-              type="button"
-              onClick={openDemo}
-              disabled={demo.isPending}
-              aria-busy={demo.isPending}
-              className="hidden h-10 items-center gap-2 rounded-[10px] bg-auth-button px-4 text-sm font-semibold whitespace-nowrap text-white transition-colors hover:bg-auth-button-hover focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none sm:inline-flex"
-            >
-              {demo.isPending ? (
-                <>
-                  <SpinnerIcon className="size-4 animate-spin" />
-                  {t('demo.openingShort')}
-                </>
-              ) : (
-                t('demo.start')
-              )}
-            </button>
-            <span aria-hidden className="mx-1 hidden h-6 w-px bg-border sm:block" />
-            <ThemeToggle />
-            <LanguageSwitcher />
-          </div>
-        </div>
+          {/* Off below sm (640px), like "Entrar". From 480px it fit in Portuguese,
+              but "Ver demostración" squeezed the row and the language switcher
+              moved again; the hero repeats the button a few pixels lower. */}
+          <button
+            type="button"
+            onClick={openDemo}
+            disabled={demo.isPending}
+            aria-busy={demo.isPending}
+            className="hidden h-10 items-center gap-2 rounded-[10px] bg-auth-button px-4 text-sm font-semibold whitespace-nowrap text-white transition-colors hover:bg-auth-button-hover focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none sm:inline-flex"
+          >
+            {demo.isPending ? (
+              <>
+                <SpinnerIcon className="size-4 animate-spin" />
+                {t('demo.openingShort')}
+              </>
+            ) : (
+              t('demo.start')
+            )}
+          </button>
+        </PublicHeaderBar>
       </header>
 
       <main className="flex-1">
@@ -155,8 +150,10 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
             </h1>
             <p className="mt-5 max-w-[34rem] text-base leading-relaxed text-ink-muted">{t('landing.hero.subtitle')}</p>
             {/* The demo first: the person this page is for wants to see the app,
-                not to open an account. Sign-up stays one screen away, on the
-                sign-in page. */}
+                not to open an account. Sign-up second, on the page itself: it
+                used to be one screen away, behind "Entrar", and a visitor who
+                did want an account had nothing here to click. Signing in drops
+                to a line below, since the header offers it too from 640px. */}
             <div className="mt-7 flex flex-wrap gap-2.5">
               <button type="button" onClick={openDemo} disabled={demo.isPending} aria-busy={demo.isPending} className={cn(PRIMARY_ACTION, 'gap-2')}>
                 {demo.isPending ? (
@@ -171,14 +168,23 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
                   </>
                 )}
               </button>
-              <Link to="/login" className={SECONDARY_ACTION}>
-                {t('landing.hero.signIn')}
+              <Link to="/register" className={SECONDARY_ACTION}>
+                {t('landing.hero.signUp')}
               </Link>
             </div>
             <div className="max-w-[34rem]">
               <ServerWakingNotice active={demo.isPending} />
             </div>
-            <p className="mt-4 flex items-center gap-2 text-[12.5px] text-ink-muted">
+            <p className="mt-4 text-sm text-ink-muted">
+              {t('auth.register.hasAccount')}{' '}
+              <Link
+                to="/login"
+                className="rounded-sm font-semibold text-auth-action underline-offset-4 hover:underline focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none"
+              >
+                {t('landing.hero.signIn')}
+              </Link>
+            </p>
+            <p className="mt-2 flex items-center gap-2 text-[12.5px] text-ink-muted">
               <CheckIcon className="size-3.5 shrink-0 text-auth-action" />
               {t('landing.hero.trust')}
             </p>

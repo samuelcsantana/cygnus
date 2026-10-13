@@ -72,6 +72,43 @@ test('the demo opens a sample family without sign-up or the terms gate, and leav
   )
 })
 
+test('the back button from inside the demo returns to the landing page, whose demo button resumes it', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  const demoStarts: string[] = []
+  page.on('request', (request) => {
+    if (request.method() === 'POST' && request.url().endsWith('/auth/demo')) demoStarts.push(request.url())
+  })
+  await page.goto('/')
+  await page.getByRole('main').getByRole('button', { name: 'Ver demonstração' }).click()
+  await expect(page).toHaveURL(/\/dashboard$/, { timeout: 60_000 })
+  await expect(page.getByRole('region', { name: 'Demonstração' })).toBeVisible()
+
+  await page.goBack()
+
+  await expect(page).toHaveURL(/\/$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'Vacinas, consultas e crescimento dos seus filhos, num lugar só.',
+  )
+  await page.getByRole('main').getByRole('button', { name: 'Ver demonstração' }).click()
+  await expect(page).toHaveURL(/\/dashboard$/)
+  // The same demo, not a second account.
+  expect(demoStarts).toHaveLength(1)
+})
+
+test('the theme and language controls stay put from the landing page to the sign-in screens', async ({ page }) => {
+  for (const width of [390, 1280, 1920]) {
+    await page.setViewportSize({ width, height: 900 })
+    const positions: string[] = []
+    for (const path of ['/', '/login', '/register']) {
+      await page.goto(path)
+      const language = await page.getByRole('group', { name: 'Idioma' }).boundingBox()
+      const theme = await page.getByRole('button', { name: 'Mudar para o tema escuro' }).boundingBox()
+      positions.push(JSON.stringify([language?.x, language?.y, theme?.x, theme?.y]))
+    }
+    expect(new Set(positions).size, `at ${width}px: ${positions.join(' | ')}`).toBe(1)
+  }
+})
+
 test('the sign-in screen offers the demo above the form', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/login')

@@ -12,36 +12,58 @@ export interface WidgetOptions {
 }
 
 /**
- * Styles live in a template string rather than a stylesheet because the whole point is that they
- * never leave the shadow root. There is no build step that could accidentally extract them into a
- * global CSS file the host also loads, and no class name that could collide with the host's.
+ * The dark palette, in one place: the stylesheet applies it on two conditions (see STYLES).
  *
  * The dark theme sets its own teal and grey for the title, link and secondary text. It used to
  * inherit the light theme's: #186560 measured 2.46:1 on the dark card and #6b7280 3.48:1, where
  * 11–15px text needs 4.5:1. axe never saw it, because the shadow root is closed. Now 9.63:1 and
- * 6.63:1. The age pills keep their light fill, where the teal is 6.12:1. (Comments stay out of
- * the string below: everything in it ships to every host.)
+ * 6.63:1. The age pills keep their light fill in both themes, where the teal is 6.12:1. The error
+ * red too: #9b1c1c is 2.06:1 on the dark card, #fca5a5 is 8.86:1.
+ */
+const DARK_PALETTE =
+  '--bg: #10201f; --edge: #21403d; --rule: #1b3331; --ink: #e6edf3; --accent: #7dd3c8; --muted: #9ca3af; --error: #fca5a5;';
+
+/**
+ * Styles live in a template string rather than a stylesheet because the whole point is that they
+ * never leave the shadow root. There is no build step that could accidentally extract them into a
+ * global CSS file the host also loads, and no class name that could collide with the host's.
+ *
+ * Colours are custom properties on the host, so a theme is one block of values. Which block
+ * applies:
+ * - `theme="light"` or `theme="dark"` on the host element: that one, whatever the OS says. A host
+ *   whose page has its own theme switch passes it, because the OS setting is not the page's: on a
+ *   light page in a dark-mode OS, the widget came out as a dark slab.
+ * - No attribute (or any other value): the visitor's `prefers-color-scheme`, as before the
+ *   attribute existed, so no host that pasted the widget earlier sees a change.
+ * Custom properties are the one thing `all: initial` leaves alone, and they are set on `:host`
+ * itself, so nothing on the host page can reach them. (Comments stay out of the string below:
+ * everything in it ships to every host.)
  */
 const STYLES = `
   :host {
     all: initial;
     display: block;
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    color: #1f2933;
     line-height: 1.4;
+    --bg: #ffffff; --edge: #d9e2ec; --rule: #eef2f6; --ink: #1f2933; --accent: #186560; --muted: #6b7280; --error: #9b1c1c;
+    color: var(--ink);
   }
+  @media (prefers-color-scheme: dark) {
+    :host(:not([theme="light"])) { ${DARK_PALETTE} }
+  }
+  :host([theme="dark"]) { ${DARK_PALETTE} }
   * { box-sizing: border-box; }
   .card {
-    border: 1px solid #d9e2ec;
+    border: 1px solid var(--edge);
     border-radius: 12px;
     padding: 16px;
-    background: #ffffff;
+    background: var(--bg);
     max-width: 420px;
   }
-  .title { font-size: 15px; font-weight: 700; margin: 0 0 2px; color: #186560; }
-  .subtitle { font-size: 12px; color: #6b7280; margin: 0 0 12px; }
+  .title { font-size: 15px; font-weight: 700; margin: 0 0 2px; color: var(--accent); }
+  .subtitle { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
   ul { list-style: none; margin: 0; padding: 0; }
-  li { display: flex; gap: 10px; padding: 7px 0; border-top: 1px solid #eef2f6; }
+  li { display: flex; gap: 10px; padding: 7px 0; border-top: 1px solid var(--rule); }
   li:first-child { border-top: none; }
   .age {
     flex: 0 0 74px;
@@ -55,23 +77,13 @@ const STYLES = `
     text-align: center;
   }
   .name { font-size: 13px; font-weight: 600; margin: 0; }
-  .dose { font-size: 11px; color: #6b7280; margin: 1px 0 0; }
-  .footer { margin-top: 12px; padding-top: 10px; border-top: 1px solid #eef2f6; font-size: 11px; }
-  a { color: #186560; font-weight: 600; text-decoration: none; }
+  .dose { font-size: 11px; color: var(--muted); margin: 1px 0 0; }
+  .footer { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--rule); font-size: 11px; }
+  a { color: var(--accent); font-weight: 600; text-decoration: none; }
   a:hover { text-decoration: underline; }
-  a:focus-visible { outline: 2px solid #186560; outline-offset: 2px; border-radius: 4px; }
-  .state { font-size: 12px; color: #6b7280; margin: 0; }
-  .error { color: #9b1c1c; }
-  @media (prefers-color-scheme: dark) {
-    .card { background: #10201f; border-color: #21403d; }
-    :host { color: #e6edf3; }
-    .name { color: #e6edf3; }
-    li { border-color: #1b3331; }
-    .footer { border-color: #1b3331; }
-    .title, a { color: #7dd3c8; }
-    a:focus-visible { outline-color: #7dd3c8; }
-    .subtitle, .dose, .state { color: #9ca3af; }
-  }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .state { font-size: 12px; color: var(--muted); margin: 0; }
+  .error { color: var(--error); }
 `;
 
 /**
@@ -98,7 +110,11 @@ export class VaccineScheduleWidget {
   }
 
   async render(): Promise<void> {
-    this.paint(`<p class="state">Carregando o calendário vacinal…</p>`);
+    // The loading and error lines sit inside the card too. Outside it they were drawn straight on
+    // the host's background, which the widget cannot see (grey text meant for the dark card, on a
+    // white page), and the error reported a height of 0, because the height is the card's: an
+    // iframe host that sizes the frame from it collapsed the message out of sight.
+    this.paint(`<div class="card"><p class="state">Carregando o calendário vacinal…</p></div>`);
 
     try {
       const schedule = await fetchPublicSchedule(this.options.apiOrigin);
@@ -106,7 +122,7 @@ export class VaccineScheduleWidget {
       this.emitSize('ready');
     } catch (error) {
       const reason = error instanceof Error ? error.message : 'unknown';
-      this.paint(`<p class="state error">Não foi possível carregar o calendário vacinal.</p>`);
+      this.paint(`<div class="card"><p class="state error">Não foi possível carregar o calendário vacinal.</p></div>`);
       this.options.emit({ source: EMBED_SOURCE, version: PROTOCOL_VERSION, type: 'error', reason });
       this.emitSize('ready');
     }
