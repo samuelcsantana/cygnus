@@ -19,8 +19,9 @@ export interface WidgetOptions {
  * The dark theme sets its own teal and grey for the title, link and secondary text. It used to
  * inherit the light theme's: #186560 measured 2.46:1 on the dark card and #6b7280 3.48:1, where
  * 11–15px text needs 4.5:1. axe never saw it, because the shadow root is closed. Now 9.63:1 and
- * 6.63:1. The age pills keep their light fill, where the teal is 6.12:1. (Comments stay out of
- * the string below: everything in it ships to every host.)
+ * 6.63:1. The age pills keep their light fill, where the teal is 6.12:1. The error red too:
+ * #9b1c1c is 2.06:1 on the dark card, #fca5a5 is 8.86:1. (Comments stay out of the string below:
+ * everything in it ships to every host.)
  */
 const STYLES = `
   :host {
@@ -71,6 +72,7 @@ const STYLES = `
     .title, a { color: #7dd3c8; }
     a:focus-visible { outline-color: #7dd3c8; }
     .subtitle, .dose, .state { color: #9ca3af; }
+    .error { color: #fca5a5; }
   }
 `;
 
@@ -98,7 +100,11 @@ export class VaccineScheduleWidget {
   }
 
   async render(): Promise<void> {
-    this.paint(`<p class="state">Carregando o calendário vacinal…</p>`);
+    // The loading and error lines sit inside the card too. Outside it they were drawn straight on
+    // the host's background, which the widget cannot see (grey text meant for the dark card, on a
+    // white page), and the error reported a height of 0, because the height is the card's: an
+    // iframe host that sizes the frame from it collapsed the message out of sight.
+    this.paint(`<div class="card"><p class="state">Carregando o calendário vacinal…</p></div>`);
 
     try {
       const schedule = await fetchPublicSchedule(this.options.apiOrigin);
@@ -106,7 +112,7 @@ export class VaccineScheduleWidget {
       this.emitSize('ready');
     } catch (error) {
       const reason = error instanceof Error ? error.message : 'unknown';
-      this.paint(`<p class="state error">Não foi possível carregar o calendário vacinal.</p>`);
+      this.paint(`<div class="card"><p class="state error">Não foi possível carregar o calendário vacinal.</p></div>`);
       this.options.emit({ source: EMBED_SOURCE, version: PROTOCOL_VERSION, type: 'error', reason });
       this.emitSize('ready');
     }

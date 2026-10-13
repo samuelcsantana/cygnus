@@ -125,6 +125,9 @@ describe('VaccineScheduleWidget', () => {
 
     expect(root()?.textContent).toContain('Não foi possível carregar');
     expect(messages.some((message) => message.type === 'error')).toBe(true);
+    // Inside the card: its background is the one the text colour was chosen for, and its height is
+    // the one reported to an iframe host. Outside it, the message reported a height of 0.
+    expect(root()?.querySelector('.card .error')).not.toBeNull();
   });
 });
 
