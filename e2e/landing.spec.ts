@@ -122,15 +122,17 @@ test('the sign-in screen offers the demo above the form', async ({ page }) => {
 test("the widget's own link leads to sign-up, because the page is the widget's host", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await page.goto('/')
-  const widget = page.locator('cygnus-vaccine-schedule')
-  // `ready` is the widget saying it painted the schedule (embed/protocol.ts).
-  // A string, like the other specs' evaluate calls: e2e/ is typed without the DOM library.
-  const ready = page.evaluate(
-    "new Promise((resolve) => document.addEventListener('cygnus:ready', resolve, { once: true }))",
+  // `ready` is the widget saying it painted the schedule (embed/protocol.ts). The listener goes in
+  // before the page loads: the widget can paint, and announce it, before goto returns, and a
+  // listener added afterwards waited for an event that had already happened (it timed out in one
+  // full parallel run of two on 2026-10-13). Strings, like the other specs' evaluate calls: e2e/ is
+  // typed without the DOM library.
+  await page.addInitScript(
+    "window.cygnusReady = new Promise((resolve) => document.addEventListener('cygnus:ready', resolve, { once: true }))",
   )
-  await widget.scrollIntoViewIfNeeded()
-  await ready
+  await page.goto('/')
+  await page.locator('cygnus-vaccine-schedule').scrollIntoViewIfNeeded()
+  await page.evaluate('window.cygnusReady')
 
   // The widget's shadow root is closed by design — a host cannot reach inside,
   // and neither can a locator — so its link is reached the way a keyboard user
