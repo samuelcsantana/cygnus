@@ -19,6 +19,10 @@ import { defineConfig } from 'vite'
  * already has.
  */
 export default defineConfig({
+  // The main build already copies `public/` to `dist/`. A library build copies it again by default,
+  // which put the app's icons, manifest and service worker under /embed/ where nothing references
+  // them: 74 kB of the 88 kB in dist/embed. The MF build opts out for the same reason.
+  publicDir: false,
   build: {
     outDir: 'dist/embed',
     emptyOutDir: false,
