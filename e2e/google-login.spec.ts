@@ -21,7 +21,7 @@ test('Google availability and cancellation are accessible and recoverable', asyn
   await page.getByRole('link', { name: 'Voltar para entrar' }).click()
   await expect(page).toHaveURL(/\/login$/)
   await page.setViewportSize({ width: 375, height: 812 })
-  await page.screenshot({ path: 'docs/verification/google-login-mobile.png', fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('google-login-mobile.png'), fullPage: true })
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
 })
 

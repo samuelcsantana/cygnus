@@ -27,11 +27,11 @@ test('creates and edits a professional with explicit child access in a responsiv
   expect((await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations).toEqual(
     [],
   )
-  await page.screenshot({ path: 'docs/verification/specialist-desktop.png' })
+  await page.screenshot({ path: test.info().outputPath('specialist-desktop.png') })
   expect((await dialog.boundingBox())?.height).toBe(before?.height)
   await page.setViewportSize({ width: 375, height: 812 })
   expect(await dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
-  await page.screenshot({ path: 'docs/verification/specialist-mobile.png' })
+  await page.screenshot({ path: test.info().outputPath('specialist-mobile.png') })
   await dialog.getByRole('button', { name: 'Adicionar profissional', exact: true }).click()
   await expect(dialog).toBeHidden()
   await page.reload()
@@ -48,9 +48,9 @@ test('creates and edits a professional with explicit child access in a responsiv
       .violations,
   ).toEqual([])
   expect(await page.locator('body').evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
-  await page.screenshot({ path: 'docs/verification/specialists-page-mobile.png' })
+  await page.screenshot({ path: test.info().outputPath('specialists-page-mobile.png') })
   await page.setViewportSize({ width: 1280, height: 900 })
-  await page.screenshot({ path: 'docs/verification/specialists-page-desktop.png' })
+  await page.screenshot({ path: test.info().outputPath('specialists-page-desktop.png') })
   await page.getByRole('searchbox').fill('999991234')
   await expect(page.getByRole('heading', { name: 'Dra. Ana Silva' })).toBeVisible()
   await page.getByRole('button', { name: 'Limpar busca' }).click()

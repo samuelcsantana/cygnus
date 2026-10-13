@@ -26,7 +26,7 @@ test('saves a memory with its photo, retains the draft between steps and edits i
   expect((await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations).toEqual(
     [],
   )
-  await page.screenshot({ path: 'docs/verification/milestone-moment.png' })
+  await page.screenshot({ path: test.info().outputPath('milestone-moment.png') })
   await dialog.getByRole('button', { name: 'Continuar' }).click()
   expect((await dialog.boundingBox())?.height).toBe(before?.height)
   await dialog
@@ -44,13 +44,13 @@ test('saves a memory with its photo, retains the draft between steps and edits i
   await dialog.getByRole('button', { name: 'Voltar' }).click()
   await dialog.getByRole('button', { name: 'Continuar' }).click()
   await expect(dialog.getByRole('button', { name: 'Trocar foto' })).toBeVisible()
-  await page.screenshot({ path: 'docs/verification/milestone-memory.png' })
+  await page.screenshot({ path: test.info().outputPath('milestone-memory.png') })
   await page.setViewportSize({ width: 375, height: 812 })
   expect(await dialog.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
   expect((await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations).toEqual(
     [],
   )
-  await page.screenshot({ path: 'docs/verification/milestone-mobile.png' })
+  await page.screenshot({ path: test.info().outputPath('milestone-mobile.png') })
   let releaseUpload!: () => void
   const uploadGate = new Promise<void>((resolve) => {
     releaseUpload = resolve
@@ -96,9 +96,9 @@ test('saves a memory with its photo, retains the draft between steps and edits i
   await page.getByRole('searchbox', { name: 'Buscar nas memórias…' }).fill('inesquecivel')
   await expect(page.getByRole('heading', { name: 'Um passeio inesquecível' })).toBeVisible()
   expect(await page.locator('body').evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
-  await page.screenshot({ path: 'docs/verification/milestones-page-mobile.png', fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('milestones-page-mobile.png'), fullPage: true })
   await page.setViewportSize({ width: 1440, height: 1000 })
-  await page.screenshot({ path: 'docs/verification/milestones-page-desktop.png', fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('milestones-page-desktop.png'), fullPage: true })
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
   await page.getByRole('button', { name: /Editar.*Um passeio inesquecível/ }).click()
   await dialog.getByRole('button', { name: 'Continuar' }).click()

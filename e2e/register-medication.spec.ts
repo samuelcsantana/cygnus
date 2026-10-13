@@ -27,7 +27,7 @@ test('records, edits and deletes a medication with a stable responsive editor', 
   expect((await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations).toEqual(
     [],
   )
-  await page.screenshot({ path: 'docs/verification/medication-medicine.png' })
+  await page.screenshot({ path: test.info().outputPath('medication-medicine.png') })
   await dialog.getByRole('button', { name: 'Continuar' }).click()
   expect((await dialog.boundingBox())?.height).toBe(before?.height)
   await dialog.getByLabel('Início', { exact: true }).fill(dateAt(1))
@@ -39,10 +39,10 @@ test('records, edits and deletes a medication with a stable responsive editor', 
   expect((await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations).toEqual(
     [],
   )
-  await page.screenshot({ path: 'docs/verification/medication-details.png' })
+  await page.screenshot({ path: test.info().outputPath('medication-details.png') })
   await page.setViewportSize({ width: 375, height: 812 })
   expect(await dialog.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
-  await page.screenshot({ path: 'docs/verification/medication-mobile.png' })
+  await page.screenshot({ path: test.info().outputPath('medication-mobile.png') })
   await dialog.getByRole('button', { name: 'Salvar Registro' }).click()
   await expect(dialog).toBeHidden()
   await page.reload()
@@ -69,9 +69,9 @@ test('records, edits and deletes a medication with a stable responsive editor', 
     (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze())
       .violations,
   ).toEqual([])
-  await page.screenshot({ path: 'docs/verification/medications-page-mobile.png' })
+  await page.screenshot({ path: test.info().outputPath('medications-page-mobile.png') })
   await page.setViewportSize({ width: 1280, height: 900 })
-  await page.screenshot({ path: 'docs/verification/medications-page-desktop.png' })
+  await page.screenshot({ path: test.info().outputPath('medications-page-desktop.png') })
   await page.getByRole('button', { name: 'Editar', exact: true }).click()
   await dialog.getByLabel('Dose (Opcional)').clear()
   await dialog.getByRole('button', { name: 'Continuar' }).click()
