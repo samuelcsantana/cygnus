@@ -1,5 +1,5 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from '@playwright/test'
 
@@ -23,19 +23,25 @@ import { chromium } from '@playwright/test'
  *   (1280x640, under GitHub's 1 MB limit; uploaded by hand in Settings → Social preview, which has
  *   no API).
  * - The API repository's cover is rendered here too, because this repository already has the
- *   browser, the fonts and the mark. It is written to `API_ASSETS_DIR` (by default the sibling
- *   checkout, `../cygnus-api/.github/assets`) and committed there.
+ *   browser, the fonts and the mark. It is written to `API_ASSETS_DIR`, or to a sibling
+ *   `../cygnus-api` checkout when one exists, and committed there. Without either it is skipped,
+ *   so a clone of this repository alone never gets a folder created beside it.
  */
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const BASE_URL = process.env.BASE_URL ?? 'https://cygnus.samuelsantana.dev'
 const OUT = resolve(ROOT, '.github/assets')
 const SCREENS = resolve(OUT, 'screens')
-const API_OUT = resolve(ROOT, process.env.API_ASSETS_DIR ?? '../cygnus-api/.github/assets')
+const API_REPO = resolve(ROOT, '../cygnus-api')
+const API_OUT = process.env.API_ASSETS_DIR
+  ? resolve(ROOT, process.env.API_ASSETS_DIR)
+  : existsSync(resolve(API_REPO, 'package.json'))
+    ? resolve(API_REPO, '.github/assets')
+    : null
 const coversOnly = process.argv.includes('--covers')
 
 mkdirSync(SCREENS, { recursive: true })
-mkdirSync(API_OUT, { recursive: true })
+if (API_OUT) mkdirSync(API_OUT, { recursive: true })
 
 const browser = await chromium.launch()
 
@@ -58,7 +64,12 @@ async function writeWebp(path, png, quality = 0.9) {
     { src: `data:image/png;base64,${png.toString('base64')}`, quality },
   )
   writeFileSync(path, Buffer.from(dataUrl.split(',')[1], 'base64'))
-  console.log(path.replace(`${resolve(ROOT, '..')}\\`, '').replaceAll('\\', '/'))
+  log(path)
+}
+
+// Printed from the folder above, so the API's cover is told apart from this repository's.
+function log(path) {
+  console.log(relative(resolve(ROOT, '..'), path).replaceAll('\\', '/'))
 }
 
 async function captureScreens() {
@@ -98,7 +109,7 @@ async function captureScreens() {
   // A cold Render instance takes about a minute to wake.
   await page.waitForURL('**/dashboard', { timeout: 120_000 })
 
-  const pages = { dashboard: '/dashboard', vaccines: '/vaccines', growth: '/crescimento', milestones: '/milestones' }
+  const pages = { dashboard: '/dashboard', vaccines: '/vaccines', growth: '/crescimento' }
   for (const theme of ['light', 'dark']) {
     await setTheme(theme)
     for (const [name, path] of Object.entries(pages)) {
@@ -145,18 +156,16 @@ async function renderCovers() {
     ${COVER_CSS}
   </style>`
 
-  const variants = [
-    { body: webCover({ mark, screen }), files: [[OUT, 'cover.webp'], [OUT, 'social-preview.jpg']] },
-    { body: apiCover({ mark }), files: [[API_OUT, 'cover.webp'], [API_OUT, 'social-preview.jpg']] },
-  ]
+  const covers = [{ body: webCover({ mark, screen }), dir: OUT }]
+  if (API_OUT) covers.push({ body: apiCover({ mark }), dir: API_OUT })
+  else console.log('cygnus-api cover skipped: no ../cygnus-api checkout and no API_ASSETS_DIR')
 
-  for (const { body, files } of variants) {
-    const [[coverDir, coverFile], [socialDir, socialFile]] = files
+  for (const { body, dir } of covers) {
     // The README banner is wider than the social card: 1280x560 reads as a header, while a
     // 2:1 banner pushes the first line of text below the fold on a laptop.
-    for (const { height, scale, dir, file } of [
-      { height: 560, scale: 2, dir: coverDir, file: coverFile },
-      { height: 640, scale: 1, dir: socialDir, file: socialFile },
+    for (const { height, scale, file } of [
+      { height: 560, scale: 2, file: 'cover.webp' },
+      { height: 640, scale: 1, file: 'social-preview.jpg' },
     ]) {
       const page = await browser.newPage({ viewport: { width: 1280, height }, deviceScaleFactor: scale })
       await page.setContent(`<!doctype html><html><head>${head}</head><body>${body(height)}</body></html>`)
@@ -164,7 +173,7 @@ async function renderCovers() {
       const path = resolve(dir, file)
       if (file.endsWith('.jpg')) {
         await page.screenshot({ path, type: 'jpeg', quality: 90 })
-        console.log(path.replace(`${resolve(ROOT, '..')}\\`, '').replaceAll('\\', '/'))
+        log(path)
       } else {
         await writeWebp(path, await page.screenshot(), 0.92)
       }

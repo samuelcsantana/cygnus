@@ -105,9 +105,10 @@ The decisions below are the ones a reviewer would ask about. Each names the file
   a sample family and deleted after 24 hours. The demo skips the terms gate, and a banner says the
   data is fake and how to leave.
 - **The schedule also ships outside the app.** [`embed/`](embed/README.md) is a dependency-free web
-  component in a shadow root, 2.78 kB gzip, with an iframe variant and a versioned `postMessage`
-  protocol. [`mf/`](mf/README.md) exposes the same schedule as a Module Federation remote that shares
-  the host's React as a singleton. Both are published contracts with stable URLs.
+  component in a shadow root (2.78 kB gzip, measured 2026-10-13), with an iframe variant and a
+  versioned `postMessage` protocol. [`mf/`](mf/README.md) exposes the same schedule as a Module
+  Federation remote that shares the host's React as a singleton. Both are published contracts with
+  stable URLs.
 - **Dates are calendar dates.** A `YYYY-MM-DD` birth date is not a UTC instant. Vitest runs in
   `America/Sao_Paulo`, because in UTC (the CI default) that class of bug passes silently
   ([`src/lib/date.ts`](src/lib/date.ts)).
@@ -230,7 +231,7 @@ GitHub Pages. One build produces three artifacts:
 
 | Artifact | Public entry point | Notes |
 | --- | --- | --- |
-| The app | `/` | lazy routes; entry chunk 183.8 kB gzip |
+| The app | `/` | lazy routes; entry chunk 183.8 kB gzip (measured 2026-10-13) |
 | Embed widget | `/embed/embed.js`, `/embed/iframe.html` | [embed/README.md](embed/README.md) |
 | Module Federation remote | `/mf/remoteEntry.js` | [mf/README.md](mf/README.md) |
 
