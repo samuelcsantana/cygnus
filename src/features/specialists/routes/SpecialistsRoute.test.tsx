@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { toast } from 'sonner'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useSelectedBabyStore } from '@/shared/stores/selectedBaby.store'
 
 import { config } from '@/lib/config'
@@ -206,4 +207,97 @@ it('does not describe unavailable child links as personal contacts', async () =>
     'Não foi possível carregar os vínculos',
   )
   expect(screen.queryByText('Só na sua lista')).not.toBeInTheDocument()
+})
+
+describe('editing, removing and sharing a professional', () => {
+  const specialistUrl = `${config.apiBaseUrl}/specialists/44444444-4444-4444-8444-444444444444`
+
+  afterEach(() => vi.restoreAllMocks())
+
+  it('saves an edit and shows the new name in the list', async () => {
+    let body: Record<string, unknown> = {}
+    server.use(
+      http.get(`${config.apiBaseUrl}/specialists`, () => HttpResponse.json([specialist()])),
+      http.patch(specialistUrl, async ({ request }) => {
+        body = (await request.json()) as Record<string, unknown>
+        return HttpResponse.json(specialist({ name: 'Dra. Fernanda Souza' }))
+      }),
+    )
+    const user = userEvent.setup()
+    renderWithProviders(<SpecialistsRoute />)
+
+    await user.click(await screen.findByRole('button', { name: 'Editar Dra. Fernanda Lima' }))
+    const dialog = screen.getByRole('dialog')
+    await user.clear(within(dialog).getByLabelText('Nome'))
+    await user.type(within(dialog).getByLabelText('Nome'), 'Dra. Fernanda Souza')
+    await user.click(within(dialog).getByRole('button', { name: 'Salvar alterações' }))
+
+    expect(await screen.findByText('Dra. Fernanda Souza')).toBeInTheDocument()
+    expect(body).toMatchObject({ name: 'Dra. Fernanda Souza' })
+  })
+
+  it('removes a professional once the removal is confirmed', async () => {
+    const success = vi.spyOn(toast, 'success')
+    server.use(
+      http.get(`${config.apiBaseUrl}/specialists`, () => HttpResponse.json([specialist()])),
+      http.delete(specialistUrl, () => new HttpResponse(null, { status: 204 })),
+    )
+    const user = userEvent.setup()
+    renderWithProviders(<SpecialistsRoute />)
+
+    await user.click(await screen.findByRole('button', { name: 'Remover Dra. Fernanda Lima' }))
+    await user.click(await screen.findByRole('button', { name: 'Remover' }))
+
+    await waitFor(() => expect(success).toHaveBeenCalledWith('Profissional removido.'))
+    expect(screen.queryByText('Dra. Fernanda Lima')).not.toBeInTheDocument()
+  })
+
+  it('keeps a professional the server did not remove, and says so', async () => {
+    const error = vi.spyOn(toast, 'error')
+    server.use(
+      http.get(`${config.apiBaseUrl}/specialists`, () => HttpResponse.json([specialist()])),
+      http.delete(specialistUrl, () => HttpResponse.json({ status: 'error' }, { status: 500 })),
+    )
+    const user = userEvent.setup()
+    renderWithProviders(<SpecialistsRoute />)
+
+    await user.click(await screen.findByRole('button', { name: 'Remover Dra. Fernanda Lima' }))
+    await user.click(await screen.findByRole('button', { name: 'Remover' }))
+
+    await waitFor(() => expect(error).toHaveBeenCalledWith('Não foi possível salvar. Tente de novo.'))
+    expect(screen.getByText('Dra. Fernanda Lima')).toBeInTheDocument()
+  })
+
+  // The same people the API accepts: the other guardians of the user's children, once each and in
+  // name order, never the user themselves.
+  it('offers to share with the other guardians of the children, never with yourself', async () => {
+    const guardian = (userId: string, name: string, role: 'OWNER' | 'GUARDIAN') => ({
+      userId,
+      name,
+      email: `${name.toLowerCase()}@example.com`,
+      role,
+      joinedAt: '2026-01-01T00:00:00.000Z',
+    })
+    server.use(
+      http.get(`${config.apiBaseUrl}/specialists`, () => HttpResponse.json([])),
+      http.get(`${config.apiBaseUrl}/babies/${babyId}/guardians`, () =>
+        HttpResponse.json([
+          guardian(ME, 'Eu', 'OWNER'),
+          guardian(SOMEBODY_ELSE, 'Joana', 'GUARDIAN'),
+          guardian('55555555-5555-4555-8555-555555555555', 'Bruno', 'GUARDIAN'),
+        ]),
+      ),
+    )
+    const user = userEvent.setup()
+    renderWithProviders(<SpecialistsRoute />)
+
+    await user.click(await screen.findByRole('button', { name: 'Adicionar o primeiro' }))
+    const share = await screen.findByRole('group', { name: 'Compartilhar individualmente' })
+
+    await waitFor(() => expect(within(share).getAllByRole('checkbox')).toHaveLength(2))
+    expect(within(share).getAllByRole('checkbox').map((box) => box.closest('label')?.textContent)).toEqual([
+      'Brunobruno@example.com',
+      'Joanajoana@example.com',
+    ])
+  })
 })
