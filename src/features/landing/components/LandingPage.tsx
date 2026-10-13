@@ -8,11 +8,9 @@ import { cn } from '@/lib/utils'
 import { ServerWakingNotice } from '@/shared/components/ServerWakingNotice'
 import { PlayIcon } from '@/shared/icons/play-icon'
 import { SpinnerIcon } from '@/shared/icons/spinner-icon'
-import { BrandSignature } from '@/shared/components/BrandSignature'
-import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { PortfolioStrip } from '@/shared/components/PortfolioStrip'
 import { ProductPreviewCard } from '@/shared/components/ProductPreviewCard'
-import { ThemeToggle } from '@/shared/components/ThemeToggle'
+import { PublicHeaderBar } from '@/shared/components/PublicHeaderBar'
 import { BookIcon } from '@/shared/icons/book-icon'
 import { CheckIcon } from '@/shared/icons/check-icon'
 import { CodeIcon } from '@/shared/icons/code-icon'
@@ -24,11 +22,11 @@ import { StethoscopeIcon } from '@/shared/icons/stethoscope-icon'
 import { SyringeIcon } from '@/shared/icons/syringe-icon'
 import { UsersIcon } from '@/shared/icons/users-icon'
 import { API_SOURCE_URL, DESIGN_SYSTEM_URL, SOURCE_URL } from '@/shared/portfolio-links'
+import { PUBLIC_CONTAINER as CONTAINER } from '@/shared/public-layout'
 
 import { ScheduleWidgetShowcase } from './ScheduleWidgetShowcase'
 import './landing.css'
 
-const CONTAINER = 'mx-auto w-full max-w-6xl px-5 md:px-8'
 const EYEBROW = 'mb-3.5 text-xs font-semibold tracking-[0.1em] text-auth-action uppercase'
 const SECTION_TITLE = 'font-display text-[30px] leading-[1.15] font-medium tracking-[-0.025em] text-balance text-ink md:text-4xl'
 const PRIMARY_ACTION =
@@ -100,50 +98,33 @@ export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
       {/* Sticky and settled by default; landing.css makes it transparent at the
           top and settle as the page scrolls, where the browser supports that. */}
       <header className="landing-header sticky top-0 z-20 border-b border-border/70 bg-auth-surface/85 shadow-[0_10px_28px_-18px_rgba(26,46,37,0.45)] backdrop-blur-[10px]">
-        <div className={cn(CONTAINER, 'flex h-[72px] items-center gap-3')}>
+        <PublicHeaderBar>
           <Link
-            to="/"
-            aria-label={t('landing.nav.home')}
-            className="rounded-lg focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none"
+            to="/login"
+            className="hidden h-10 items-center rounded-[10px] px-3.5 text-sm font-semibold text-ink transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none sm:inline-flex"
           >
-            <BrandSignature compact />
+            {t('landing.nav.signIn')}
           </Link>
-          {/* The theme and language controls sit at the right edge, after the
-              actions. Placed before them, they moved 30–35px every time the
-              language changed, because "Entrar" and "Ver demonstração" change
-              width with it, and the next click landed on the wrong code. At the
-              edge, with a fixed width, they stay under the pointer. */}
-          <div className="ml-auto flex items-center gap-1.5">
-            <Link
-              to="/login"
-              className="hidden h-10 items-center rounded-[10px] px-3.5 text-sm font-semibold text-ink transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none sm:inline-flex"
-            >
-              {t('landing.nav.signIn')}
-            </Link>
-            {/* Off below sm (640px), like "Entrar". From 480px it fit in Portuguese,
-                but "Ver demostración" squeezed the row and the language switcher
-                moved again; the hero repeats the button a few pixels lower. */}
-            <button
-              type="button"
-              onClick={openDemo}
-              disabled={demo.isPending}
-              aria-busy={demo.isPending}
-              className="hidden h-10 items-center gap-2 rounded-[10px] bg-auth-button px-4 text-sm font-semibold whitespace-nowrap text-white transition-colors hover:bg-auth-button-hover focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none sm:inline-flex"
-            >
-              {demo.isPending ? (
-                <>
-                  <SpinnerIcon className="size-4 animate-spin" />
-                  {t('demo.openingShort')}
-                </>
-              ) : (
-                t('demo.start')
-              )}
-            </button>
-            <span aria-hidden className="mx-1 hidden h-6 w-px bg-border sm:block" />
-            <ThemeToggle />
-            <LanguageSwitcher />
-          </div>
-        </div>
+          {/* Off below sm (640px), like "Entrar". From 480px it fit in Portuguese,
+              but "Ver demostración" squeezed the row and the language switcher
+              moved again; the hero repeats the button a few pixels lower. */}
+          <button
+            type="button"
+            onClick={openDemo}
+            disabled={demo.isPending}
+            aria-busy={demo.isPending}
+            className="hidden h-10 items-center gap-2 rounded-[10px] bg-auth-button px-4 text-sm font-semibold whitespace-nowrap text-white transition-colors hover:bg-auth-button-hover focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none sm:inline-flex"
+          >
+            {demo.isPending ? (
+              <>
+                <SpinnerIcon className="size-4 animate-spin" />
+                {t('demo.openingShort')}
+              </>
+            ) : (
+              t('demo.start')
+            )}
+          </button>
+        </PublicHeaderBar>
       </header>
 
       <main className="flex-1">

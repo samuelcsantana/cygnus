@@ -3,10 +3,9 @@ import { Link, Outlet } from 'react-router-dom'
 import authHeroUrl from '@/assets/auth-hero.avif'
 import { useWakeApi } from '@/hooks/useWakeApi'
 import { BrandSignature } from '@/shared/components/BrandSignature'
-import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { PortfolioStrip } from '@/shared/components/PortfolioStrip'
 import { ProductPreviewCard } from '@/shared/components/ProductPreviewCard'
-import { ThemeToggle } from '@/shared/components/ThemeToggle'
+import { PublicHeaderBar } from '@/shared/components/PublicHeaderBar'
 import { CheckIcon } from '@/shared/icons/check-icon'
 import { AuthBackdrop } from './AuthBackdrop'
 
@@ -18,11 +17,12 @@ export function AuthLayout() {
     <div className="relative flex min-h-dvh flex-col bg-auth-surface">
       <AuthBackdrop />
       <div className="relative z-10"><PortfolioStrip /></div>
-      <div className="relative z-10 flex flex-1 flex-col px-4 pb-6 pt-4 sm:px-6 lg:px-8 lg:pt-8">
-        <header className="flex items-center justify-end gap-1.5">
-          <ThemeToggle />
-          <LanguageSwitcher />
-        </header>
+      {/* The landing page's header row, so "Entrar" changes the page under it
+          and nothing in it. This screen had its own full-width row, and the
+          theme and language buttons jumped right and down on the way in: 384px
+          and 14px on a 1920px screen. The mark also links back home now. */}
+      <header className="relative z-10"><PublicHeaderBar /></header>
+      <div className="relative z-10 flex flex-1 flex-col px-4 pb-6 sm:px-6 lg:px-8">
         <main className="flex flex-1 items-start justify-center py-5 sm:items-center sm:py-8">
           <div className="grid w-full max-w-[26rem] grid-cols-1 overflow-hidden rounded-3xl border border-border/70 bg-card shadow-xl shadow-emerald-900/5 lg:min-h-[40rem] lg:max-w-[56rem] lg:grid-cols-[11fr_14fr] dark:shadow-black/20">
             <div className="relative isolate hidden flex-col overflow-hidden bg-gradient-to-br from-auth-panel to-auth-button p-10 lg:flex">
@@ -47,7 +47,6 @@ export function AuthLayout() {
             </div>
             <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-12">
               <div className="w-full">
-                <div className="mb-6 lg:hidden"><BrandSignature /></div>
                 <Outlet />
               </div>
             </div>
