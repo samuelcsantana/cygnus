@@ -50,8 +50,19 @@ export function LanguageSwitcher({ variant = 'compact', className }: LanguageSwi
       <div
         role="group"
         aria-label={t('common.languageSwitcherLabel')}
-        className={cn('inline-flex h-9 items-center rounded-[10px] border border-border bg-card p-0.5', className)}
+        className={cn('relative inline-flex h-9 items-center rounded-[10px] border border-border bg-card p-0.5', className)}
       >
+        {/* The highlight is one element that slides to the chosen code, so a
+            change of language reads as a move from one code to the other. As a
+            background on each button it vanished from one and appeared on the
+            next in the same frame. The buttons share one width so the slide is
+            a whole number of button widths, and so the group never changes size
+            either. */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0.5 left-0.5 w-9 rounded-[7px] bg-emerald-50 motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-out dark:bg-emerald-500/10"
+          style={{ transform: `translateX(${LANGUAGE_OPTIONS.indexOf(active) * 100}%)` }}
+        />
         {LANGUAGE_OPTIONS.map((language) => {
           const isActive = language.value === active.value
           return (
@@ -62,11 +73,9 @@ export function LanguageSwitcher({ variant = 'compact', className }: LanguageSwi
               aria-pressed={isActive}
               onClick={() => void i18n.changeLanguage(language.value)}
               className={cn(
-                'inline-flex h-full min-w-8 items-center justify-center rounded-[7px] px-2 text-[12.5px] font-semibold tracking-wide transition-colors',
+                'relative inline-flex h-full w-9 items-center justify-center rounded-[7px] text-[12.5px] font-semibold tracking-wide transition-colors',
                 'focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none',
-                isActive
-                  ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-300'
-                  : 'text-ink-muted hover:text-ink',
+                isActive ? 'text-emerald-800 dark:text-emerald-300' : 'text-ink-muted hover:text-ink',
               )}
             >
               {language.short}
