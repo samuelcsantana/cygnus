@@ -10,6 +10,11 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
+  // Four, not one per core. Every spec signs a user up, and the API is one Node process hashing
+  // passwords with bcrypt on libuv's four threads: with ten workers on a 20-core machine sign-ups
+  // queued, sign-up took up to 7.8 s and three long journeys passed their 30 s budget. With four,
+  // the 29 tests ran green in under a minute (2026-10-13).
+  workers: 4,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: 'list',
