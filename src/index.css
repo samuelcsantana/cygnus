@@ -30,6 +30,16 @@
     }
   }
 
+  /* The theme button's icon turns in when it changes (ThemeToggle). */
+  --animate-icon-swap: icon-swap 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+
+  @keyframes icon-swap {
+    from {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0.6);
+    }
+  }
+
   /* Progress bars fill from empty when they first appear (option 36). */
   --animate-grow-x: grow-x 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s both;
 

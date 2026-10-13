@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
@@ -38,6 +39,9 @@ interface ThemeToggleProps {
 export function ThemeToggle({ variant = 'compact', className }: ThemeToggleProps) {
   const { t } = useTranslation()
   const { theme, resolvedTheme, setTheme } = useTheme()
+  // Only a click turns the icon: on mount (every page has its own header) it
+  // just appears, or each navigation would spin it.
+  const [clicked, setClicked] = useState(false)
   const Icon = THEME_ICON[theme]
 
   if (variant === 'field') {
@@ -93,7 +97,10 @@ export function ThemeToggle({ variant = 'compact', className }: ThemeToggleProps
   return (
     <button
       type="button"
-      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      onClick={() => {
+        setClicked(true)
+        setTheme(isDark ? 'light' : 'dark')
+      }}
       aria-label={label}
       title={label}
       className={cn(
@@ -102,7 +109,8 @@ export function ThemeToggle({ variant = 'compact', className }: ThemeToggleProps
         className,
       )}
     >
-      <DestinationIcon className="h-4 w-4" />
+      {/* Keyed by the theme, so the new icon mounts and turns in. */}
+      <DestinationIcon key={resolvedTheme} className={cn('h-4 w-4', clicked && 'motion-safe:animate-icon-swap')} />
     </button>
   )
 }
