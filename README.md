@@ -1,122 +1,262 @@
+<a href="https://cygnus.samuelsantana.dev"><img src=".github/assets/cover.webp" alt="Cygnus: vaccines, checkups and growth, all in one place. A laptop shows the dashboard of the demo family, and a phone shows the vaccine list in dark mode." width="100%"></a>
+
+<p align="center">
+  <a href="https://cygnus.samuelsantana.dev"><b>Try the live demo</b></a>: no sign-up, a sample family that is deleted after 24 hours.
+  <br>
+  <a href="https://samuelcsantana.github.io/cygnus/">Design system</a> ·
+  <a href="https://github.com/samuelcsantana/cygnus-api">API repository</a> ·
+  <a href="https://samuelcsantana.github.io/cygnus/coverage/">Coverage report</a> ·
+  <a href="https://github.com/samuelcsantana/cygnus/releases/latest">Releases</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml"><img src="https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+  <a href="https://samuelcsantana.github.io/cygnus/"><img src="https://github.com/samuelcsantana/cygnus/actions/workflows/storybook.yml/badge.svg?branch=main" alt="Storybook deployment"></a>
+  <a href="https://samuelcsantana.github.io/cygnus/coverage/"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fsamuelcsantana.github.io%2Fcygnus%2Fcoverage%2Fbadge.json" alt="Unit test line coverage"></a>
+  <a href="https://github.com/samuelcsantana/cygnus/releases/latest"><img src="https://img.shields.io/github/v/release/samuelcsantana/cygnus?label=release" alt="Latest release"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/samuelcsantana/cygnus" alt="MIT License"></a>
+</p>
+
 # Cygnus
 
-[![Latest release](https://img.shields.io/github/v/release/samuelcsantana/cygnus?label=release)](https://github.com/samuelcsantana/cygnus/releases/latest)
-[![CI](https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml)
-[![Storybook deployment](https://github.com/samuelcsantana/cygnus/actions/workflows/storybook.yml/badge.svg?branch=main)](https://samuelcsantana.github.io/cygnus/)
-[![MIT License](https://img.shields.io/github/license/samuelcsantana/cygnus)](LICENSE)
-[![Unit test line coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fsamuelcsantana.github.io%2Fcygnus%2Fcoverage%2Fbadge.json)](https://samuelcsantana.github.io/cygnus/coverage/)
+Cygnus is a mobile-first web app where parents keep their children's health record in one place:
+Brazil's National Immunization Program (PNI) schedule, with what was given and what is overdue;
+doctor visits; weight and height on the WHO growth charts; developmental milestones with photos;
+medications, professionals and health plans. A record can be shared with every person who helps
+care, so it does not live in one parent's drawer. Portuguese, English and Spanish; light and dark.
 
-![React 19](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
-![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
-![Vite 8](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
-![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+This repository is the frontend. The backend is
+[cygnus-api](https://github.com/samuelcsantana/cygnus-api). Both are a portfolio project, built
+the way a product is built: tests, an accessible design system, a public contract between the two
+halves, production deploys, privacy terms and observability.
 
-A mobile-first web application for families to track their children's health and development.
+Cygnus organizes information. It does not replace advice from healthcare professionals.
 
-[Live application](https://cygnus.samuelsantana.dev) · [Design system](https://samuelcsantana.github.io/cygnus/) · [Backend](https://github.com/samuelcsantana/cygnus-api) · [MIT License](LICENSE)
+## Screens
 
-## Features
+Taken from the live demo by [`scripts/render-readme-assets.mjs`](scripts/render-readme-assets.mjs).
+They follow your GitHub theme.
 
-- Registration, password or Google sign-in, and account recovery.
-- Child profiles and shared access for guardians.
-- Vaccination schedules, appointments, medications, and a professional directory.
-- Growth measurements, WHO reference ranges, and developmental milestones.
-- Health plans, search, and notifications.
-- Terms of Use, Privacy Policy, and versioned acceptance records.
-- Portuguese, English, and Spanish interfaces; light and dark themes.
+<table>
+  <tr>
+    <td width="50%">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset=".github/assets/screens/landing-dark.webp">
+        <img src=".github/assets/screens/landing-light.webp" alt="The landing page: headline, the buttons to try the demo or create an account, and a preview of a child's vaccine card.">
+      </picture>
+      <p align="center"><b>Landing page</b>, which never waits for the API</p>
+    </td>
+    <td width="50%">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset=".github/assets/screens/dashboard-dark.webp">
+        <img src=".github/assets/screens/dashboard-light.webp" alt="The dashboard of the demo family: two children, upcoming appointments, vaccine progress, growth and milestones.">
+      </picture>
+      <p align="center"><b>Dashboard</b> for the whole family</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset=".github/assets/screens/vaccines-dark.webp">
+        <img src=".github/assets/screens/vaccines-light.webp" alt="The vaccine list: progress through the routine doses, filters by status, and an overdue dose at the top.">
+      </picture>
+      <p align="center"><b>Vaccines</b> on the PNI schedule</p>
+    </td>
+    <td width="50%">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset=".github/assets/screens/growth-dark.webp">
+        <img src=".github/assets/screens/growth-light.webp" alt="Weight and height charts over the WHO reference bands, with the recorded measurements below.">
+      </picture>
+      <p align="center"><b>Growth</b> over the WHO reference bands</p>
+    </td>
+  </tr>
+</table>
 
-Cygnus organizes information and does not replace advice from healthcare professionals. The web application relies on the API for family records. Its cache does not provide complete offline storage of those records.
+<p align="center">
+  <img src=".github/assets/screens/dashboard-phone-light.webp" alt="The dashboard on a phone, light theme." width="23%">
+  <img src=".github/assets/screens/vaccines-phone-light.webp" alt="The vaccine list on a phone, light theme." width="23%">
+  <img src=".github/assets/screens/dashboard-phone-dark.webp" alt="The dashboard on a phone, dark theme." width="23%">
+  <img src=".github/assets/screens/vaccines-phone-dark.webp" alt="The vaccine list on a phone, dark theme." width="23%">
+</p>
+
+## What is worth reading here
+
+The decisions below are the ones a reviewer would ask about. Each names the file where it lives.
+
+- **No token ever reaches JavaScript.** Sessions are HttpOnly, `SameSite=Strict` cookies. Concurrent
+  401s share one silent `POST /auth/refresh` and retry once, and mutating requests echo the readable
+  `csrf_token` cookie as `X-CSRF-Token` (double-submit). All three live in
+  [`src/lib/http-client.ts`](src/lib/http-client.ts) and nowhere else. Strict cookies do not travel
+  to a cross-site host, so production calls the API through a same-origin Vercel rewrite
+  ([`vercel.json`](vercel.json)).
+- **Every response is parsed at the boundary.** Each `*.api.ts` fetches `unknown` and returns a
+  Zod-parsed type, so a contract drift surfaces as a validation error with a path, not as a broken
+  render three components later. In CI, `npm run contract:check` compares the mapped schemas with
+  the `openapi.json` the API commits ([`scripts/`](scripts)).
+- **Accessibility is a build gate, not a panel.** Every Storybook story runs axe in the light and
+  the dark theme, and a violation fails CI. There is no exception list. Four colour tokens in
+  [`src/index.css`](src/index.css) deliberately differ from the design reference, because the
+  reference values measured below WCAG AA; each says so where it is defined.
+- **The landing page never waits for the API.** The API runs on a free Render instance that sleeps
+  and takes about a minute to wake. The session cookies are HttpOnly, so the readable `csrf_token`
+  cookie is the hint: without it, `/` renders at once and sends no request
+  ([`LandingRoute.tsx`](src/features/landing/routes/LandingRoute.tsx)).
+- **A demo without sign-up.** "Try the demo" asks the API for a disposable account, pre-filled with
+  a sample family and deleted after 24 hours. The demo skips the terms gate, and a banner says the
+  data is fake and how to leave.
+- **The schedule also ships outside the app.** [`embed/`](embed/README.md) is a dependency-free web
+  component in a shadow root (2.78 kB gzip, measured 2026-10-13), with an iframe variant and a
+  versioned `postMessage` protocol. [`mf/`](mf/README.md) exposes the same schedule as a Module
+  Federation remote that shares the host's React as a singleton. Both are published contracts with
+  stable URLs.
+- **Dates are calendar dates.** A `YYYY-MM-DD` birth date is not a UTC instant. Vitest runs in
+  `America/Sao_Paulo`, because in UTC (the CI default) that class of bug passes silently
+  ([`src/lib/date.ts`](src/lib/date.ts)).
+- **Motion that respects the reader.** Page changes are View Transitions, and the scroll-driven
+  effects sit behind `@supports (animation-timeline: view())`. Every effect is off under
+  `prefers-reduced-motion`.
+
+## Architecture
+
+```mermaid
+flowchart TB
+  subgraph Clients
+    SPA["Cygnus app<br/>(React SPA)"]
+    Site["Any website<br/>embed widget"]
+    Host["Another React app<br/>Module Federation host"]
+  end
+  subgraph Vercel["Vercel · cygnus.samuelsantana.dev"]
+    Static["Static build<br/>/ · /embed/* · /mf/*"]
+    Proxy["Rewrite<br/>/api/* · /uploads/*"]
+  end
+  subgraph Render
+    API["cygnus-api<br/>Fastify 5"]
+    Redis[("Redis")]
+  end
+  Neon[("PostgreSQL<br/>Neon")]
+
+  SPA --> Static
+  SPA -- "same-origin, cookies" --> Proxy
+  Site -- "GET /public/vaccine-schedule" --> Proxy
+  Host -- "remoteEntry.js" --> Static
+  Proxy --> API
+  API --> Neon
+  API --> Redis
+```
+
+The browser only ever talks to `cygnus.samuelsantana.dev`. GitHub Pages hosts the
+[design system](https://samuelcsantana.github.io/cygnus/) and the
+[coverage report](https://samuelcsantana.github.io/cygnus/coverage/), and Sentry receives errors
+and Web Vitals.
 
 ## Stack
 
-React 19, Vite 8, and strict TypeScript; TanStack Query for server state; React Hook Form and Zod for forms; Zustand for shared UI state; Tailwind CSS v4, shadcn/ui, and Radix; i18next for localization.
+| Concern | Choice |
+| --- | --- |
+| UI | React 19, React Router 7, Tailwind CSS 4, shadcn/ui on Radix |
+| Server state | TanStack Query, with exported query-key factories |
+| Forms and validation | React Hook Form and Zod |
+| UI state | Zustand, for UI state only |
+| Localization | i18next: Brazilian Portuguese (default), English, Spanish |
+| Build | Vite 8, strict TypeScript, oxlint, Module Federation |
+| Tests | Vitest, Testing Library and MSW; Storybook 10 with axe; Playwright |
+| Delivery | Vercel, GitHub Pages, Docker with nginx, Sentry |
 
-Vitest, Testing Library, and MSW cover application tests. Storybook documents components and checks interactions and accessibility. Playwright covers browser journeys.
+## Running locally
 
-## Local development
-
-Use Node.js 24 and npm. Start the separate backend, normally at `http://localhost:3005`, following the [cygnus-api instructions](https://github.com/samuelcsantana/cygnus-api).
+Use Node.js 24 and npm. Start the [API](https://github.com/samuelcsantana/cygnus-api) first; it
+listens on `http://localhost:3005` by default.
 
 ```bash
 npm ci
-npm run dev
+npm run dev        # http://localhost:4205
 ```
 
-The frontend runs at `http://localhost:4205`. To configure the API, create a `.env.local` file with `VITE_API_BASE_URL`. Variables prefixed with `VITE_*` are public and compiled into the build: never put secrets in them. Google credentials belong in the backend.
+To point at another API, create `.env.local` with `VITE_API_BASE_URL`. Every `VITE_*` variable is
+compiled into the public bundle, so never put a secret in one; the Google credentials belong to the
+API.
 
-### Docker
+With Docker, nginx serves the production build on the same port, without hot reload:
 
 ```bash
 docker compose up -d --build web
 ```
 
-Nginx serves the static build on port 4205 without hot reload. Rebuild the service after changes. Docker and Vite use the same port, so run only one of them on it. Compose does not start the backend; set `VITE_API_BASE_URL` as a build argument when needed.
+Rebuild after each change. Docker and Vite both use port 4205, so run one at a time. Compose does
+not start the API; pass `VITE_API_BASE_URL` as a build argument to change its origin.
 
-## Validation
+## Quality checks
 
-| Command | Purpose |
+| Command | What it checks |
 | --- | --- |
-| `npm run lint` | Lint with oxlint |
-| `npx tsc -b` | Typecheck the application, stories, and integrations |
-| `npm test` | Unit and component tests |
-| `npm run test:coverage` | V8 coverage, HTML report, and metrics summary |
-| `npm run contract:check` | Check mapped endpoint contracts against OpenAPI |
-| `npm run test:storybook` | Stories, interactions, and axe checks in Chromium |
-| `npm run test:e2e` | Playwright journeys against running services |
-| `npm run build` | Typecheck, application, embed, and Module Federation |
-| `npm run storybook` | Design system on port 6006 |
-| `npm run build-storybook` | Static design system in `storybook-static/` |
-| `npm run preview` | Preview the build locally |
+| `npm run lint` | oxlint |
+| `npx tsc -b` | Types for the app, stories, embed and Module Federation |
+| `npm test` | Unit and component tests in jsdom, with strict MSW |
+| `npm run test:coverage` | The same, with V8 coverage and a summary |
+| `npm run contract:check` | Mapped schemas against the API's published OpenAPI |
+| `npm run test:storybook` | Every story in Chromium: render, interactions and axe |
+| `npm run test:e2e` | Playwright journeys against a running stack |
+| `npm run build` | Typecheck, then the app, the embed and the remote, in that order |
 
-Install the test browser with `npx playwright install chromium`. Read the [E2E instructions](e2e/README.md) before running tests that create data.
+CI runs lint, types, the contract check, coverage and the build in one job, and the Storybook suite
+in another. The Storybook suite needs `npx playwright install chromium`. The E2E suite is not in CI,
+because it needs a checkout of the API with PostgreSQL and Redis; the
+[E2E instructions](e2e/README.md) explain how to run it. The contract check covers an explicit map
+of endpoints, and axe does not replace a manual accessibility review.
 
-CI checks lint, types, contracts, unit tests, the build, and Storybook. E2E runs separately. The contract checker covers an explicit endpoint map; axe does not replace a manual accessibility assessment.
+The [coverage report](https://samuelcsantana.github.io/cygnus/coverage/) counts every TypeScript
+module in `src/`, `embed/` and `mf/`, imported by a test or not, and excludes declarations, tests,
+stories and test infrastructure. Storybook and E2E runs do not add to it. No minimum is enforced.
 
-The [public coverage report](https://samuelcsantana.github.io/cygnus/coverage/) shows lines, statements, functions, and branches exercised by unit and component tests. The badge displays line coverage from the latest successful Pages publication. The report includes TypeScript modules in `src/`, `embed/`, and `mf/`, even when tests do not import them; it excludes type declarations, tests, stories, and test infrastructure. Storybook and E2E checks are separate and do not contribute to this percentage. CI also retains the report as an artifact for 14 days. No minimum coverage threshold is enforced for this initial baseline.
+## Project layout
 
-## Structure and design system
-
-| Directory | Responsibility |
+| Path | What lives there |
 | --- | --- |
-| `src/app/` | Routes, providers, and layouts |
-| `src/features/` | Domains, APIs, schemas, hooks, and pages |
-| `src/components/ui/` | UI primitives |
-| `src/shared/`, `src/hooks/`, `src/lib/` | Reusable components and infrastructure |
-| `src/locales/` | Brazilian Portuguese, English, and Spanish copy |
+| `src/app/` | Router, providers, layouts and the session gate |
+| `src/features/<domain>/` | One folder per domain: `api/` (fetch, Zod schemas, hooks), `components/`, `routes/` |
+| `src/components/ui/` | shadcn/ui primitives, without business logic |
+| `src/shared/`, `src/hooks/`, `src/lib/` | Cross-feature components and infrastructure: HTTP client, query client, i18n, dates |
+| `src/locales/` | Copy in the three languages |
 | `src/docs/` | Storybook pages |
-| `e2e/` | Playwright journeys and fixtures |
+| `embed/`, `mf/` | The widget and the federated remote |
+| `e2e/` | Playwright journeys |
 
-Design tokens live in `src/index.css`. Stories sit beside their components; configuration lives in `.storybook/`. The suite treats accessibility violations as errors. The `storybook.yml` workflow publishes the design system from `main` to GitHub Pages.
+Routes are lazy-loaded. Design tokens live in `src/index.css`, and stories sit beside their
+components.
 
-## Build and deployment
+## Deployment
 
-Three artifacts share the production build:
+A merge to `main` deploys to Vercel and republishes the design system and the coverage report to
+GitHub Pages. One build produces three artifacts:
 
-| Artifact | Public entry point | Documentation |
+| Artifact | Public entry point | Notes |
 | --- | --- | --- |
-| React application | `/` | This README |
-| Standalone widget | `/embed/embed.js`, `/embed/iframe.html` | [Embed](embed/README.md) |
-| Module Federation | `/mf/remoteEntry.js` | [Module Federation](mf/README.md) |
+| The app | `/` | lazy routes; entry chunk 183.8 kB gzip (measured 2026-10-13) |
+| Embed widget | `/embed/embed.js`, `/embed/iframe.html` | [embed/README.md](embed/README.md) |
+| Module Federation remote | `/mf/remoteEntry.js` | [mf/README.md](mf/README.md) |
 
-Preserve the Cygnus URLs and technical identifiers used by external consumers. Stable entry points need short caching or revalidation; hashed assets can use immutable caching.
-
-The Vercel configuration proxies `/api/*` and `/uploads/*` to the backend on Render. Changes to `main` trigger deployment. Docker uses Nginx with its own header and cache configuration. To check static serving after changes:
+Those three URLs are contracts: they live in other people's HTML and deployments, so they never
+change, and they are cached for ten minutes. Only hashed assets are `immutable`. Vercel and the
+Docker nginx keep separate header configurations, and one script checks either:
 
 ```bash
-node scripts/check-static-serving.mjs
-node scripts/check-static-serving.mjs --browser
+node scripts/check-static-serving.mjs            # headers, caching and 404s
+node scripts/check-static-serving.mjs --browser  # plus the iframe, from another origin, in Chromium
 ```
 
-Set `STATIC_BASE_URL` to check another target. The second check requires Chromium and API access.
+It checks the Docker build on port 4205 by default; set `STATIC_BASE_URL` to check another target.
+The browser check calls the real API.
 
 ## Terms and privacy
 
-The documents are available at the public [Terms of Use](https://cygnus.samuelsantana.dev/termos) and [Privacy Policy](https://cygnus.samuelsantana.dev/privacidade) routes. Content lives in `src/features/legal/content/`; version, status, and effective date are defined in `src/shared/legal.ts`. Local changes appear on the website after deployment.
+The [Terms of Use](https://cygnus.samuelsantana.dev/termos) and the
+[Privacy Policy](https://cygnus.samuelsantana.dev/privacidade) are versioned in
+[`src/shared/legal.ts`](src/shared/legal.ts), with the text in `src/features/legal/content/`. A new
+version asks every signed-in user to accept again, and the API records each acceptance.
 
-The Android application with local data storage is planned separately and is not delivered by this repository.
+## License
 
-## License and contact
+[MIT](LICENSE), © 2026 Samuel Santana. Dependencies and third-party material keep their own
+licenses.
 
-Code is distributed under the [MIT License](LICENSE), copyright © 2026 Samuel Santana. Dependencies and third-party materials remain subject to their respective licenses.
-
-Maintainer: Samuel Santana — [samuel.ssa89@gmail.com](mailto:samuel.ssa89@gmail.com).
+Built by Samuel Santana: [samuel.ssa89@gmail.com](mailto:samuel.ssa89@gmail.com).
