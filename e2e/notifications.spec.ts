@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test'
 import { AxeBuilder } from '@axe-core/playwright'
 
+import { LEGAL_DOCUMENTS } from '../src/shared/legal.js'
+
 // Deterministic alerts exercise the production UI without depending on the daily reminder job.
 test('notification filters, read state and record navigation work on mobile and desktop', async ({ page }) => {
   const ana = { id: '11111111-1111-4111-8111-111111111111', userId: '99999999-9999-4999-8999-999999999999', name: 'Ana', birthDate: '2024-01-01', sexAtBirth: 'FEMALE', bloodType: null, allergies: [], healthPlanName: null, healthPlanNumber: null, avatarUrl: null, avatarColor: null, measurements: [], createdAt: '2026-01-01T12:00:00Z' }
@@ -11,6 +13,11 @@ test('notification filters, read state and record navigation work on mobile and 
     { id: '44444444-4444-4444-8444-444444444444', babyId: bruno.id, type: 'VACCINE_DELAYED', referenceId: '55555555-5555-4555-8555-555555555555', title: 'Vacina do Bruno', message: 'A vacina de Bruno está atrasada.', readAt: null as string | null, createdAt: '2026-09-08T12:00:00Z' },
   ]
   await page.route('**/auth/me', route => route.fulfill({ json: { id: ana.userId, name: 'Responsável', email: 'parent@example.com', createdAt: ana.createdAt } }))
+  // ProtectedLayout asks which legal versions this account accepted before showing any page. Left to
+  // the real API, that request had no session, answered 401 and sent the test to /login. The
+  // versions come from the app's own registry, so a new version of the terms does not break this.
+  const accepted = Object.values(LEGAL_DOCUMENTS).map(doc => ({ documentId: doc.id, version: doc.version, acceptedAt: ana.createdAt }))
+  await page.route('**/legal/acceptances', route => route.fulfill({ json: accepted }))
   await page.route('**/babies', route => route.fulfill({ json: [ana, bruno] }))
   await page.route('**/babies/*/appointments', route => route.fulfill({ json: [appointment] }))
   await page.route('**/notifications', route => route.request().isNavigationRequest() ? route.continue() : route.fulfill({ json: items }))
