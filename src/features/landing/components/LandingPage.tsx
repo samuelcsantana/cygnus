@@ -150,8 +150,10 @@ export function LandingPage({ widgetScriptSrc, demoActive = false }: LandingPage
             </h1>
             <p className="mt-5 max-w-[34rem] text-base leading-relaxed text-ink-muted">{t('landing.hero.subtitle')}</p>
             {/* The demo first: the person this page is for wants to see the app,
-                not to open an account. Sign-up stays one screen away, on the
-                sign-in page. */}
+                not to open an account. Sign-up second, on the page itself: it
+                used to be one screen away, behind "Entrar", and a visitor who
+                did want an account had nothing here to click. Signing in drops
+                to a line below, since the header offers it too from 640px. */}
             <div className="mt-7 flex flex-wrap gap-2.5">
               <button type="button" onClick={openDemo} disabled={demo.isPending} aria-busy={demo.isPending} className={cn(PRIMARY_ACTION, 'gap-2')}>
                 {demo.isPending ? (
@@ -166,14 +168,23 @@ export function LandingPage({ widgetScriptSrc, demoActive = false }: LandingPage
                   </>
                 )}
               </button>
-              <Link to="/login" className={SECONDARY_ACTION}>
-                {t('landing.hero.signIn')}
+              <Link to="/register" className={SECONDARY_ACTION}>
+                {t('landing.hero.signUp')}
               </Link>
             </div>
             <div className="max-w-[34rem]">
               <ServerWakingNotice active={demo.isPending} />
             </div>
-            <p className="mt-4 flex items-center gap-2 text-[12.5px] text-ink-muted">
+            <p className="mt-4 text-sm text-ink-muted">
+              {t('auth.register.hasAccount')}{' '}
+              <Link
+                to="/login"
+                className="rounded-sm font-semibold text-auth-action underline-offset-4 hover:underline focus-visible:ring-3 focus-visible:ring-emerald-600/40 focus-visible:outline-none"
+              >
+                {t('landing.hero.signIn')}
+              </Link>
+            </p>
+            <p className="mt-2 flex items-center gap-2 text-[12.5px] text-ink-muted">
               <CheckIcon className="size-3.5 shrink-0 text-auth-action" />
               {t('landing.hero.trust')}
             </p>
