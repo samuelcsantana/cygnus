@@ -17,7 +17,7 @@ Set `E2E_BASE_URL` to override the default frontend URL, `http://localhost:4205`
 
 - Registration helpers generate unique email addresses. The shared login helper also completes legal acceptance for new accounts.
 - Real API scenarios create persistent records; do not assume automatic cleanup.
-- Unique accounts do not isolate infrastructure limits. The shared-IP API rate limiter can affect a complete parallel run; reduce concurrency or run focused specs when diagnosing failures.
+- Every request comes from one IP. The API's compose stack raises its per-IP rate limits for that reason (it logs `rate_limits.overridden` at boot); against an API running the production limits, a full run draws 429s. The suite runs four workers (`playwright.config.ts`): the API hashes passwords on four threads, and more workers made sign-ups queue past the test timeouts.
 - A focused passing scenario does not establish that the complete suite passes.
 - Locale is pinned to `pt-BR`; selectors use Portuguese interface copy.
 - E2E is not currently part of the main CI workflow. Unit and Storybook checks run separately.
