@@ -22,6 +22,10 @@ import { chromium } from '@playwright/test'
  * - The covers are HTML rendered here: `cover.webp` (README, 2x) and `social-preview.jpg`
  *   (1280x640, under GitHub's 1 MB limit; uploaded by hand in Settings → Social preview, which has
  *   no API).
+ * - `public/og-image.jpg` is the same cover in Portuguese, over Portuguese screenshots: the picture a
+ *   link to the app shows on LinkedIn, WhatsApp or Slack (`og:image` in index.html). Portuguese
+ *   because index.html is: a link preview is fetched once, by a crawler, with no language to
+ *   negotiate. 1200x630 is the 1.91:1 those previews crop to.
  * - The API repository's cover is rendered here too, because this repository already has the
  *   browser, the fonts and the mark. It is written to `API_ASSETS_DIR`, or to a sibling
  *   `../cygnus-api` checkout when one exists, and committed there. Without either it is skipped,
@@ -31,6 +35,7 @@ import { chromium } from '@playwright/test'
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const BASE_URL = process.env.BASE_URL ?? 'https://cygnus.samuelsantana.dev'
 const OUT = resolve(ROOT, '.github/assets')
+const PUBLIC = resolve(ROOT, 'public')
 const SCREENS = resolve(OUT, 'screens')
 const API_REPO = resolve(ROOT, '../cygnus-api')
 const API_OUT = process.env.API_ASSETS_DIR
@@ -72,6 +77,50 @@ function log(path) {
   console.log(relative(resolve(ROOT, '..'), path).replaceAll('\\', '/'))
 }
 
+// networkidle is not enough: a query can start after the network goes quiet, and the dashboard
+// was caught three ways that it missed: as grey skeletons, as the session gate's spinner, and as
+// overview cards still printing their loading text. The cards print `common.loading` as plain
+// text, with no class or role to wait on, so the app's own word for it is read from each locale
+// shot here.
+const LOADING_TEXT = ['en', 'pt-BR'].map(
+  (lng) => JSON.parse(readFileSync(resolve(ROOT, `src/locales/${lng}.json`), 'utf8')).common.loading,
+)
+function isSettled(loadingText) {
+  if (document.querySelector('.animate-pulse, .animate-spin')) return false
+  return ![...document.querySelectorAll('p, span')].some((el) => loadingText.includes(el.textContent.trim()))
+}
+
+// Production allows 100 API requests a minute per IP, and one run here can make more than that. A
+// page that loaded through a 429 shows an error card instead of the app, and nothing else notices:
+// the dashboard was captured once with two cards reading "could not load". So each page records
+// the 429s it receives, and `load` waits out the window and loads the page again.
+function watchRateLimit(page) {
+  const limit = { hit: false, retryAt: 0 }
+  page.on('response', (response) => {
+    if (response.status() !== 429) return
+    limit.hit = true
+    const seconds = Number(response.headers()['retry-after']) || 60
+    limit.retryAt = Math.max(limit.retryAt, Date.now() + seconds * 1000)
+  })
+  return limit
+}
+
+// Opens `url`, or reloads when there is none, and returns once the app has finished loading.
+async function load(page, limit, url) {
+  for (;;) {
+    limit.hit = false
+    if (url) await page.goto(url)
+    else await page.reload()
+    await page.waitForLoadState('networkidle')
+    await page.waitForFunction(isSettled, LOADING_TEXT, { timeout: 30_000 })
+    await page.waitForTimeout(400)
+    if (!limit.hit) return
+    const wait = Math.max(0, limit.retryAt - Date.now()) + 1_000
+    console.log(`rate limited, loading ${url ?? page.url()} again in ${Math.ceil(wait / 1000)} s`)
+    await page.waitForTimeout(wait)
+  }
+}
+
 async function captureScreens() {
   const desktop = await browser.newContext({
     viewport: { width: 1440, height: 900 },
@@ -82,24 +131,17 @@ async function captureScreens() {
   })
   await desktop.addInitScript(() => localStorage.setItem('i18nextLng', 'en'))
   const page = await desktop.newPage()
+  const pageLimit = watchRateLimit(page)
 
   const setTheme = (theme) => page.evaluate((t) => localStorage.setItem('theme', t), theme)
-  const settle = async () => {
-    await page.waitForLoadState('networkidle')
-    // Skeletons are the one loading state that networkidle does not cover: a query can resolve
-    // after the network goes quiet, and the dashboard was caught as grey boxes once.
-    await page.waitForFunction(() => !document.querySelector('.animate-pulse'), null, { timeout: 30_000 })
-    await page.waitForTimeout(400)
-  }
-  const shoot = async (name) => {
-    await settle()
+  const shoot = async (name, url) => {
+    await load(page, pageLimit, url)
     await writeWebp(resolve(SCREENS, `${name}.webp`), await page.screenshot())
   }
 
   await page.goto(`${BASE_URL}/?lng=en`)
   for (const theme of ['light', 'dark']) {
     await setTheme(theme)
-    await page.reload()
     await shoot(`landing-${theme}`)
   }
 
@@ -113,8 +155,7 @@ async function captureScreens() {
   for (const theme of ['light', 'dark']) {
     await setTheme(theme)
     for (const [name, path] of Object.entries(pages)) {
-      await page.goto(`${BASE_URL}${path}`)
-      await shoot(`${name}-${theme}`)
+      await shoot(`${name}-${theme}`, `${BASE_URL}${path}`)
     }
   }
 
@@ -129,16 +170,25 @@ async function captureScreens() {
     reducedMotion: 'reduce',
   })
   const phonePage = await phone.newPage()
+  const phoneLimit = watchRateLimit(phonePage)
+  const shootPhone = async (name, url) => {
+    await load(phonePage, phoneLimit, url)
+    await writeWebp(resolve(SCREENS, `${name}.webp`), await phonePage.screenshot())
+  }
   for (const theme of ['light', 'dark']) {
     await phonePage.addInitScript((t) => localStorage.setItem('theme', t), theme)
     for (const name of ['dashboard', 'vaccines']) {
-      await phonePage.goto(`${BASE_URL}${pages[name]}`)
-      await phonePage.waitForLoadState('networkidle')
-      await phonePage.waitForFunction(() => !document.querySelector('.animate-pulse'), null, { timeout: 30_000 })
-      await phonePage.waitForTimeout(400)
-      await writeWebp(resolve(SCREENS, `${name}-phone-${theme}.webp`), await phonePage.screenshot())
+      await shootPhone(`${name}-phone-${theme}`, `${BASE_URL}${pages[name]}`)
     }
   }
+
+  // The link preview's two screens, in Portuguese. Taken last: the phone context copied the desktop
+  // storage, so a language switched earlier would have leaked into the English shots. `?lng=` wins
+  // over storage in the language detector, and dark is the last theme init script added above.
+  await shootPhone('vaccines-phone-dark-pt', `${BASE_URL}${pages.vaccines}?lng=pt-BR`)
+  await setTheme('light')
+  await shoot('dashboard-light-pt', `${BASE_URL}${pages.dashboard}?lng=pt-BR`)
+
   await phone.close()
   await desktop.close()
 }
@@ -156,19 +206,26 @@ async function renderCovers() {
     ${COVER_CSS}
   </style>`
 
-  const covers = [{ body: webCover({ mark, screen }), dir: OUT }]
-  if (API_OUT) covers.push({ body: apiCover({ mark }), dir: API_OUT })
+  // The README banner is wider than the social card: 1280x560 reads as a header, while a
+  // 2:1 banner pushes the first line of text below the fold on a laptop.
+  const readme = (dir) => [
+    { dir, file: 'cover.webp', width: 1280, height: 560, scale: 2 },
+    { dir, file: 'social-preview.jpg', width: 1280, height: 640, scale: 1 },
+  ]
+  const covers = [
+    { body: webCover({ mark, screen, copy: WEB_COPY.en }), outputs: readme(OUT) },
+    {
+      body: webCover({ mark, screen, copy: WEB_COPY.pt }),
+      outputs: [{ dir: PUBLIC, file: 'og-image.jpg', width: 1200, height: 630, scale: 1 }],
+    },
+  ]
+  if (API_OUT) covers.push({ body: apiCover({ mark }), outputs: readme(API_OUT) })
   else console.log('cygnus-api cover skipped: no ../cygnus-api checkout and no API_ASSETS_DIR')
 
-  for (const { body, dir } of covers) {
-    // The README banner is wider than the social card: 1280x560 reads as a header, while a
-    // 2:1 banner pushes the first line of text below the fold on a laptop.
-    for (const { height, scale, file } of [
-      { height: 560, scale: 2, file: 'cover.webp' },
-      { height: 640, scale: 1, file: 'social-preview.jpg' },
-    ]) {
-      const page = await browser.newPage({ viewport: { width: 1280, height }, deviceScaleFactor: scale })
-      await page.setContent(`<!doctype html><html><head>${head}</head><body>${body(height)}</body></html>`)
+  for (const { body, outputs } of covers) {
+    for (const { dir, file, width, height, scale } of outputs) {
+      const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: scale })
+      await page.setContent(`<!doctype html><html><head>${head}</head><body>${body(width, height)}</body></html>`)
       await page.evaluate(() => document.fonts.ready)
       const path = resolve(dir, file)
       if (file.endsWith('.jpg')) {
@@ -200,29 +257,48 @@ const stars = () =>
 const brand = (mark, suffix = '') =>
   `<div class="brand"><div class="tile">${mark}</div><span>Cygnus${suffix ? `<b>${suffix}</b>` : ''}</span></div>`
 
-function webCover({ mark, screen }) {
-  return (height) => `<main class="cover" style="height:${height}px">
+// The Portuguese follows the landing page's own hero (`landing.hero` in pt-BR.json).
+const WEB_COPY = {
+  en: {
+    eyebrow: "Children's health, organized",
+    title: 'Vaccines, checkups<br>and growth, <em>all in one place.</em>',
+    lede: "Brazil's vaccine schedule, doctor visits, WHO growth charts, milestones and medications, shared by the whole family.",
+    demo: 'Live demo, no sign-up',
+    screens: { desktop: 'dashboard-light', phone: 'vaccines-phone-dark' },
+  },
+  pt: {
+    eyebrow: 'Saúde da criança, organizada',
+    title: 'Vacinas, consultas<br>e crescimento, <em>num lugar só.</em>',
+    lede: 'O calendário do PNI, as consultas, as curvas de crescimento da OMS, os marcos e os remédios, para a família inteira.',
+    demo: 'Demonstração sem cadastro',
+    screens: { desktop: 'dashboard-light-pt', phone: 'vaccines-phone-dark-pt' },
+  },
+}
+
+// The two social cards (630 and 640 tall) place the screens lower than the 560px README banner.
+function webCover({ mark, screen, copy }) {
+  return (width, height) => `<main class="cover" style="width:${width}px;height:${height}px">
     ${stars()}
     <section class="copy">
       ${brand(mark)}
-      <p class="eyebrow">Children's health, organized</p>
-      <h1>Vaccines, checkups<br>and growth, <em>all in one place.</em></h1>
-      <p class="lede">Brazil's vaccine schedule, doctor visits, WHO growth charts, milestones and medications, shared by the whole family.</p>
+      <p class="eyebrow">${copy.eyebrow}</p>
+      <h1>${copy.title}</h1>
+      <p class="lede">${copy.lede}</p>
       <ul class="chips"><li>React 19</li><li>TypeScript</li><li>TanStack Query</li><li>Storybook + axe</li></ul>
-      <p class="foot"><strong>Live demo, no sign-up</strong> · cygnus.samuelsantana.dev</p>
+      <p class="foot"><strong>${copy.demo}</strong> · cygnus.samuelsantana.dev</p>
     </section>
-    <figure class="browser" style="top:${height === 640 ? 92 : 64}px">
+    <figure class="browser" style="top:${height >= 630 ? 92 : 64}px">
       <div class="bar"><span>cygnus.samuelsantana.dev/dashboard</span></div>
-      <img src="${screen('dashboard-light')}" alt="">
+      <img src="${screen(copy.screens.desktop)}" alt="">
     </figure>
-    <figure class="phone" style="top:${height === 640 ? 196 : 150}px">
-      <img src="${screen('vaccines-phone-dark')}" alt="">
+    <figure class="phone" style="top:${height >= 630 ? 196 : 150}px">
+      <img src="${screen(copy.screens.phone)}" alt="">
     </figure>
   </main>`
 }
 
 function apiCover({ mark }) {
-  return (height) => `<main class="cover" style="height:${height}px">
+  return (width, height) => `<main class="cover" style="width:${width}px;height:${height}px">
     ${stars()}
     <section class="copy">
       ${brand(mark, 'API')}
@@ -232,7 +308,7 @@ function apiCover({ mark }) {
       <ul class="chips"><li>58 endpoints</li><li>OpenAPI 3.0</li><li>17 Prisma models</li><li>HttpOnly + CSRF</li></ul>
       <p class="foot"><strong>MIT</strong> · github.com/samuelcsantana/cygnus-api</p>
     </section>
-    <figure class="terminal" style="top:${height === 640 ? 96 : 52}px">
+    <figure class="terminal" style="top:${height >= 630 ? 96 : 52}px">
       <div class="bar"><span>production · cygnus.samuelsantana.dev/api</span></div>
       <pre><span class="prompt">$</span> curl -i -X POST <span class="url">…/api/auth/demo</span>
 <span class="ok">HTTP/1.1 201 Created</span>
@@ -244,7 +320,7 @@ function apiCover({ mark }) {
 { <span class="k">"status"</span>: <span class="v">"ok"</span>, <span class="k">"message"</span>: <span class="v">"Demo session started"</span>,
   <span class="k">"expiresAt"</span>: <span class="v">"…"</span> }</pre>
     </figure>
-    <figure class="layers" style="top:${height === 640 ? 380 : 296}px">
+    <figure class="layers" style="top:${height >= 630 ? 380 : 296}px">
       <ol>
         <li><b>presentation</b><span>routes · Zod schemas · auth guard</span></li>
         <li><b>infrastructure</b><span>Prisma · Redis · BullMQ · Resend</span></li>
@@ -260,7 +336,7 @@ const COVER_CSS = `
   * { box-sizing: border-box; }
   html, body { margin: 0; }
   .cover {
-    position: relative; width: 1280px; overflow: hidden; color: #fff; font-family: Inter, sans-serif;
+    position: relative; overflow: hidden; color: #fff; font-family: Inter, sans-serif;
     background:
       radial-gradient(760px 420px at 88% 112%, rgba(45, 106, 79, 0.95), transparent 70%),
       radial-gradient(640px 380px at 0% -8%, rgba(33, 72, 112, 0.9), transparent 65%),

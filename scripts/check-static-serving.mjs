@@ -11,6 +11,15 @@ assert.equal(app.headers.get('x-frame-options'), 'DENY')
 assert.match(app.headers.get('content-security-policy'), /frame-ancestors 'none'/)
 assert.equal(app.headers.get('cache-control'), 'no-cache')
 const html = await app.text()
+
+// Link previews are built by crawlers that run no JavaScript, so the tag has to be in the HTML as
+// served, and the file it names has to be a real image: a missing one would come back as the SPA
+// fallback, 200 and text/html, and the preview would silently have no picture.
+const preview = html.match(/<meta property="og:image" content="https:\/\/[^/"]+(\/[^"]+)"/)?.[1]
+assert.ok(preview, 'index.html must name an og:image')
+const previewImage = await get(preview)
+assert.equal(previewImage.status, 200, preview)
+assert.equal(previewImage.headers.get('content-type'), 'image/jpeg', preview)
 const asset = html.match(/src="(\/assets\/[^"]+\.js)"/)?.[1]
 assert.ok(asset, 'The app must reference a built JavaScript asset')
 assert.equal((await get(asset)).headers.get('cache-control'), 'public, max-age=31536000, immutable')
