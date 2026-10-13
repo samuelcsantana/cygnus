@@ -31,7 +31,7 @@ test('notification filters, read state and record navigation work on mobile and 
   await expect(page.getByRole('heading', { name: 'Consulta da Ana' })).toBeVisible()
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
   await page.setViewportSize({ width: 375, height: 812 })
-  await page.screenshot({ path: 'docs/verification/notifications-mobile.png', fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('notifications-mobile.png'), fullPage: true })
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
   expect(await page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')).toBe(true)
   await page.getByRole('combobox', { name: 'Criança', exact: true }).click()
@@ -39,7 +39,7 @@ test('notification filters, read state and record navigation work on mobile and 
   // Radix hides the background while the popup owns focus. Audit the active
   // listbox here; the complete page is audited above with the popup closed.
   expect((await new AxeBuilder({ page }).include('[role="listbox"]').analyze()).violations).toEqual([])
-  await page.screenshot({ path: 'docs/verification/notifications-select-mobile.png', fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('notifications-select-mobile.png'), fullPage: true })
   await page.getByRole('option', { name: 'Ana', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Vacina do Bruno' })).toHaveCount(0)
   await page.getByRole('button', { name: 'Marcar como lida', exact: true }).click()

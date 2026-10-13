@@ -5,7 +5,7 @@ test('welcomes a family and guides its first records on desktop and mobile', asy
   await registerAndLogin(page, uniqueTestUser('overview'))
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await expect(page.getByRole('button', { name: 'Adicionar meu primeiro filho' })).toBeVisible()
-  await page.screenshot({ path: 'docs/verification/home-empty.png', fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('home-empty.png'), fullPage: true })
   expect(
     (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze())
       .violations,
@@ -13,14 +13,14 @@ test('welcomes a family and guides its first records on desktop and mobile', asy
   await openAddBabyDialog(page)
   await addBaby(page, { name: 'Alice', birthDate: '2025-06-15', sexAtBirth: 'Feminino' })
   await expect(page.getByRole('heading', { name: 'Comece por aqui' })).toBeVisible()
-  await page.screenshot({ path: 'docs/verification/home-first.png', fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('home-first.png'), fullPage: true })
   expect(
     (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze())
       .violations,
   ).toEqual([])
   await page.setViewportSize({ width: 375, height: 812 })
   expect(await page.locator('body').evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
-  await page.screenshot({ path: 'docs/verification/home-mobile.png', fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('home-mobile.png'), fullPage: true })
   await page.getByRole('link', { name: 'Agendar uma consulta', exact: true }).click()
   await expect(page).toHaveURL(/appointments$/)
 })

@@ -66,11 +66,11 @@ test('keeps account email read-only while saving the name', async ({ page }) => 
   await expect(page.getByRole('button', { name: 'Trocar senha' })).toBeVisible()
   await page.reload()
   await expect(page.getByRole('banner').locator('img')).toHaveAttribute('src', replaced)
-  await page.screenshot({ path: 'docs/verification/profile-redesign-desktop.png', fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('profile-redesign-desktop.png'), fullPage: true })
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
   await page.setViewportSize({ width: 375, height: 812 })
   expect(await page.locator('body').evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
-  await page.screenshot({ path: 'docs/verification/profile-mobile.png', fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('profile-mobile.png'), fullPage: true })
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
   await page.getByRole('button', { name: 'Remover foto' }).click()
   const removed = page.waitForResponse(

@@ -33,7 +33,7 @@ test('the landing page greets a visitor at /, readable and accessible at phone a
     // times 1.5s later). A real overflow persists, and still fails here.
     await expect.poll(() => page.evaluate('document.documentElement.scrollWidth <= innerWidth')).toBe(true)
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
-    await page.screenshot({ path: `docs/verification/landing-${width}-${colorScheme}.png`, fullPage: true })
+    await page.screenshot({ path: test.info().outputPath(`landing-${width}-${colorScheme}.png`), fullPage: true })
   }
 
   // A visitor with no session must not wait on the API to see the page.
@@ -62,7 +62,7 @@ test('the demo opens a sample family without sign-up or the terms gate, and leav
   await expect(page.getByText('Helena').first()).toBeVisible()
   await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important}' })
   expect((await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual([])
-  await page.screenshot({ path: 'docs/verification/demo-dashboard.png', fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('demo-dashboard.png'), fullPage: true })
 
   await banner.getByRole('button', { name: 'Sair' }).click()
 

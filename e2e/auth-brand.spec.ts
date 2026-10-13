@@ -27,7 +27,7 @@ test('auth branding stays compact and accessible across forms, sizes and themes'
     await expect(page.getByRole('button', { name: 'Continuar com Google' })).toBeInViewport()
     expect(await page.evaluate('document.documentElement.scrollWidth <= innerWidth')).toBe(true)
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
-    await page.screenshot({ path: `docs/verification/auth-brand-${name}.png`, fullPage: true })
+    await page.screenshot({ path: test.info().outputPath(`auth-brand-${name}.png`), fullPage: true })
   }
   await page.setViewportSize({ width: 360, height: 800 })
   await page.emulateMedia({ colorScheme: 'light' })
@@ -35,7 +35,7 @@ test('auth branding stays compact and accessible across forms, sizes and themes'
   await expect(page.getByRole('heading', { name: 'Crie sua conta' })).toBeVisible()
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([])
   expect(await page.evaluate('document.documentElement.scrollWidth <= innerWidth')).toBe(true)
-  await page.screenshot({ path: 'docs/verification/auth-brand-register.png', fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('auth-brand-register.png'), fullPage: true })
   await page.getByRole('link', { name: 'Entrar', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Bem-vindo(a) de volta' })).toBeVisible()
   await page.getByLabel('E-mail', { exact: true }).fill('parent@example.com')
