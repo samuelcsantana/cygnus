@@ -64,6 +64,13 @@ const INSIDE_ITEMS = ['a11y', 'contract', 'session', 'widget'] as const
 interface LandingPageProps {
   /** Passed through to the widget; stories pass `null` (see ScheduleWidgetShowcase). */
   widgetScriptSrc?: string | null
+  /**
+   * The visitor is inside a demo already (LandingRoute shows this page to a
+   * demo session, so the browser's back button can return here). The demo
+   * buttons then go back to it: starting another would throw away what the
+   * visitor changed and spend one of the ten demos an address gets per hour.
+   */
+  demoActive?: boolean
 }
 
 /**
@@ -81,15 +88,22 @@ interface LandingPageProps {
  * reader can check; none is a count, because counts drift and nothing would
  * update this page when they do.
  */
-export function LandingPage({ widgetScriptSrc }: LandingPageProps) {
+export function LandingPage({ widgetScriptSrc, demoActive = false }: LandingPageProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const demo = useStartDemoSession()
-  const openDemo = () =>
+  // Pushed, not replaced: this page stays in the history under the dashboard,
+  // so the browser's back button returns to it, as a visitor expects.
+  const openDemo = () => {
+    if (demoActive) {
+      navigate('/dashboard')
+      return
+    }
     demo.mutate(undefined, {
-      onSuccess: () => navigate('/dashboard', { replace: true }),
+      onSuccess: () => navigate('/dashboard'),
       onError: (error) => toast.error(t(demoStartErrorKey(error))),
     })
+  }
 
   return (
     <div className="landing flex min-h-dvh flex-col bg-auth-surface">

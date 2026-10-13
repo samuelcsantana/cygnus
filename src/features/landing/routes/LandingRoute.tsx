@@ -26,6 +26,11 @@ const SESSION_HINT_COOKIE = 'csrf_token'
  * did; a 401 (the http client's silent refresh already tried) shows the page.
  * `expectsAnonymous` keeps that 401 from tripping the global "session expired"
  * redirect to /login.
+ *
+ * A demo session sees the page too. The demo starts here, and a visitor who
+ * presses the browser's back button from inside it expects to come back here;
+ * redirected to the dashboard, the button looked broken. The page's demo
+ * buttons then return to the running demo instead of starting another.
  */
 export function LandingRoute() {
   const [hasSessionHint] = useState(() => readCookie(SESSION_HINT_COOKIE) !== null)
@@ -45,6 +50,7 @@ function SessionAwareLanding() {
   const currentUser = useCurrentUser({ expectsAnonymous: true })
 
   if (currentUser.isSuccess) {
+    if (currentUser.data.demoExpiresAt) return <LandingPage demoActive />
     return <Navigate to="/dashboard" replace />
   }
 

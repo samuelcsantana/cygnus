@@ -93,4 +93,38 @@ describe('LandingRoute', () => {
     await waitFor(() => expect(onUnauthorized).not.toHaveBeenCalled())
     expect(screen.queryByText('dashboard')).not.toBeInTheDocument()
   })
+
+  it('shows a demo session the landing page, whose demo button returns to that demo', async () => {
+    setSessionHint()
+    const demoStarts: string[] = []
+    server.use(
+      http.get(`${config.apiBaseUrl}/auth/me`, () =>
+        HttpResponse.json({
+          id: '00000000-0000-0000-0000-000000000001',
+          email: 'demo-1@demo.cygnus.invalid',
+          name: 'Marina',
+          createdAt: '2026-10-13T00:00:00.000Z',
+          demoExpiresAt: '2026-10-14T00:00:00.000Z',
+        }),
+      ),
+      http.post(`${config.apiBaseUrl}/auth/demo`, ({ request }) => {
+        demoStarts.push(request.url)
+        return HttpResponse.json({ demoExpiresAt: '2026-10-14T00:00:00.000Z' }, { status: 201 })
+      }),
+    )
+
+    renderAtRoot()
+
+    // The back button from inside the demo lands here; a redirect to the
+    // dashboard made it look broken.
+    expect(await screen.findByRole('heading', { level: 1 })).toBeInTheDocument()
+    expect(screen.queryByText('dashboard')).not.toBeInTheDocument()
+
+    screen.getAllByRole('button', { name: /Ver demonstração/ }).at(0)?.click()
+
+    expect(await screen.findByText('dashboard')).toBeInTheDocument()
+    // Back to the running demo, not a new account: a second one would drop
+    // what the visitor changed and spend the address's hourly allowance.
+    expect(demoStarts).toEqual([])
+  })
 })
