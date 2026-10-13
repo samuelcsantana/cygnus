@@ -5,8 +5,15 @@
  * (`scripts/render-brand-icons.mjs`). `BrandMark.test.tsx` fails if the two drift apart.
  */
 
-/** The night sky, top to bottom. */
-export const BRAND_MARK_SKY = ['#10243a', '#163a2e'] as const
+/**
+ * The night sky, top to bottom: navy into the app's own green (`--color-auth-button`).
+ *
+ * The green used to be #163a2e, which read as black: on the dark page background it measured
+ * 1.36:1, so the tile's edge disappeared, and next to the green buttons the mark looked like a
+ * different brand. #2d6a4f is 2.65:1 there and is the green of every primary action. The top stays
+ * a night navy, lifted slightly to meet it, and the stars keep 10.8:1 against it.
+ */
+export const BRAND_MARK_SKY = ['#14304d', '#2d6a4f'] as const
 
 /** Back to front: body, tail, the two faces of the wing, the neck, the head, the bill. */
 export const BRAND_MARK_FACES = [
