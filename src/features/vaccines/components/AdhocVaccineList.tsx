@@ -29,8 +29,8 @@ interface AdhocVaccineListProps {
 
 // Household-wide list of campaign/custom vaccine records, each tagged with
 // which child it belongs to. All records here are adhoc (not derived from
-// the national schedule catalog), so â€” unlike catalog-derived VaccineCalendarList
-// rows â€” every one of them is eligible for deletion/correction.
+// the national schedule catalog), so — unlike catalog-derived VaccineCalendarList
+// rows — every one of them is eligible for deletion/correction.
 export function AdhocVaccineList({ babies }: AdhocVaccineListProps) {
   const { t } = useTranslation()
   const {
@@ -105,7 +105,7 @@ function AdhocVaccineRow({ item, baby }: AdhocVaccineRowProps) {
   const avatarAppearance = baby ? babyAvatarAppearance(baby.id, baby.avatarColor) : null
 
   // Radix's AlertDialogAction always closes the alert dialog immediately on
-  // click, before this async handler settles â€” so a failure can't be shown
+  // click, before this async handler settles — so a failure can't be shown
   // inline inside the (already-unmounted) AlertDialogContent; a toast is the
   // only reliable way to surface it.
   const handleDelete = async () => {
@@ -155,7 +155,7 @@ function AdhocVaccineRow({ item, baby }: AdhocVaccineRowProps) {
       <AlertDialog>
         {/* `asChild` on the <button>, not on a wrapping <span>. Radix puts
             `aria-haspopup="dialog"` and `aria-expanded` on whatever element it
-            is given, and a bare <span> has no role that may carry either â€” axe
+            is given, and a bare <span> has no role that may carry either — axe
             reports `aria-allowed-attr`, one node per row.
 
             This is the second time the same shape has cost a fix here: PR #29
