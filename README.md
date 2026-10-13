@@ -10,11 +10,23 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml"><img src="https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
-  <a href="https://samuelcsantana.github.io/cygnus/"><img src="https://github.com/samuelcsantana/cygnus/actions/workflows/storybook.yml/badge.svg?branch=main" alt="Storybook deployment"></a>
-  <a href="https://samuelcsantana.github.io/cygnus/coverage/"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fsamuelcsantana.github.io%2Fcygnus%2Fcoverage%2Fbadge.json" alt="Unit test line coverage"></a>
+  <a href="https://github.com/samuelcsantana/cygnus/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/samuelcsantana/cygnus/ci.yml?branch=main&amp;label=CI&amp;logo=githubactions&amp;logoColor=white" alt="CI status"></a>
+  <a href="https://github.com/samuelcsantana/cygnus/deployments"><img src="https://img.shields.io/github/deployments/samuelcsantana/cygnus/Production?label=production&amp;logo=vercel" alt="Production deployment on Vercel"></a>
+  <a href="https://samuelcsantana.github.io/cygnus/coverage/"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fsamuelcsantana.github.io%2Fcygnus%2Fcoverage%2Fbadge.json&amp;label=coverage" alt="Unit test line coverage"></a>
+  <a href="https://cygnus.samuelsantana.dev"><img src="https://img.shields.io/website?url=https%3A%2F%2Fcygnus.samuelsantana.dev&amp;label=live%20app" alt="Live app status"></a>
+  <br>
+  <a href="https://cygnus.samuelsantana.dev"><img src="https://img.shields.io/badge/live%20demo-no%20sign--up-2d6a4f" alt="Live demo, no sign-up"></a>
+  <a href="https://samuelcsantana.github.io/cygnus/"><img src="https://img.shields.io/badge/design%20system-Storybook-FF4785?logo=storybook&amp;logoColor=white" alt="Design system on Storybook"></a>
+  <a href="https://samuelcsantana.github.io/cygnus/"><img src="https://img.shields.io/badge/accessibility-axe%20gate%20in%20CI-0f766e" alt="Accessibility: axe runs on every story and a violation fails CI"></a>
   <a href="https://github.com/samuelcsantana/cygnus/releases/latest"><img src="https://img.shields.io/github/v/release/samuelcsantana/cygnus?label=release" alt="Latest release"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/samuelcsantana/cygnus" alt="MIT License"></a>
+  <br>
+  <img src="https://img.shields.io/badge/React-19-149ECA?logo=react&amp;logoColor=white" alt="React 19">
+  <img src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&amp;logoColor=white" alt="TypeScript strict">
+  <img src="https://img.shields.io/badge/Vite-8-646CFF?logo=vite&amp;logoColor=white" alt="Vite 8">
+  <img src="https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwindcss&amp;logoColor=white" alt="Tailwind CSS 4">
+  <img src="https://img.shields.io/badge/TanStack%20Query-5-FF4154?logo=reactquery&amp;logoColor=white" alt="TanStack Query 5">
+  <img src="https://img.shields.io/badge/Storybook-10-FF4785?logo=storybook&amp;logoColor=white" alt="Storybook 10">
 </p>
 
 # Cygnus
