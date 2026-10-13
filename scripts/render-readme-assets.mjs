@@ -72,6 +72,50 @@ function log(path) {
   console.log(relative(resolve(ROOT, '..'), path).replaceAll('\\', '/'))
 }
 
+// networkidle is not enough: a query can start after the network goes quiet, and the dashboard
+// was caught three ways that it missed: as grey skeletons, as the session gate's spinner, and as
+// overview cards still printing their loading text. The cards print `common.loading` as plain
+// text, with no class or role to wait on, so the app's own word for it is read from the locale
+// shot here.
+const LOADING_TEXT = ['en'].map(
+  (lng) => JSON.parse(readFileSync(resolve(ROOT, `src/locales/${lng}.json`), 'utf8')).common.loading,
+)
+function isSettled(loadingText) {
+  if (document.querySelector('.animate-pulse, .animate-spin')) return false
+  return ![...document.querySelectorAll('p, span')].some((el) => loadingText.includes(el.textContent.trim()))
+}
+
+// Production allows 100 API requests a minute per IP, and one run here can make more than that. A
+// page that loaded through a 429 shows an error card instead of the app, and nothing else notices:
+// the dashboard was captured once with two cards reading "could not load". So each page records
+// the 429s it receives, and `load` waits out the window and loads the page again.
+function watchRateLimit(page) {
+  const limit = { hit: false, retryAt: 0 }
+  page.on('response', (response) => {
+    if (response.status() !== 429) return
+    limit.hit = true
+    const seconds = Number(response.headers()['retry-after']) || 60
+    limit.retryAt = Math.max(limit.retryAt, Date.now() + seconds * 1000)
+  })
+  return limit
+}
+
+// Opens `url`, or reloads when there is none, and returns once the app has finished loading.
+async function load(page, limit, url) {
+  for (;;) {
+    limit.hit = false
+    if (url) await page.goto(url)
+    else await page.reload()
+    await page.waitForLoadState('networkidle')
+    await page.waitForFunction(isSettled, LOADING_TEXT, { timeout: 30_000 })
+    await page.waitForTimeout(400)
+    if (!limit.hit) return
+    const wait = Math.max(0, limit.retryAt - Date.now()) + 1_000
+    console.log(`rate limited, loading ${url ?? page.url()} again in ${Math.ceil(wait / 1000)} s`)
+    await page.waitForTimeout(wait)
+  }
+}
+
 async function captureScreens() {
   const desktop = await browser.newContext({
     viewport: { width: 1440, height: 900 },
@@ -82,24 +126,17 @@ async function captureScreens() {
   })
   await desktop.addInitScript(() => localStorage.setItem('i18nextLng', 'en'))
   const page = await desktop.newPage()
+  const pageLimit = watchRateLimit(page)
 
   const setTheme = (theme) => page.evaluate((t) => localStorage.setItem('theme', t), theme)
-  const settle = async () => {
-    await page.waitForLoadState('networkidle')
-    // Skeletons are the one loading state that networkidle does not cover: a query can resolve
-    // after the network goes quiet, and the dashboard was caught as grey boxes once.
-    await page.waitForFunction(() => !document.querySelector('.animate-pulse'), null, { timeout: 30_000 })
-    await page.waitForTimeout(400)
-  }
-  const shoot = async (name) => {
-    await settle()
+  const shoot = async (name, url) => {
+    await load(page, pageLimit, url)
     await writeWebp(resolve(SCREENS, `${name}.webp`), await page.screenshot())
   }
 
   await page.goto(`${BASE_URL}/?lng=en`)
   for (const theme of ['light', 'dark']) {
     await setTheme(theme)
-    await page.reload()
     await shoot(`landing-${theme}`)
   }
 
@@ -113,8 +150,7 @@ async function captureScreens() {
   for (const theme of ['light', 'dark']) {
     await setTheme(theme)
     for (const [name, path] of Object.entries(pages)) {
-      await page.goto(`${BASE_URL}${path}`)
-      await shoot(`${name}-${theme}`)
+      await shoot(`${name}-${theme}`, `${BASE_URL}${path}`)
     }
   }
 
@@ -129,14 +165,15 @@ async function captureScreens() {
     reducedMotion: 'reduce',
   })
   const phonePage = await phone.newPage()
+  const phoneLimit = watchRateLimit(phonePage)
+  const shootPhone = async (name, url) => {
+    await load(phonePage, phoneLimit, url)
+    await writeWebp(resolve(SCREENS, `${name}.webp`), await phonePage.screenshot())
+  }
   for (const theme of ['light', 'dark']) {
     await phonePage.addInitScript((t) => localStorage.setItem('theme', t), theme)
     for (const name of ['dashboard', 'vaccines']) {
-      await phonePage.goto(`${BASE_URL}${pages[name]}`)
-      await phonePage.waitForLoadState('networkidle')
-      await phonePage.waitForFunction(() => !document.querySelector('.animate-pulse'), null, { timeout: 30_000 })
-      await phonePage.waitForTimeout(400)
-      await writeWebp(resolve(SCREENS, `${name}-phone-${theme}.webp`), await phonePage.screenshot())
+      await shootPhone(`${name}-phone-${theme}`, `${BASE_URL}${pages[name]}`)
     }
   }
   await phone.close()
