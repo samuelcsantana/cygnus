@@ -118,7 +118,7 @@ The decisions below are the ones a reviewer would ask about. Each names the file
 ## Architecture
 
 ```mermaid
-flowchart LR
+flowchart TB
   subgraph Clients
     SPA["Cygnus app<br/>(React SPA)"]
     Site["Any website<br/>embed widget"]
