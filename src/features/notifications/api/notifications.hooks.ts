@@ -6,12 +6,13 @@ import type { Notification } from './notifications.schemas'
 
 export const notificationsQueryKey = ['notifications'] as const
 
-// No websocket/push channel in the contract — poll instead.
+// No websocket/push channel in the contract, and no timed poll either: a poll kept the
+// database awake for as long as a tab stayed open. The list refreshes when the app
+// loads and when the tab regains focus (React Query's default, once the data is stale).
 export function useNotifications() {
   return useQuery({
     queryKey: notificationsQueryKey,
     queryFn: fetchNotifications,
-    refetchInterval: 60_000,
   })
 }
 
